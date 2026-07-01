@@ -1,54 +1,87 @@
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
 
-export default function Navbar(){
+  return (
+    <nav className="w-full shadow-md bg-white fixed top-0 left-0 z-50">
 
-return (
+      {/* TOP BAR */}
+      <div className="flex items-center justify-between px-4 py-3">
 
-<nav className="p-5 shadow">
+        <Link
+  to="/"
+  className="flex items-center gap-3 transition-opacity hover:opacity-90"
+  aria-label="Go to Mpumudde High School homepage"
+>
+  <img
+    src="/logo.png"
+    alt="Mpumudde High School logo"
+    className="h-10 w-10 object-contain"
+  />
 
-<div className="flex justify-between">
-
-
-<h1 className="font-bold text-xl">
-Mpumudde High School
-</h1>
-
-
-<div className="space-x-5">
-
-<Link to="/">
-Home
+  <div className="leading-tight">
+    <h5 className="text-lg text-slate-900">
+      Mpumudde High School
+    </h5>
+    <p className="text-xs text-slate-600">
+      Excellence • Discipline • Service
+    </p>
+  </div>
 </Link>
 
-<Link to="/about">
-About
-</Link>
+        {/* Desktop Links */}
+        <div className="hidden md:flex gap-6 font-medium">
+          <Link to="/">Home</Link>
+          <Link to="/about">About</Link>
+          <Link to="/academics">Academics</Link>
+          <Link to="/news">News</Link>
+          <Link to="/contact">Contact</Link>
+        </div>
 
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden"
+          onClick={() => setOpen(true)}
+        >
+          <Menu />
+        </button>
+      </div>
 
-<Link to="/academics">
-Academics
-</Link>
+      {/* OVERLAY */}
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/40"
+          onClick={() => setOpen(false)}
+        />
+      )}
 
+      {/* MOBILE SLIDE MENU */}
+      <div
+        className={`fixed top-0 right-0 h-full w-[70vw] bg-white shadow-lg transform transition-transform duration-300 z-50
+        ${open ? "translate-x-0" : "translate-x-full"}`}
+      >
 
-<Link to="/news">
-News
-</Link>
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b">
+          <span className="font-bold">Menu</span>
 
+          <button onClick={() => setOpen(false)}>
+            <X />
+          </button>
+        </div>
 
-<Link to="/contact">
-Contact
-</Link>
-
-
-</div>
-
-
-</div>
-
-
-</nav>
-
-);
-
+        {/* Links */}
+        <div className="flex flex-col gap-4 p-4 font-medium">
+          <Link onClick={() => setOpen(false)} to="/">Home</Link>
+          <Link onClick={() => setOpen(false)} to="/about">About</Link>
+          <Link onClick={() => setOpen(false)} to="/academics">Academics</Link>
+          <Link onClick={() => setOpen(false)} to="/news">News</Link>
+          <Link onClick={() => setOpen(false)} to="/contact">Contact</Link>
+        </div>
+      </div>
+    </nav>
+  );
 }
