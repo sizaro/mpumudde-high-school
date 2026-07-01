@@ -1,0 +1,11 @@
+export { default as Hero } from "./Hero";
+export { default as QuickActions } from "./QuickActions";
+export { default as AboutPreview } from "./AboutPreview";
+export { default as PrincipalMessage } from "./PrincipalMessage";
+export { default as Statistics } from "./Statistics";
+export { default as Programs } from "./Programs";
+export { default as LatestNews } from "./LatestNews";
+export { default as UpcomingEvents } from "./UpcomingEvents";
+export { default as GalleryPreview } from "./GalleryPreview";
+export { default as Testimonials } from "./Testimonials";
+export { default as CallToAction } from "./CallToAction";
