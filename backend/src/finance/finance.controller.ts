@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { FinanceService } from './finance.service';
-import { CreateFinanceDto } from './dto/create-finance.dto';
-import { UpdateFinanceDto } from './dto/update-finance.dto';
+import { FinanceService } from './finance.service.js';
+import { CreateFinanceDto } from './dto/create-finance.dto.js';
+import { UpdateFinanceDto } from './dto/update-finance.dto.js';
 
 @Controller('finance')
 export class FinanceController {

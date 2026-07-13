@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateParentDto } from './dto/create-parent.dto';
-import { UpdateParentDto } from './dto/update-parent.dto';
+import { CreateParentDto } from './dto/create-parent.dto.js';
+import { UpdateParentDto } from './dto/update-parent.dto.js';
 
 @Injectable()
 export class ParentsService {

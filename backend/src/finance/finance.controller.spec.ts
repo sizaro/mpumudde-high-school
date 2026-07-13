@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FinanceController } from './finance.controller';
-import { FinanceService } from './finance.service';
+import { FinanceController } from './finance.controller.js';
+import { FinanceService } from './finance.service.js';
 
 describe('FinanceController', () => {
   let controller: FinanceController;
