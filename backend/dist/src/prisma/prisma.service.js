@@ -7,14 +7,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+import 'dotenv/config';
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '../../generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 let PrismaService = class PrismaService extends PrismaClient {
     constructor() {
+        console.log('DATABASE_URL:', process.env.DATABASE_URL);
         const pool = new Pool({
             connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false,
+            },
         });
         const adapter = new PrismaPg(pool);
         super({
@@ -22,7 +27,13 @@ let PrismaService = class PrismaService extends PrismaClient {
         });
     }
     async onModuleInit() {
+        console.log('Connecting Prisma...');
         await this.$connect();
+        console.log('Prisma connected.');
+        const result = await this.$queryRaw `
+    SELECT current_user, current_database();
+  `;
+        console.log(result);
     }
     async onModuleDestroy() {
         await this.$disconnect();
