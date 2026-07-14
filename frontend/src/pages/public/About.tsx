@@ -25,7 +25,7 @@ import {
 
 export default function About() {
   return (
-    <>
+    <main className="overflow-hidden">
       <HeroSection />
       <SchoolOverview />
       <History />
@@ -48,6 +48,6 @@ export default function About() {
       <FAQsPreview />
       <ContactVisit />
       <ExploreMore />
-    </>
+    </main>
   );
 }
