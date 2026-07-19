@@ -1,6 +1,2 @@
-export const Role = {
-    DIRECTOR: 'DIRECTOR',
-    TEACHER: 'TEACHER',
-    PARENT: 'PARENT'
-};
+export {};
 //# sourceMappingURL=enums.js.map

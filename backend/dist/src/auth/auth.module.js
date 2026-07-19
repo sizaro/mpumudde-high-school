@@ -6,23 +6,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
 import { PrismaModule } from '../prisma/prisma.module.js';
+import { ConfigModule, ConfigService, } from '@nestjs/config';
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
     Module({
         imports: [
             PrismaModule,
-            PassportModule,
-            JwtModule.register({
-                secret: process.env.JWT_SECRET || 'development-secret',
-                signOptions: {
-                    expiresIn: '1d',
-                },
+            ConfigModule,
+            JwtModule.registerAsync({
+                imports: [
+                    ConfigModule,
+                ],
+                inject: [
+                    ConfigService,
+                ],
+                useFactory: (configService) => ({
+                    secret: configService.getOrThrow('JWT_SECRET'),
+                    signOptions: {
+                        expiresIn: '1d',
+                    },
+                }),
             }),
         ],
         controllers: [
@@ -33,7 +41,7 @@ AuthModule = __decorate([
             JwtStrategy,
         ],
         exports: [
-            JwtModule,
+            AuthService,
         ],
     })
 ], AuthModule);

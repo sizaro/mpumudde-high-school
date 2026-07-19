@@ -10,24 +10,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
 let JwtStrategy = class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
+    configService;
+    constructor(configService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: process.env.JWT_SECRET || 'development-secret',
+            ignoreExpiration: false,
+            secretOrKey: configService.getOrThrow('JWT_SECRET'),
         });
+        this.configService = configService;
     }
     async validate(payload) {
         return {
             id: payload.sub,
             email: payload.email,
-            role: payload.role,
+            roles: payload.roles,
+            permissions: payload.permissions,
         };
     }
 };
 JwtStrategy = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [ConfigService])
 ], JwtStrategy);
 export { JwtStrategy };
 //# sourceMappingURL=jwt.strategy.js.map

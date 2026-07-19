@@ -1,15 +1,17 @@
 import { PrismaService } from '../prisma/prisma.service.js';
 import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dto/login.dto.js';
 export declare class AuthService {
-    private prisma;
-    private jwtService;
+    private readonly prisma;
+    private readonly jwtService;
     constructor(prisma: PrismaService, jwtService: JwtService);
-    login(email: string, password: string): Promise<{
+    login(loginDto: LoginDto): Promise<{
         access_token: string;
         user: {
             id: string;
             email: string;
-            role: import("../../generated/prisma/enums.js").Role;
+            roles: string[];
+            permissions: string[];
         };
     }>;
 }

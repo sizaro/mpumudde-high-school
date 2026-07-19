@@ -15,15 +15,29 @@ const prisma = new PrismaClient({
 });
 async function main() {
     const result = await prisma.$queryRaw `
+
     SELECT current_user, current_database();
+
   `;
     console.log(result);
-    const password = await bcrypt.hash('director123', 10);
+    const hashedPassword = await bcrypt.hash('director123', 10);
+    const superAdminRole = await prisma.role.findUnique({
+        where: {
+            name: 'SUPER_ADMIN',
+        },
+    });
+    if (!superAdminRole) {
+        throw new Error('SUPER_ADMIN role does not exist. Run role seed first.');
+    }
     const user = await prisma.user.create({
         data: {
             email: 'director@mpumudde.com',
-            password,
-            role: 'DIRECTOR',
+            password: hashedPassword,
+            roles: {
+                create: {
+                    roleId: superAdminRole.id,
+                },
+            },
             director: {
                 create: {
                     firstName: 'School',
@@ -31,6 +45,14 @@ async function main() {
                     phone: '0700000000',
                 },
             },
+        },
+        include: {
+            roles: {
+                include: {
+                    role: true,
+                },
+            },
+            director: true,
         },
     });
     console.log(user);

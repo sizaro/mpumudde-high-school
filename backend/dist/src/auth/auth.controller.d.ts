@@ -1,14 +1,16 @@
 import { AuthService } from './auth.service.js';
 import { LoginDto } from './dto/login.dto.js';
 export declare class AuthController {
-    private authService;
+    private readonly authService;
     constructor(authService: AuthService);
-    login(dto: LoginDto): Promise<{
+    login(loginDto: LoginDto): Promise<{
         access_token: string;
         user: {
             id: string;
             email: string;
-            role: import("../../generated/prisma/enums.js").Role;
+            roles: string[];
+            permissions: string[];
         };
     }>;
+    me(req: any): Promise<any>;
 }

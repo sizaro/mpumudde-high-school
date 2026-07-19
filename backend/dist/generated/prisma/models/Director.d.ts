@@ -282,9 +282,6 @@ export type DirectorUncheckedUpdateOneWithoutUserNestedInput = {
     connect?: Prisma.DirectorWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.DirectorUpdateToOneWithWhereWithoutUserInput, Prisma.DirectorUpdateWithoutUserInput>, Prisma.DirectorUncheckedUpdateWithoutUserInput>;
 };
-export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null;
-};
 export type DirectorCreateWithoutUserInput = {
     id?: string;
     firstName: string;

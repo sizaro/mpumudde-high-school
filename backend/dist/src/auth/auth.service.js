@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -18,35 +18,49 @@ let AuthService = class AuthService {
         this.prisma = prisma;
         this.jwtService = jwtService;
     }
-    async login(email, password) {
+    async login(loginDto) {
         const user = await this.prisma.user.findUnique({
             where: {
-                email,
+                email: loginDto.email,
             },
             include: {
-                director: true,
-                teacher: true,
-                parent: true,
+                roles: {
+                    include: {
+                        role: {
+                            include: {
+                                permissions: {
+                                    include: {
+                                        permission: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             },
         });
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) {
+        const passwordValid = await bcrypt.compare(loginDto.password, user.password);
+        if (!passwordValid) {
             throw new UnauthorizedException('Invalid credentials');
         }
-        const token = this.jwtService.sign({
+        const roles = user.roles.map(userRole => userRole.role.name);
+        const permissions = user.roles.flatMap(userRole => userRole.role.permissions.map(rolePermission => rolePermission.permission.name));
+        const payload = {
             sub: user.id,
             email: user.email,
-            role: user.role,
-        });
+            roles,
+            permissions,
+        };
         return {
-            access_token: token,
+            access_token: await this.jwtService.signAsync(payload),
             user: {
                 id: user.id,
                 email: user.email,
-                role: user.role,
+                roles,
+                permissions,
             },
         };
     }

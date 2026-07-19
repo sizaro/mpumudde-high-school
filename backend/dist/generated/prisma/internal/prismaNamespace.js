@@ -25,9 +25,15 @@ export const JsonNull = runtime.JsonNull;
 export const AnyNull = runtime.AnyNull;
 export const ModelName = {
     User: 'User',
+    Role: 'Role',
+    Permission: 'Permission',
+    UserRole: 'UserRole',
+    RolePermission: 'RolePermission',
     Director: 'Director',
     Teacher: 'Teacher',
-    Parent: 'Parent'
+    Parent: 'Parent',
+    Student: 'Student',
+    StudentParent: 'StudentParent'
 };
 export const TransactionIsolationLevel = runtime.makeStrictEnum({
     ReadUncommitted: 'ReadUncommitted',
@@ -39,10 +45,35 @@ export const UserScalarFieldEnum = {
     id: 'id',
     email: 'email',
     password: 'password',
-    role: 'role',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
+};
+export const RoleScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const PermissionScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const UserRoleScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    roleId: 'roleId',
+    createdAt: 'createdAt'
+};
+export const RolePermissionScalarFieldEnum = {
+    id: 'id',
+    roleId: 'roleId',
+    permissionId: 'permissionId',
+    createdAt: 'createdAt'
 };
 export const DirectorScalarFieldEnum = {
     id: 'id',
@@ -67,9 +98,28 @@ export const ParentScalarFieldEnum = {
     firstName: 'firstName',
     lastName: 'lastName',
     phone: 'phone',
+    relationship: 'relationship',
     userId: 'userId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
+};
+export const StudentScalarFieldEnum = {
+    id: 'id',
+    admissionNumber: 'admissionNumber',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    dateOfBirth: 'dateOfBirth',
+    gender: 'gender',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const StudentParentScalarFieldEnum = {
+    id: 'id',
+    studentId: 'studentId',
+    parentId: 'parentId',
+    relationship: 'relationship',
+    createdAt: 'createdAt'
 };
 export const SortOrder = {
     asc: 'asc',

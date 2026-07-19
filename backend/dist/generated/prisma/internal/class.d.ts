@@ -33,6 +33,18 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get user(): Prisma.UserDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    get role(): Prisma.RoleDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get permission(): Prisma.PermissionDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get userRole(): Prisma.UserRoleDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get rolePermission(): Prisma.RolePermissionDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
     get director(): Prisma.DirectorDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
@@ -40,6 +52,12 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
         omit: OmitOpts;
     }>;
     get parent(): Prisma.ParentDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get student(): Prisma.StudentDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get studentParent(): Prisma.StudentParentDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
 }
