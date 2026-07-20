@@ -1,8 +1,53 @@
+import {
+  HeroSection,
+  SchoolOverview,
+  History,
+  VisionMission,
+  CoreValues,
+  HeadteacherWelcome,
+  WhyChooseUs,
+  AcademicExcellence,
+  StudentLife,
+  SchoolStatistics,
+  Achievements,
+  CommunityEngagement,
+  LeadershipPreview,
+  TeachingStaffPreview,
+  DepartmentsPreview,
+  FacilitiesPreview,
+  BoardOfGovernorsPreview,
+  PoliciesPreview,
+  CareersPreview,
+  FAQsPreview,
+  ContactVisit,
+  ExploreMore,
+} from "../../components/about";
+
 export default function About() {
   return (
-    <div>
-      <h1>Mpumudde High School</h1>
-      <p>Welcome to our official website About</p>
-    </div>
+    <main className="overflow-hidden">
+      <HeroSection />
+      <SchoolOverview />
+      <History />
+      <VisionMission />
+      <CoreValues />
+      <HeadteacherWelcome />
+      <WhyChooseUs />
+      <AcademicExcellence />
+      <StudentLife />
+      <SchoolStatistics />
+      <Achievements />
+      <CommunityEngagement />
+      <LeadershipPreview />
+      <TeachingStaffPreview />
+      <DepartmentsPreview />
+      <FacilitiesPreview />
+      <BoardOfGovernorsPreview />
+      <PoliciesPreview />
+      <CareersPreview />
+      <FAQsPreview />
+      <ContactVisit />
+      <ExploreMore />
+    </main>
   );
 }

@@ -26,7 +26,7 @@ export default function AboutPreview() {
           <div className="relative">
 
             <img
-              src="https://images.unsplash.com/photo-1523050854058-8df90110c9f8?auto=format&fit=crop&w=1200&q=80"
+              src="/images/school_class_school_children.jpg"
               alt="Mpumudde High School"
               className="rounded-3xl shadow-2xl w-full h-[620px] object-cover"
             />
