@@ -1,0 +1,67 @@
+import api from "../api/axios";
+
+
+import type {
+  LoginDto,
+  LoginResponse,
+  User,
+} from "../types/auth";
+
+
+
+class AuthService {
+
+
+
+  async login(
+
+    loginDto: LoginDto,
+
+  ): Promise<LoginResponse> {
+
+
+
+    const { data } = await api.post<LoginResponse>(
+
+      "/auth/login",
+
+      loginDto,
+
+    );
+
+
+
+    return data;
+
+
+  }
+
+
+
+
+
+
+  async me(): Promise<User> {
+
+
+
+    const { data } = await api.get<User>(
+
+      "/auth/me",
+
+    );
+
+
+
+    return data;
+
+
+  }
+
+
+
+}
+
+
+
+export default new AuthService();

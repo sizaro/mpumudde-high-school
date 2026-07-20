@@ -1,4 +1,4 @@
-export default function TeacherDashboard() {
+export default function ParentDashboard() {
 
   return (
 
@@ -6,14 +6,14 @@ export default function TeacherDashboard() {
 
       <h1 className="text-3xl font-bold">
 
-        Teacher Dashboard
+        Parent Dashboard
 
       </h1>
 
 
       <p className="mt-4 text-gray-600">
 
-        Welcome to the teacher portal.
+        Welcome to the parent portal.
 
       </p>
 
