@@ -12,3 +12,4 @@ export type Teacher = Prisma.TeacherModel;
 export type Parent = Prisma.ParentModel;
 export type Student = Prisma.StudentModel;
 export type StudentParent = Prisma.StudentParentModel;
+export type Payment = Prisma.PaymentModel;

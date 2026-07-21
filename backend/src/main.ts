@@ -16,13 +16,21 @@ async function bootstrap() {
 
   app.enableCors({
 
-    origin: [
+    origin: (origin, callback) => {
 
-      'http://localhost:5173',
+      if (!origin) {
+        return callback(null, true);
+      }
 
-      'https://mpumudde-high-school.vercel.app',
+      if (
+        origin === 'https://mpumudde-high-school.vercel.app' ||
+        /^http:\/\/localhost:\d+$/.test(origin)
+      ) {
+        return callback(null, true);
+      }
 
-    ],
+      callback(new Error('Not allowed by CORS'));
+    },
 
     credentials: true,
 

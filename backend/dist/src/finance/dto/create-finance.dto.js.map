@@ -1,1 +1,1 @@
-{"version":3,"file":"create-finance.dto.js","sourceRoot":"","sources":["../../../../src/finance/dto/create-finance.dto.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,gBAAgB;CAAG"}
+{"version":3,"file":"create-finance.dto.js","sourceRoot":"","sources":["../../../../src/finance/dto/create-finance.dto.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,gBAAgB;IAC3B,SAAS,CAAU;IACnB,MAAM,CAAU;IAChB,MAAM,CAAU;IAChB,MAAM,CAAU;IAChB,WAAW,CAAU;IACrB,IAAI,CAAU;CACf"}

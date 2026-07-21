@@ -18,7 +18,8 @@ export const ModelName = {
     Teacher: 'Teacher',
     Parent: 'Parent',
     Student: 'Student',
-    StudentParent: 'StudentParent'
+    StudentParent: 'StudentParent',
+    Payment: 'Payment'
 };
 export const TransactionIsolationLevel = runtime.makeStrictEnum({
     ReadUncommitted: 'ReadUncommitted',
@@ -105,6 +106,17 @@ export const StudentParentScalarFieldEnum = {
     parentId: 'parentId',
     relationship: 'relationship',
     createdAt: 'createdAt'
+};
+export const PaymentScalarFieldEnum = {
+    id: 'id',
+    studentId: 'studentId',
+    amount: 'amount',
+    method: 'method',
+    status: 'status',
+    description: 'description',
+    date: 'date',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
 };
 export const SortOrder = {
     asc: 'asc',

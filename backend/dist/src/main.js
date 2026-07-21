@@ -6,10 +6,16 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.use(cookieParser());
     app.enableCors({
-        origin: [
-            'http://localhost:5173',
-            'https://mpumudde-high-school.vercel.app',
-        ],
+        origin: (origin, callback) => {
+            if (!origin) {
+                return callback(null, true);
+            }
+            if (origin === 'https://mpumudde-high-school.vercel.app' ||
+                /^http:\/\/localhost:\d+$/.test(origin)) {
+                return callback(null, true);
+            }
+            callback(new Error('Not allowed by CORS'));
+        },
         credentials: true,
     });
     app.useGlobalPipes(new ValidationPipe({

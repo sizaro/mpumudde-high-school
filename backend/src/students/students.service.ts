@@ -1,26 +1,56 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateStudentDto } from './dto/create-student.dto.js';
 import { UpdateStudentDto } from './dto/update-student.dto.js';
 
 @Injectable()
 export class StudentsService {
-  create(createStudentDto: CreateStudentDto) {
-    return 'This action adds a new student';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createStudentDto: CreateStudentDto) {
+    return this.prisma.student.create({
+      data: {
+        admissionNumber: createStudentDto.admissionNumber,
+        firstName: createStudentDto.firstName,
+        lastName: createStudentDto.lastName,
+        dateOfBirth: createStudentDto.dateOfBirth ? new Date(createStudentDto.dateOfBirth) : undefined,
+        gender: createStudentDto.gender,
+        isActive: createStudentDto.isActive ?? true,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all students`;
+  async findAll() {
+    return this.prisma.student.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: { parents: true, payments: true },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} student`;
+  async findOne(id: string) {
+    return this.prisma.student.findUnique({
+      where: { id },
+      include: { parents: true, payments: true },
+    });
   }
 
-  update(id: number, updateStudentDto: UpdateStudentDto) {
-    return `This action updates a #${id} student`;
+  async update(id: string, updateStudentDto: UpdateStudentDto) {
+    return this.prisma.student.update({
+      where: { id },
+      data: {
+        admissionNumber: updateStudentDto.admissionNumber,
+        firstName: updateStudentDto.firstName,
+        lastName: updateStudentDto.lastName,
+        dateOfBirth: updateStudentDto.dateOfBirth ? new Date(updateStudentDto.dateOfBirth) : undefined,
+        gender: updateStudentDto.gender,
+        isActive: updateStudentDto.isActive,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} student`;
+  async remove(id: string) {
+    return this.prisma.student.delete({
+      where: { id },
+    });
   }
 }

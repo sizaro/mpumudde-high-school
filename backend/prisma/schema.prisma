@@ -201,6 +201,8 @@ model Student {
 
   parents StudentParent[]
 
+  payments Payment[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -229,4 +231,26 @@ model StudentParent {
   createdAt DateTime @default(now())
 
   @@unique([studentId, parentId])
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  studentId String
+
+  amount Int
+
+  method String
+
+  status String @default("completed")
+
+  description String?
+
+  date DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
 }

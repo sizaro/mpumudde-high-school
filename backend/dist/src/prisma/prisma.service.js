@@ -22,17 +22,15 @@ let PrismaService = class PrismaService extends PrismaClient {
             },
         });
         const adapter = new PrismaPg(pool);
-        super({
-            adapter,
-        });
+        super({ adapter });
     }
     async onModuleInit() {
         console.log('Connecting Prisma...');
         await this.$connect();
         console.log('Prisma connected.');
         const result = await this.$queryRaw `
-    SELECT current_user, current_database();
-  `;
+      SELECT current_user, current_database();
+    `;
         console.log(result);
     }
     async onModuleDestroy() {

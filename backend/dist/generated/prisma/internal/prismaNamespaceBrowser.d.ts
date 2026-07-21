@@ -21,6 +21,7 @@ export declare const ModelName: {
     readonly Parent: "Parent";
     readonly Student: "Student";
     readonly StudentParent: "StudentParent";
+    readonly Payment: "Payment";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -120,6 +121,18 @@ export declare const StudentParentScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type StudentParentScalarFieldEnum = (typeof StudentParentScalarFieldEnum)[keyof typeof StudentParentScalarFieldEnum];
+export declare const PaymentScalarFieldEnum: {
+    readonly id: "id";
+    readonly studentId: "studentId";
+    readonly amount: "amount";
+    readonly method: "method";
+    readonly status: "status";
+    readonly description: "description";
+    readonly date: "date";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";

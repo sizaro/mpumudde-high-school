@@ -4,26 +4,62 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
 let StudentsService = class StudentsService {
-    create(createStudentDto) {
-        return 'This action adds a new student';
+    prisma;
+    constructor(prisma) {
+        this.prisma = prisma;
     }
-    findAll() {
-        return `This action returns all students`;
+    async create(createStudentDto) {
+        return this.prisma.student.create({
+            data: {
+                admissionNumber: createStudentDto.admissionNumber,
+                firstName: createStudentDto.firstName,
+                lastName: createStudentDto.lastName,
+                dateOfBirth: createStudentDto.dateOfBirth ? new Date(createStudentDto.dateOfBirth) : undefined,
+                gender: createStudentDto.gender,
+                isActive: createStudentDto.isActive ?? true,
+            },
+        });
     }
-    findOne(id) {
-        return `This action returns a #${id} student`;
+    async findAll() {
+        return this.prisma.student.findMany({
+            orderBy: { createdAt: 'desc' },
+            include: { parents: true, payments: true },
+        });
     }
-    update(id, updateStudentDto) {
-        return `This action updates a #${id} student`;
+    async findOne(id) {
+        return this.prisma.student.findUnique({
+            where: { id },
+            include: { parents: true, payments: true },
+        });
     }
-    remove(id) {
-        return `This action removes a #${id} student`;
+    async update(id, updateStudentDto) {
+        return this.prisma.student.update({
+            where: { id },
+            data: {
+                admissionNumber: updateStudentDto.admissionNumber,
+                firstName: updateStudentDto.firstName,
+                lastName: updateStudentDto.lastName,
+                dateOfBirth: updateStudentDto.dateOfBirth ? new Date(updateStudentDto.dateOfBirth) : undefined,
+                gender: updateStudentDto.gender,
+                isActive: updateStudentDto.isActive,
+            },
+        });
+    }
+    async remove(id) {
+        return this.prisma.student.delete({
+            where: { id },
+        });
     }
 };
 StudentsService = __decorate([
-    Injectable()
+    Injectable(),
+    __metadata("design:paramtypes", [PrismaService])
 ], StudentsService);
 export { StudentsService };
 //# sourceMappingURL=students.service.js.map

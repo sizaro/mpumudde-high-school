@@ -26,13 +26,13 @@ let FinanceController = class FinanceController {
         return this.financeService.findAll();
     }
     findOne(id) {
-        return this.financeService.findOne(+id);
+        return this.financeService.findOne(id);
     }
     update(id, updateFinanceDto) {
-        return this.financeService.update(+id, updateFinanceDto);
+        return this.financeService.update(id, updateFinanceDto);
     }
     remove(id) {
-        return this.financeService.remove(+id);
+        return this.financeService.remove(id);
     }
 };
 __decorate([
