@@ -5,96 +5,96 @@ export declare class StudentsController {
     private readonly studentsService;
     constructor(studentsService: StudentsService);
     create(createStudentDto: CreateStudentDto): Promise<{
-        admissionNumber: string;
-        firstName: string;
-        lastName: string;
-        dateOfBirth: Date | null;
-        gender: string | null;
-        isActive: boolean;
         id: string;
+        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
+        firstName: string;
+        lastName: string;
+        admissionNumber: string;
+        dateOfBirth: Date | null;
+        gender: string | null;
     }>;
     findAll(): Promise<({
         parents: {
             id: string;
             createdAt: Date;
+            relationship: string | null;
             studentId: string;
             parentId: string;
-            relationship: string | null;
         }[];
         payments: {
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            description: string | null;
             studentId: string;
             amount: number;
             method: string;
             status: string;
-            description: string | null;
             date: Date;
         }[];
     } & {
-        admissionNumber: string;
-        firstName: string;
-        lastName: string;
-        dateOfBirth: Date | null;
-        gender: string | null;
-        isActive: boolean;
         id: string;
+        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
+        firstName: string;
+        lastName: string;
+        admissionNumber: string;
+        dateOfBirth: Date | null;
+        gender: string | null;
     })[]>;
     findOne(id: string): Promise<({
         parents: {
             id: string;
             createdAt: Date;
+            relationship: string | null;
             studentId: string;
             parentId: string;
-            relationship: string | null;
         }[];
         payments: {
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            description: string | null;
             studentId: string;
             amount: number;
             method: string;
             status: string;
-            description: string | null;
             date: Date;
         }[];
     } & {
-        admissionNumber: string;
-        firstName: string;
-        lastName: string;
-        dateOfBirth: Date | null;
-        gender: string | null;
-        isActive: boolean;
         id: string;
+        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
+        firstName: string;
+        lastName: string;
+        admissionNumber: string;
+        dateOfBirth: Date | null;
+        gender: string | null;
     }) | null>;
     update(id: string, updateStudentDto: UpdateStudentDto): Promise<{
-        admissionNumber: string;
-        firstName: string;
-        lastName: string;
-        dateOfBirth: Date | null;
-        gender: string | null;
-        isActive: boolean;
         id: string;
+        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
+        firstName: string;
+        lastName: string;
+        admissionNumber: string;
+        dateOfBirth: Date | null;
+        gender: string | null;
     }>;
     remove(id: string): Promise<{
-        admissionNumber: string;
-        firstName: string;
-        lastName: string;
-        dateOfBirth: Date | null;
-        gender: string | null;
-        isActive: boolean;
         id: string;
+        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
+        firstName: string;
+        lastName: string;
+        admissionNumber: string;
+        dateOfBirth: Date | null;
+        gender: string | null;
     }>;
 }
