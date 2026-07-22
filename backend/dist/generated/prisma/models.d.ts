@@ -8,5 +8,7 @@ export type * from './models/Teacher.js';
 export type * from './models/Parent.js';
 export type * from './models/Student.js';
 export type * from './models/StudentParent.js';
+export type * from './models/Term.js';
+export type * from './models/StudentTermFee.js';
 export type * from './models/Payment.js';
 export type * from './commonInputTypes.js';

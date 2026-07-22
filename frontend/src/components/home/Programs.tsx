@@ -3,7 +3,6 @@ import {
   FlaskConical,
   Laptop,
   Palette,
-  Users,
   Music,
 } from "lucide-react";
 import { Link } from "react-router-dom";

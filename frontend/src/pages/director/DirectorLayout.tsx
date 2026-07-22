@@ -36,10 +36,7 @@ export default function DirectorLayout() {
                 Student Status
               </NavLink>
               <NavLink to="finance" className={navButton} end>
-                Fees Management
-              </NavLink>
-              <NavLink to="finance/history" className={navButton} end>
-                Payment History
+                Finances
               </NavLink>
               <NavLink to="reports" className={navButton} end>
                 Reports

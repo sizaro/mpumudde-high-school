@@ -29,6 +29,7 @@ export declare class StudentsController {
             updatedAt: Date;
             description: string | null;
             studentId: string;
+            studentTermFeeId: string | null;
             amount: number;
             method: string;
             status: string;
@@ -59,6 +60,7 @@ export declare class StudentsController {
             updatedAt: Date;
             description: string | null;
             studentId: string;
+            studentTermFeeId: string | null;
             amount: number;
             method: string;
             status: string;

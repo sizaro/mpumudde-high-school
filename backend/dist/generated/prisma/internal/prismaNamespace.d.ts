@@ -167,6 +167,8 @@ export declare const ModelName: {
     readonly Parent: "Parent";
     readonly Student: "Student";
     readonly StudentParent: "StudentParent";
+    readonly Term: "Term";
+    readonly StudentTermFee: "StudentTermFee";
     readonly Payment: "Payment";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -180,7 +182,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "parent" | "student" | "studentParent" | "payment";
+        modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "parent" | "student" | "studentParent" | "term" | "studentTermFee" | "payment";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -924,6 +926,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        Term: {
+            payload: Prisma.$TermPayload<ExtArgs>;
+            fields: Prisma.TermFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.TermFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.TermFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload>;
+                };
+                findFirst: {
+                    args: Prisma.TermFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.TermFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload>;
+                };
+                findMany: {
+                    args: Prisma.TermFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload>[];
+                };
+                create: {
+                    args: Prisma.TermCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload>;
+                };
+                createMany: {
+                    args: Prisma.TermCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.TermCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload>[];
+                };
+                delete: {
+                    args: Prisma.TermDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload>;
+                };
+                update: {
+                    args: Prisma.TermUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.TermDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.TermUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.TermUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload>[];
+                };
+                upsert: {
+                    args: Prisma.TermUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TermPayload>;
+                };
+                aggregate: {
+                    args: Prisma.TermAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateTerm>;
+                };
+                groupBy: {
+                    args: Prisma.TermGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.TermGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.TermCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.TermCountAggregateOutputType> | number;
+                };
+            };
+        };
+        StudentTermFee: {
+            payload: Prisma.$StudentTermFeePayload<ExtArgs>;
+            fields: Prisma.StudentTermFeeFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.StudentTermFeeFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.StudentTermFeeFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload>;
+                };
+                findFirst: {
+                    args: Prisma.StudentTermFeeFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.StudentTermFeeFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload>;
+                };
+                findMany: {
+                    args: Prisma.StudentTermFeeFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload>[];
+                };
+                create: {
+                    args: Prisma.StudentTermFeeCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload>;
+                };
+                createMany: {
+                    args: Prisma.StudentTermFeeCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.StudentTermFeeCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload>[];
+                };
+                delete: {
+                    args: Prisma.StudentTermFeeDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload>;
+                };
+                update: {
+                    args: Prisma.StudentTermFeeUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload>;
+                };
+                deleteMany: {
+                    args: Prisma.StudentTermFeeDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.StudentTermFeeUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.StudentTermFeeUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload>[];
+                };
+                upsert: {
+                    args: Prisma.StudentTermFeeUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTermFeePayload>;
+                };
+                aggregate: {
+                    args: Prisma.StudentTermFeeAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateStudentTermFee>;
+                };
+                groupBy: {
+                    args: Prisma.StudentTermFeeGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.StudentTermFeeGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.StudentTermFeeCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.StudentTermFeeCountAggregateOutputType> | number;
+                };
+            };
+        };
         Payment: {
             payload: Prisma.$PaymentPayload<ExtArgs>;
             fields: Prisma.PaymentFieldRefs;
@@ -1119,9 +1269,31 @@ export declare const StudentParentScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type StudentParentScalarFieldEnum = (typeof StudentParentScalarFieldEnum)[keyof typeof StudentParentScalarFieldEnum];
+export declare const TermScalarFieldEnum: {
+    readonly id: "id";
+    readonly name: "name";
+    readonly feeAmount: "feeAmount";
+    readonly startDate: "startDate";
+    readonly endDate: "endDate";
+    readonly isActive: "isActive";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type TermScalarFieldEnum = (typeof TermScalarFieldEnum)[keyof typeof TermScalarFieldEnum];
+export declare const StudentTermFeeScalarFieldEnum: {
+    readonly id: "id";
+    readonly studentId: "studentId";
+    readonly termId: "termId";
+    readonly amountOwed: "amountOwed";
+    readonly amountPaid: "amountPaid";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type StudentTermFeeScalarFieldEnum = (typeof StudentTermFeeScalarFieldEnum)[keyof typeof StudentTermFeeScalarFieldEnum];
 export declare const PaymentScalarFieldEnum: {
     readonly id: "id";
     readonly studentId: "studentId";
+    readonly studentTermFeeId: "studentTermFeeId";
     readonly amount: "amount";
     readonly method: "method";
     readonly status: "status";
@@ -1190,6 +1362,8 @@ export type GlobalOmitConfig = {
     parent?: Prisma.ParentOmit;
     student?: Prisma.StudentOmit;
     studentParent?: Prisma.StudentParentOmit;
+    term?: Prisma.TermOmit;
+    studentTermFee?: Prisma.StudentTermFeeOmit;
     payment?: Prisma.PaymentOmit;
 };
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';

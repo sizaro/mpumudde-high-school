@@ -25,6 +25,12 @@ let FinanceController = class FinanceController {
     findAll() {
         return this.financeService.findAll();
     }
+    getStudentsWithBalances() {
+        return this.financeService.getStudentsWithBalances();
+    }
+    getStudentBalance(studentId) {
+        return this.financeService.getStudentBalance(studentId);
+    }
     findOne(id) {
         return this.financeService.findOne(id);
     }
@@ -48,6 +54,19 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], FinanceController.prototype, "findAll", null);
+__decorate([
+    Get('students/balances/all'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], FinanceController.prototype, "getStudentsWithBalances", null);
+__decorate([
+    Get('students/:studentId/balance'),
+    __param(0, Param('studentId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], FinanceController.prototype, "getStudentBalance", null);
 __decorate([
     Get(':id'),
     __param(0, Param('id')),

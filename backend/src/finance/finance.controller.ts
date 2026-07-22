@@ -17,6 +17,16 @@ export class FinanceController {
     return this.financeService.findAll();
   }
 
+  @Get('students/balances/all')
+  getStudentsWithBalances() {
+    return this.financeService.getStudentsWithBalances();
+  }
+
+  @Get('students/:studentId/balance')
+  getStudentBalance(@Param('studentId') studentId: string) {
+    return this.financeService.getStudentBalance(studentId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.financeService.findOne(id);

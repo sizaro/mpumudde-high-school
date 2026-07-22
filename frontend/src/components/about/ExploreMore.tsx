@@ -1,16 +1,14 @@
 import {
-  Users,
   GraduationCap,
   Building2,
   ClipboardList,
-  FileText,
   Briefcase,
   HelpCircle,
 } from "lucide-react";
 
 const links = [
   {
-    icon: Users,
+    icon: GraduationCap,
     title: "Leadership",
     description:
       "Meet the school leaders guiding our vision and development.",

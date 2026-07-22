@@ -21,6 +21,8 @@ export declare const ModelName: {
     readonly Parent: "Parent";
     readonly Student: "Student";
     readonly StudentParent: "StudentParent";
+    readonly Term: "Term";
+    readonly StudentTermFee: "StudentTermFee";
     readonly Payment: "Payment";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -121,9 +123,31 @@ export declare const StudentParentScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type StudentParentScalarFieldEnum = (typeof StudentParentScalarFieldEnum)[keyof typeof StudentParentScalarFieldEnum];
+export declare const TermScalarFieldEnum: {
+    readonly id: "id";
+    readonly name: "name";
+    readonly feeAmount: "feeAmount";
+    readonly startDate: "startDate";
+    readonly endDate: "endDate";
+    readonly isActive: "isActive";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type TermScalarFieldEnum = (typeof TermScalarFieldEnum)[keyof typeof TermScalarFieldEnum];
+export declare const StudentTermFeeScalarFieldEnum: {
+    readonly id: "id";
+    readonly studentId: "studentId";
+    readonly termId: "termId";
+    readonly amountOwed: "amountOwed";
+    readonly amountPaid: "amountPaid";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type StudentTermFeeScalarFieldEnum = (typeof StudentTermFeeScalarFieldEnum)[keyof typeof StudentTermFeeScalarFieldEnum];
 export declare const PaymentScalarFieldEnum: {
     readonly id: "id";
     readonly studentId: "studentId";
+    readonly studentTermFeeId: "studentTermFeeId";
     readonly amount: "amount";
     readonly method: "method";
     readonly status: "status";

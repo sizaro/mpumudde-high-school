@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import FinanceService from "../../../services/financeService";
-import type { Payment } from "../../types/api.types";
+import type { Payment } from "../../../types/api.types";
 
 export default function PaymentHistory() {
   const [payments, setPayments] = useState<Payment[]>([]);

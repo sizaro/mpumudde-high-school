@@ -15,27 +15,65 @@ let FinanceService = class FinanceService {
         this.prisma = prisma;
     }
     async create(createFinanceDto) {
-        return this.prisma.payment.create({
+        let studentTermFeeId = createFinanceDto.studentTermFeeId;
+        if (!studentTermFeeId) {
+            const activeTerm = await this.prisma.term.findFirst({
+                where: { isActive: true },
+            });
+            if (activeTerm) {
+                const studentTermFee = await this.prisma.studentTermFee.findUnique({
+                    where: {
+                        studentId_termId: {
+                            studentId: createFinanceDto.studentId,
+                            termId: activeTerm.id,
+                        },
+                    },
+                });
+                if (studentTermFee) {
+                    studentTermFeeId = studentTermFee.id;
+                }
+            }
+        }
+        const payment = await this.prisma.payment.create({
             data: {
                 studentId: createFinanceDto.studentId,
+                studentTermFeeId: studentTermFeeId || undefined,
                 amount: createFinanceDto.amount,
                 method: createFinanceDto.method,
                 status: createFinanceDto.status ?? 'completed',
                 description: createFinanceDto.description,
                 date: createFinanceDto.date ? new Date(createFinanceDto.date) : undefined,
             },
+            include: { student: true, studentTermFee: true },
         });
+        if (studentTermFeeId) {
+            await this.prisma.studentTermFee.update({
+                where: { id: studentTermFeeId },
+                data: {
+                    amountPaid: {
+                        increment: createFinanceDto.amount,
+                    },
+                },
+            });
+        }
+        return payment;
     }
     async findAll() {
         return this.prisma.payment.findMany({
             orderBy: { date: 'desc' },
-            include: { student: true },
+            include: {
+                student: true,
+                studentTermFee: { include: { term: true } },
+            },
         });
     }
     async findOne(id) {
         return this.prisma.payment.findUnique({
             where: { id },
-            include: { student: true },
+            include: {
+                student: true,
+                studentTermFee: { include: { term: true } },
+            },
         });
     }
     async update(id, updateFinanceDto) {
@@ -48,12 +86,98 @@ let FinanceService = class FinanceService {
                 description: updateFinanceDto.description,
                 date: updateFinanceDto.date ? new Date(updateFinanceDto.date) : undefined,
             },
+            include: { student: true, studentTermFee: true },
         });
     }
     async remove(id) {
         return this.prisma.payment.delete({
             where: { id },
         });
+    }
+    async getStudentsWithBalances() {
+        const students = await this.prisma.student.findMany({
+            include: {
+                termFees: {
+                    include: { term: true },
+                    where: { term: { isActive: true } },
+                },
+                payments: true,
+            },
+        });
+        return students.map((student) => {
+            if (student.termFees.length === 0) {
+                return {
+                    id: student.id,
+                    admissionNumber: student.admissionNumber,
+                    firstName: student.firstName,
+                    lastName: student.lastName,
+                    isActive: student.isActive,
+                    balances: [],
+                    totalOwed: 0,
+                    totalPaid: 0,
+                    totalBalance: 0,
+                };
+            }
+            const balances = student.termFees.map((tf) => ({
+                termId: tf.termId,
+                termName: tf.term.name,
+                amountOwed: tf.amountOwed,
+                amountPaid: tf.amountPaid,
+                balance: tf.amountOwed - tf.amountPaid,
+            }));
+            const totalOwed = balances.reduce((sum, b) => sum + b.amountOwed, 0);
+            const totalPaid = balances.reduce((sum, b) => sum + b.amountPaid, 0);
+            const totalBalance = totalOwed - totalPaid;
+            return {
+                id: student.id,
+                admissionNumber: student.admissionNumber,
+                firstName: student.firstName,
+                lastName: student.lastName,
+                isActive: student.isActive,
+                balances,
+                totalOwed,
+                totalPaid,
+                totalBalance,
+            };
+        });
+    }
+    async getStudentBalance(studentId) {
+        const student = await this.prisma.student.findUnique({
+            where: { id: studentId },
+            include: {
+                termFees: {
+                    include: { term: true },
+                    where: { term: { isActive: true } },
+                },
+                payments: {
+                    include: { studentTermFee: { include: { term: true } } },
+                },
+            },
+        });
+        if (!student)
+            return null;
+        const balances = student.termFees.map((tf) => ({
+            termId: tf.termId,
+            termName: tf.term.name,
+            amountOwed: tf.amountOwed,
+            amountPaid: tf.amountPaid,
+            balance: tf.amountOwed - tf.amountPaid,
+        }));
+        const totalOwed = balances.reduce((sum, b) => sum + b.amountOwed, 0);
+        const totalPaid = balances.reduce((sum, b) => sum + b.amountPaid, 0);
+        const totalBalance = totalOwed - totalPaid;
+        return {
+            id: student.id,
+            admissionNumber: student.admissionNumber,
+            firstName: student.firstName,
+            lastName: student.lastName,
+            isActive: student.isActive,
+            balances,
+            totalOwed,
+            totalPaid,
+            totalBalance,
+            recentPayments: student.payments.slice(0, 5),
+        };
     }
 };
 FinanceService = __decorate([
