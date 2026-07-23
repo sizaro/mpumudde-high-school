@@ -1,13 +1,6 @@
-import {
-  GraduationCap,
-  BookOpen,
-  Newspaper,
-  Images,
-  CalendarDays,
-  PhoneCall,
-  ArrowRight,
-} from "lucide-react";
+import { GraduationCap, BookOpen, Newspaper, Images, CalendarDays, PhoneCall, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import Reveal from "../../shared/Reveal";
 
 const quickLinks = [
   {
@@ -55,78 +48,69 @@ const quickLinks = [
 ];
 
 export default function QuickActions() {
+  const primary = quickLinks.slice(0, 3);
+  const secondary = quickLinks.slice(3);
+
   return (
     <section className="bg-slate-50 py-20">
-
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Heading */}
+        <div className="text-center mb-10">
+          <span className="inline-block px-4 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">QUICK ACCESS</span>
 
-        <div className="text-center mb-14">
+          <h2 className="mt-5 text-4xl font-bold text-slate-900">Everything You Need, One Click Away</h2>
 
-          <span className="inline-block px-4 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">
-            QUICK ACCESS
-          </span>
-
-          <h2 className="mt-5 text-4xl font-bold text-slate-900">
-            Everything You Need, One Click Away
-          </h2>
-
-          <p className="mt-4 max-w-2xl mx-auto text-slate-600 text-lg">
-            Whether you're a parent, student, visitor or prospective learner,
-            quickly access the most important sections of our website.
-          </p>
-
+          <p className="mt-4 max-w-2xl mx-auto text-slate-600 text-lg">Whether you're a parent, student, visitor or prospective learner, quickly access the most important sections of our website.</p>
         </div>
 
-        {/* Cards */}
-
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-
-          {quickLinks.map((item) => {
-
+        {/* Primary Actions */}
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-3 mb-10">
+          {primary.map((item) => {
             const Icon = item.icon;
-
             return (
+              <Reveal key={item.title}>
+                <Link to={item.link} className="group block rounded-3xl bg-white p-8 shadow-md border border-slate-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${item.color}`}>
+                    <Icon size={26} />
+                  </div>
 
-              <Link
-                key={item.title}
-                to={item.link}
-                className="group rounded-2xl bg-white shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 p-8"
-              >
+                  <h3 className="mt-5 text-2xl font-semibold text-slate-900">{item.title}</h3>
 
-                <div
-                  className={`w-16 h-16 rounded-2xl flex items-center justify-center ${item.color}`}
-                >
-                  <Icon size={30} />
-                </div>
+                  <p className="mt-3 text-slate-600">{item.description}</p>
 
-                <h3 className="mt-6 text-2xl font-bold text-slate-900">
-                  {item.title}
-                </h3>
-
-                <p className="mt-3 text-slate-600 leading-7">
-                  {item.description}
-                </p>
-
-                <div className="mt-8 flex items-center gap-2 font-semibold text-blue-700 group-hover:gap-4 transition-all">
-
-                  Learn More
-
-                  <ArrowRight size={18} />
-
-                </div>
-
-              </Link>
-
+                  <div className="mt-6 inline-flex items-center gap-2 font-semibold text-blue-700 group-hover:gap-4 transition-all">
+                    Learn More
+                    <ArrowRight size={18} />
+                  </div>
+                </Link>
+              </Reveal>
             );
-
           })}
+        </div>
 
+        {/* Secondary Quick Links */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {secondary.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Reveal key={item.title}>
+                <Link to={item.link} className="group rounded-2xl bg-white shadow-sm border border-slate-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-250 p-6 flex items-start gap-4">
+                  <div className={`w-14 h-14 rounded-lg flex items-center justify-center ${item.color}`}>
+                    <Icon size={22} />
+                  </div>
+
+                  <div>
+                    <h4 className="text-lg font-semibold text-slate-900">{item.title}</h4>
+                    <p className="mt-1 text-slate-600 text-sm">{item.description}</p>
+                  </div>
+                </Link>
+              </Reveal>
+            );
+          })}
         </div>
 
       </div>
-
     </section>
   );
 }

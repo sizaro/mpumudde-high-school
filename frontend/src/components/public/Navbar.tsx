@@ -97,6 +97,10 @@ export default function Navbar() {
             News
           </Link>
 
+          <Link to="/news-room">
+            News Room
+          </Link>
+
 
           <Link to="/contact">
             Contact
@@ -231,6 +235,10 @@ export default function Navbar() {
 
           <Link onClick={() => setOpen(false)} to="/news">
             News
+          </Link>
+
+          <Link onClick={() => setOpen(false)} to="/news-room">
+            News Room
           </Link>
 
 
