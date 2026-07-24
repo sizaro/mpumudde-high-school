@@ -34,20 +34,20 @@ const programs = [
 
 export default function AcademicExcellence() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-slate-900/20">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
           {/* Left */}
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+            <p className="section-badge">
               Academic Excellence
             </p>
 
-            <h2 className="mt-4 text-4xl font-extrabold leading-tight text-slate-900">
+            <h2 className="mt-4 text-4xl font-extrabold leading-tight" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
               Inspiring excellence through quality education.
             </h2>
 
-            <p className="mt-8 leading-8 text-slate-600">
+            <p className="mt-8 leading-8 section-lead">
               At Mpumudde High School, academic excellence is more than
               achieving high grades. We nurture curiosity, creativity,
               discipline, and confidence while equipping students with the
@@ -55,13 +55,13 @@ export default function AcademicExcellence() {
               workplace.
             </p>
 
-            <p className="mt-6 leading-8 text-slate-600">
+            <p className="mt-6 leading-8 section-lead">
               Our experienced teachers combine effective classroom instruction,
               practical learning, technology integration, and continuous
               assessment to ensure every learner reaches their full potential.
             </p>
 
-            <button className="mt-10 rounded-full bg-amber-500 px-8 py-3 font-semibold text-slate-900 transition hover:bg-amber-400">
+            <button className="mt-10 glass-button">
               Explore Academics
             </button>
           </div>
@@ -74,17 +74,17 @@ export default function AcademicExcellence() {
               return (
                 <div
                   key={program.title}
-                  className="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition duration-300 hover:-translate-y-2 hover:border-amber-400 hover:shadow-xl"
+                  className="glass-card p-8 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
                 >
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl" style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa' }}>
                     <Icon size={30} />
                   </div>
 
-                  <h3 className="mt-6 text-xl font-bold text-slate-900">
+                  <h3 className="mt-6 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
                     {program.title}
                   </h3>
 
-                  <p className="mt-4 leading-7 text-slate-600">
+                  <p className="mt-4 leading-7 section-lead">
                     {program.description}
                   </p>
                 </div>

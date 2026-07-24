@@ -1,17 +1,17 @@
 export default function VisionMission() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-slate-900/20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center mb-14">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             Our Purpose
           </p>
 
-          <h2 className="mt-3 text-3xl md:text-4xl font-extrabold text-slate-900">
+          <h2 className="mt-3 section-title">
             Guided by a clear vision and a meaningful mission.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-3xl section-lead">
             Our vision inspires where we are going, while our mission defines
             how we serve our students every day. Together, they shape the
             culture, values, and educational experience at Mpumudde High School.
@@ -20,16 +20,16 @@ export default function VisionMission() {
 
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Vision */}
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-10 transition hover:shadow-lg">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-3xl">
-              👁️
+          <div className="glass-card-solid p-10 transition hover:shadow-lg">
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl" style={{ background: 'rgba(251, 191, 36, 0.2)' }}>
+              <span className="text-3xl">👁️</span>
             </div>
 
-            <h3 className="text-2xl font-bold text-slate-900">
+            <h3 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
               Our Vision
             </h3>
 
-            <p className="mt-6 leading-8 text-slate-600">
+            <p className="mt-6 leading-8" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               To become a centre of excellence in education that nurtures
               knowledgeable, disciplined, innovative, and responsible citizens
               prepared to contribute positively to their communities and the
@@ -38,16 +38,16 @@ export default function VisionMission() {
           </div>
 
           {/* Mission */}
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-10 transition hover:shadow-lg">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-3xl">
-              🎯
+          <div className="glass-card-solid p-10 transition hover:shadow-lg">
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl" style={{ background: 'rgba(251, 191, 36, 0.2)' }}>
+              <span className="text-3xl">🎯</span>
             </div>
 
-            <h3 className="text-2xl font-bold text-slate-900">
+            <h3 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
               Our Mission
             </h3>
 
-            <p className="mt-6 leading-8 text-slate-600">
+            <p className="mt-6 leading-8" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               To provide quality, learner-centred education through academic
               excellence, strong moral values, innovation, and holistic
               development, empowering every student to realise their full

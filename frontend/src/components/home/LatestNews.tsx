@@ -33,8 +33,8 @@ const news = [
 
 export default function LatestNews() {
   return (
-    <section className="bg-white py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24">
+      <div className="site-container">
 
         {/* Header */}
 
@@ -42,15 +42,15 @@ export default function LatestNews() {
 
           <div>
 
-            <span className="inline-block px-4 py-2 rounded-full bg-orange-100 text-orange-700 font-semibold">
+            <span className="section-badge" style={{ background: 'rgba(251, 191, 36, 0.15)', borderColor: 'rgba(251, 191, 36, 0.3)', color: 'rgba(252, 211, 77, 1)' }}>
               LATEST NEWS
             </span>
 
-            <h2 className="mt-6 text-4xl md:text-5xl font-bold text-slate-900">
+            <h2 className="section-title mt-6">
               Stay Updated With School Life
             </h2>
 
-            <p className="mt-4 text-slate-600 max-w-2xl text-lg">
+            <p className="section-lead mt-4">
               Important announcements, academic updates, and school events.
             </p>
 
@@ -58,7 +58,7 @@ export default function LatestNews() {
 
           <Link
             to="/news"
-            className="inline-flex items-center gap-2 text-orange-700 font-semibold hover:gap-4 transition-all"
+            className="inline-flex items-center gap-2 font-semibold hover:gap-4 transition-all text-amber-400"
           >
             View All News
             <ArrowRight size={18} />
@@ -74,7 +74,7 @@ export default function LatestNews() {
             <Link
               key={item.title}
               to="/news"
-              className="group bg-white border border-slate-100 rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+              className="group glass-card overflow-hidden hover:scale-105 transition-all duration-300"
             >
 
               {/* Image */}
@@ -91,9 +91,9 @@ export default function LatestNews() {
 
               <div className="p-6">
 
-                <div className="flex items-center justify-between text-sm text-slate-500">
+                <div className="flex items-center justify-between text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
 
-                  <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-medium">
+                  <span style={{ background: 'rgba(251, 191, 36, 0.2)', color: 'rgba(252, 211, 77, 1)' }} className="px-3 py-1 rounded-full font-medium">
                     {item.category}
                   </span>
 
@@ -104,15 +104,15 @@ export default function LatestNews() {
 
                 </div>
 
-                <h3 className="mt-4 text-xl font-bold text-slate-900 group-hover:text-orange-700 transition-colors">
+                <h3 className="mt-4 text-xl font-bold group-hover:text-amber-400 transition-colors" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
                   {item.title}
                 </h3>
 
-                <p className="mt-3 text-slate-600 leading-7">
+                <p className="mt-3 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   {item.excerpt}
                 </p>
 
-                <div className="mt-5 text-orange-700 font-semibold">
+                <div className="mt-5 font-semibold text-amber-400">
                   Read More →
                 </div>
 

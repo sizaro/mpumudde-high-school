@@ -34,19 +34,19 @@ const engagements = [
 
 export default function CommunityEngagement() {
   return (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-slate-900/30 py-24">
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             Community Engagement
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold text-slate-900">
+          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
             Developing students who make a difference.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-3xl section-lead">
             Mpumudde High School believes education extends beyond the classroom.
             Through service, partnerships, and community involvement, students
             learn the importance of leadership and responsibility.
@@ -61,17 +61,17 @@ export default function CommunityEngagement() {
             return (
               <div
                 key={item.title}
-                className="rounded-3xl bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+                className="glass-card p-8 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl" style={{ background: 'rgba(34, 197, 94, 0.2)', color: '#86efac' }}>
                   <Icon size={32} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-bold text-slate-900">
+                <h3 className="mt-6 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
                   {item.title}
                 </h3>
 
-                <p className="mt-4 leading-7 text-slate-600">
+                <p className="mt-4 leading-7 section-lead">
                   {item.description}
                 </p>
               </div>

@@ -23,22 +23,22 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="bg-slate-50 py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24">
+      <div className="site-container">
 
         {/* Header */}
 
         <div className="text-center mb-16">
 
-          <span className="inline-block px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 font-semibold">
+          <span className="section-badge">
             TESTIMONIALS
           </span>
 
-          <h2 className="mt-6 text-4xl md:text-5xl font-bold text-slate-900">
+          <h2 className="section-title mt-6">
             What Our Community Says
           </h2>
 
-          <p className="mt-4 text-slate-600 max-w-2xl mx-auto text-lg">
+          <p className="section-lead mx-auto mt-4">
             Voices from students, parents, and alumni who experienced our education.
           </p>
 
@@ -51,22 +51,22 @@ export default function Testimonials() {
           {testimonials.map((item) => (
             <div
               key={item.name}
-              className="bg-white border border-slate-100 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+              className="glass-card-solid p-8 hover:scale-105 transition-all duration-300"
             >
 
-              <Quote className="text-indigo-600 mb-4" size={36} />
+              <Quote className="text-violet-400 mb-4" size={36} />
 
-              <p className="text-slate-600 leading-7">
+              <p className="leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                 "{item.message}"
               </p>
 
               <div className="mt-6">
 
-                <h4 className="font-bold text-slate-900">
+                <h4 className="font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
                   {item.name}
                 </h4>
 
-                <p className="text-slate-500 text-sm">
+                <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
                   {item.role}
                 </p>
 

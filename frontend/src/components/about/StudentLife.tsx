@@ -48,19 +48,19 @@ const studentLife = [
 
 export default function StudentLife() {
   return (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-slate-900/30 py-24">
       <div className="mx-auto max-w-7xl px-6">
         {/* Heading */}
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             Student Life
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold text-slate-900">
+          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
             Learning extends beyond the classroom.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-3xl section-lead">
             At Mpumudde High School, students enjoy a vibrant school experience
             that encourages leadership, creativity, teamwork, service, and
             personal growth alongside academic success.
@@ -86,19 +86,19 @@ export default function StudentLife() {
               return (
                 <div
                   key={item.title}
-                  className="rounded-3xl bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+                  className="glass-card p-6 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
                 >
                   <div className="flex items-start gap-5">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" style={{ background: 'rgba(251, 146, 60, 0.2)', color: '#fb923c' }}>
                       <Icon size={28} />
                     </div>
 
                     <div>
-                      <h3 className="text-xl font-bold text-slate-900">
+                      <h3 className="text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
                         {item.title}
                       </h3>
 
-                      <p className="mt-3 leading-7 text-slate-600">
+                      <p className="mt-3 leading-7 section-lead">
                         {item.description}
                       </p>
                     </div>

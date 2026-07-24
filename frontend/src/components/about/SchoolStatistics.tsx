@@ -52,7 +52,7 @@ export default function SchoolStatistics() {
       <div className="mx-auto max-w-7xl px-6">
         {/* Heading */}
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-400">
+          <p className="section-badge">
             School Statistics
           </p>
 
@@ -74,9 +74,9 @@ export default function SchoolStatistics() {
             return (
               <div
                 key={stat.title}
-                className="rounded-3xl border border-slate-700 bg-slate-800 p-8 text-center transition duration-300 hover:-translate-y-2 hover:border-amber-400 hover:shadow-2xl"
+                className="glass-card-solid p-8 text-center transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-500 text-slate-900">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full" style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#4ade80' }}>
                   <Icon size={38} />
                 </div>
 

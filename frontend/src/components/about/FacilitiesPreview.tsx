@@ -62,20 +62,20 @@ const facilities = [
 
 export default function FacilitiesPreview() {
   return (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-slate-900/30 py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         {/* Heading */}
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             School Facilities
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold text-slate-900">
+          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
             An environment designed for learning and growth.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-3xl section-lead">
             Our facilities provide students with the resources, comfort, and
             opportunities needed for academic success and personal development.
           </p>
@@ -90,17 +90,17 @@ export default function FacilitiesPreview() {
             return (
               <div
                 key={facility.title}
-                className="group rounded-3xl bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+                className="group glass-card p-8 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 transition group-hover:bg-amber-500 group-hover:text-white">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl transition group-hover:scale-110" style={{ background: 'rgba(34, 197, 94, 0.2)', color: '#86efac' }}>
                   <Icon size={32} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-bold text-slate-900">
+                <h3 className="mt-6 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
                   {facility.title}
                 </h3>
 
-                <p className="mt-4 leading-7 text-slate-600">
+                <p className="mt-4 leading-7 section-lead">
                   {facility.description}
                 </p>
               </div>
@@ -121,7 +121,7 @@ export default function FacilitiesPreview() {
 
         {/* CTA */}
         <div className="mt-12 text-center">
-          <button className="rounded-full bg-slate-900 px-8 py-3 font-semibold text-white transition hover:bg-slate-700">
+          <button className="glass-button">
             View All Facilities
           </button>
         </div>

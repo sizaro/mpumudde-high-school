@@ -3,7 +3,6 @@ import {
   GraduationCap,
   Building2,
   ClipboardList,
-  FileText,
   Briefcase,
   HelpCircle,
 } from "lucide-react";
@@ -55,20 +54,20 @@ const links = [
 
 export default function ExploreMore() {
   return (
-    <section className="bg-white py-24">
+    <section className="bg-slate-900/20 py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         {/* Heading */}
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             Explore More
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold text-slate-900">
+          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
             Discover more about Mpumudde High School.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-3xl section-lead">
             Explore our leadership, academic departments, facilities, policies,
             and other areas of the school.
           </p>
@@ -83,21 +82,21 @@ export default function ExploreMore() {
             return (
               <div
                 key={link.title}
-                className="group cursor-pointer rounded-3xl border border-slate-200 p-8 transition duration-300 hover:-translate-y-2 hover:border-amber-400 hover:shadow-xl"
+                className="group glass-card cursor-pointer p-8 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 transition group-hover:bg-amber-500 group-hover:text-white">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl transition group-hover:scale-110" style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#c084fc' }}>
                   <Icon size={30} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-bold text-slate-900">
+                <h3 className="mt-6 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
                   {link.title}
                 </h3>
 
-                <p className="mt-4 leading-7 text-slate-600">
+                <p className="mt-4 leading-7 section-lead">
                   {link.description}
                 </p>
 
-                <p className="mt-6 font-semibold text-amber-600">
+                <p className="mt-6 font-semibold" style={{ color: '#4ade80' }}>
                   Learn More →
                 </p>
               </div>

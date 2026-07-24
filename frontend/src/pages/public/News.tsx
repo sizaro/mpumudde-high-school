@@ -33,15 +33,15 @@ const newsItems = [
 
 export default function News() {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-20 space-y-16 text-slate-900">
+    <section className="site-container py-20 space-y-16">
       <header className="space-y-4 text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+        <p className="section-badge">
           Latest school news
         </p>
-        <h1 className="text-4xl md:text-5xl font-extrabold">
+        <h1 className="section-title">
           Stay informed with the latest announcements and school events.
         </h1>
-        <p className="mx-auto max-w-3xl text-lg leading-8 text-slate-600">
+        <p className="section-lead mx-auto">
           Discover important updates about academics, facilities, community projects,
           and student achievements at Mpumudde High School.
         </p>
@@ -51,7 +51,7 @@ export default function News() {
         {newsItems.map((item) => (
           <article
             key={item.title}
-            className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+            className="group glass-card overflow-hidden transition hover:scale-105"
           >
             <div className="h-56 overflow-hidden">
               <img
@@ -61,8 +61,8 @@ export default function News() {
               />
             </div>
             <div className="p-8">
-              <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500">
-                <span className="rounded-full bg-orange-100 px-3 py-1 text-orange-700">
+              <div className="flex flex-wrap items-center gap-3 text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                <span className="rounded-full px-3 py-1" style={{ background: 'rgba(251, 191, 36, 0.2)', color: 'rgba(252, 211, 77, 1)' }}>
                   {item.category}
                 </span>
                 <div className="inline-flex items-center gap-1">
@@ -70,13 +70,13 @@ export default function News() {
                   <span>{item.date}</span>
                 </div>
               </div>
-              <h2 className="mt-5 text-2xl font-bold text-slate-900">
+              <h2 className="mt-5 text-2xl font-bold group-hover:text-amber-400 transition-colors" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
                 {item.title}
               </h2>
-              <p className="mt-4 text-slate-600 leading-7">{item.excerpt}</p>
+              <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{item.excerpt}</p>
               <Link
                 to="/news"
-                className="mt-6 inline-flex items-center gap-2 font-semibold text-orange-700 hover:text-orange-800"
+                className="mt-6 inline-flex items-center gap-2 font-semibold text-amber-400 hover:text-amber-300"
               >
                 Read More
                 <ArrowRight size={18} />
@@ -86,22 +86,22 @@ export default function News() {
         ))}
       </div>
 
-      <div className="rounded-3xl bg-slate-950 p-10 text-white shadow-xl">
+      <div className="glass-card-solid p-10">
         <div className="md:flex md:items-center md:justify-between gap-6">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-amber-400">
+            <p className="section-badge">
               School announcements
             </p>
-            <h2 className="mt-4 text-3xl font-bold">
+            <h2 className="mt-4 text-3xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
               Never miss a school update
             </h2>
-            <p className="mt-4 max-w-2xl text-slate-200 leading-7">
+            <p className="mt-4 max-w-2xl leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               Check back regularly for new notices, event announcements, and student spotlights.
             </p>
           </div>
           <Link
             to="/contact"
-            className="inline-flex items-center justify-center rounded-full bg-amber-400 px-6 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-slate-950 shadow-lg hover:bg-amber-300"
+            className="glass-button uppercase tracking-[0.2em] whitespace-nowrap"
           >
             Contact administration
           </Link>

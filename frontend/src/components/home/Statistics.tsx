@@ -34,22 +34,22 @@ const stats = [
 
 export default function Statistics() {
   return (
-    <section className="bg-white py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24">
+      <div className="site-container">
 
         {/* Header */}
 
         <div className="text-center mb-16">
 
-          <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-semibold">
+          <span className="section-badge">
             OUR IMPACT
           </span>
 
-          <h2 className="mt-6 text-4xl md:text-5xl font-bold text-slate-900">
+          <h2 className="section-title mt-6">
             Numbers That Reflect Excellence
           </h2>
 
-          <p className="mt-4 text-slate-600 max-w-2xl mx-auto text-lg">
+          <p className="section-lead mx-auto mt-4">
             A track record built on discipline, academic success, and holistic
             development of learners.
           </p>
@@ -68,20 +68,31 @@ export default function Statistics() {
 
               <div
                 key={item.label}
-                className="bg-slate-50 border border-slate-100 rounded-3xl p-10 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+                className="glass-card-solid p-10 text-center hover:scale-105 transition-all duration-300"
               >
 
                 <div
                   className={`w-16 h-16 mx-auto rounded-2xl flex items-center justify-center ${item.color}`}
+                  style={{ 
+                    background: item.label === 'Students' ? 'rgba(34, 211, 238, 0.2)' : 
+                                item.label === 'Teachers' ? 'rgba(16, 185, 129, 0.2)' : 
+                                item.label === 'Programs' ? 'rgba(251, 191, 36, 0.2)' : 
+                                'rgba(139, 92, 246, 0.2)' 
+                  }}
                 >
-                  <Icon size={30} />
+                  <Icon size={30} className={
+                    item.label === 'Students' ? 'text-cyan-400' : 
+                    item.label === 'Teachers' ? 'text-emerald-400' : 
+                    item.label === 'Programs' ? 'text-amber-400' : 
+                    'text-violet-400'
+                  } />
                 </div>
 
-                <h3 className="mt-6 text-4xl font-extrabold text-slate-900">
+                <h3 className="mt-6 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
                   {item.value}
                 </h3>
 
-                <p className="mt-2 text-slate-600 font-medium">
+                <p className="mt-2 font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   {item.label}
                 </p>
 

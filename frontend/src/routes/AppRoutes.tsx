@@ -14,6 +14,7 @@ import Admissions from "../pages/public/Admissions";
 import News from "../pages/public/News";
 import Gallery from "../pages/public/Gallery";
 import Contact from "../pages/public/Contact";
+import Calendar from "../pages/public/Calendar";
 
 
 
@@ -72,6 +73,11 @@ export default function AppRoutes() {
         <Route
           path="/gallery"
           element={<Gallery />}
+        />
+
+        <Route
+          path="/calendar"
+          element={<Calendar />}
         />
 
 
