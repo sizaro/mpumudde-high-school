@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { CalendarDays, Mail, Menu, Moon, PhoneCall, Sun, X } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { CalendarDays, Mail, Menu, Moon, PhoneCall, Sun, X, ChevronDown } from "lucide-react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import LoginModal from "../auth/LoginModal";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -9,7 +9,17 @@ const navLinks = [
   { label: "About", to: "/about" },
   { label: "Academics", to: "/academics" },
   { label: "Admissions", to: "/admissions" },
-  { label: "News", to: "/news" },
+  { 
+    label: "Newsroom", 
+    to: "/newsroom",
+    dropdown: [
+      { label: "News", to: "/newsroom/news" },
+      { label: "Events", to: "/newsroom/events" },
+      { label: "Announcements", to: "/newsroom/announcements" },
+      { label: "School Updates", to: "/newsroom/updates" },
+      { label: "Media Gallery", to: "/newsroom/media" },
+    ]
+  },
   { label: "Gallery", to: "/gallery" },
   { label: "Contact", to: "/contact" },
 ];
@@ -24,7 +34,9 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [newsroomOpen, setNewsroomOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
 
   return (
     <nav className="fixed inset-x-0 top-0 z-50">
@@ -81,9 +93,48 @@ export default function Navbar() {
 
           <div className="hidden items-center gap-6 xl:flex">
             {navLinks.map((link) => (
-              <NavLink key={link.to} to={link.to} end={link.end} className={navLinkClass}>
-                {link.label}
-              </NavLink>
+              link.dropdown ? (
+                <div 
+                  key={link.to}
+                  className="relative"
+                  onMouseEnter={() => setNewsroomOpen(true)}
+                  onMouseLeave={() => setNewsroomOpen(false)}
+                >
+                  <button
+                    className={`inline-flex items-center gap-1 text-sm font-semibold tracking-wide transition-all duration-300 ${
+                      location.pathname.startsWith('/newsroom')
+                        ? "text-emerald-400 dark:text-emerald-300"
+                        : "text-slate-700 dark:text-white/80 hover:text-emerald-500 dark:hover:text-emerald-200"
+                    }`}
+                  >
+                    {link.label}
+                    <ChevronDown size={16} className={`transition-transform ${newsroomOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {newsroomOpen && (
+                    <div className="absolute top-full left-0 mt-2 w-56 glass-card-solid rounded-xl shadow-2xl overflow-hidden">
+                      {link.dropdown.map((item) => (
+                        <NavLink
+                          key={item.to}
+                          to={item.to}
+                          className={({ isActive }) => `block px-5 py-3 text-sm font-semibold transition-all ${
+                            isActive
+                              ? "bg-emerald-400/20 text-emerald-400"
+                              : "text-slate-700 dark:text-white/80 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-emerald-500 dark:hover:text-emerald-300"
+                          }`}
+                        >
+                          {item.label}
+                        </NavLink>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <NavLink key={link.to} to={link.to} end={link.end} className={navLinkClass}>
+                  {link.label}
+                </NavLink>
+              )
             ))}
 
             {/* Theme Toggle Button */}
