@@ -13,13 +13,14 @@ import Contact from "../pages/public/Contact";
 
 import DirectorDashboard from "../pages/director/Dashboard";
 import DirectorOverview from "../pages/director/Overview";
-import StudentRegister from "../pages/director/students/Register";
+import StudentRegister from "../pages/director/students/RegistrationWizard";
 import StudentList from "../pages/director/students/List";
 import StudentStatus from "../pages/director/students/Status";
 import StudentProfile from "../pages/director/students/Profile";
 import FinanceOverview from "../pages/director/finance/FinanceOverview";
 import PaymentHistory from "../pages/director/finance/History";
 import DirectorReports from "../pages/director/reports/Reports";
+import AcademicSetupPage from "../pages/director/setup/AcademicSetupPage";
 import TeacherDashboard from "../pages/teacher/Dashboard";
 import ParentDashboard from "../pages/parent/Dashboard";
 import StudentDashboard from "../pages/student/Dashboard";
@@ -54,6 +55,7 @@ export default function AppRoutes() {
         <Route path="students/profile" element={<StudentProfile />} />
         <Route path="finance" element={<FinanceOverview />} />
         <Route path="finance/history" element={<PaymentHistory />} />
+        <Route path="academic-setup" element={<AcademicSetupPage />} />
         <Route path="reports" element={<DirectorReports />} />
       </Route>
       <Route

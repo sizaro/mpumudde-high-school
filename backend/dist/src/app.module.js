@@ -19,6 +19,7 @@ import { UsersModule } from './users/users.module.js';
 import { RolesModule } from './roles/roles.module.js';
 import { TeachingAssignmentsModule } from './teaching-assignments/teaching-assignments.module.js';
 import { DashboardModule } from './dashboard/dashboard.module.js';
+import { SetupModule } from './setup/setup.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 let AppModule = class AppModule {
 };
@@ -38,6 +39,7 @@ AppModule = __decorate([
             RolesModule,
             TeachingAssignmentsModule,
             DashboardModule,
+            SetupModule,
         ],
         controllers: [AppController],
         providers: [AppService],

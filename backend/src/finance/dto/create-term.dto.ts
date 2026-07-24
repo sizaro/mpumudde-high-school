@@ -19,4 +19,8 @@ export class CreateTermDto {
   @IsOptional()
   @IsOptional()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsString()
+  academicYearId?: string;
 }

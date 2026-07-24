@@ -38,13 +38,26 @@ let FinanceService = class FinanceService {
             data: {
                 studentId: createFinanceDto.studentId,
                 studentTermFeeId: studentTermFeeId || undefined,
+                financeStructureId: createFinanceDto.financeStructureId || undefined,
                 amount: createFinanceDto.amount,
                 method: createFinanceDto.method,
                 status: createFinanceDto.status ?? 'completed',
                 description: createFinanceDto.description,
                 date: createFinanceDto.date ? new Date(createFinanceDto.date) : undefined,
             },
-            include: { student: true, studentTermFee: true },
+            include: {
+                student: true,
+                studentTermFee: true,
+                financeStructure: {
+                    include: {
+                        academicYear: true,
+                        term: true,
+                        schoolClass: true,
+                        studentCategory: true,
+                        feeType: true,
+                    },
+                },
+            },
         });
         if (studentTermFeeId) {
             await this.prisma.studentTermFee.update({

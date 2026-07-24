@@ -28,4 +28,12 @@ export class CreateFinanceDto {
   @IsOptional()
   @IsString()
   date?: string;
+
+  @IsOptional()
+  @IsString()
+  financeStructureId?: string;
+
+  @IsOptional()
+  @IsString()
+  feeTypeId?: string;
 }

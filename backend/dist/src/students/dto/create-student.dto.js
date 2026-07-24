@@ -15,6 +15,10 @@ export class CreateStudentDto {
     dateOfBirth;
     gender;
     isActive;
+    academicYearId;
+    termId;
+    classId;
+    studentCategoryId;
 }
 __decorate([
     IsString(),
@@ -46,4 +50,24 @@ __decorate([
     IsBoolean(),
     __metadata("design:type", Boolean)
 ], CreateStudentDto.prototype, "isActive", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateStudentDto.prototype, "academicYearId", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateStudentDto.prototype, "termId", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateStudentDto.prototype, "classId", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateStudentDto.prototype, "studentCategoryId", void 0);
 //# sourceMappingURL=create-student.dto.js.map

@@ -19,7 +19,12 @@ export const ModelName = {
     Parent: 'Parent',
     Student: 'Student',
     StudentParent: 'StudentParent',
+    AcademicYear: 'AcademicYear',
     Term: 'Term',
+    SchoolClass: 'SchoolClass',
+    StudentCategory: 'StudentCategory',
+    FeeType: 'FeeType',
+    FinanceStructure: 'FinanceStructure',
     StudentTermFee: 'StudentTermFee',
     Payment: 'Payment'
 };
@@ -99,6 +104,10 @@ export const StudentScalarFieldEnum = {
     dateOfBirth: 'dateOfBirth',
     gender: 'gender',
     isActive: 'isActive',
+    academicYearId: 'academicYearId',
+    termId: 'termId',
+    classId: 'classId',
+    studentCategoryId: 'studentCategoryId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -109,13 +118,53 @@ export const StudentParentScalarFieldEnum = {
     relationship: 'relationship',
     createdAt: 'createdAt'
 };
+export const AcademicYearScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
 export const TermScalarFieldEnum = {
     id: 'id',
     name: 'name',
+    academicYearId: 'academicYearId',
     feeAmount: 'feeAmount',
     startDate: 'startDate',
     endDate: 'endDate',
     isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const SchoolClassScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const StudentCategoryScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const FeeTypeScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const FinanceStructureScalarFieldEnum = {
+    id: 'id',
+    academicYearId: 'academicYearId',
+    termId: 'termId',
+    classId: 'classId',
+    studentCategoryId: 'studentCategoryId',
+    feeTypeId: 'feeTypeId',
+    expectedAmount: 'expectedAmount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -132,6 +181,7 @@ export const PaymentScalarFieldEnum = {
     id: 'id',
     studentId: 'studentId',
     studentTermFeeId: 'studentTermFeeId',
+    financeStructureId: 'financeStructureId',
     amount: 'amount',
     method: 'method',
     status: 'status',

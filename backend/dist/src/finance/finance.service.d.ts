@@ -9,45 +9,105 @@ export declare class FinanceService {
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            termId: string | null;
             isActive: boolean;
+            academicYearId: string | null;
             admissionNumber: string;
             firstName: string;
             lastName: string;
             dateOfBirth: Date | null;
             gender: string | null;
+            classId: string | null;
+            studentCategoryId: string | null;
         };
         studentTermFee: {
+            studentId: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            studentId: string;
             termId: string;
             amountOwed: number;
             amountPaid: number;
         } | null;
+        financeStructure: ({
+            term: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+                feeAmount: number;
+                startDate: Date;
+                endDate: Date;
+                isActive: boolean;
+                academicYearId: string | null;
+            };
+            academicYear: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+                isActive: boolean;
+            };
+            schoolClass: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+                isActive: boolean;
+            };
+            studentCategory: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+                isActive: boolean;
+            };
+            feeType: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+                isActive: boolean;
+            };
+        } & {
+            feeTypeId: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            termId: string;
+            academicYearId: string;
+            classId: string;
+            studentCategoryId: string;
+            expectedAmount: number;
+        }) | null;
     } & {
-        id: string;
+        studentId: string;
+        studentTermFeeId: string | null;
         amount: number;
         method: string;
         status: string;
         description: string | null;
         date: Date;
+        financeStructureId: string | null;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
-        studentId: string;
-        studentTermFeeId: string | null;
     }>;
     findAll(): Promise<({
         student: {
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            termId: string | null;
             isActive: boolean;
+            academicYearId: string | null;
             admissionNumber: string;
             firstName: string;
             lastName: string;
             dateOfBirth: Date | null;
             gender: string | null;
+            classId: string | null;
+            studentCategoryId: string | null;
         };
         studentTermFee: ({
             term: {
@@ -59,39 +119,45 @@ export declare class FinanceService {
                 startDate: Date;
                 endDate: Date;
                 isActive: boolean;
+                academicYearId: string | null;
             };
         } & {
+            studentId: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            studentId: string;
             termId: string;
             amountOwed: number;
             amountPaid: number;
         }) | null;
     } & {
-        id: string;
+        studentId: string;
+        studentTermFeeId: string | null;
         amount: number;
         method: string;
         status: string;
         description: string | null;
         date: Date;
+        financeStructureId: string | null;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
-        studentId: string;
-        studentTermFeeId: string | null;
     })[]>;
     findOne(id: string): Promise<({
         student: {
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            termId: string | null;
             isActive: boolean;
+            academicYearId: string | null;
             admissionNumber: string;
             firstName: string;
             lastName: string;
             dateOfBirth: Date | null;
             gender: string | null;
+            classId: string | null;
+            studentCategoryId: string | null;
         };
         studentTermFee: ({
             term: {
@@ -103,72 +169,80 @@ export declare class FinanceService {
                 startDate: Date;
                 endDate: Date;
                 isActive: boolean;
+                academicYearId: string | null;
             };
         } & {
+            studentId: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            studentId: string;
             termId: string;
             amountOwed: number;
             amountPaid: number;
         }) | null;
     } & {
-        id: string;
+        studentId: string;
+        studentTermFeeId: string | null;
         amount: number;
         method: string;
         status: string;
         description: string | null;
         date: Date;
+        financeStructureId: string | null;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
-        studentId: string;
-        studentTermFeeId: string | null;
     }) | null>;
     update(id: string, updateFinanceDto: UpdateFinanceDto): Promise<{
         student: {
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            termId: string | null;
             isActive: boolean;
+            academicYearId: string | null;
             admissionNumber: string;
             firstName: string;
             lastName: string;
             dateOfBirth: Date | null;
             gender: string | null;
+            classId: string | null;
+            studentCategoryId: string | null;
         };
         studentTermFee: {
+            studentId: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            studentId: string;
             termId: string;
             amountOwed: number;
             amountPaid: number;
         } | null;
     } & {
-        id: string;
+        studentId: string;
+        studentTermFeeId: string | null;
         amount: number;
         method: string;
         status: string;
         description: string | null;
         date: Date;
+        financeStructureId: string | null;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
-        studentId: string;
-        studentTermFeeId: string | null;
     }>;
     remove(id: string): Promise<{
-        id: string;
+        studentId: string;
+        studentTermFeeId: string | null;
         amount: number;
         method: string;
         status: string;
         description: string | null;
         date: Date;
+        financeStructureId: string | null;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
-        studentId: string;
-        studentTermFeeId: string | null;
     }>;
     getStudentsWithBalances(): Promise<{
         id: string;
@@ -214,27 +288,29 @@ export declare class FinanceService {
                     startDate: Date;
                     endDate: Date;
                     isActive: boolean;
+                    academicYearId: string | null;
                 };
             } & {
+                studentId: string;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
-                studentId: string;
                 termId: string;
                 amountOwed: number;
                 amountPaid: number;
             }) | null;
         } & {
-            id: string;
+            studentId: string;
+            studentTermFeeId: string | null;
             amount: number;
             method: string;
             status: string;
             description: string | null;
             date: Date;
+            financeStructureId: string | null;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
-            studentId: string;
-            studentTermFeeId: string | null;
         })[];
     } | null>;
 }

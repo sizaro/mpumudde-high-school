@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import StudentService from "../../../services/studentService";
 import type { Student } from "../../../types/api.types";
 
@@ -79,7 +80,7 @@ export default function StudentList() {
                   <td className="px-6 py-4 text-sm text-slate-700">{`${student.firstName} ${student.lastName}`}</td>
                   <td className="px-6 py-4 text-sm text-slate-700">{student.isActive ? "Active" : "Inactive"}</td>
                   <td className="px-6 py-4 text-sm">
-                    <button className="rounded-2xl bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">View</button>
+                    <Link to={`/director/students/profile?id=${student.id}`} className="rounded-2xl bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">View</Link>
                   </td>
                 </tr>
               ))

@@ -29,6 +29,9 @@ let StudentsController = class StudentsController {
     async findOne(id) {
         return this.studentsService.findOne(id);
     }
+    async getFinanceSummary(id) {
+        return this.studentsService.getFinanceSummary(id);
+    }
     async update(id, updateStudentDto) {
         return this.studentsService.update(id, updateStudentDto);
     }
@@ -56,6 +59,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], StudentsController.prototype, "findOne", null);
+__decorate([
+    Get(':id/finance-summary'),
+    __param(0, Param('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], StudentsController.prototype, "getFinanceSummary", null);
 __decorate([
     Patch(':id'),
     __param(0, Param('id')),

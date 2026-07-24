@@ -5,4 +5,8 @@ export declare class CreateStudentDto {
     dateOfBirth?: string;
     gender?: string;
     isActive?: boolean;
+    academicYearId?: string;
+    termId?: string;
+    classId?: string;
+    studentCategoryId?: string;
 }

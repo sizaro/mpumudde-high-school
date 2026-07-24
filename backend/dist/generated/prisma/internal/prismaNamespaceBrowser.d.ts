@@ -21,7 +21,12 @@ export declare const ModelName: {
     readonly Parent: "Parent";
     readonly Student: "Student";
     readonly StudentParent: "StudentParent";
+    readonly AcademicYear: "AcademicYear";
     readonly Term: "Term";
+    readonly SchoolClass: "SchoolClass";
+    readonly StudentCategory: "StudentCategory";
+    readonly FeeType: "FeeType";
+    readonly FinanceStructure: "FinanceStructure";
     readonly StudentTermFee: "StudentTermFee";
     readonly Payment: "Payment";
 };
@@ -111,6 +116,10 @@ export declare const StudentScalarFieldEnum: {
     readonly dateOfBirth: "dateOfBirth";
     readonly gender: "gender";
     readonly isActive: "isActive";
+    readonly academicYearId: "academicYearId";
+    readonly termId: "termId";
+    readonly classId: "classId";
+    readonly studentCategoryId: "studentCategoryId";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
@@ -123,9 +132,18 @@ export declare const StudentParentScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type StudentParentScalarFieldEnum = (typeof StudentParentScalarFieldEnum)[keyof typeof StudentParentScalarFieldEnum];
+export declare const AcademicYearScalarFieldEnum: {
+    readonly id: "id";
+    readonly name: "name";
+    readonly isActive: "isActive";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type AcademicYearScalarFieldEnum = (typeof AcademicYearScalarFieldEnum)[keyof typeof AcademicYearScalarFieldEnum];
 export declare const TermScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";
+    readonly academicYearId: "academicYearId";
     readonly feeAmount: "feeAmount";
     readonly startDate: "startDate";
     readonly endDate: "endDate";
@@ -134,6 +152,42 @@ export declare const TermScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type TermScalarFieldEnum = (typeof TermScalarFieldEnum)[keyof typeof TermScalarFieldEnum];
+export declare const SchoolClassScalarFieldEnum: {
+    readonly id: "id";
+    readonly name: "name";
+    readonly isActive: "isActive";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type SchoolClassScalarFieldEnum = (typeof SchoolClassScalarFieldEnum)[keyof typeof SchoolClassScalarFieldEnum];
+export declare const StudentCategoryScalarFieldEnum: {
+    readonly id: "id";
+    readonly name: "name";
+    readonly isActive: "isActive";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type StudentCategoryScalarFieldEnum = (typeof StudentCategoryScalarFieldEnum)[keyof typeof StudentCategoryScalarFieldEnum];
+export declare const FeeTypeScalarFieldEnum: {
+    readonly id: "id";
+    readonly name: "name";
+    readonly isActive: "isActive";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type FeeTypeScalarFieldEnum = (typeof FeeTypeScalarFieldEnum)[keyof typeof FeeTypeScalarFieldEnum];
+export declare const FinanceStructureScalarFieldEnum: {
+    readonly id: "id";
+    readonly academicYearId: "academicYearId";
+    readonly termId: "termId";
+    readonly classId: "classId";
+    readonly studentCategoryId: "studentCategoryId";
+    readonly feeTypeId: "feeTypeId";
+    readonly expectedAmount: "expectedAmount";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type FinanceStructureScalarFieldEnum = (typeof FinanceStructureScalarFieldEnum)[keyof typeof FinanceStructureScalarFieldEnum];
 export declare const StudentTermFeeScalarFieldEnum: {
     readonly id: "id";
     readonly studentId: "studentId";
@@ -148,6 +202,7 @@ export declare const PaymentScalarFieldEnum: {
     readonly id: "id";
     readonly studentId: "studentId";
     readonly studentTermFeeId: "studentTermFeeId";
+    readonly financeStructureId: "financeStructureId";
     readonly amount: "amount";
     readonly method: "method";
     readonly status: "status";

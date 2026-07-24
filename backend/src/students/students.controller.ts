@@ -23,6 +23,11 @@ export class StudentsController {
     return this.studentsService.findOne(id);
   }
 
+  @Get(':id/finance-summary')
+  async getFinanceSummary(@Param('id') id: string) {
+    return this.studentsService.getFinanceSummary(id);
+  }
+
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
     return this.studentsService.update(id, updateStudentDto);

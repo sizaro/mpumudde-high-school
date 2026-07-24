@@ -17,6 +17,8 @@ export class CreateFinanceDto {
     status;
     description;
     date;
+    financeStructureId;
+    feeTypeId;
 }
 __decorate([
     IsString(),
@@ -52,4 +54,14 @@ __decorate([
     IsString(),
     __metadata("design:type", String)
 ], CreateFinanceDto.prototype, "date", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateFinanceDto.prototype, "financeStructureId", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateFinanceDto.prototype, "feeTypeId", void 0);
 //# sourceMappingURL=create-finance.dto.js.map

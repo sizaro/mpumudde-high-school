@@ -6,4 +6,6 @@ export declare class CreateFinanceDto {
     status?: string;
     description?: string;
     date?: string;
+    financeStructureId?: string;
+    feeTypeId?: string;
 }

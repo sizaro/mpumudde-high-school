@@ -19,6 +19,11 @@ class StudentService {
     const { data } = await api.patch<Student>(`/students/${id}`, student);
     return data;
   }
+
+  async getStudentFinanceSummary(studentId: string) {
+    const { data } = await api.get(`/students/${studentId}/finance-summary`);
+    return data;
+  }
 }
 
 export default new StudentService();

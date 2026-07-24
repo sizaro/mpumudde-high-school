@@ -199,6 +199,22 @@ model Student {
 
   isActive Boolean @default(true)
 
+  academicYearId String?
+
+  termId String?
+
+  classId String?
+
+  studentCategoryId String?
+
+  academicYear AcademicYear? @relation(fields: [academicYearId], references: [id])
+
+  term Term? @relation(fields: [termId], references: [id])
+
+  schoolClass SchoolClass? @relation(fields: [classId], references: [id])
+
+  studentCategory StudentCategory? @relation(fields: [studentCategoryId], references: [id])
+
   parents StudentParent[]
 
   payments Payment[]
@@ -236,29 +252,137 @@ model StudentParent {
 }
 
 // ==========================
-// TERMS & FEES
+// ACADEMIC SETUP & FEES
 // ==========================
 
-model Term {
+model AcademicYear {
   id String @id @default(cuid())
 
   name String @unique
-  // e.g., "Term 1 2024", "Term 2 2024"
-
-  feeAmount Int
-  // e.g., 1000000 for 1 million shillings
-
-  startDate DateTime
-
-  endDate DateTime
 
   isActive Boolean @default(true)
 
-  studentTermFees StudentTermFee[]
+  terms Term[]
+
+  financeStructures FinanceStructure[]
+
+  students Student[]
 
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+}
+
+model Term {
+  id String @id @default(cuid())
+
+  name String
+  // e.g., "Term 1 2024", "Term 2 2024"
+
+  academicYearId String
+
+  feeAmount Int @default(0)
+  // e.g., 1000000 for 1 million shillings
+
+  startDate DateTime?
+
+  endDate DateTime?
+
+  isActive Boolean @default(true)
+
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  studentTermFees StudentTermFee[]
+
+  financeStructures FinanceStructure[]
+
+  students Student[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicYearId, name])
+}
+
+model SchoolClass {
+  id String @id @default(cuid())
+
+  name String @unique
+
+  isActive Boolean @default(true)
+
+  students Student[]
+
+  financeStructures FinanceStructure[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model StudentCategory {
+  id String @id @default(cuid())
+
+  name String @unique
+
+  isActive Boolean @default(true)
+
+  students Student[]
+
+  financeStructures FinanceStructure[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model FeeType {
+  id String @id @default(cuid())
+
+  name String @unique
+
+  isActive Boolean @default(true)
+
+  financeStructures FinanceStructure[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model FinanceStructure {
+  id String @id @default(cuid())
+
+  academicYearId String
+
+  termId String
+
+  classId String
+
+  studentCategoryId String
+
+  feeTypeId String
+
+  expectedAmount Int
+
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  term Term @relation(fields: [termId], references: [id])
+
+  schoolClass SchoolClass @relation(fields: [classId], references: [id])
+
+  studentCategory StudentCategory @relation(fields: [studentCategoryId], references: [id])
+
+  feeType FeeType @relation(fields: [feeTypeId], references: [id])
+
+  payments Payment[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicYearId, termId, classId, studentCategoryId, feeTypeId])
 }
 
 model StudentTermFee {
@@ -292,6 +416,8 @@ model Payment {
 
   studentTermFeeId String?
 
+  financeStructureId String?
+
   amount Int
 
   method String
@@ -305,6 +431,8 @@ model Payment {
   student Student @relation(fields: [studentId], references: [id])
 
   studentTermFee StudentTermFee? @relation(fields: [studentTermFeeId], references: [id])
+
+  financeStructure FinanceStructure? @relation(fields: [financeStructureId], references: [id])
 
   createdAt DateTime @default(now())
 

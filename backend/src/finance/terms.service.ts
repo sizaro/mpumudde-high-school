@@ -16,6 +16,11 @@ export class TermsService {
         startDate: new Date(createTermDto.startDate),
         endDate: new Date(createTermDto.endDate),
         isActive: createTermDto.isActive ?? true,
+        academicYear: {
+          connect: {
+            id: createTermDto.academicYearId ?? '',
+          },
+        },
       },
     });
   }
