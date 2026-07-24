@@ -55,19 +55,19 @@ export default function AccountManagement() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold">Account Management</h1>
-          <p className="mt-2 text-slate-500">Manage your portal account and create new login accounts for staff and students.</p>
+          <p className="mt-2 text-slate-500">
+            View your director account details or create new portal login accounts.
+          </p>
         </div>
       </div>
 
       <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_320px]">
         <div className="space-y-6">
           <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-semibold">Action</h2>
-                <p className="mt-1 text-sm text-slate-500">Choose whether to manage your account or create a new portal account.</p>
-              </div>
-            </div>
+            <h2 className="text-xl font-semibold">Action</h2>
+            <p className="mt-2 text-sm text-slate-500">
+              Select an action to manage your director account or create a new user account.
+            </p>
 
             <div className="mt-6 space-y-4">
               <button
@@ -82,9 +82,9 @@ export default function AccountManagement() {
                     : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400'
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-base font-semibold">Manage my account</span>
-                  <span className="text-sm">View your active portal profile</span>
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+                  <span className="text-base font-semibold break-words">Manage my account</span>
+                  <span className="text-sm text-slate-500 break-words">View current director details</span>
                 </div>
               </button>
 
@@ -100,9 +100,9 @@ export default function AccountManagement() {
                     : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400'
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-base font-semibold">Create new account</span>
-                  <span className="text-sm">Add a new student, parent, teacher, secretary, or bursar account</span>
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+                  <span className="text-base font-semibold break-words">Create new account</span>
+                  <span className="text-sm text-slate-500 break-words">Add a teacher, student, parent, bursar, or secretary</span>
                 </div>
               </button>
             </div>
@@ -111,7 +111,7 @@ export default function AccountManagement() {
           <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h2 className="text-xl font-semibold mb-4">How it works</h2>
             <p className="text-sm text-slate-600">
-              Directors can create portal login accounts for all supported roles. Use the left actions to toggle between your own account and the new account flow.
+              Directors can create portal login accounts for supported roles and review their own active account details.
             </p>
             <div className="mt-6 space-y-4 text-sm text-slate-600">
               <div>
@@ -121,10 +121,10 @@ export default function AccountManagement() {
               <div>
                 <h3 className="font-semibold">Notes</h3>
                 <ul className="list-disc pl-5 space-y-2">
-                  <li>Provide the correct role before creating the account.</li>
-                  <li>Add first and last name for all users.</li>
-                  <li>Include a phone number for better follow-up.</li>
-                  <li>Use relationship only for parent accounts.</li>
+                  <li>Choose the correct role before creating an account.</li>
+                  <li>Fill in first and last name for all users.</li>
+                  <li>Add a phone number for follow-up contact.</li>
+                  <li>Provide relationship details only for parent accounts.</li>
                 </ul>
               </div>
             </div>
@@ -139,18 +139,18 @@ export default function AccountManagement() {
                 <div className="space-y-4">
                   <div className="rounded-3xl bg-slate-50 p-4">
                     <p className="text-sm text-slate-500">Logged in as</p>
-                    <p className="mt-2 text-lg font-semibold text-slate-900">{user.email}</p>
-                    <p className="mt-1 text-sm text-slate-600">Roles: {user.roles.join(', ')}</p>
+                    <p className="mt-2 text-lg font-semibold text-slate-900 break-words">{user.email}</p>
+                    <p className="mt-1 text-sm text-slate-600 break-words">Roles: {user.roles.join(', ')}</p>
                   </div>
                   <div className="rounded-3xl bg-slate-50 p-4 text-sm text-slate-700">
-                    <p className="font-semibold">Account management</p>
+                    <p className="font-semibold">Account overview</p>
                     <p className="mt-2">
-                      This panel shows your current portal account details. To update your password or email, use the main account settings page or contact an administrator if needed.
+                      This panel shows your current director portal details. To change your password or email, use the settings page or contact administration.
                     </p>
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-slate-600">Unable to load your account details. Please refresh or sign in again.</p>
+                <p className="text-sm text-slate-600">Unable to load account details. Please refresh or sign in again.</p>
               )}
             </>
           ) : (
@@ -242,7 +242,7 @@ export default function AccountManagement() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-6 py-3 text-white transition hover:bg-slate-700 disabled:opacity-50"
+                  className="inline-flex w-full items-center justify-center rounded-2xl bg-slate-900 px-6 py-3 text-white transition hover:bg-slate-700 disabled:opacity-50"
                 >
                   {loading ? 'Creating account...' : 'Create account'}
                 </button>
