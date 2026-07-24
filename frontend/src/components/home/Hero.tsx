@@ -1,49 +1,89 @@
 import { ArrowRight, GraduationCap, BookOpen, Users, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden">
 
-      {/* Background with overlay */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=80')",
-        }}
-      />
+      {/* Video Background with Fallback */}
+      <div className="absolute inset-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=80"
+          className="w-full h-full object-cover"
+        >
+          <source
+            src="https://www.w3schools.com/html/mov_bbb.mp4"
+            type="video/mp4"
+          />
+          {/* Fallback image if video fails */}
+          <img
+            src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=80"
+            alt="School campus"
+            className="w-full h-full object-cover"
+          />
+        </video>
+      </div>
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-violet-900/80 to-slate-900/90" />
 
       {/* Content */}
       <div className="relative max-w-7xl mx-auto px-6 w-full">
 
-        <div className="max-w-3xl">
+        <motion.div 
+          className="max-w-3xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
 
           {/* Badge with glass effect */}
-          <div className="section-badge mb-8">
+          <motion.div 
+            className="section-badge mb-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             Excellence • Discipline • Service
-          </div>
+          </motion.div>
 
           {/* Heading with gradient */}
-          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
+          <motion.h1 
+            className="text-5xl md:text-7xl font-extrabold leading-tight"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
             <span className="block bg-gradient-to-r from-white via-cyan-100 to-white bg-clip-text text-transparent">
               Building Tomorrow's
             </span>
             <span className="block bg-gradient-to-r from-emerald-300 via-cyan-300 to-emerald-300 bg-clip-text text-transparent">
               Leaders Today
             </span>
-          </h1>
+          </motion.h1>
 
           {/* Description */}
-          <p className="mt-8 text-lg md:text-xl text-slate-700 dark:text-white/80 leading-8 max-w-2xl">
+          <motion.p 
+            className="mt-8 text-lg md:text-xl text-slate-700 dark:text-white/80 leading-8 max-w-2xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
             Welcome to Mpumudde High School, where academic excellence,
             innovation, discipline, and character development prepare every
             learner for a successful future.
-          </p>
+          </motion.p>
 
           {/* Buttons */}
-          <div className="flex flex-wrap gap-5 mt-10">
+          <motion.div 
+            className="flex flex-wrap gap-5 mt-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+          >
 
             <Link
               to="/admissions"
@@ -60,82 +100,47 @@ export default function Hero() {
               Explore Our School
             </Link>
 
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
 
         {/* Bottom Cards with enhanced glass effect */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-24">
+        <motion.div 
+          className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-24"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.9 }}
+        >
 
-          <div className="glass-card-solid p-6 transition-transform hover:scale-105">
+          {[
+            { icon: GraduationCap, value: "98%", label: "Examination Success", color: "emerald" },
+            { icon: Users, value: "1,500+", label: "Students", color: "cyan" },
+            { icon: BookOpen, value: "40+", label: "Qualified Teachers", color: "violet" },
+            { icon: Trophy, value: "30+", label: "Years of Excellence", color: "amber" }
+          ].map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              className="glass-card-solid p-6 transition-transform hover:scale-105"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
+            >
+              <stat.icon
+                className={`text-${stat.color}-400 mb-3`}
+                size={32}
+              />
 
-            <GraduationCap
-              className="text-emerald-400 mb-3"
-              size={32}
-            />
+              <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
+                {stat.value}
+              </h3>
 
-            <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
-              98%
-            </h3>
+              <p className="text-slate-600 dark:text-white/70">
+                {stat.label}
+              </p>
+            </motion.div>
+          ))}
 
-            <p className="text-slate-600 dark:text-white/70">
-              Examination Success
-            </p>
-
-          </div>
-
-          <div className="glass-card-solid p-6 transition-transform hover:scale-105">
-
-            <Users
-              className="text-cyan-400 mb-3"
-              size={32}
-            />
-
-            <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
-              1,500+
-            </h3>
-
-            <p className="text-slate-600 dark:text-white/70">
-              Students
-            </p>
-
-          </div>
-
-          <div className="glass-card-solid p-6 transition-transform hover:scale-105">
-
-            <BookOpen
-              className="text-violet-400 mb-3"
-              size={32}
-            />
-
-            <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
-              40+
-            </h3>
-
-            <p className="text-slate-600 dark:text-white/70">
-              Qualified Teachers
-            </p>
-
-          </div>
-
-          <div className="glass-card-solid p-6 transition-transform hover:scale-105">
-
-            <Trophy
-              className="text-amber-400 mb-3"
-              size={32}
-            />
-
-            <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
-              30+
-            </h3>
-
-            <p className="text-slate-600 dark:text-white/70">
-              Years of Excellence
-            </p>
-
-          </div>
-
-        </div>
+        </motion.div>
 
       </div>
 
