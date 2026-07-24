@@ -58,11 +58,11 @@ export default function WhyChooseUs() {
             Why Choose Us
           </p>
 
-          <h2 className="mt-3 text-3xl font-extrabold text-white md:text-4xl">
+          <h2 className="mt-3 text-3xl font-extrabold text-slate-900 dark:text-white md:text-4xl">
             What makes Mpumudde High School different?
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-300">
+          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600 dark:text-slate-300">
             We are committed to providing a complete educational experience
             that empowers students academically, socially, spiritually, and
             personally.

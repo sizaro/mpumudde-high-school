@@ -56,17 +56,17 @@ export default function Testimonials() {
 
               <Quote className="text-violet-400 mb-4" size={36} />
 
-              <p className="leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              <p className="leading-7 text-slate-600 dark:text-white/70">
                 "{item.message}"
               </p>
 
               <div className="mt-6">
 
-                <h4 className="font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h4 className="font-bold text-slate-900 dark:text-white">
                   {item.name}
                 </h4>
 
-                <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                <p className="text-sm text-slate-500 dark:text-white/60">
                   {item.role}
                 </p>
 

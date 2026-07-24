@@ -25,11 +25,11 @@ export default function History() {
               <span className="text-xl font-bold">1</span>
             </div>
 
-            <h3 className="text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
               School Founded
             </h3>
 
-            <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
               Established with a vision of providing accessible, quality
               secondary education rooted in discipline and excellence.
             </p>
@@ -40,11 +40,11 @@ export default function History() {
               <span className="text-xl font-bold">2</span>
             </div>
 
-            <h3 className="text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
               Continuous Growth
             </h3>
 
-            <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
               Expanded academic programs, facilities, and extracurricular
               opportunities while maintaining high educational standards.
             </p>
@@ -55,11 +55,11 @@ export default function History() {
               <span className="text-xl font-bold">3</span>
             </div>
 
-            <h3 className="text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
               Academic Achievement
             </h3>
 
-            <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
               Built a reputation for producing disciplined learners equipped
               with knowledge, confidence, and leadership skills.
             </p>
@@ -70,11 +70,11 @@ export default function History() {
               <span className="text-xl font-bold">4</span>
             </div>
 
-            <h3 className="text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
               Looking Ahead
             </h3>
 
-            <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
               Continuing to embrace innovation, technology, and holistic
               education while preparing students for a changing world.
             </p>

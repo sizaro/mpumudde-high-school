@@ -15,8 +15,8 @@ export default function HeadteacherWelcome() {
 
             {/* Decorative Card */}
             <div className="absolute -bottom-8 left-8 glass-card-solid px-8 py-5 shadow-xl">
-              <p className="text-3xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>20+</p>
-              <p className="text-sm font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              <p className="text-3xl font-extrabold text-slate-900 dark:text-white">20+</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-white/70">
                 Years of Educational Leadership
               </p>
             </div>
@@ -32,7 +32,7 @@ export default function HeadteacherWelcome() {
               A message from our Headteacher
             </h2>
 
-            <p className="mt-8 text-lg leading-9" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-8 text-lg leading-9 text-slate-600 dark:text-white/70">
               Welcome to Mpumudde High School.
             </p>
 
@@ -58,15 +58,15 @@ export default function HeadteacherWelcome() {
             </p>
 
             <div className="mt-10 border-l-4 border-emerald-400 pl-6">
-              <h3 className="text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                 Mr. John Doe
               </h3>
 
-              <p className="mt-2" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              <p className="mt-2 text-slate-600 dark:text-white/70">
                 Headteacher
               </p>
 
-              <p className="mt-1 text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+              <p className="mt-1 text-sm text-slate-500 dark:text-white/60">
                 Mpumudde High School
               </p>
             </div>

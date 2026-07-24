@@ -99,11 +99,11 @@ export default function QuickActions() {
                   <Icon size={30} />
                 </div>
 
-                <h3 className="mt-6 text-2xl font-bold text-white">
+                <h3 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
                   {item.title}
                 </h3>
 
-                <p className="mt-3 text-white/70 leading-7">
+                <p className="mt-3 text-slate-600 dark:text-white/70 leading-7">
                   {item.description}
                 </p>
 

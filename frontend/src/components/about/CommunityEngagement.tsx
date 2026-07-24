@@ -42,7 +42,7 @@ export default function CommunityEngagement() {
             Community Engagement
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             Developing students who make a difference.
           </h2>
 
@@ -67,7 +67,7 @@ export default function CommunityEngagement() {
                   <Icon size={32} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="mt-6 text-xl font-bold text-slate-900 dark:text-white">
                   {item.title}
                 </h3>
 

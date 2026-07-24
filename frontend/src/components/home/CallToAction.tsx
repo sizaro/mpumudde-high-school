@@ -20,7 +20,7 @@ export default function CallToAction() {
             Join Mpumudde High School Today
           </h2>
 
-          <p className="mt-6 text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255, 255, 255, 0.75)' }}>
+          <p className="mt-6 text-lg max-w-2xl mx-auto text-slate-600 dark:text-white/75">
             Unlock a future of academic excellence, discipline, and opportunity.
             Applications are open for all classes.
           </p>
@@ -39,12 +39,7 @@ export default function CallToAction() {
 
             <Link
               to="/contact"
-              className="px-8 py-4 rounded-full font-semibold transition-all flex items-center gap-2"
-              style={{ 
-                border: '1px solid rgba(255, 255, 255, 0.2)', 
-                background: 'rgba(255, 255, 255, 0.05)',
-                color: 'rgba(255, 255, 255, 0.95)'
-              }}
+              className="px-8 py-4 rounded-full font-semibold transition-all flex items-center gap-2 border border-slate-300/30 dark:border-white/20 bg-slate-200/5 dark:bg-white/5 text-slate-900 dark:text-white hover:bg-slate-200/10 dark:hover:bg-white/10"
             >
               <Phone size={18} />
               Contact Admissions

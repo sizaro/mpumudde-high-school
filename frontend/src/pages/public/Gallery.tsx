@@ -68,8 +68,8 @@ export default function Gallery() {
               <div className="mx-auto inline-flex rounded-2xl p-3" style={{ background: 'rgba(139, 92, 246, 0.2)' }}>
                 <Icon size={22} className="text-violet-400" />
               </div>
-              <p className="mt-4 text-2xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>{item.label}</p>
-              <p className="mt-2 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{item.text}</p>
+              <p className="mt-4 text-2xl font-extrabold text-slate-900 dark:text-white">{item.label}</p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-white/70">{item.text}</p>
             </article>
           );
         })}
@@ -87,12 +87,12 @@ export default function Gallery() {
                 alt={item.title}
                 className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
               />
-              <span className="absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em]" style={{ background: 'rgba(139, 92, 246, 0.85)', backdropFilter: 'blur(12px)', color: 'rgba(255, 255, 255, 0.95)' }}>
+              <span className="absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] bg-violet-500/85 text-white backdrop-blur-[12px]">
                 {item.tag}
               </span>
             </div>
             <div className="p-6">
-              <h2 className="text-lg font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>{item.title}</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">{item.title}</h2>
             </div>
           </article>
         ))}

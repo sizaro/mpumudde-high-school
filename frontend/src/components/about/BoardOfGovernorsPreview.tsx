@@ -43,7 +43,7 @@ export default function BoardOfGovernorsPreview() {
             Governance
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             Strong leadership and responsible governance.
           </h2>
 
@@ -69,7 +69,7 @@ export default function BoardOfGovernorsPreview() {
                   <Icon size={32} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="mt-6 text-xl font-bold text-slate-900 dark:text-white">
                   {item.title}
                 </h3>
 

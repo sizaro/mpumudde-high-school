@@ -41,7 +41,7 @@ export default function Achievements() {
             Achievements
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             Celebrating milestones of excellence.
           </h2>
 
@@ -76,7 +76,7 @@ export default function Achievements() {
                       {achievement.year}
                     </span>
 
-                    <h3 className="mt-4 text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                    <h3 className="mt-4 text-2xl font-bold text-slate-900 dark:text-white">
                       {achievement.title}
                     </h3>
 

@@ -43,7 +43,7 @@ export default function AcademicExcellence() {
               Academic Excellence
             </p>
 
-            <h2 className="mt-4 text-4xl font-extrabold leading-tight" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+            <h2 className="mt-4 text-4xl font-extrabold leading-tight text-slate-900 dark:text-white">
               Inspiring excellence through quality education.
             </h2>
 
@@ -80,7 +80,7 @@ export default function AcademicExcellence() {
                     <Icon size={30} />
                   </div>
 
-                  <h3 className="mt-6 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                  <h3 className="mt-6 text-xl font-bold text-slate-900 dark:text-white">
                     {program.title}
                   </h3>
 

@@ -25,11 +25,11 @@ export default function VisionMission() {
               <span className="text-3xl">👁️</span>
             </div>
 
-            <h3 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
               Our Vision
             </h3>
 
-            <p className="mt-6 leading-8" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-6 leading-8 text-slate-600 dark:text-white/70">
               To become a centre of excellence in education that nurtures
               knowledgeable, disciplined, innovative, and responsible citizens
               prepared to contribute positively to their communities and the
@@ -43,11 +43,11 @@ export default function VisionMission() {
               <span className="text-3xl">🎯</span>
             </div>
 
-            <h3 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
               Our Mission
             </h3>
 
-            <p className="mt-6 leading-8" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-6 leading-8 text-slate-600 dark:text-white/70">
               To provide quality, learner-centred education through academic
               excellence, strong moral values, innovation, and holistic
               development, empowering every student to realise their full

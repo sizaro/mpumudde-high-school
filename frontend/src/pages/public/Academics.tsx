@@ -17,24 +17,24 @@ export default function Academics() {
 
       <div className="grid gap-10 lg:grid-cols-3">
         <div className="glass-card p-8">
-          <h2 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Core subjects</h2>
-          <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Core subjects</h2>
+          <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
             Daily classes in mathematics, sciences, English, social studies and ICT
             build strong reasoning, communication and digital skills.
           </p>
         </div>
 
         <div className="glass-card p-8">
-          <h2 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Practical learning</h2>
-          <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Practical learning</h2>
+          <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
             Students learn through experiments, project work, research tasks and
             collaborative problem solving.
           </p>
         </div>
 
         <div className="glass-card p-8">
-          <h2 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Exam preparation</h2>
-          <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Exam preparation</h2>
+          <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
             Regular revision clinics, practice exams and tutor support help students
             perform confidently in national assessments.
           </p>
@@ -52,16 +52,16 @@ export default function Academics() {
 
         <div className="space-y-8">
           <div>
-            <h2 className="text-3xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Leadership and support</h2>
-            <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Leadership and support</h2>
+            <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
               Teachers guide every student with personalized coaching, enrichment
               sessions and character-building activities.
             </p>
           </div>
 
           <div>
-            <h2 className="text-3xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Learning beyond the classroom</h2>
-            <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Learning beyond the classroom</h2>
+            <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
               Students join clubs, competitions and community service to grow
               confidence, creativity and teamwork.
             </p>
@@ -71,24 +71,24 @@ export default function Academics() {
 
       <div className="grid gap-10 lg:grid-cols-3">
         <div className="glass-card p-8">
-          <h2 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>STEM & Innovation</h2>
-          <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">STEM & Innovation</h2>
+          <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
             Students explore science, technology, engineering, and mathematics through practical
             experiments, coding challenges, and collaborative projects.
           </p>
         </div>
 
         <div className="glass-card p-8">
-          <h2 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Language & Humanities</h2>
-          <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Language & Humanities</h2>
+          <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
             We nurture strong communication, cultural awareness, and critical thinking through
             literature, history, and social sciences.
           </p>
         </div>
 
         <div className="glass-card p-8">
-          <h2 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Exam readiness</h2>
-          <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Exam readiness</h2>
+          <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
             Regular assessments, revision sessions, and teacher-led review clinics help students
             perform confidently in their certificates and national examinations.
           </p>

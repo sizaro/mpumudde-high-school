@@ -47,14 +47,14 @@ export default function Admissions() {
               </Link>
               <Link
                 to="/academics"
-                className="rounded-full px-6 py-3 text-sm font-semibold transition-all" style={{ border: '1px solid rgba(255, 255, 255, 0.2)', color: 'rgba(255, 255, 255, 0.95)' }}
+                className="rounded-full px-6 py-3 text-sm font-semibold transition-all border border-slate-400 dark:border-white/20 text-slate-900 dark:text-white hover:bg-slate-200/20 dark:hover:bg-white/10"
               >
                 Explore Academics
               </Link>
             </div>
           </div>
 
-          <div className="rounded-3xl p-8" style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+          <div className="rounded-3xl p-8 bg-white/5 dark:bg-white/5">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400">
               Why families choose us
             </p>
@@ -84,8 +84,8 @@ export default function Admissions() {
               <div className="inline-flex rounded-2xl p-3" style={{ background: 'rgba(16, 185, 129, 0.2)' }}>
                 <Icon size={22} className="text-emerald-400" />
               </div>
-              <h2 className="mt-5 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>{step.title}</h2>
-              <p className="mt-3 text-sm leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{step.text}</p>
+              <h2 className="mt-5 text-xl font-bold text-slate-900 dark:text-white">{step.title}</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-white/70">{step.text}</p>
             </article>
           );
         })}
@@ -93,10 +93,10 @@ export default function Admissions() {
 
       <div className="grid gap-8 lg:grid-cols-2">
         <article className="glass-card p-8 md:p-10">
-          <h2 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Application checklist</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Application checklist</h2>
           <ul className="mt-6 space-y-3">
             {requirements.map((requirement) => (
-              <li key={requirement} className="flex items-start gap-3 text-sm" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+              <li key={requirement} className="flex items-start gap-3 text-sm text-slate-700 dark:text-white/80">
                 <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-400" />
                 {requirement}
               </li>
@@ -108,8 +108,8 @@ export default function Admissions() {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400">
             Admissions timeline
           </p>
-          <h2 className="mt-4 text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>2026 Intake</h2>
-          <div className="mt-6 space-y-4 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <h2 className="mt-4 text-2xl font-bold text-slate-900 dark:text-white">2026 Intake</h2>
+          <div className="mt-6 space-y-4 text-sm text-slate-600 dark:text-white/70">
             <p>Applications open: 5 August 2026</p>
             <p>Entrance assessments: 16-27 August 2026</p>
             <p>Admission notices: 5 September 2026</p>

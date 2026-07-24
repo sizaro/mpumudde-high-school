@@ -78,11 +78,11 @@ export default function CoreValues() {
                   <Icon size={32} />
                 </div>
 
-                <h3 className="mt-6 text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
                   {value.title}
                 </h3>
 
-                <p className="mt-4 leading-8" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <p className="mt-4 leading-8 text-slate-600 dark:text-white/70">
                   {value.description}
                 </p>
               </div>

@@ -45,11 +45,11 @@ export default function AboutPreview() {
 
                 <div>
 
-                  <h3 className="font-bold text-xl" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                  <h3 className="font-bold text-xl text-slate-900 dark:text-white">
                     Established
                   </h3>
 
-                  <p style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                  <p className="text-slate-600 dark:text-white/70">
                     Over 30 Years of Excellence
                   </p>
 
@@ -95,11 +95,11 @@ export default function AboutPreview() {
 
               <div>
 
-                <h3 className="font-bold text-2xl" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="font-bold text-2xl text-slate-900 dark:text-white">
                   Our Vision
                 </h3>
 
-                <p className="mt-2 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <p className="mt-2 leading-7 text-slate-600 dark:text-white/70">
                   To be a leading centre of academic excellence,
                   innovation, leadership and character development.
                 </p>
@@ -120,11 +120,11 @@ export default function AboutPreview() {
 
               <div>
 
-                <h3 className="font-bold text-2xl" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="font-bold text-2xl text-slate-900 dark:text-white">
                   Our Mission
                 </h3>
 
-                <p className="mt-2 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <p className="mt-2 leading-7 text-slate-600 dark:text-white/70">
                   To provide quality education through committed teaching,
                   innovation, discipline and a supportive learning environment
                   that enables every learner to reach their full potential.
@@ -149,7 +149,7 @@ export default function AboutPreview() {
                     size={22}
                   />
 
-                  <span className="font-medium" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                  <span className="font-medium text-slate-700 dark:text-white/80">
                     {value}
                   </span>
 

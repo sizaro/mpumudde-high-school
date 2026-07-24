@@ -47,10 +47,10 @@ export default function Contact() {
                   <Icon size={24} className="text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-sm uppercase tracking-[0.3em]" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                  <p className="text-sm uppercase tracking-[0.3em] text-slate-500 dark:text-white/60">
                     {detail.label}
                   </p>
-                  <p className="mt-3 text-xl font-semibold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                  <p className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">
                     {detail.value}
                   </p>
                 </div>
@@ -59,25 +59,25 @@ export default function Contact() {
           })}
 
           <div className="glass-card p-8">
-            <h2 className="text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Office Hours</h2>
-            <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Office Hours</h2>
+            <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
               Monday - Friday: 8:00 AM to 4:00 PM
             </p>
-            <p className="mt-3 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-3 leading-7 text-slate-600 dark:text-white/70">
               Saturday: 9:00 AM to 12:00 PM
             </p>
           </div>
         </div>
 
         <div className="glass-card-solid p-10">
-          <h2 className="text-3xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>Send us a message</h2>
-          <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Send us a message</h2>
+          <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">
             Use the form below to send a message to our admissions or support team.
             We will respond within 1-2 business days.
           </p>
 
           <form className="mt-10 space-y-6">
-            <label className="block text-sm font-medium" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+            <label className="block text-sm font-medium text-slate-800 dark:text-white/90">
               Full name
               <input
                 type="text"
@@ -86,7 +86,7 @@ export default function Contact() {
               />
             </label>
 
-            <label className="block text-sm font-medium" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+            <label className="block text-sm font-medium text-slate-800 dark:text-white/90">
               Email address
               <input
                 type="email"
@@ -95,7 +95,7 @@ export default function Contact() {
               />
             </label>
 
-            <label className="block text-sm font-medium" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+            <label className="block text-sm font-medium text-slate-800 dark:text-white/90">
               Message
               <textarea
                 rows={5}

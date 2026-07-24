@@ -82,19 +82,19 @@ export default function UpcomingEvents() {
 
               {/* Title */}
 
-              <h3 className="mt-4 text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+              <h3 className="mt-4 text-2xl font-bold text-slate-900 dark:text-white">
                 {event.title}
               </h3>
 
               {/* Description */}
 
-              <p className="mt-3 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              <p className="mt-3 leading-7 text-slate-600 dark:text-white/70">
                 {event.description}
               </p>
 
               {/* Meta Info */}
 
-              <div className="mt-6 space-y-2 text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+              <div className="mt-6 space-y-2 text-sm text-slate-500 dark:text-white/60">
 
                 <div className="flex items-center gap-2">
                   <Clock size={16} />

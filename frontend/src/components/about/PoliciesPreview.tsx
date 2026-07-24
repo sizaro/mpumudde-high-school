@@ -50,7 +50,7 @@ export default function PoliciesPreview() {
             School Policies
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             Clear standards for a successful school community.
           </h2>
 
@@ -76,7 +76,7 @@ export default function PoliciesPreview() {
                   <Icon size={28} />
                 </div>
 
-                <h3 className="mt-6 text-lg font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="mt-6 text-lg font-bold text-slate-900 dark:text-white">
                   {policy.title}
                 </h3>
 

@@ -88,11 +88,11 @@ export default function Statistics() {
                   } />
                 </div>
 
-                <h3 className="mt-6 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="mt-6 text-4xl font-extrabold text-slate-900 dark:text-white">
                   {item.value}
                 </h3>
 
-                <p className="mt-2 font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <p className="mt-2 font-medium text-slate-600 dark:text-white/70">
                   {item.label}
                 </p>
 

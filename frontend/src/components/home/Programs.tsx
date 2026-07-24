@@ -112,11 +112,11 @@ export default function Programs() {
                   } />
                 </div>
 
-                <h3 className="mt-6 text-2xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
                   {item.title}
                 </h3>
 
-                <p className="mt-3 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <p className="mt-3 leading-7 text-slate-600 dark:text-white/70">
                   {item.description}
                 </p>
 

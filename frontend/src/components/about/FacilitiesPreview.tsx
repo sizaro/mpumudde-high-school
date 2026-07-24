@@ -71,7 +71,7 @@ export default function FacilitiesPreview() {
             School Facilities
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             An environment designed for learning and growth.
           </h2>
 
@@ -96,7 +96,7 @@ export default function FacilitiesPreview() {
                   <Icon size={32} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="mt-6 text-xl font-bold text-slate-900 dark:text-white">
                   {facility.title}
                 </h3>
 

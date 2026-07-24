@@ -61,7 +61,7 @@ export default function News() {
               />
             </div>
             <div className="p-8">
-              <div className="flex flex-wrap items-center gap-3 text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+              <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-white/60">
                 <span className="rounded-full px-3 py-1" style={{ background: 'rgba(251, 191, 36, 0.2)', color: 'rgba(252, 211, 77, 1)' }}>
                   {item.category}
                 </span>
@@ -70,10 +70,10 @@ export default function News() {
                   <span>{item.date}</span>
                 </div>
               </div>
-              <h2 className="mt-5 text-2xl font-bold group-hover:text-amber-400 transition-colors" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+              <h2 className="mt-5 text-2xl font-bold group-hover:text-amber-400 transition-colors text-slate-900 dark:text-white">
                 {item.title}
               </h2>
-              <p className="mt-4 leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{item.excerpt}</p>
+              <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">{item.excerpt}</p>
               <Link
                 to="/news"
                 className="mt-6 inline-flex items-center gap-2 font-semibold text-amber-400 hover:text-amber-300"
@@ -92,10 +92,10 @@ export default function News() {
             <p className="section-badge">
               School announcements
             </p>
-            <h2 className="mt-4 text-3xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+            <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white">
               Never miss a school update
             </h2>
-            <p className="mt-4 max-w-2xl leading-7" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-4 max-w-2xl leading-7 text-slate-600 dark:text-white/70">
               Check back regularly for new notices, event announcements, and student spotlights.
             </p>
           </div>

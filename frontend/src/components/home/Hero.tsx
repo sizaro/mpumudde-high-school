@@ -36,7 +36,7 @@ export default function Hero() {
           </h1>
 
           {/* Description */}
-          <p className="mt-8 text-lg md:text-xl text-white/80 leading-8 max-w-2xl">
+          <p className="mt-8 text-lg md:text-xl text-slate-700 dark:text-white/80 leading-8 max-w-2xl">
             Welcome to Mpumudde High School, where academic excellence,
             innovation, discipline, and character development prepare every
             learner for a successful future.
@@ -55,7 +55,7 @@ export default function Hero() {
 
             <Link
               to="/about"
-              className="glass-card rounded-full px-8 py-4 font-semibold text-white transition-all hover:bg-white/10"
+              className="glass-card rounded-full px-8 py-4 font-semibold text-slate-900 dark:text-white transition-all hover:bg-slate-200/30 dark:hover:bg-white/10"
             >
               Explore Our School
             </Link>
@@ -74,11 +74,11 @@ export default function Hero() {
               size={32}
             />
 
-            <h3 className="text-white text-3xl font-bold">
+            <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
               98%
             </h3>
 
-            <p className="text-white/70">
+            <p className="text-slate-600 dark:text-white/70">
               Examination Success
             </p>
 
@@ -91,11 +91,11 @@ export default function Hero() {
               size={32}
             />
 
-            <h3 className="text-white text-3xl font-bold">
+            <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
               1,500+
             </h3>
 
-            <p className="text-white/70">
+            <p className="text-slate-600 dark:text-white/70">
               Students
             </p>
 
@@ -108,11 +108,11 @@ export default function Hero() {
               size={32}
             />
 
-            <h3 className="text-white text-3xl font-bold">
+            <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
               40+
             </h3>
 
-            <p className="text-white/70">
+            <p className="text-slate-600 dark:text-white/70">
               Qualified Teachers
             </p>
 
@@ -125,11 +125,11 @@ export default function Hero() {
               size={32}
             />
 
-            <h3 className="text-white text-3xl font-bold">
+            <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
               30+
             </h3>
 
-            <p className="text-white/70">
+            <p className="text-slate-600 dark:text-white/70">
               Years of Excellence
             </p>
 

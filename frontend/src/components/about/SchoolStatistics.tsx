@@ -56,11 +56,11 @@ export default function SchoolStatistics() {
             School Statistics
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold text-white">
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             Our impact in numbers.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-300">
+          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600 dark:text-slate-300">
             Every number represents students whose lives have been transformed
             through quality education, strong values, and dedicated mentorship.
           </p>
@@ -80,15 +80,15 @@ export default function SchoolStatistics() {
                   <Icon size={38} />
                 </div>
 
-                <h3 className="mt-8 text-5xl font-extrabold text-white">
+                <h3 className="mt-8 text-5xl font-extrabold text-slate-900 dark:text-white">
                   {stat.value}
                 </h3>
 
-                <h4 className="mt-3 text-xl font-semibold text-white">
+                <h4 className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">
                   {stat.title}
                 </h4>
 
-                <p className="mt-4 leading-7 text-slate-300">
+                <p className="mt-4 leading-7 text-slate-600 dark:text-slate-300">
                   {stat.description}
                 </p>
               </div>

@@ -71,7 +71,7 @@ export default function DepartmentsPreview() {
             Academic Departments
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             A wide range of subjects for a complete education.
           </h2>
 
@@ -97,7 +97,7 @@ export default function DepartmentsPreview() {
                   <Icon size={28} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+                <h3 className="mt-6 text-xl font-bold text-slate-900 dark:text-white">
                   {department.title}
                 </h3>
 

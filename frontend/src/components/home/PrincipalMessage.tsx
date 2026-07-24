@@ -25,11 +25,11 @@ export default function PrincipalMessage() {
 
             <div className="absolute -bottom-8 left-8 glass-card-solid p-6">
 
-              <h3 className="text-xl font-bold" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                 Mr. John Doe
               </h3>
 
-              <p style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              <p className="text-slate-600 dark:text-white/70">
                 Head Teacher
               </p>
 
@@ -67,13 +67,13 @@ export default function PrincipalMessage() {
               higher education and positively contribute to society.
             </p>
 
-            <p className="mt-6 text-lg leading-8" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-white/70">
               We combine academic excellence with character formation,
               leadership development, sports, technology and co-curricular
               activities to ensure every learner receives a balanced education.
             </p>
 
-            <p className="mt-6 text-lg leading-8" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-white/70">
               We warmly welcome parents, guardians and prospective students to
               become part of our vibrant learning community.
             </p>
@@ -93,7 +93,7 @@ export default function PrincipalMessage() {
 
                 </div>
 
-                <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                <span className="text-slate-700 dark:text-white/80">
                   principal@mpumudde.ac.ug
                 </span>
 
@@ -110,7 +110,7 @@ export default function PrincipalMessage() {
 
                 </div>
 
-                <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                <span className="text-slate-700 dark:text-white/80">
                   +256 XXX XXX XXX
                 </span>
 
