@@ -37,7 +37,7 @@
     background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #ffffff 100%) fixed;
     background-attachment: fixed;
     background-size: cover;
-    color: rgb(var(--text-primary));
+    color: rgb(71, 85, 105);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background 0.3s ease, color 0.3s ease;
@@ -46,6 +46,7 @@
   /* Ultra Dark Theme Background - MUCH DARKER! */
   .dark body {
     background: linear-gradient(135deg, #05080f 0%, #0a0f19 50%, #05080f 100%) fixed;
+    color: rgb(255, 255, 255);
   }
 
   #root {

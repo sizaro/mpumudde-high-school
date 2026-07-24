@@ -1,4 +1,4 @@
-﻿import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const newsItems = [
@@ -41,7 +41,7 @@ export default function News() {
         <h1 className="section-title">
           Stay informed with the latest announcements and school events.
         </h1>
-        <p className="section-lead mx-auto">
+        <p className="text-slate-700 dark:text-white/80 text-lg max-w-3xl mx-auto leading-relaxed">
           Discover important updates about academics, facilities, community projects,
           and student achievements at Mpumudde High School.
         </p>
@@ -61,19 +61,19 @@ export default function News() {
               />
             </div>
             <div className="p-8">
-              <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-white/60">
-                <span className="rounded-full px-3 py-1" style={{ background: 'rgba(251, 191, 36, 0.2)', color: 'rgba(252, 211, 77, 1)' }}>
+             <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600 dark:text-white/60">
+               <span className="rounded-full px-3 py-1 font-semibold" style={{ background: 'rgba(251, 191, 36, 0.2)', color: 'rgba(252, 211, 77, 1)' }}>
                   {item.category}
                 </span>
-                <div className="inline-flex items-center gap-1">
+               <div className="inline-flex items-center gap-1 text-slate-600 dark:text-white/60">
                   <Calendar size={14} />
                   <span>{item.date}</span>
                 </div>
               </div>
-              <h2 className="mt-5 text-2xl font-bold group-hover:text-amber-400 transition-colors text-slate-900 dark:text-white">
+             <h2 className="mt-5 text-2xl font-bold text-slate-900 dark:text-white group-hover:text-amber-400 transition-colors">
                 {item.title}
               </h2>
-              <p className="mt-4 leading-7 text-slate-600 dark:text-white/70">{item.excerpt}</p>
+             <p className="mt-4 leading-7 text-slate-700 dark:text-white/70">{item.excerpt}</p>
               <Link
                 to="/news"
                 className="mt-6 inline-flex items-center gap-2 font-semibold text-amber-400 hover:text-amber-300"
@@ -95,13 +95,13 @@ export default function News() {
             <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white">
               Never miss a school update
             </h2>
-            <p className="mt-4 max-w-2xl leading-7 text-slate-600 dark:text-white/70">
+           <p className="mt-4 max-w-2xl leading-7 text-slate-700 dark:text-white/70">
               Check back regularly for new notices, event announcements, and student spotlights.
             </p>
           </div>
           <Link
             to="/contact"
-            className="glass-button uppercase tracking-[0.2em] whitespace-nowrap"
+           className="glass-button uppercase tracking-[0.2em] whitespace-nowrap text-slate-900 dark:text-white font-bold"
           >
             Contact administration
           </Link>
