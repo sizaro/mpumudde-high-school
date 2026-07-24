@@ -21,6 +21,7 @@ import FinanceOverview from "../pages/director/finance/FinanceOverview";
 import PaymentHistory from "../pages/director/finance/History";
 import DirectorReports from "../pages/director/reports/Reports";
 import AcademicSetupPage from "../pages/director/setup/AcademicSetupPage";
+import AccountManagement from "../pages/director/AccountManagement";
 import TeacherDashboard from "../pages/teacher/Dashboard";
 import ParentDashboard from "../pages/parent/Dashboard";
 import StudentDashboard from "../pages/student/Dashboard";
@@ -56,6 +57,7 @@ export default function AppRoutes() {
         <Route path="finance" element={<FinanceOverview />} />
         <Route path="finance/history" element={<PaymentHistory />} />
         <Route path="academic-setup" element={<AcademicSetupPage />} />
+        <Route path="account-management" element={<AccountManagement />} />
         <Route path="reports" element={<DirectorReports />} />
       </Route>
       <Route

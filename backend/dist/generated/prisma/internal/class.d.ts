@@ -66,7 +66,7 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get term(): Prisma.TermDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
-    get class(): Prisma.ClassDelegate<ExtArgs, {
+    get schoolClass(): Prisma.SchoolClassDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
     get studentCategory(): Prisma.StudentCategoryDelegate<ExtArgs, {
@@ -79,9 +79,6 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
         omit: OmitOpts;
     }>;
     get studentTermFee(): Prisma.StudentTermFeeDelegate<ExtArgs, {
-        omit: OmitOpts;
-    }>;
-    get studentFee(): Prisma.StudentFeeDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
     get payment(): Prisma.PaymentDelegate<ExtArgs, {

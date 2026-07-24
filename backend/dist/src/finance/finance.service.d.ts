@@ -7,242 +7,242 @@ export declare class FinanceService {
     create(createFinanceDto: CreateFinanceDto): Promise<{
         student: {
             id: string;
+            isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
-            termId: string | null;
-            isActive: boolean;
-            academicYearId: string | null;
-            admissionNumber: string;
             firstName: string;
             lastName: string;
+            admissionNumber: string;
             dateOfBirth: Date | null;
             gender: string | null;
+            academicYearId: string | null;
+            termId: string | null;
             classId: string | null;
             studentCategoryId: string | null;
         };
-        studentTermFee: {
-            studentId: string;
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            termId: string;
-            amountOwed: number;
-            amountPaid: number;
-        } | null;
         financeStructure: ({
-            term: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-                feeAmount: number;
-                startDate: Date;
-                endDate: Date;
-                isActive: boolean;
-                academicYearId: string | null;
-            };
             academicYear: {
                 id: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
+            };
+            term: {
+                id: string;
                 isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+                academicYearId: string;
+                feeAmount: number;
+                startDate: Date | null;
+                endDate: Date | null;
             };
             schoolClass: {
                 id: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
-                isActive: boolean;
             };
             studentCategory: {
                 id: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
-                isActive: boolean;
             };
             feeType: {
                 id: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
-                isActive: boolean;
             };
         } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            academicYearId: string;
+            termId: string;
+            classId: string;
+            studentCategoryId: string;
             feeTypeId: string;
+            expectedAmount: number;
+        }) | null;
+        studentTermFee: {
             id: string;
             createdAt: Date;
             updatedAt: Date;
             termId: string;
-            academicYearId: string;
-            classId: string;
-            studentCategoryId: string;
-            expectedAmount: number;
-        }) | null;
+            studentId: string;
+            amountOwed: number;
+            amountPaid: number;
+        } | null;
     } & {
-        studentId: string;
-        studentTermFeeId: string | null;
-        amount: number;
-        method: string;
-        status: string;
-        description: string | null;
-        date: Date;
-        financeStructureId: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        description: string | null;
+        studentId: string;
+        studentTermFeeId: string | null;
+        financeStructureId: string | null;
+        amount: number;
+        method: string;
+        status: string;
+        date: Date;
     }>;
     findAll(): Promise<({
         student: {
             id: string;
+            isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
-            termId: string | null;
-            isActive: boolean;
-            academicYearId: string | null;
-            admissionNumber: string;
             firstName: string;
             lastName: string;
+            admissionNumber: string;
             dateOfBirth: Date | null;
             gender: string | null;
+            academicYearId: string | null;
+            termId: string | null;
             classId: string | null;
             studentCategoryId: string | null;
         };
         studentTermFee: ({
             term: {
                 id: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
+                academicYearId: string;
                 feeAmount: number;
-                startDate: Date;
-                endDate: Date;
-                isActive: boolean;
-                academicYearId: string | null;
+                startDate: Date | null;
+                endDate: Date | null;
             };
         } & {
-            studentId: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
             termId: string;
+            studentId: string;
             amountOwed: number;
             amountPaid: number;
         }) | null;
     } & {
-        studentId: string;
-        studentTermFeeId: string | null;
-        amount: number;
-        method: string;
-        status: string;
-        description: string | null;
-        date: Date;
-        financeStructureId: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        description: string | null;
+        studentId: string;
+        studentTermFeeId: string | null;
+        financeStructureId: string | null;
+        amount: number;
+        method: string;
+        status: string;
+        date: Date;
     })[]>;
     findOne(id: string): Promise<({
         student: {
             id: string;
+            isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
-            termId: string | null;
-            isActive: boolean;
-            academicYearId: string | null;
-            admissionNumber: string;
             firstName: string;
             lastName: string;
+            admissionNumber: string;
             dateOfBirth: Date | null;
             gender: string | null;
+            academicYearId: string | null;
+            termId: string | null;
             classId: string | null;
             studentCategoryId: string | null;
         };
         studentTermFee: ({
             term: {
                 id: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
+                academicYearId: string;
                 feeAmount: number;
-                startDate: Date;
-                endDate: Date;
-                isActive: boolean;
-                academicYearId: string | null;
+                startDate: Date | null;
+                endDate: Date | null;
             };
         } & {
-            studentId: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
             termId: string;
+            studentId: string;
             amountOwed: number;
             amountPaid: number;
         }) | null;
     } & {
-        studentId: string;
-        studentTermFeeId: string | null;
-        amount: number;
-        method: string;
-        status: string;
-        description: string | null;
-        date: Date;
-        financeStructureId: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        description: string | null;
+        studentId: string;
+        studentTermFeeId: string | null;
+        financeStructureId: string | null;
+        amount: number;
+        method: string;
+        status: string;
+        date: Date;
     }) | null>;
     update(id: string, updateFinanceDto: UpdateFinanceDto): Promise<{
         student: {
             id: string;
+            isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
-            termId: string | null;
-            isActive: boolean;
-            academicYearId: string | null;
-            admissionNumber: string;
             firstName: string;
             lastName: string;
+            admissionNumber: string;
             dateOfBirth: Date | null;
             gender: string | null;
+            academicYearId: string | null;
+            termId: string | null;
             classId: string | null;
             studentCategoryId: string | null;
         };
         studentTermFee: {
-            studentId: string;
             id: string;
             createdAt: Date;
             updatedAt: Date;
             termId: string;
+            studentId: string;
             amountOwed: number;
             amountPaid: number;
         } | null;
     } & {
-        studentId: string;
-        studentTermFeeId: string | null;
-        amount: number;
-        method: string;
-        status: string;
-        description: string | null;
-        date: Date;
-        financeStructureId: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        description: string | null;
+        studentId: string;
+        studentTermFeeId: string | null;
+        financeStructureId: string | null;
+        amount: number;
+        method: string;
+        status: string;
+        date: Date;
     }>;
     remove(id: string): Promise<{
-        studentId: string;
-        studentTermFeeId: string | null;
-        amount: number;
-        method: string;
-        status: string;
-        description: string | null;
-        date: Date;
-        financeStructureId: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        description: string | null;
+        studentId: string;
+        studentTermFeeId: string | null;
+        financeStructureId: string | null;
+        amount: number;
+        method: string;
+        status: string;
+        date: Date;
     }>;
     getStudentsWithBalances(): Promise<{
         id: string;
@@ -281,36 +281,36 @@ export declare class FinanceService {
             studentTermFee: ({
                 term: {
                     id: string;
+                    isActive: boolean;
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
+                    academicYearId: string;
                     feeAmount: number;
-                    startDate: Date;
-                    endDate: Date;
-                    isActive: boolean;
-                    academicYearId: string | null;
+                    startDate: Date | null;
+                    endDate: Date | null;
                 };
             } & {
-                studentId: string;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
                 termId: string;
+                studentId: string;
                 amountOwed: number;
                 amountPaid: number;
             }) | null;
         } & {
-            studentId: string;
-            studentTermFeeId: string | null;
-            amount: number;
-            method: string;
-            status: string;
-            description: string | null;
-            date: Date;
-            financeStructureId: string | null;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            description: string | null;
+            studentId: string;
+            studentTermFeeId: string | null;
+            financeStructureId: string | null;
+            amount: number;
+            method: string;
+            status: string;
+            date: Date;
         })[];
     } | null>;
 }

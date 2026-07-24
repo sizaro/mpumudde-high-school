@@ -38,6 +38,9 @@ export default function DirectorLayout() {
               <NavLink to="finance" className={navButton} end>
                 Finances
               </NavLink>
+              <NavLink to="account-management" className={navButton} end>
+                Account Management
+              </NavLink>
               <NavLink to="academic-setup" className={navButton} end>
                 Academic Setup
               </NavLink>

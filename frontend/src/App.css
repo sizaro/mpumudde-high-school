@@ -1,3 +1,46 @@
+:root {
+  --accent-emerald: #34d399;
+  --accent-cyan: #22d3ee;
+  --accent-violet: #a78bfa;
+  --accent-amber: #fbbf24;
+
+  --accent: var(--accent-emerald);
+  --accent-bg: rgba(52, 211, 153, 0.12);
+  --accent-border: rgba(52, 211, 153, 0.24);
+
+  --accent-emerald-bg: rgba(52, 211, 153, 0.12);
+  --accent-emerald-border: rgba(52, 211, 153, 0.24);
+  --accent-cyan-bg: rgba(34, 211, 238, 0.12);
+  --accent-cyan-border: rgba(34, 211, 238, 0.24);
+  --accent-violet-bg: rgba(167, 139, 250, 0.12);
+  --accent-violet-border: rgba(167, 139, 250, 0.24);
+  --accent-amber-bg: rgba(251, 191, 36, 0.12);
+  --accent-amber-border: rgba(251, 191, 36, 0.24);
+}
+
+.nav-link-active {
+  background-color: var(--accent);
+  color: white;
+  box-shadow: 0 24px 60px rgba(52, 211, 153, 0.16);
+}
+
+.nav-link:hover:not(.nav-link-active) {
+  background-color: var(--accent-bg);
+  color: var(--accent);
+}
+
+.btn-accent {
+  background-color: var(--accent);
+  color: white;
+  border-color: transparent;
+}
+
+.btn-accent-soft {
+  background-color: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;

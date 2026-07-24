@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 import { Body, Controller, Get, Post, Req, Res, UseGuards, } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { LoginDto } from './dto/login.dto.js';
+import { RegisterDto } from './dto/register.dto.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 let AuthController = class AuthController {
     authService;
@@ -21,6 +22,20 @@ let AuthController = class AuthController {
     }
     async login(loginDto, response) {
         const result = await this.authService.login(loginDto);
+        response.cookie('access_token', result.access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production'
+                ? 'none'
+                : 'lax',
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+        return {
+            user: result.user,
+        };
+    }
+    async register(registerDto, response) {
+        const result = await this.authService.register(registerDto);
         response.cookie('access_token', result.access_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -45,6 +60,14 @@ __decorate([
     __metadata("design:paramtypes", [LoginDto, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    Post('register'),
+    __param(0, Body()),
+    __param(1, Res({ passthrough: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [RegisterDto, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "register", null);
 __decorate([
     UseGuards(JwtAuthGuard),
     Get('me'),
