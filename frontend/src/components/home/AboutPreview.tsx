@@ -6,6 +6,7 @@ import {
   Target,
   Eye,
 } from "lucide-react";
+import { AnimatedSection } from "../AnimatedSection";
 
 const values = [
   "Academic Excellence",
@@ -17,6 +18,7 @@ const values = [
 export default function AboutPreview() {
   return (
     <section className="py-24">
+      <AnimatedSection delay={0.1}>
       <div className="site-container">
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -176,6 +178,7 @@ export default function AboutPreview() {
         </div>
 
       </div>
+      </AnimatedSection>
     </section>
   );
 }

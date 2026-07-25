@@ -1,29 +1,27 @@
 import { ArrowRight, GraduationCap, BookOpen, Users, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { heroVideo, getVideoProps } from "../../config/videos";
 
 export default function Hero() {
+  const videoProps = getVideoProps(heroVideo);
+  
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden">
 
       {/* Video Background with Fallback */}
       <div className="absolute inset-0">
         <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          poster="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=80"
+          {...videoProps}
           className="w-full h-full object-cover"
         >
-          <source
-            src="https://www.w3schools.com/html/mov_bbb.mp4"
-            type="video/mp4"
-          />
+          {heroVideo.sources.map((source, index) => (
+            <source key={index} src={source.src} type={source.type} />
+          ))}
           {/* Fallback image if video fails */}
           <img
-            src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=80"
-            alt="School campus"
+            src={heroVideo.poster}
+            alt={heroVideo.title}
             className="w-full h-full object-cover"
           />
         </video>

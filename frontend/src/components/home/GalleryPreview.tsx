@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Images, ArrowRight } from "lucide-react";
+import { AnimatedSection } from "../AnimatedSection";
 
 const images = [
   "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
@@ -13,6 +14,7 @@ const images = [
 export default function GalleryPreview() {
   return (
     <section className="py-24">
+      <AnimatedSection delay={0.2}>
       <div className="site-container">
 
         {/* Header */}
@@ -71,6 +73,7 @@ export default function GalleryPreview() {
         </div>
 
       </div>
+      </AnimatedSection>
     </section>
   );
 }

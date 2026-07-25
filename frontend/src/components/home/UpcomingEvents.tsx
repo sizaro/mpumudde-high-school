@@ -1,5 +1,6 @@
 import { CalendarDays, MapPin, Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AnimatedSection } from "../AnimatedSection";
 
 const events = [
   {
@@ -31,6 +32,7 @@ const events = [
 export default function UpcomingEvents() {
   return (
     <section className="py-24">
+      <AnimatedSection delay={0.25}>
       <div className="site-container">
 
         {/* Header */}
@@ -114,6 +116,7 @@ export default function UpcomingEvents() {
         </div>
 
       </div>
+      </AnimatedSection>
     </section>
   );
 }

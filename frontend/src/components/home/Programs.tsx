@@ -6,6 +6,7 @@ import {
   Music,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AnimatedSection } from "../AnimatedSection";
 
 const programs = [
   {
@@ -55,6 +56,7 @@ const programs = [
 export default function Programs() {
   return (
     <section className="py-24">
+      <AnimatedSection delay={0.15}>
       <div className="site-container">
 
         {/* Header */}
@@ -136,6 +138,7 @@ export default function Programs() {
         </div>
 
       </div>
+      </AnimatedSection>
     </section>
   );
 }

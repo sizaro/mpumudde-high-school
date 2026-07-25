@@ -5,10 +5,12 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
+import { AnimatedSection } from "../AnimatedSection";
 
 export default function PrincipalMessage() {
   return (
     <section className="py-24">
+      <AnimatedSection delay={0.2}>
       <div className="site-container">
 
         <div className="grid lg:grid-cols-2 gap-20 items-center">
@@ -135,6 +137,7 @@ export default function PrincipalMessage() {
         </div>
 
       </div>
+      </AnimatedSection>
     </section>
   );
 }
