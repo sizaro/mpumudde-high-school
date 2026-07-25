@@ -1,5 +1,4 @@
 import {
-  Users,
   GraduationCap,
   Building2,
   ClipboardList,
@@ -9,7 +8,7 @@ import {
 
 const links = [
   {
-    icon: Users,
+    icon: GraduationCap,
     title: "Leadership",
     description:
       "Meet the school leaders guiding our vision and development.",

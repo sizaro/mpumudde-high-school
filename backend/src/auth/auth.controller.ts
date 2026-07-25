@@ -15,6 +15,7 @@ import type { Response } from 'express';
 import { AuthService } from './auth.service.js';
 
 import { LoginDto } from './dto/login.dto.js';
+import { RegisterDto } from './dto/register.dto.js';
 
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 
@@ -83,6 +84,52 @@ export class AuthController {
 
   }
 
+
+  @Post('register')
+  async register(
+
+    @Body() registerDto: RegisterDto,
+
+    @Res({ passthrough: true }) response: Response,
+
+  ) {
+
+    const result = await this.authService.register(registerDto);
+
+
+    response.cookie(
+
+      'access_token',
+
+      result.access_token,
+
+      {
+
+        httpOnly: true,
+
+        secure: process.env.NODE_ENV === 'production',
+
+        sameSite:
+          process.env.NODE_ENV === 'production'
+            ? 'none'
+            : 'lax',
+
+        maxAge:
+          24 * 60 * 60 * 1000,
+
+      },
+
+    );
+
+
+    return {
+
+      user: result.user,
+
+    };
+
+
+  }
 
 
 

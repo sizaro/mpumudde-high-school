@@ -24,6 +24,24 @@ export async function seedRoles() {
       description:
         "Parent access role.",
     },
+
+    {
+      name: "STUDENT",
+      description:
+        "Student access role.",
+    },
+
+    {
+      name: "SECRETARY",
+      description:
+        "School secretary access role.",
+    },
+
+    {
+      name: "BURSAR",
+      description:
+        "Bursar access role.",
+    },
   ];
 
 

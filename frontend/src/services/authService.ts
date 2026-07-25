@@ -4,6 +4,7 @@ import api from "../api/axios";
 import type {
   LoginDto,
   LoginResponse,
+  RegisterDto,
   User,
 } from "../types/auth";
 
@@ -37,6 +38,25 @@ class AuthService {
   }
 
 
+  async register(
+
+    registerDto: RegisterDto,
+
+  ): Promise<LoginResponse> {
+
+
+    const { data } = await api.post<LoginResponse>(
+
+      "/auth/register",
+
+      registerDto,
+
+    );
+
+
+    return data;
+
+  }
 
 
 
