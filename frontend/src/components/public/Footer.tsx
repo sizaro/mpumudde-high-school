@@ -1,255 +1,126 @@
 import { Link } from "react-router-dom";
-
-import {
-  MapPin,
-  Phone,
-  Mail,
-} from "lucide-react";
-
+import { Mail, MapPin, Phone } from "lucide-react";
 import {
   FaFacebook,
   FaInstagram,
-  FaXTwitter,
-  FaYoutube,
   FaLinkedin,
   FaTiktok,
   FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
 } from "react-icons/fa6";
+
+const navLinks = [
+  { label: "Home", to: "/" },
+  { label: "About", to: "/about" },
+  { label: "Academics", to: "/academics" },
+  { label: "Admissions", to: "/admissions" },
+  { label: "News", to: "/news" },
+  { label: "Gallery", to: "/gallery" },
+  { label: "Contact", to: "/contact" },
+];
+
+const socials = [
+  { href: "https://facebook.com/mpumuddehighschool", label: "Facebook", icon: FaFacebook },
+  { href: "https://x.com/mpumuddehs", label: "X", icon: FaXTwitter },
+  { href: "https://instagram.com/mpumuddehighschool", label: "Instagram", icon: FaInstagram },
+  { href: "https://youtube.com/@mpumuddehighschool", label: "YouTube", icon: FaYoutube },
+  { href: "https://www.tiktok.com/@mpumuddehighschool", label: "TikTok", icon: FaTiktok },
+  {
+    href: "https://www.linkedin.com/company/mpumudde-high-school",
+    label: "LinkedIn",
+    icon: FaLinkedin,
+  },
+  { href: "https://whatsapp.com/channel/xxxxxxxx", label: "WhatsApp", icon: FaWhatsapp },
+];
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-gray-300 mt-20">
-
-      <div className="max-w-7xl mx-auto px-6 py-14 grid lg:grid-cols-4 md:grid-cols-2 gap-10">
-
-        {/* School */}
+    <footer className="relative mt-20">
+      <div className="glass-card site-container grid gap-10 py-14 md:grid-cols-2 xl:grid-cols-4">
         <div>
-          <h3 className="text-2xl font-bold text-white">
-            Mpumudde High School
-          </h3>
-
-          <p className="mt-4 text-sm leading-7">
-            Excellence in Education, Character, and Leadership.
-            We are committed to nurturing responsible citizens
-            through quality education, discipline, innovation,
-            and Christian values.
+          <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white">Mpumudde High School</h3>
+          <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-white/70">
+            We equip learners with strong academics, discipline, leadership values, and practical
+            life skills that prepare them for meaningful impact in society.
           </p>
         </div>
 
-        {/* Quick Links */}
         <div>
-          <h4 className="text-white font-semibold mb-4">
-            Quick Links
-          </h4>
-
-          <ul className="space-y-3 text-sm">
-
-            <li>
-              <Link to="/" className="hover:text-white">
-                Home
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/about" className="hover:text-white">
-                About Us
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/academics" className="hover:text-white">
-                Academics
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/admissions" className="hover:text-white">
-                Admissions
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/news" className="hover:text-white">
-                News & Events
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/contact" className="hover:text-white">
-                Contact
-              </Link>
-            </li>
-
+          <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-900 dark:text-white">Explore</h4>
+          <ul className="mt-4 space-y-3 text-sm">
+            {navLinks.map((link) => (
+              <li key={link.to}>
+                <Link to={link.to} className="text-slate-600 dark:text-white/70 transition-colors hover:text-emerald-600 dark:hover:text-emerald-300">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
-        {/* Contact */}
         <div>
-          <h4 className="text-white font-semibold mb-4">
-            Contact
+          <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-900 dark:text-white">Contact</h4>
+          <div className="mt-4 space-y-4 text-sm">
+            <p className="flex gap-3 text-slate-600 dark:text-white/70">
+              <MapPin size={18} className="mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+              Mpumudde, Jinja District, Uganda
+            </p>
+            <p className="flex gap-3 text-slate-600 dark:text-white/70">
+              <Phone size={18} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
+              +256 312 345 678
+            </p>
+            <p className="flex gap-3 text-slate-600 dark:text-white/70">
+              <Mail size={18} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
+              info@mpumuddehs.ac.ug
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-900 dark:text-white">
+            Connect With Us
           </h4>
-
-          <div className="space-y-4 text-sm">
-
-            <div className="flex gap-3">
-              <MapPin size={18} className="mt-1 text-green-500" />
-              <span>
-                Mpumudde, Jinja District
-                <br />
-                Uganda
-              </span>
-            </div>
-
-            <div className="flex gap-3">
-              <Phone size={18} className="text-green-500" />
-              <span>+256 XXX XXX XXX</span>
-            </div>
-
-            <div className="flex gap-3">
-              <Mail size={18} className="text-green-500" />
-              <span>info@mpumuddehighschool.ac.ug</span>
-            </div>
-
+          <div className="mt-4 flex flex-wrap gap-3">
+            {socials.map((social) => {
+              const Icon = social.icon;
+              return (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass-card rounded-xl p-2.5 text-slate-700 dark:text-white/80 transition-all hover:text-emerald-600 dark:hover:text-emerald-300"
+                  aria-label={social.label}
+                >
+                  <Icon size={18} />
+                </a>
+              );
+            })}
           </div>
-        </div>
-
-        {/* Social */}
-        
-        {/* Social */}
-<div>
-  <h4 className="text-white font-semibold mb-4">
-    Connect With Us
-  </h4>
-
-  <div className="flex flex-wrap gap-4">
-
-    <a
-      href="https://facebook.com/mpumuddehighschool"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-white transition"
-      aria-label="Facebook"
-    >
-      <FaFacebook size={22} />
-    </a>
-
-    <a
-      href="https://x.com/mpumuddehs"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-white transition"
-      aria-label="X"
-    >
-      <FaXTwitter size={22} />
-    </a>
-
-    <a
-      href="https://instagram.com/mpumuddehighschool"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-white transition"
-      aria-label="Instagram"
-    >
-      <FaInstagram size={22} />
-    </a>
-
-    <a
-      href="https://youtube.com/@mpumuddehighschool"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-white transition"
-      aria-label="YouTube"
-    >
-      <FaYoutube size={22} />
-    </a>
-
-    <a
-      href="https://www.tiktok.com/@mpumuddehighschool"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-white transition"
-      aria-label="TikTok"
-    >
-      <FaTiktok size={22} />
-    </a>
-
-    <a
-      href="https://www.linkedin.com/company/mpumudde-high-school"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-white transition"
-      aria-label="LinkedIn"
-    >
-      <FaLinkedin size={22} />
-    </a>
-
-    <a
-      href="https://whatsapp.com/channel/xxxxxxxx"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-white transition"
-      aria-label="WhatsApp Channel"
-    >
-      <FaWhatsapp size={22} />
-    </a>
-
-  </div>
-
-  <p className="mt-6 text-sm leading-6">
-    Stay connected for announcements, admissions, academic updates,
-    student achievements, and upcoming school events.
-  </p>
-
-  <p className="mt-4 text-xs text-gray-400 leading-5">
-    These are the official Mpumudde High School communication channels.
-    Follow only these verified accounts for authentic school updates and announcements.
-  </p>
-</div>
-
-      </div>
-
-      <div className="border-t border-slate-800">
-
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-
-          <p>
-            © {new Date().getFullYear()} Mpumudde High School. All Rights Reserved.
+          <p className="mt-5 text-sm leading-6 text-slate-500 dark:text-white/60">
+            Follow our verified channels for admissions updates, announcements, and student
+            achievement stories.
           </p>
-
-          <div className="flex gap-6">
-
-            <Link to="/privacy" className="hover:text-white">
-              Privacy Policy
-            </Link>
-
-            <Link to="/terms" className="hover:text-white">
-              Terms of Use
-            </Link>
-
-          </div>
-
         </div>
-
       </div>
 
-      <div className="bg-slate-950 border-t border-slate-800">
-
-        <div className="max-w-7xl mx-auto px-6 py-4 text-center text-xs text-gray-500">
-
-          Website designed, developed, and maintained by{" "}
-          <a
-            href="https://sizaforgeltd.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-green-400 hover:text-green-300 font-medium"
-          >
-            SizaForge Technologies Ltd.
-          </a>
-
+      <div className="border-t border-slate-200 dark:border-white/10">
+        <div className="site-container flex flex-col items-center justify-between gap-3 py-5 text-xs text-slate-500 dark:text-white/50 md:flex-row">
+          <p>© {new Date().getFullYear()} Mpumudde High School. All rights reserved.</p>
+          <p>
+            Developed by{" "}
+            <a
+              href="https://sizaforgeltd.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-emerald-600 dark:text-emerald-300 transition-colors hover:text-emerald-700 dark:hover:text-emerald-200"
+            >
+              SizaForge Technologies Ltd.
+            </a>
+          </p>
         </div>
-
       </div>
-
     </footer>
   );
 }

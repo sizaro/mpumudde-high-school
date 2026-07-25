@@ -14,6 +14,15 @@ import Admissions from "../pages/public/Admissions";
 import News from "../pages/public/News";
 import Gallery from "../pages/public/Gallery";
 import Contact from "../pages/public/Contact";
+import Calendar from "../pages/public/Calendar";
+
+// Newsroom Pages
+import Newsroom from "../pages/public/Newsroom";
+import NewsroomNews from "../pages/public/NewsroomNews";
+import NewsroomEvents from "../pages/public/NewsroomEvents";
+import NewsroomAnnouncements from "../pages/public/NewsroomAnnouncements";
+import NewsroomUpdates from "../pages/public/NewsroomUpdates";
+import NewsroomMedia from "../pages/public/NewsroomMedia";
 
 
 
@@ -68,10 +77,46 @@ export default function AppRoutes() {
           element={<News />}
         />
 
+        {/* Newsroom Routes */}
+        <Route
+          path="/newsroom"
+          element={<Newsroom />}
+        />
+
+        <Route
+          path="/newsroom/news"
+          element={<NewsroomNews />}
+        />
+
+        <Route
+          path="/newsroom/events"
+          element={<NewsroomEvents />}
+        />
+
+        <Route
+          path="/newsroom/announcements"
+          element={<NewsroomAnnouncements />}
+        />
+
+        <Route
+          path="/newsroom/updates"
+          element={<NewsroomUpdates />}
+        />
+
+        <Route
+          path="/newsroom/media"
+          element={<NewsroomMedia />}
+        />
+
 
         <Route
           path="/gallery"
           element={<Gallery />}
+        />
+
+        <Route
+          path="/calendar"
+          element={<Calendar />}
         />
 
 

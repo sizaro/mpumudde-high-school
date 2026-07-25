@@ -1,6 +1,6 @@
 export default function HeadteacherWelcome() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-slate-900/20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid items-center gap-16 lg:grid-cols-2">
           {/* Headteacher Image */}
@@ -14,9 +14,9 @@ export default function HeadteacherWelcome() {
             </div>
 
             {/* Decorative Card */}
-            <div className="absolute -bottom-8 left-8 rounded-2xl bg-amber-500 px-8 py-5 text-slate-900 shadow-xl">
-              <p className="text-3xl font-extrabold">20+</p>
-              <p className="text-sm font-medium">
+            <div className="absolute -bottom-8 left-8 glass-card-solid px-8 py-5 shadow-xl">
+              <p className="text-3xl font-extrabold text-slate-900 dark:text-white">20+</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-white/70">
                 Years of Educational Leadership
               </p>
             </div>
@@ -24,26 +24,26 @@ export default function HeadteacherWelcome() {
 
           {/* Content */}
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+            <p className="section-badge">
               Headteacher's Welcome
             </p>
 
-            <h2 className="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">
+            <h2 className="mt-3 section-title">
               A message from our Headteacher
             </h2>
 
-            <p className="mt-8 text-lg leading-9 text-slate-600">
+            <p className="mt-8 text-lg leading-9 text-slate-600 dark:text-white/70">
               Welcome to Mpumudde High School.
             </p>
 
-            <p className="mt-6 leading-8 text-slate-600">
+            <p className="mt-6 section-lead">
               We believe that education extends beyond the classroom. Our
               mission is to nurture confident, disciplined, compassionate, and
               responsible young people who are prepared to succeed in higher
               education, meaningful careers, and life.
             </p>
 
-            <p className="mt-6 leading-8 text-slate-600">
+            <p className="mt-6 section-lead">
               Every learner who joins our school becomes part of a community
               that values excellence, innovation, integrity, and service.
               Together with our dedicated staff and supportive parents, we
@@ -51,22 +51,22 @@ export default function HeadteacherWelcome() {
               their talents and reach their full potential.
             </p>
 
-            <p className="mt-6 leading-8 text-slate-600">
+            <p className="mt-6 section-lead">
               Thank you for taking the time to learn about our school. We look
               forward to welcoming you to our campus and partnering with you in
               shaping tomorrow's leaders.
             </p>
 
-            <div className="mt-10 border-l-4 border-amber-500 pl-6">
-              <h3 className="text-xl font-bold text-slate-900">
+            <div className="mt-10 border-l-4 border-emerald-400 pl-6">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                 Mr. John Doe
               </h3>
 
-              <p className="mt-2 text-slate-600">
+              <p className="mt-2 text-slate-600 dark:text-white/70">
                 Headteacher
               </p>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500 dark:text-white/60">
                 Mpumudde High School
               </p>
             </div>

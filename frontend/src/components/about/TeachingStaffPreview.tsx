@@ -48,20 +48,20 @@ const departments = [
 
 export default function TeachingStaffPreview() {
   return (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-slate-900/30 py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         {/* Heading */}
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             Teaching Staff
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold text-slate-900">
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             Experienced teachers dedicated to student success.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-3xl section-lead">
             Our teachers combine knowledge, experience, and passion to provide
             meaningful learning experiences that help students achieve their
             goals.
@@ -77,17 +77,17 @@ export default function TeachingStaffPreview() {
             return (
               <div
                 key={department.title}
-                className="rounded-3xl bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+                className="glass-card p-8 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl" style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#c084fc' }}>
                   <Icon size={32} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-bold text-slate-900">
+                <h3 className="mt-6 text-xl font-bold text-slate-900 dark:text-white">
                   {department.title}
                 </h3>
 
-                <p className="mt-4 leading-7 text-slate-600">
+                <p className="mt-4 leading-7 section-lead">
                   {department.description}
                 </p>
               </div>
@@ -98,7 +98,7 @@ export default function TeachingStaffPreview() {
 
         {/* CTA */}
         <div className="mt-12 text-center">
-          <button className="rounded-full bg-slate-900 px-8 py-3 font-semibold text-white transition hover:bg-slate-700">
+          <button className="glass-button">
             View Teaching Staff
           </button>
         </div>

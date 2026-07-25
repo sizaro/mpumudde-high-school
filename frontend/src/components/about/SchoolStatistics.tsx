@@ -52,15 +52,15 @@ export default function SchoolStatistics() {
       <div className="mx-auto max-w-7xl px-6">
         {/* Heading */}
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-400">
+          <p className="section-badge">
             School Statistics
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold text-white">
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             Our impact in numbers.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-300">
+          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600 dark:text-slate-300">
             Every number represents students whose lives have been transformed
             through quality education, strong values, and dedicated mentorship.
           </p>
@@ -74,21 +74,21 @@ export default function SchoolStatistics() {
             return (
               <div
                 key={stat.title}
-                className="rounded-3xl border border-slate-700 bg-slate-800 p-8 text-center transition duration-300 hover:-translate-y-2 hover:border-amber-400 hover:shadow-2xl"
+                className="glass-card-solid p-8 text-center transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-500 text-slate-900">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full" style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#4ade80' }}>
                   <Icon size={38} />
                 </div>
 
-                <h3 className="mt-8 text-5xl font-extrabold text-white">
+                <h3 className="mt-8 text-5xl font-extrabold text-slate-900 dark:text-white">
                   {stat.value}
                 </h3>
 
-                <h4 className="mt-3 text-xl font-semibold text-white">
+                <h4 className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">
                   {stat.title}
                 </h4>
 
-                <p className="mt-4 leading-7 text-slate-300">
+                <p className="mt-4 leading-7 text-slate-600 dark:text-slate-300">
                   {stat.description}
                 </p>
               </div>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Images, ArrowRight } from "lucide-react";
+import { AnimatedSection } from "../AnimatedSection";
 
 const images = [
   "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
@@ -12,8 +13,9 @@ const images = [
 
 export default function GalleryPreview() {
   return (
-    <section className="bg-white py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24">
+      <AnimatedSection delay={0.2}>
+      <div className="site-container">
 
         {/* Header */}
 
@@ -21,16 +23,15 @@ export default function GalleryPreview() {
 
           <div>
 
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 text-purple-700 font-semibold">
-              <Images size={16} />
-              GALLERY
+            <span className="section-badge" style={{ background: 'rgba(168, 85, 247, 0.15)', borderColor: 'rgba(168, 85, 247, 0.3)', color: 'rgba(196, 181, 253, 1)' }}>
+              <Images size={16} className="inline" /> GALLERY
             </span>
 
-            <h2 className="mt-6 text-4xl md:text-5xl font-bold text-slate-900">
+            <h2 className="section-title mt-6">
               Life at Mpumudde High School
             </h2>
 
-            <p className="mt-4 text-slate-600 max-w-2xl text-lg">
+            <p className="section-lead mt-4">
               A glimpse into academics, sports, and vibrant student life.
             </p>
 
@@ -38,7 +39,7 @@ export default function GalleryPreview() {
 
           <Link
             to="/gallery"
-            className="inline-flex items-center gap-2 text-purple-700 font-semibold hover:gap-4 transition-all"
+            className="inline-flex items-center gap-2 font-semibold hover:gap-4 transition-all text-purple-400"
           >
             View Full Gallery
             <ArrowRight size={18} />
@@ -64,7 +65,7 @@ export default function GalleryPreview() {
 
               {/* Overlay */}
 
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
             </div>
           ))}
@@ -72,6 +73,7 @@ export default function GalleryPreview() {
         </div>
 
       </div>
+      </AnimatedSection>
     </section>
   );
 }

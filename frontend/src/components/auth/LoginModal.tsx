@@ -343,8 +343,7 @@ export default function LoginModal({
               rounded-lg
               bg-blue-600
               py-2
-              text-white
-              hover:bg-blue-700
+              text-white hover:bg-blue-700
               disabled:opacity-50
             "
 
