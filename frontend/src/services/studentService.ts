@@ -20,6 +20,11 @@ class StudentService {
     return data;
   }
 
+  async getStudent(studentId: string): Promise<Student> {
+    const { data } = await api.get<Student>(`/students/${studentId}`);
+    return data;
+  }
+
   async getStudentFinanceSummary(studentId: string) {
     const { data } = await api.get(`/students/${studentId}/finance-summary`);
     return data;

@@ -157,8 +157,11 @@ export default function RegistrationWizard() {
                             const file = event.target.files?.[0];
                             if (file) {
                               const reader = new FileReader();
-                              reader.onload = (e) => {
-                                updateField("passportPhoto", e.target?.result as string);
+                              reader.onload = () => {
+                                const photo = reader.result;
+                                if (typeof photo === "string") {
+                                  updateField("passportPhoto", photo);
+                                }
                               };
                               reader.readAsDataURL(file);
                             }
@@ -185,8 +188,11 @@ export default function RegistrationWizard() {
                         const file = event.target.files?.[0];
                         if (file) {
                           const reader = new FileReader();
-                          reader.onload = (e) => {
-                            updateField("passportPhoto", e.target?.result as string);
+                          reader.onload = () => {
+                            const photo = reader.result;
+                            if (typeof photo === "string") {
+                              updateField("passportPhoto", photo);
+                            }
                           };
                           reader.readAsDataURL(file);
                         }

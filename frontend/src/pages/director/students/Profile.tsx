@@ -33,22 +33,45 @@ interface StudentFinanceSummary {
 export default function StudentProfile() {
   const [searchParams] = useSearchParams();
   const studentId = searchParams.get("id") || "";
+  const [student, setStudent] = useState<StudentProfileData | null>(null);
   const [summary, setSummary] = useState<StudentFinanceSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadSummary = async () => {
+    const loadStudent = async () => {
       if (!studentId) return;
+      setLoading(true);
+
       try {
-        const data = await StudentService.getStudentFinanceSummary(studentId);
-        setSummary(data);
+        const [studentData, financeData] = await Promise.all([
+          StudentService.getStudent(studentId),
+          StudentService.getStudentFinanceSummary(studentId),
+        ]);
+
+        setStudent({
+          id: studentData.id,
+          admissionNumber: studentData.admissionNumber,
+          firstName: studentData.firstName,
+          lastName: studentData.lastName,
+          passportPhoto: studentData.passportPhoto,
+          academicYear: financeData.student.academicYear,
+          term: financeData.student.term,
+          className: financeData.student.className,
+          studentCategory: financeData.student.studentCategory,
+        });
+
+        setSummary(financeData);
       } catch {
-        setError("Unable to load student finance summary.");
+        setError("Unable to load student profile.");
+      } finally {
+        setLoading(false);
       }
     };
-    void loadSummary();
+
+    void loadStudent();
   }, [studentId]);
 
   const updatePassportPhoto = async (photo?: string) => {
@@ -62,13 +85,21 @@ export default function StudentProfile() {
         passportPhoto: photo ?? "",
       });
 
-      setSummary((current) => ({
-        ...current,
-        student: {
-          ...current!.student,
-          passportPhoto: updatedStudent.passportPhoto,
-        },
-      }));
+      setStudent((current) =>
+        current ? { ...current, passportPhoto: updatedStudent.passportPhoto } : current,
+      );
+
+      setSummary((current) =>
+        current
+          ? {
+              ...current,
+              student: {
+                ...current.student,
+                passportPhoto: updatedStudent.passportPhoto,
+              },
+            }
+          : current,
+      );
 
       setStatus(photo ? "Photo updated." : "Photo removed.");
     } catch {
@@ -83,15 +114,21 @@ export default function StudentProfile() {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const photo = e.target?.result as string;
-      void updatePassportPhoto(photo);
+    reader.onload = () => {
+      const photo = reader.result;
+      if (typeof photo === "string") {
+        void updatePassportPhoto(photo);
+      }
     };
     reader.readAsDataURL(file);
   };
 
-  if (!summary) {
+  if (loading) {
     return <div className="text-sm text-slate-600">{error || "Loading student profile..."}</div>;
+  }
+
+  if (!student || !summary) {
+    return <div className="text-sm text-slate-600">{error || "Student not found."}</div>;
   }
 
   return (
@@ -108,8 +145,8 @@ export default function StudentProfile() {
       <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <div className="grid gap-4 sm:grid-cols-[auto_1fr] lg:grid-cols-[auto_1fr]">
           <div className="flex flex-col items-center gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-            {summary.student.passportPhoto ? (
-              <img src={summary.student.passportPhoto} alt="Student passport" className="h-44 w-44 rounded-3xl object-cover" />
+            {student.passportPhoto ? (
+              <img src={student.passportPhoto} alt="Student passport" className="h-44 w-44 rounded-3xl object-cover" />
             ) : (
               <div className="flex h-44 w-44 items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-white text-sm text-slate-500">
                 No photo available
@@ -118,10 +155,10 @@ export default function StudentProfile() {
 
             <div className="flex flex-wrap gap-2">
               <label className="inline-flex cursor-pointer items-center rounded-2xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800">
-                {summary.student.passportPhoto ? "Change photo" : "Add photo"}
+                {student.passportPhoto ? "Change photo" : "Add photo"}
                 <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
               </label>
-              {summary.student.passportPhoto ? (
+              {student.passportPhoto ? (
                 <button
                   type="button"
                   onClick={() => void updatePassportPhoto("")}
@@ -137,19 +174,19 @@ export default function StudentProfile() {
           <div>
             <div>
               <p className="text-sm font-semibold text-slate-700">Student</p>
-              <p className="mt-2 text-xl font-semibold text-slate-900">{summary.student.firstName} {summary.student.lastName}</p>
+              <p className="mt-2 text-xl font-semibold text-slate-900">{student.firstName} {student.lastName}</p>
             </div>
             <div>
               <p className="text-sm font-semibold text-slate-700">Admission number</p>
-              <p className="mt-2 text-slate-900">{summary.student.admissionNumber}</p>
+              <p className="mt-2 text-slate-900">{student.admissionNumber}</p>
             </div>
             <div>
               <p className="text-sm font-semibold text-slate-700">Placement</p>
-              <p className="mt-2 text-slate-900">{summary.student.academicYear} • {summary.student.term} • {summary.student.className}</p>
+              <p className="mt-2 text-slate-900">{student.academicYear} • {student.term} • {student.className}</p>
             </div>
             <div>
               <p className="text-sm font-semibold text-slate-700">Category</p>
-              <p className="mt-2 text-slate-900">{summary.student.studentCategory}</p>
+              <p className="mt-2 text-slate-900">{student.studentCategory}</p>
             </div>
           </div>
         </div>

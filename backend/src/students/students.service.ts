@@ -60,21 +60,45 @@ export class StudentsService {
   }
 
   async update(id: string, updateStudentDto: UpdateStudentDto) {
+    const data: Record<string, unknown> = {};
+
+    if (updateStudentDto.admissionNumber !== undefined) {
+      data.admissionNumber = updateStudentDto.admissionNumber;
+    }
+    if (updateStudentDto.firstName !== undefined) {
+      data.firstName = updateStudentDto.firstName;
+    }
+    if (updateStudentDto.lastName !== undefined) {
+      data.lastName = updateStudentDto.lastName;
+    }
+    if (updateStudentDto.dateOfBirth !== undefined) {
+      data.dateOfBirth = updateStudentDto.dateOfBirth ? new Date(updateStudentDto.dateOfBirth) : null;
+    }
+    if (updateStudentDto.gender !== undefined) {
+      data.gender = updateStudentDto.gender;
+    }
+    if (updateStudentDto.passportPhoto !== undefined) {
+      data.passportPhoto = updateStudentDto.passportPhoto;
+    }
+    if (updateStudentDto.isActive !== undefined) {
+      data.isActive = updateStudentDto.isActive;
+    }
+    if (updateStudentDto.academicYearId !== undefined) {
+      data.academicYearId = updateStudentDto.academicYearId;
+    }
+    if (updateStudentDto.termId !== undefined) {
+      data.termId = updateStudentDto.termId;
+    }
+    if (updateStudentDto.classId !== undefined) {
+      data.classId = updateStudentDto.classId;
+    }
+    if (updateStudentDto.studentCategoryId !== undefined) {
+      data.studentCategoryId = updateStudentDto.studentCategoryId;
+    }
+
     return this.prisma.student.update({
       where: { id },
-      data: {
-        admissionNumber: updateStudentDto.admissionNumber,
-        firstName: updateStudentDto.firstName,
-        lastName: updateStudentDto.lastName,
-        dateOfBirth: updateStudentDto.dateOfBirth ? new Date(updateStudentDto.dateOfBirth) : undefined,
-        gender: updateStudentDto.gender,
-        passportPhoto: updateStudentDto.passportPhoto,
-        isActive: updateStudentDto.isActive,
-        academicYearId: updateStudentDto.academicYearId,
-        termId: updateStudentDto.termId,
-        classId: updateStudentDto.classId,
-        studentCategoryId: updateStudentDto.studentCategoryId,
-      },
+      data,
       include: {
         academicYear: true,
         term: true,
