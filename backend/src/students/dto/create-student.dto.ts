@@ -22,6 +22,10 @@ export class CreateStudentDto {
   gender?: string;
 
   @IsOptional()
+  @IsString()
+  passportPhoto?: string;
+
+  @IsOptional()
   @IsBoolean()
   isActive?: boolean;
 

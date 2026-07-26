@@ -197,6 +197,8 @@ model Student {
 
   gender String?
 
+  passportPhoto String?
+
   isActive Boolean @default(true)
 
   academicYearId String?

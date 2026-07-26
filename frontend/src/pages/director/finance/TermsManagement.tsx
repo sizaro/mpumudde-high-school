@@ -113,113 +113,12 @@ export default function TermsManagement() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-semibold">Terms & Fees</h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Create and manage academic terms with associated fees.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setShowForm(!showForm)}
-          className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
-        >
-          <Plus size={18} />
-          New Term
-        </button>
+      <div>
+        <h2 className="text-xl font-semibold">Terms & Fees</h2>
+        <p className="mt-1 text-sm text-slate-500">
+          Create and manage academic terms in Academic Setup. Manage fees and assignments here.
+        </p>
       </div>
-
-      {showForm && (
-        <form
-          onSubmit={handleCreateTerm}
-          className="rounded-2xl border border-slate-200 bg-slate-50 p-6"
-        >
-          <h3 className="mb-4 font-semibold text-slate-900">Create New Term</h3>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <label className="block text-sm font-medium text-slate-700">
-              Term Name
-              <input
-                type="text"
-                value={form.name}
-                onChange={(e) => setForm((curr) => ({ ...curr, name: e.target.value }))}
-                placeholder="e.g., Term 1 2024"
-                className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-slate-400"
-                required
-              />
-            </label>
-
-            <label className="block text-sm font-medium text-slate-700">
-              Fee Amount (UGX)
-              <input
-                type="number"
-                value={form.feeAmount}
-                onChange={(e) => setForm((curr) => ({ ...curr, feeAmount: e.target.value }))}
-                placeholder="1000000"
-                min="1"
-                className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-slate-400"
-                required
-              />
-            </label>
-
-            <label className="block text-sm font-medium text-slate-700">
-              Start Date
-              <input
-                type="date"
-                value={form.startDate}
-                onChange={(e) => setForm((curr) => ({ ...curr, startDate: e.target.value }))}
-                className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-slate-400"
-                required
-              />
-            </label>
-
-            <label className="block text-sm font-medium text-slate-700">
-              End Date
-              <input
-                type="date"
-                value={form.endDate}
-                onChange={(e) => setForm((curr) => ({ ...curr, endDate: e.target.value }))}
-                className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-slate-400"
-                required
-              />
-            </label>
-          </div>
-
-          <label className="mt-4 flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={form.isActive}
-              onChange={(e) => setForm((curr) => ({ ...curr, isActive: e.target.checked }))}
-              className="h-4 w-4 rounded border-slate-300"
-            />
-            <span className="text-sm font-medium text-slate-700">Active term</span>
-          </label>
-
-          {feedback && (
-            <p className={`mt-4 text-sm ${feedback.includes("success") ? "text-emerald-600" : "text-red-600"}`}>
-              {feedback}
-            </p>
-          )}
-
-          <div className="mt-6 flex gap-3">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:bg-slate-400"
-            >
-              {submitting ? "Creating..." : "Create Term"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowForm(false)}
-              className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      )}
 
       {loading ? (
         <div className="py-8 text-center text-slate-500">Loading terms...</div>

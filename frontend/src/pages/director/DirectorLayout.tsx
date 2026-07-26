@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { Bell, LogOut } from "lucide-react";
+import { Bell, LogOut, ChevronDown } from "lucide-react";
+import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 const navButton = ({ isActive }: { isActive: boolean }) =>
@@ -9,8 +10,16 @@ const navButton = ({ isActive }: { isActive: boolean }) =>
       : "text-slate-700 hover:bg-slate-100 hover:text-slate-900 hover:shadow-sm"
   }`;
 
+const subNavButton = ({ isActive }: { isActive: boolean }) =>
+  `block w-full rounded-2xl px-4 py-2.5 text-left text-sm transition duration-200 ease-out ml-4 ${
+    isActive
+      ? "bg-slate-800 text-white"
+      : "text-slate-600 hover:bg-slate-50 hover:text-slate-700"
+  }`;
+
 export default function DirectorLayout() {
   const { logout } = useAuth();
+  const [studentsMenuOpen, setStudentsMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -26,15 +35,32 @@ export default function DirectorLayout() {
               <NavLink to="." className={navButton} end>
                 Overview
               </NavLink>
-              <NavLink to="students/register" className={navButton} end>
-                Student Registration
-              </NavLink>
-              <NavLink to="students" className={navButton} end>
-                Registered Students
-              </NavLink>
-              <NavLink to="students/status" className={navButton} end>
-                Student Status
-              </NavLink>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setStudentsMenuOpen(!studentsMenuOpen)}
+                  className={`${navButton({ isActive: studentsMenuOpen })} flex items-center justify-between w-full`}
+                >
+                  <span>Students</span>
+                  <ChevronDown size={16} className={`transition ${studentsMenuOpen ? "rotate-180" : ""}`} />
+                </button>
+
+                {studentsMenuOpen && (
+                  <div className="mt-1 space-y-1">
+                    <NavLink to="students/register" className={subNavButton} end>
+                      Register Student
+                    </NavLink>
+                    <NavLink to="students" className={subNavButton} end>
+                      Registered Students
+                    </NavLink>
+                    <NavLink to="students/status" className={subNavButton} end>
+                      Student Status
+                    </NavLink>
+                  </div>
+                )}
+              </div>
+
               <NavLink to="finance" className={navButton} end>
                 Finances
               </NavLink>

@@ -22,8 +22,11 @@ export default function AcademicSetupPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [form, setForm] = useState({
     academicYearName: "",
-    termName: "",
     termAcademicYearId: "",
+    termStartDate: "",
+    termEndDate: "",
+    termFeeAmount: "",
+    termEditId: "",
     className: "",
     studentCategoryName: "",
     feeTypeName: "",
@@ -34,6 +37,7 @@ export default function AcademicSetupPage() {
     financeFeeTypeId: "",
     financeExpectedAmount: "",
   });
+  const [editingTermId, setEditingTermId] = useState<string | null>(null);
 
   const loadData = async () => {
     try {
@@ -74,11 +78,25 @@ export default function AcademicSetupPage() {
   };
 
   const handleCreateTerm = async () => {
-    if (!form.termName.trim() || !form.termAcademicYearId) return;
-    await SetupService.createTerm({ academicYearId: form.termAcademicYearId, name: form.termName.trim(), feeAmount: 0 });
-    setForm((current) => ({ ...current, termName: "", termAcademicYearId: "" }));
-    setMessage("Term saved.");
-    await loadData();
+    if (editingTermId && (!form.termStartDate || !form.termEndDate)) return;
+    
+    if (editingTermId) {
+      // Update existing term
+      const termToUpdate = terms.find(t => t.id === editingTermId);
+      if (termToUpdate) {
+        await SetupService.createTerm({
+          academicYearId: termToUpdate.academicYearId,
+          name: termToUpdate.name,
+          feeAmount: form.termFeeAmount ? Number(form.termFeeAmount) : termToUpdate.feeAmount,
+          startDate: form.termStartDate,
+          endDate: form.termEndDate,
+        });
+        setMessage("Term updated successfully.");
+        setEditingTermId(null);
+        setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termFeeAmount: "", termEditId: "" }));
+        await loadData();
+      }
+    }
   };
 
   const handleCreateClass = async () => {
@@ -181,29 +199,72 @@ export default function AcademicSetupPage() {
         <div className="grid gap-4 lg:grid-cols-[1.1fr_0.85fr]">
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-xl font-semibold text-slate-900">Terms</h2>
+            <p className="mt-2 text-sm text-slate-500">Term 1, 2, and 3 are predefined. Edit their features as needed.</p>
             <div className="mt-4 space-y-3">
-              {terms.length ? terms.map((term) => (
-                <div key={term.id} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                  <p className="font-medium text-slate-900">{term.name}</p>
-                  <p className="text-sm text-slate-500">{term.academicYear?.name ?? "Academic year"}</p>
+              {["Term 1", "Term 2", "Term 3"].map((termName) => (
+                <div key={termName} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-slate-900">{termName}</p>
+                      {terms.find(t => t.name === termName)?.startDate && (
+                        <p className="mt-1 text-xs text-slate-500">
+                          {new Date(terms.find(t => t.name === termName)?.startDate || "").toLocaleDateString()} - {new Date(terms.find(t => t.name === termName)?.endDate || "").toLocaleDateString()}
+                        </p>
+                      )}
+                      {terms.find(t => t.name === termName)?.feeAmount && (
+                        <p className="text-xs text-slate-500">Fee: UGX {terms.find(t => t.name === termName)?.feeAmount.toLocaleString()}</p>
+                      )}
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        const term = terms.find(t => t.name === termName);
+                        if (term) {
+                          setEditingTermId(term.id);
+                          setForm((current) => ({ 
+                            ...current, 
+                            termStartDate: term.startDate || "", 
+                            termEndDate: term.endDate || "",
+                            termFeeAmount: term.feeAmount ? String(term.feeAmount) : ""
+                          }));
+                        }
+                      }}
+                      className="rounded-2xl bg-slate-900 px-3 py-1 text-xs font-medium text-white"
+                    >
+                      Edit
+                    </button>
+                  </div>
                 </div>
-              )) : <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-500">No terms created yet.</div>}
+              ))}
             </div>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold text-slate-900">Add Term</h2>
-            <label className="mt-4 block text-sm font-medium text-slate-700">
-              Academic Year
-              <select value={form.termAcademicYearId} onChange={(event) => setForm((current) => ({ ...current, termAcademicYearId: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
-                <option value="">Select academic year</option>
-                {academicYears.map((year) => <option key={year.id} value={year.id}>{year.name}</option>)}
-              </select>
-            </label>
-            <label className="mt-4 block text-sm font-medium text-slate-700">
-              Term Name
-              <input value={form.termName} onChange={(event) => setForm((current) => ({ ...current, termName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. Term 1" />
-            </label>
-            <button type="button" onClick={handleCreateTerm} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Term</button>
+            <h2 className="text-xl font-semibold text-slate-900">{editingTermId ? "Edit Term" : "Term Features"}</h2>
+            {editingTermId ? (
+              <>
+                <label className="mt-4 block text-sm font-medium text-slate-700">
+                  Start Date
+                  <input type="date" value={form.termStartDate} onChange={(event) => setForm((current) => ({ ...current, termStartDate: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />
+                </label>
+                <label className="mt-4 block text-sm font-medium text-slate-700">
+                  End Date
+                  <input type="date" value={form.termEndDate} onChange={(event) => setForm((current) => ({ ...current, termEndDate: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />
+                </label>
+                <label className="mt-4 block text-sm font-medium text-slate-700">
+                  Fee Amount (UGX) (Optional)
+                  <input type="number" value={form.termFeeAmount} onChange={(event) => setForm((current) => ({ ...current, termFeeAmount: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="0" />
+                </label>
+                <div className="mt-4 flex gap-2">
+                  <button type="button" onClick={handleCreateTerm} className="flex-1 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Changes</button>
+                  <button type="button" onClick={() => {
+                    setEditingTermId(null);
+                    setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termFeeAmount: "" }));
+                  }} className="flex-1 rounded-2xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700">Cancel</button>
+                </div>
+              </>
+            ) : (
+              <p className="mt-4 text-sm text-slate-500">Select a term to edit its start date, end date, and fee amount.</p>
+            )}
           </div>
         </div>
       ) : null}
@@ -225,7 +286,15 @@ export default function AcademicSetupPage() {
             <h2 className="text-xl font-semibold text-slate-900">Add Class</h2>
             <label className="mt-4 block text-sm font-medium text-slate-700">
               Class Name
-              <input value={form.className} onChange={(event) => setForm((current) => ({ ...current, className: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. Senior 1" />
+              <select value={form.className} onChange={(event) => setForm((current) => ({ ...current, className: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
+                <option value="">Select a class</option>
+                <option value="Senior 1">Senior 1</option>
+                <option value="Senior 2">Senior 2</option>
+                <option value="Senior 3">Senior 3</option>
+                <option value="Senior 4">Senior 4</option>
+                <option value="Senior 5">Senior 5</option>
+                <option value="Senior 6">Senior 6</option>
+              </select>
             </label>
             <button type="button" onClick={handleCreateClass} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Class</button>
           </div>
@@ -249,7 +318,11 @@ export default function AcademicSetupPage() {
             <h2 className="text-xl font-semibold text-slate-900">Add Category</h2>
             <label className="mt-4 block text-sm font-medium text-slate-700">
               Category Name
-              <input value={form.studentCategoryName} onChange={(event) => setForm((current) => ({ ...current, studentCategoryName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. Boarding" />
+              <select value={form.studentCategoryName} onChange={(event) => setForm((current) => ({ ...current, studentCategoryName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
+                <option value="">Select a category</option>
+                <option value="Boarding">Boarding</option>
+                <option value="Day">Day</option>
+              </select>
             </label>
             <button type="button" onClick={handleCreateStudentCategory} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Category</button>
           </div>
@@ -273,7 +346,13 @@ export default function AcademicSetupPage() {
             <h2 className="text-xl font-semibold text-slate-900">Add Fee Type</h2>
             <label className="mt-4 block text-sm font-medium text-slate-700">
               Fee Type Name
-              <input value={form.feeTypeName} onChange={(event) => setForm((current) => ({ ...current, feeTypeName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. Tuition" />
+              <select value={form.feeTypeName} onChange={(event) => setForm((current) => ({ ...current, feeTypeName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
+                <option value="">Select a fee type</option>
+                <option value="Tuition">Tuition</option>
+                <option value="Examination">Examination</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Activities">Activities</option>
+              </select>
             </label>
             <button type="button" onClick={handleCreateFeeType} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Fee Type</button>
           </div>
@@ -306,14 +385,14 @@ export default function AcademicSetupPage() {
               Term
               <select value={form.financeTermId} onChange={(event) => setForm((current) => ({ ...current, financeTermId: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
                 <option value="">Select term</option>
-                {terms.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                {terms.filter((t) => (t.name === "Term 1" || t.name === "Term 2" || t.name === "Term 3") && t.academicYearId === form.financeAcademicYearId).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
               </select>
             </label>
             <label className="mt-4 block text-sm font-medium text-slate-700">
               Class
               <select value={form.financeClassId} onChange={(event) => setForm((current) => ({ ...current, financeClassId: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
                 <option value="">Select class</option>
-                {classes.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                {classes.filter((c) => ["Senior 1", "Senior 2", "Senior 3", "Senior 4", "Senior 5", "Senior 6"].includes(c.name)).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
               </select>
             </label>
             <label className="mt-4 block text-sm font-medium text-slate-700">

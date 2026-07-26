@@ -5,6 +5,7 @@ export interface Student {
   lastName: string;
   dateOfBirth?: string;
   gender?: string;
+  passportPhoto?: string;
   isActive: boolean;
   academicYearId?: string;
   termId?: string;
