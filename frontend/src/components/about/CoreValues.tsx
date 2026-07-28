@@ -48,18 +48,18 @@ const values = [
 
 export default function CoreValues() {
   return (
-    <section className="bg-slate-50 py-20">
+    <section className="bg-slate-900/30 py-20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             Core Values
           </p>
 
-          <h2 className="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">
+          <h2 className="mt-3 section-title">
             The principles that guide everything we do.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-3xl section-lead">
             Our values shape the character of our students, influence our
             decisions, and define the culture of Mpumudde High School.
           </p>
@@ -72,17 +72,17 @@ export default function CoreValues() {
             return (
               <div
                 key={value.title}
-                className="group rounded-3xl border border-slate-200 bg-white p-8 transition duration-300 hover:-translate-y-2 hover:border-amber-400 hover:shadow-xl"
+                className="group glass-card p-8 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 transition group-hover:bg-amber-500 group-hover:text-white">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl transition group-hover:scale-110" style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#4ade80' }}>
                   <Icon size={32} />
                 </div>
 
-                <h3 className="mt-6 text-2xl font-bold text-slate-900">
+                <h3 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
                   {value.title}
                 </h3>
 
-                <p className="mt-4 leading-8 text-slate-600">
+                <p className="mt-4 leading-8 text-slate-600 dark:text-white/70">
                   {value.description}
                 </p>
               </div>

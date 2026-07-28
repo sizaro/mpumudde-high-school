@@ -31,17 +31,24 @@ const newsItems = [
   },
 ];
 
-export default function News() {
+export default function NewsroomNews() {
   return (
     <section className="site-container py-20 space-y-16">
-      <header className="space-y-4 text-center">
+      <header className="space-y-4">
+        <Link 
+          to="/newsroom"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-amber-400 hover:text-amber-300 mb-6"
+        >
+          ← Back to Newsroom
+        </Link>
+        
         <p className="section-badge">
           Latest school news
         </p>
         <h1 className="section-title">
           Stay informed with the latest announcements and school events.
         </h1>
-        <p className="text-slate-700 dark:text-white/80 text-lg max-w-3xl mx-auto leading-relaxed">
+        <p className="text-slate-700 dark:text-white/80 text-lg max-w-3xl leading-relaxed">
           Discover important updates about academics, facilities, community projects,
           and student achievements at Mpumudde High School.
         </p>

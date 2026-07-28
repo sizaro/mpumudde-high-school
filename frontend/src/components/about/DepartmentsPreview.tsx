@@ -62,20 +62,20 @@ const departments = [
 
 export default function DepartmentsPreview() {
   return (
-    <section className="bg-white py-24">
+    <section className="bg-slate-900/20 py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         {/* Header */}
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             Academic Departments
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold text-slate-900">
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             A wide range of subjects for a complete education.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-3xl section-lead">
             Our departments provide students with knowledge, practical skills,
             and opportunities to explore their interests and prepare for future
             careers.
@@ -91,17 +91,17 @@ export default function DepartmentsPreview() {
             return (
               <div
                 key={department.title}
-                className="group rounded-3xl border border-slate-200 bg-slate-50 p-7 transition duration-300 hover:-translate-y-2 hover:border-amber-400 hover:shadow-xl"
+                className="group glass-card p-7 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 transition group-hover:bg-amber-500 group-hover:text-white">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl transition group-hover:scale-110" style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa' }}>
                   <Icon size={28} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-bold text-slate-900">
+                <h3 className="mt-6 text-xl font-bold text-slate-900 dark:text-white">
                   {department.title}
                 </h3>
 
-                <p className="mt-4 leading-7 text-slate-600">
+                <p className="mt-4 leading-7 section-lead">
                   {department.description}
                 </p>
               </div>
@@ -112,7 +112,7 @@ export default function DepartmentsPreview() {
 
         {/* Button */}
         <div className="mt-12 text-center">
-          <button className="rounded-full bg-slate-900 px-8 py-3 font-semibold text-white transition hover:bg-slate-700">
+          <button className="glass-button">
             Explore All Departments
           </button>
         </div>

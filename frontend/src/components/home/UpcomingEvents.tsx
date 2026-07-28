@@ -1,5 +1,6 @@
 import { CalendarDays, MapPin, Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AnimatedSection } from "../AnimatedSection";
 
 const events = [
   {
@@ -30,8 +31,9 @@ const events = [
 
 export default function UpcomingEvents() {
   return (
-    <section className="bg-slate-50 py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24">
+      <AnimatedSection delay={0.25}>
+      <div className="site-container">
 
         {/* Header */}
 
@@ -39,15 +41,15 @@ export default function UpcomingEvents() {
 
           <div>
 
-            <span className="inline-block px-4 py-2 rounded-full bg-green-100 text-green-700 font-semibold">
+            <span className="section-badge">
               UPCOMING EVENTS
             </span>
 
-            <h2 className="mt-6 text-4xl md:text-5xl font-bold text-slate-900">
+            <h2 className="section-title mt-6">
               School Activities & Calendar
             </h2>
 
-            <p className="mt-4 text-slate-600 max-w-2xl text-lg">
+            <p className="section-lead mt-4">
               Stay informed about important academic and co-curricular events.
             </p>
 
@@ -55,7 +57,7 @@ export default function UpcomingEvents() {
 
           <Link
             to="/events"
-            className="inline-flex items-center gap-2 text-green-700 font-semibold hover:gap-4 transition-all"
+            className="inline-flex items-center gap-2 font-semibold hover:gap-4 transition-all text-emerald-400"
           >
             View All Events
             <ArrowRight size={18} />
@@ -70,31 +72,31 @@ export default function UpcomingEvents() {
           {events.map((event) => (
             <div
               key={event.title}
-              className="bg-white border border-slate-100 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+              className="glass-card-solid p-8 hover:scale-105 transition-all duration-300"
             >
 
               {/* Date Badge */}
 
-              <div className="flex items-center gap-2 text-green-700 font-semibold">
+              <div className="flex items-center gap-2 font-semibold text-emerald-400">
                 <CalendarDays size={18} />
                 <span>{event.date}</span>
               </div>
 
               {/* Title */}
 
-              <h3 className="mt-4 text-2xl font-bold text-slate-900">
+              <h3 className="mt-4 text-2xl font-bold text-slate-900 dark:text-white">
                 {event.title}
               </h3>
 
               {/* Description */}
 
-              <p className="mt-3 text-slate-600 leading-7">
+              <p className="mt-3 leading-7 text-slate-600 dark:text-white/70">
                 {event.description}
               </p>
 
               {/* Meta Info */}
 
-              <div className="mt-6 space-y-2 text-sm text-slate-600">
+              <div className="mt-6 space-y-2 text-sm text-slate-500 dark:text-white/60">
 
                 <div className="flex items-center gap-2">
                   <Clock size={16} />
@@ -114,6 +116,7 @@ export default function UpcomingEvents() {
         </div>
 
       </div>
+      </AnimatedSection>
     </section>
   );
 }

@@ -1,6 +1,6 @@
 export default function SchoolOverview() {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-20">
+    <section className="mx-auto max-w-6xl px-6 py-20 bg-slate-900/20">
       <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
         {/* Image */}
         <div className="overflow-hidden rounded-3xl shadow-xl">
@@ -13,22 +13,22 @@ export default function SchoolOverview() {
 
         {/* Content */}
         <div className="space-y-6">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             School Overview
           </p>
 
-          <h2 className="text-3xl font-extrabold text-slate-900 md:text-4xl">
+          <h2 className="section-title">
             Building a strong foundation for lifelong success.
           </h2>
 
-          <p className="leading-8 text-slate-600">
+          <p className="section-lead">
             Mpumudde High School is committed to providing quality education
             that develops students academically, socially, and personally.
             Through dedicated teachers, supportive learning environments, and
             strong values, we help learners discover their potential.
           </p>
 
-          <p className="leading-8 text-slate-600">
+          <p className="section-lead">
             Our approach combines classroom excellence with leadership,
             creativity, discipline, and community responsibility. We believe
             every student deserves opportunities to grow, achieve, and prepare
@@ -36,23 +36,23 @@ export default function SchoolOverview() {
           </p>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl bg-slate-50 p-5">
-              <h3 className="text-2xl font-bold text-slate-900">20+</h3>
-              <p className="mt-1 text-sm text-slate-600">
+            <div className="glass-card p-5">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">20+</h3>
+              <p className="mt-1 text-sm text-slate-600 dark:text-white/70">
                 Years of Excellence
               </p>
             </div>
 
-            <div className="rounded-2xl bg-slate-50 p-5">
-              <h3 className="text-2xl font-bold text-slate-900">1000+</h3>
-              <p className="mt-1 text-sm text-slate-600">
+            <div className="glass-card p-5">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">1000+</h3>
+              <p className="mt-1 text-sm text-slate-600 dark:text-white/70">
                 Students
               </p>
             </div>
 
-            <div className="rounded-2xl bg-slate-50 p-5">
-              <h3 className="text-2xl font-bold text-slate-900">50+</h3>
-              <p className="mt-1 text-sm text-slate-600">
+            <div className="glass-card p-5">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">50+</h3>
+              <p className="mt-1 text-sm text-slate-600 dark:text-white/70">
                 Teachers
               </p>
             </div>

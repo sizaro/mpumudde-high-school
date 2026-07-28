@@ -41,20 +41,20 @@ const faqs = [
 
 export default function FAQsPreview() {
   return (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-slate-900/30 py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         {/* Header */}
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-600">
+          <p className="section-badge">
             Frequently Asked Questions
           </p>
 
-          <h2 className="mt-4 text-4xl font-extrabold text-slate-900">
+          <h2 className="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white">
             Answers to common questions.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-3xl section-lead">
             Find quick answers about admissions, academics, boarding, fees,
             and school life.
           </p>
@@ -69,17 +69,17 @@ export default function FAQsPreview() {
             return (
               <div
                 key={faq.question}
-                className="rounded-3xl bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl"
+                className="glass-card p-7 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: 'rgba(251, 191, 36, 0.2)', color: '#fbbf24' }}>
                   <Icon size={28} />
                 </div>
 
-                <h3 className="mt-6 text-lg font-bold text-slate-900">
+                <h3 className="mt-6 text-lg font-bold text-slate-900 dark:text-white">
                   {faq.question}
                 </h3>
 
-                <p className="mt-4 text-sm leading-7 text-slate-600">
+                <p className="mt-4 text-sm leading-7 section-lead">
                   {faq.answer}
                 </p>
               </div>
@@ -90,7 +90,7 @@ export default function FAQsPreview() {
 
         {/* CTA */}
         <div className="mt-12 text-center">
-          <button className="rounded-full bg-slate-900 px-8 py-3 font-semibold text-white transition hover:bg-slate-700">
+          <button className="glass-button">
             View All FAQs
           </button>
         </div>

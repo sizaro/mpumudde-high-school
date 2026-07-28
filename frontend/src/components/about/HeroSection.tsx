@@ -11,16 +11,16 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-slate-900/60" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-6 py-28 text-center text-white">
+      <div className="relative mx-auto max-w-6xl px-6 py-28 text-center">
         <p className="mb-5 text-sm uppercase tracking-[0.3em] text-amber-400">
           About Mpumudde High School
         </p>
 
-        <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-tight md:text-6xl">
+        <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-tight md:text-6xl text-slate-900 dark:text-white">
           A school where curiosity, character and achievement grow together.
         </h1>
 
-        <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-200">
+        <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300">
           Mpumudde High School provides students with a well-rounded education
           that blends academic excellence, leadership development, and community
           service. We prepare learners for the future with values, confidence,
@@ -32,7 +32,7 @@ export default function HeroSection() {
             Learn More
           </button>
 
-          <button className="rounded-full border border-white/40 px-8 py-3 font-semibold text-white transition hover:bg-white hover:text-slate-900">
+          <button className="rounded-full border border-slate-400 dark:border-white/40 px-8 py-3 font-semibold text-slate-900 dark:text-white transition hover:bg-slate-200 dark:hover:bg-white/10">
             Contact Us
           </button>
         </div>
