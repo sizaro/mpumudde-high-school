@@ -20,6 +20,7 @@ const subNavButton = ({ isActive }: { isActive: boolean }) =>
 export default function DirectorLayout() {
   const { logout } = useAuth();
   const [studentsMenuOpen, setStudentsMenuOpen] = useState(false);
+  const [teachersMenuOpen, setTeachersMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -27,8 +28,12 @@ export default function DirectorLayout() {
         <aside className="w-full border-b border-slate-200 bg-white p-6 shadow-sm lg:w-72 lg:border-r lg:border-b-0 lg:shadow-none">
           <div className="sticky top-0 space-y-4">
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Director Portal</h2>
-              <p className="mt-2 text-sm text-slate-500">Manage students and school finance.</p>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
+                Director Portal
+              </h2>
+              <p className="mt-2 text-sm text-slate-500">
+                Manage students and school finance.
+              </p>
             </div>
 
             <nav className="mt-6 space-y-2 text-sm">
@@ -43,12 +48,19 @@ export default function DirectorLayout() {
                   className={`${navButton({ isActive: studentsMenuOpen })} flex items-center justify-between w-full`}
                 >
                   <span>Students</span>
-                  <ChevronDown size={16} className={`transition ${studentsMenuOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    size={16}
+                    className={`transition ${studentsMenuOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {studentsMenuOpen && (
                   <div className="mt-1 space-y-1">
-                    <NavLink to="students/register" className={subNavButton} end>
+                    <NavLink
+                      to="students/register"
+                      className={subNavButton}
+                      end
+                    >
                       Register Student
                     </NavLink>
                     <NavLink to="students" className={subNavButton} end>
@@ -64,6 +76,32 @@ export default function DirectorLayout() {
               <NavLink to="finance" className={navButton} end>
                 Finances
               </NavLink>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setTeachersMenuOpen(!teachersMenuOpen)}
+                  className={`${navButton({ isActive: teachersMenuOpen })} flex items-center justify-between w-full`}
+                >
+                  <span>Teachers</span>
+                  <ChevronDown
+                    size={16}
+                    className={`transition ${teachersMenuOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {teachersMenuOpen && (
+                  <div className="mt-1 space-y-1">
+                    <NavLink to="teachers" className={subNavButton} end>
+                      All Teachers
+                    </NavLink>
+                    <NavLink to="teachers/create" className={subNavButton} end>
+                      Register Teacher
+                    </NavLink>
+                  </div>
+                )}
+              </div>
+
               <NavLink to="account-management" className={navButton} end>
                 Account Management
               </NavLink>

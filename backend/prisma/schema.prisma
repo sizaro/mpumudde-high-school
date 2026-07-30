@@ -28,6 +28,8 @@ model User {
 
   parent Parent?
 
+  uploadedDocuments Document[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -134,22 +136,482 @@ model Director {
 // ==========================
 
 model Teacher {
+
   id String @id @default(cuid())
+
 
   firstName String
 
+  middleName String?
+
   lastName String
 
+
+  gender String?
+
+  dateOfBirth DateTime?
+
+
   phone String?
+
+  email String?
+
+
+  nationality String?
+
+
+  address String?
+
+
+  profilePhoto String?
+
+
 
   userId String @unique
 
   user User @relation(fields: [userId], references: [id])
 
+
+
+  employment TeacherEmployment?
+
+
+  medicalInformation MedicalInformation?
+
+
+  emergencyContacts EmergencyContact[]
+
+
+  qualifications Qualification[]
+
+
+  teachingAssignments TeacherAssignment[]
+
+
+  attendanceSessions AttendanceSession[]
+
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+
 }
+
+
+
+model TeacherEmployment {
+
+  id String @id @default(cuid())
+
+
+  teacherId String @unique
+
+
+  employeeNumber String @unique
+
+
+  position String?
+
+
+  department String?
+
+
+  employmentType String?
+
+
+  employmentDate DateTime?
+
+
+  probationEndDate DateTime?
+
+
+  salary Int?
+
+
+  status String @default("active")
+
+
+  teacher Teacher @relation(fields: [teacherId], references: [id])
+
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+
+
+
+model Subject {
+
+  id String @id @default(cuid())
+
+
+  name String @unique
+
+
+  code String?
+
+
+  isActive Boolean @default(true)
+
+
+  teachers TeacherAssignment[]
+
+
+  attendanceSessions AttendanceSession[]
+
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+
+model TeacherAssignment {
+
+  id String @id @default(cuid())
+
+
+  teacherId String
+
+  classId String
+
+  subjectId String
+
+
+
+  teacher Teacher @relation(fields: [teacherId], references: [id])
+
+
+  schoolClass SchoolClass @relation(fields: [classId], references: [id])
+
+
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+
+
+  createdAt DateTime @default(now())
+
+
+
+  @@unique([teacherId, classId, subjectId])
+
+}
+
+model MedicalInformation {
+
+ id String @id @default(cuid())
+
+
+ teacherId String @unique
+
+
+ bloodGroup String?
+
+
+ allergies String?
+
+
+ medicalConditions String?
+
+
+ medication String?
+
+
+ disability String?
+
+
+ notes String?
+
+
+
+ teacher Teacher @relation(fields: [teacherId], references: [id])
+
+
+}
+
+model EmergencyContact {
+
+ id String @id @default(cuid())
+
+
+ teacherId String
+
+
+ fullName String
+
+
+ relationship String
+
+
+ phone String
+
+
+ alternativePhone String?
+
+
+ address String?
+
+
+
+ isNextOfKin Boolean @default(false)
+
+
+
+ teacher Teacher @relation(fields: [teacherId], references: [id])
+
+
+ createdAt DateTime @default(now())
+
+
+}
+
+model Document {
+
+  id String @id @default(cuid())
+
+  // ==========================
+  // Ownership
+  // ==========================
+
+  entityType String
+  // TEACHER
+  // STUDENT
+  // PARENT
+  // DIRECTOR
+  // SCHOOL
+  // FINANCE
+
+  entityId String
+
+  // ==========================
+  // Document Category
+  // ==========================
+
+  documentCategoryId String
+
+  documentCategory DocumentCategory @relation(fields: [documentCategoryId], references: [id])
+
+  // ==========================
+  // File Information
+  // ==========================
+
+  title String?
+
+  description String?
+
+  originalFileName String
+
+  storedFileName String?
+
+  fileUrl String
+
+  fileExtension String?
+  // pdf
+  // jpg
+  // png
+  // docx
+
+  mimeType String?
+
+  fileSize Int?
+
+  // ==========================
+  // Upload Information
+  // ==========================
+
+  uploadedByUserId String?
+
+  uploadedBy User? @relation(fields: [uploadedByUserId], references: [id])
+
+  // ==========================
+  // Status
+  // ==========================
+
+  isVerified Boolean @default(false)
+
+  verifiedAt DateTime?
+
+  expiresAt DateTime?
+
+  isActive Boolean @default(true)
+
+  // ==========================
+  // Audit
+  // ==========================
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([entityType, entityId])
+
+  @@index([documentCategoryId])
+
+}
+
+
+model DocumentCategory {
+
+  id String @id @default(cuid())
+
+  name String @unique
+  // National ID
+  // Passport
+  // LC1 Introduction Letter
+  // Driving Permit
+  // Birth Certificate
+  // Academic Certificate
+  // Appointment Letter
+  // Employment Contract
+  // Recommendation Letter
+  // Police Clearance
+  // Teaching License
+  // CV
+  // Medical Report
+  // Report Card
+  // Invoice
+  // Receipt
+  // Other
+
+  description String?
+
+  entityType String
+  // TEACHER
+  // STUDENT
+  // PARENT
+  // DIRECTOR
+  // FINANCE
+  // SCHOOL
+  // GENERAL
+
+  isRequired Boolean @default(false)
+
+  isActive Boolean @default(true)
+
+  allowMultiple Boolean @default(true)
+
+  documents Document[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+
+model Qualification {
+
+  id String @id @default(cuid())
+
+  teacherId String
+
+  qualificationType String?
+  // Certificate
+  // Diploma
+  // Bachelor's Degree
+  // Master's Degree
+  // PhD
+  // Professional Certification
+  // Other
+
+  qualificationName String
+  // Bachelor of Science with Education
+
+  institution String
+
+  specialization String?
+  // Mathematics
+  // Physics
+  // ICT
+
+  grade String?
+  // First Class
+  // Second Upper
+  // Credit
+  // Distinction
+
+  yearStarted Int?
+
+  yearCompleted Int?
+
+  certificateNumber String?
+
+  documentUrl String?
+
+  teacher Teacher @relation(fields: [teacherId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+
+
+model AttendanceSession {
+
+  id String @id @default(cuid())
+
+
+  teacherId String
+
+  classId String
+
+  subjectId String
+
+
+  date DateTime @default(now())
+
+
+  teacher Teacher @relation(fields: [teacherId], references: [id])
+
+
+  schoolClass SchoolClass @relation(fields: [classId], references: [id])
+
+
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+
+  records AttendanceRecord[]
+
+
+  createdAt DateTime @default(now())
+
+
+}
+
+
+model AttendanceRecord {
+
+  id String @id @default(cuid())
+
+
+  attendanceSessionId String
+
+
+  studentId String
+
+
+  status String
+  // Present
+  // Absent
+  // Late
+  // Excused
+
+
+
+  attendanceSession AttendanceSession @relation(fields: [attendanceSessionId], references: [id])
+
+
+  student Student @relation(fields: [studentId], references: [id])
+
+
+  createdAt DateTime @default(now())
+
+
+}
+
+
 
 // ==========================
 // PARENTS
@@ -185,47 +647,75 @@ model Parent {
 // ==========================
 
 model Student {
+
   id String @id @default(cuid())
+
 
   admissionNumber String @unique
 
+
   firstName String
+
 
   lastName String
 
+
   dateOfBirth DateTime?
+
 
   gender String?
 
+
   passportPhoto String?
+
 
   isActive Boolean @default(true)
 
+
   academicYearId String?
+
 
   termId String?
 
+
   classId String?
+
 
   studentCategoryId String?
 
+
+
   academicYear AcademicYear? @relation(fields: [academicYearId], references: [id])
+
 
   term Term? @relation(fields: [termId], references: [id])
 
+
   schoolClass SchoolClass? @relation(fields: [classId], references: [id])
+
 
   studentCategory StudentCategory? @relation(fields: [studentCategoryId], references: [id])
 
+
+
   parents StudentParent[]
+
 
   payments Payment[]
 
+
   termFees StudentTermFee[]
+
+
+  attendanceRecords AttendanceRecord[]
+
+
 
   createdAt DateTime @default(now())
 
+
   updatedAt DateTime @updatedAt
+
 }
 
 // ==========================
@@ -315,6 +805,10 @@ model SchoolClass {
   isActive Boolean @default(true)
 
   students Student[]
+
+  teachers TeacherAssignment[]
+
+  attendanceSessions AttendanceSession[]
 
   financeStructures FinanceStructure[]
 

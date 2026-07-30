@@ -22,7 +22,28 @@ import PaymentHistory from "../pages/director/finance/History";
 import DirectorReports from "../pages/director/reports/Reports";
 import AcademicSetupPage from "../pages/director/setup/AcademicSetupPage";
 import AccountManagement from "../pages/director/AccountManagement";
-import TeacherDashboard from "../pages/teacher/Dashboard";
+
+// Director — Teacher management
+import TeacherListPage from "../pages/director/teachers/List";
+import CreateTeacherWizard from "../pages/director/teachers/CreateWizard";
+import TeacherProfileDirector from "../pages/director/teachers/Profile";
+import TeacherAssignmentsPage from "../pages/director/teachers/Assignments";
+import EditTeacherPage from "../pages/director/teachers/EditTeacher";
+import TeacherContactsPage from "../pages/director/teachers/Contacts";
+import TeacherMedicalPage from "../pages/director/teachers/Medical";
+import TeacherDocumentsPage from "../pages/director/teachers/Documents";
+
+// Teacher portal
+import TeacherLayout from "../pages/teacher/TeacherLayout";
+import TeacherOverview from "../pages/teacher/Overview";
+import MyClasses from "../pages/teacher/MyClasses";
+import MySubjects from "../pages/teacher/MySubjects";
+import TakeAttendance from "../pages/teacher/TakeAttendance";
+import AttendanceHistory from "../pages/teacher/AttendanceHistory";
+import TeacherProfilePage from "../pages/teacher/TeacherProfilePage";
+import MyDocuments from "../pages/teacher/MyDocuments";
+import MyMedical from "../pages/teacher/MyMedical";
+
 import ParentDashboard from "../pages/parent/Dashboard";
 import StudentDashboard from "../pages/student/Dashboard";
 
@@ -40,7 +61,7 @@ export default function AppRoutes() {
         <Route path="/contact" element={<Contact />} />
       </Route>
 
-      {/* PROTECTED DASHBOARDS */}
+      {/* DIRECTOR DASHBOARD */}
       <Route
         path="/director"
         element={
@@ -59,15 +80,43 @@ export default function AppRoutes() {
         <Route path="academic-setup" element={<AcademicSetupPage />} />
         <Route path="account-management" element={<AccountManagement />} />
         <Route path="reports" element={<DirectorReports />} />
+        {/* Teacher management */}
+        <Route path="teachers" element={<TeacherListPage />} />
+        <Route path="teachers/create" element={<CreateTeacherWizard />} />
+        <Route path="teachers/:id" element={<TeacherProfileDirector />} />
+        <Route path="teachers/:id/edit" element={<EditTeacherPage />} />
+        <Route
+          path="teachers/:id/assignments"
+          element={<TeacherAssignmentsPage />}
+        />
+        <Route path="teachers/:id/contacts" element={<TeacherContactsPage />} />
+        <Route path="teachers/:id/medical" element={<TeacherMedicalPage />} />
+        <Route
+          path="teachers/:id/documents"
+          element={<TeacherDocumentsPage />}
+        />
       </Route>
+
+      {/* TEACHER PORTAL */}
       <Route
         path="/teacher"
         element={
           <ProtectedRoute roles={["TEACHER"]}>
-            <TeacherDashboard />
+            <TeacherLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<TeacherOverview />} />
+        <Route path="overview" element={<TeacherOverview />} />
+        <Route path="classes" element={<MyClasses />} />
+        <Route path="subjects" element={<MySubjects />} />
+        <Route path="attendance/take" element={<TakeAttendance />} />
+        <Route path="attendance/history" element={<AttendanceHistory />} />
+        <Route path="profile" element={<TeacherProfilePage />} />
+        <Route path="documents" element={<MyDocuments />} />
+        <Route path="medical" element={<MyMedical />} />
+      </Route>
+
       <Route
         path="/parent"
         element={

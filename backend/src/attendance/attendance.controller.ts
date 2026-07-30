@@ -1,34 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+﻿import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AttendanceService } from './attendance.service.js';
-import { CreateAttendanceDto } from './dto/create-attendance.dto.js';
-import { UpdateAttendanceDto } from './dto/update-attendance.dto.js';
+import { CreateAttendanceSessionDto } from './dto/create-attendance-session.dto.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
+@UseGuards(JwtAuthGuard)
 @Controller('attendance')
 export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}
 
-  @Post()
-  create(@Body() createAttendanceDto: CreateAttendanceDto) {
-    return this.attendanceService.create(createAttendanceDto);
+  @Post('sessions')
+  createSession(@Body() dto: CreateAttendanceSessionDto, @Req() req: any) {
+    return this.attendanceService.createSession(dto, req.user.id);
   }
 
-  @Get()
-  findAll() {
-    return this.attendanceService.findAll();
-  }
+  @Get('sessions')
+  findAll() { return this.attendanceService.findAll(); }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.attendanceService.findOne(+id);
-  }
+  @Get('sessions/mine')
+  findMine(@Req() req: any) { return this.attendanceService.findByTeacher(req.user.id); }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAttendanceDto: UpdateAttendanceDto) {
-    return this.attendanceService.update(+id, updateAttendanceDto);
-  }
+  @Get('sessions/class/:classId')
+  findByClass(@Param('classId') classId: string) { return this.attendanceService.findByClass(classId); }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.attendanceService.remove(+id);
+  @Get('sessions/:id')
+  findOne(@Param('id') id: string) { return this.attendanceService.findOne(id); }
+
+  @Get('students/class/:classId')
+  getStudentsForClass(@Param('classId') classId: string) {
+    return this.attendanceService.getStudentsForClass(classId);
   }
 }
