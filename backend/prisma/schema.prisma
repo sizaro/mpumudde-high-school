@@ -20,6 +20,12 @@ model User {
 
   isActive Boolean @default(true)
 
+  // Preserves the existing database field while legacy login tracking is phased out.
+  isLoggedIn Boolean @default(false)
+
+  // Preserves existing login-history data in the production database.
+  lastLogin DateTime?
+
   roles UserRole[]
 
   director Director?
@@ -226,6 +232,8 @@ model TeacherEmployment {
 
 
   salary Int?
+
+  payFrequency String?
 
 
   status String @default("active")
@@ -623,14 +631,26 @@ model Parent {
 
   phone String?
 
+  email String?
+
+  occupation String?
+
+  address String?
+
+  profilePhoto String?
+
+  identityDocumentType String?
+
+  identityDocumentUrl String?
+
   relationship String?
   // Father
   // Mother
   // Guardian
 
-  userId String @unique
+  userId String? @unique
 
-  user User @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
 
   students StudentParent[]
 
@@ -664,6 +684,22 @@ model Student {
 
 
   passportPhoto String?
+
+  nationality String?
+
+  address String?
+
+  previousSchool String?
+
+  bloodGroup String?
+
+  allergies String?
+
+  medicalConditions String?
+
+  specialNeeds String?
+
+  medicalNotes String?
 
 
   isActive Boolean @default(true)
@@ -713,6 +749,12 @@ model Student {
 
   updatedAt DateTime @updatedAt
 
+}
+
+model StudentNumberSequence {
+  year Int @id
+  nextNumber Int @default(1)
+  updatedAt DateTime @updatedAt
 }
 
 // ==========================
@@ -837,6 +879,8 @@ model FeeType {
 
   financeStructures FinanceStructure[]
 
+  payments Payment[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -909,6 +953,10 @@ model Payment {
 
   financeStructureId String?
 
+  feeTypeId String?
+
+  receiptUrl String?
+
   amount Int
 
   method String
@@ -924,6 +972,8 @@ model Payment {
   studentTermFee StudentTermFee? @relation(fields: [studentTermFeeId], references: [id])
 
   financeStructure FinanceStructure? @relation(fields: [financeStructureId], references: [id])
+
+  feeType FeeType? @relation(fields: [feeTypeId], references: [id])
 
   createdAt DateTime @default(now())
 
