@@ -69,6 +69,7 @@ export default function RegistrationWizard() {
   const [registrationData, setRegistrationData] = useState<any>({ academicYears: [], terms: [], classes: [], studentCategories: [] });
   const [status, setStatus] = useState<string | null>(null);
   const [payments, setPayments] = useState([{ feeTypeId: "", amount: "", method: "cash", receiptDataUrl: "", receiptName: "" }]);
+  const [draftReady, setDraftReady] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -77,12 +78,30 @@ export default function RegistrationWizard() {
       
       // Generate unique admission number
       const saved = localStorage.getItem(DRAFT_KEY);
-      if (saved) { try { setForm((current) => ({ ...current, ...JSON.parse(saved) })); return; } catch { localStorage.removeItem(DRAFT_KEY); } }
+      if (saved) {
+        try {
+          const draft = JSON.parse(saved);
+          // Supports both older form-only drafts and the current full registration draft.
+          setForm((current) => ({ ...current, ...(draft.form ?? draft) }));
+          if (Array.isArray(draft.payments) && draft.payments.length) setPayments(draft.payments);
+          if (typeof draft.step === "number") setStep(Math.max(0, Math.min(draft.step, steps.length - 1)));
+        } catch { localStorage.removeItem(DRAFT_KEY); }
+      }
+      setDraftReady(true);
     };
     void load();
   }, []);
 
-  useEffect(() => { localStorage.setItem(DRAFT_KEY, JSON.stringify(form)); }, [form]);
+  useEffect(() => {
+    if (!draftReady) return;
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ form, payments, step }));
+  }, [draftReady, form, payments, step]);
+
+  useEffect(() => {
+    const registrationFee = (registrationData.feeTypes || []).find((fee: any) => fee.name?.toLowerCase() === "registration");
+    if (!registrationFee) return;
+    setPayments((current) => current.map((payment, index) => index === 0 && !payment.feeTypeId ? { ...payment, feeTypeId: registrationFee.id } : payment));
+  }, [registrationData.feeTypes]);
 
   const progress = useMemo(() => `${step + 1}/${steps.length}`, [step]);
   const selectedAcademicYear = (registrationData.academicYears || []).find((year: any) => year.id === form.academicYearId);
@@ -142,7 +161,7 @@ export default function RegistrationWizard() {
         if (!payment.feeTypeId || !payment.amount) continue;
         let receiptUrl: string | undefined;
         if (payment.receiptDataUrl) { const blob = await (await fetch(payment.receiptDataUrl)).blob(); const upload = new FormData(); upload.append("file", new File([blob], payment.receiptName || "payment-receipt.jpg", { type: blob.type || "image/jpeg" })); receiptUrl = (await StudentService.uploadPhoto(upload)).url; }
-        paymentPayload.push({ feeTypeId: payment.feeTypeId, academicYearId: form.academicYearId, termId: form.termId, amount: Number(payment.amount), method: payment.method, receiptUrl });
+        paymentPayload.push({ feeTypeId: payment.feeTypeId, feeTypeName: (registrationData.feeTypes || []).find((fee: any) => fee.id === payment.feeTypeId)?.name, academicYearId: form.academicYearId, termId: form.termId, amount: Number(payment.amount), method: payment.method, receiptUrl });
       }
       if (!paymentPayload.length) { setStatus("Add the required registration payment before confirming registration."); return; }
       const student = {
@@ -165,8 +184,9 @@ export default function RegistrationWizard() {
       setStatus("Student registered successfully.");
       navigate("/director/students");
     } catch (error) {
-      console.error("Registration error:", error);
-      setStatus("Unable to register the student. Please try again.");
+      const response = error as { response?: { data?: { message?: string | string[] } } };
+      const message = response.response?.data?.message;
+      setStatus(Array.isArray(message) ? message.join(", ") : message ?? "Unable to register the student. Please try again.");
     }
   };
 
@@ -204,7 +224,7 @@ export default function RegistrationWizard() {
             <label className="text-sm font-medium text-slate-700">Nationality<select value={NATIONALITIES.includes(form.nationality) ? form.nationality : form.nationality ? "Other" : ""} onChange={(event) => updateField("nationality", event.target.value === "Other" ? "Other" : event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select nationality</option>{NATIONALITIES.map((item) => <option key={item}>{item}</option>)}</select>{form.nationality === "Other" && <input onChange={(event) => updateField("nationality", event.target.value)} placeholder="Type country" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />}</label>
             <label className="text-sm font-medium text-slate-700 md:col-span-2">Address<textarea value={form.address} onChange={(event) => updateField("address", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
             <label className="text-sm font-medium text-slate-700">Previous School<input value={form.previousSchool} onChange={(event) => updateField("previousSchool", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
-            <div className="md:col-span-2">
+            <div className="order-first md:col-span-2">
               <div className="mt-2">
               <PhotoCapture label="Student photo" value={form.passportPhoto} onChange={(value) => updateField("passportPhoto", value)} />
               {/*
@@ -295,7 +315,7 @@ export default function RegistrationWizard() {
               <label className="text-sm font-medium text-slate-700">Occupation<select value={OCCUPATIONS.includes(form.parentOccupation) ? form.parentOccupation : form.parentOccupation ? "Other" : ""} onChange={(event) => updateField("parentOccupation", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select occupation</option>{OCCUPATIONS.map((item) => <option key={item}>{item}</option>)}</select>{form.parentOccupation === "Other" && <input onChange={(event) => updateField("parentOccupation", event.target.value)} placeholder="Type occupation" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />}</label>
               <label className="text-sm font-medium text-slate-700">Address<input value={form.parentAddress} onChange={(event) => updateField("parentAddress", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
               <label className="text-sm font-medium text-slate-700 md:col-span-2">Identification Information<textarea value={form.parentIdInfo} onChange={(event) => updateField("parentIdInfo", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
-              <div className="md:col-span-2"><PhotoCapture label="Primary guardian photo" value={form.parentPhoto} onChange={(value) => updateField("parentPhoto", value)} /></div>
+              <div className="order-first md:col-span-2"><PhotoCapture label="Primary guardian photo" value={form.parentPhoto} onChange={(value) => updateField("parentPhoto", value)} /></div>
               <label className="text-sm font-medium text-slate-700">Guardian document<select value={form.parentDocumentType} onChange={(event) => updateField("parentDocumentType", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select document type</option><option>National ID</option><option>LC1 Introduction Letter</option><option>Passport</option><option>Other</option></select></label>
               <label className="text-sm font-medium text-slate-700">Upload document<input type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" onChange={(event) => { const file = event.target.files?.[0]; if (file) { const reader = new FileReader(); reader.onload = () => setForm((current) => ({ ...current, parentDocumentDataUrl: String(reader.result), parentDocumentName: file.name })); reader.readAsDataURL(file); } }} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />{form.parentDocumentName && <span className="mt-1 block text-xs text-emerald-700">Selected: {form.parentDocumentName}</span>}</label>
             </div>

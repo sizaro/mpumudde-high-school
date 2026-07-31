@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateStudentDto } from './dto/create-student.dto.js';
 import { UpdateStudentDto } from './dto/update-student.dto.js';
@@ -34,9 +34,14 @@ export class StudentsService {
 
   async createCompleteRegistration(dto: CompleteStudentRegistrationDto) {
     const { student, primaryGuardian, additionalGuardians = [], payments = [] } = dto;
-    const registrationFee = await this.prisma.feeType.findFirst({ where: { name: { equals: 'Registration', mode: 'insensitive' } } });
-    if (!registrationFee) throw new Error('Create the Registration fee type in Academic Setup before registering a student.');
-    if (!payments.some((payment) => payment.feeTypeId === registrationFee.id && payment.amount > 0)) throw new Error('A Registration payment is required.');
+    const feeTypes = await this.prisma.feeType.findMany({ where: { isActive: true } });
+    const normalizedPayments = payments.map((payment) => ({
+      ...payment,
+      feeTypeId: feeTypes.find((feeType) => feeType.name.toLowerCase() === payment.feeTypeName?.toLowerCase())?.id ?? payment.feeTypeId,
+    }));
+    const registrationFee = feeTypes.find((feeType) => feeType.name.toLowerCase() === 'registration');
+    if (!registrationFee) throw new BadRequestException('Create the Registration fee type in Academic Setup before registering a student.');
+    if (!normalizedPayments.some((payment) => payment.feeTypeId === registrationFee.id && payment.amount > 0)) throw new BadRequestException('Select Registration and enter its payment amount before continuing.');
     return this.prisma.$transaction(async (tx) => {
       const admissionNumber = await this.generateStudentNumber(tx);
       const created = await tx.student.create({
@@ -83,7 +88,7 @@ export class StudentsService {
         });
         await tx.studentParent.create({ data: { studentId: created.id, parentId: parent.id, relationship: guardian.relationship } });
       }
-      for (const payment of payments) {
+      for (const payment of normalizedPayments) {
         const structure = await tx.financeStructure.findFirst({ where: { academicYearId: payment.academicYearId, termId: payment.termId, classId: student.classId, studentCategoryId: student.studentCategoryId, feeTypeId: payment.feeTypeId } });
         await tx.payment.create({ data: { studentId: created.id, feeTypeId: payment.feeTypeId, financeStructureId: structure?.id, amount: payment.amount, method: payment.method, receiptUrl: payment.receiptUrl, status: 'completed' } });
       }
