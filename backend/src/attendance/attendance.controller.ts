@@ -2,8 +2,11 @@
 import { AttendanceService } from './attendance.service.js';
 import { CreateAttendanceSessionDto } from './dto/create-attendance-session.dto.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { Roles } from '../common/decorators/roles.decorator.js';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('TEACHER', 'SUPER_ADMIN')
 @Controller('attendance')
 export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}

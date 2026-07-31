@@ -1,6 +1,7 @@
 ﻿import {
   Controller,
   Post,
+  Body,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -9,6 +10,8 @@
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { Roles } from '../common/decorators/roles.decorator.js';
 import { memoryStorage } from 'multer';
 
 @UseGuards(JwtAuthGuard)
@@ -39,5 +42,14 @@ export class UploadController {
       fileSize: file.size,
       fileExtension: file.originalname.split('.').pop()?.toLowerCase(),
     };
+  }
+
+  @Post('delete')
+  @UseGuards(RolesGuard)
+  @Roles('SUPER_ADMIN')
+  async deleteUpload(@Body() body: { publicId?: string }) {
+    if (!body.publicId) throw new BadRequestException('Upload public ID is required');
+    await this.uploadService.deleteFile(body.publicId);
+    return { message: 'Upload removed' };
   }
 }

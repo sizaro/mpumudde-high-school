@@ -78,6 +78,14 @@ class AuthService {
 
   }
 
+  async changePassword(currentPassword: string, newPassword: string): Promise<{ message: string }> {
+    const { data } = await api.patch<{ message: string }>("/auth/change-password", {
+      currentPassword,
+      newPassword,
+    });
+    return data;
+  }
+
 
 
 }

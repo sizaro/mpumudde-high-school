@@ -18,6 +18,7 @@ export default function TeacherProfilePage() {
 
       <section className="bg-white border rounded-lg p-6">
         <h2 className="font-semibold mb-4">Personal Information</h2>
+        {profile.profilePhoto && <img src={profile.profilePhoto} alt={`${profile.firstName} ${profile.lastName}`} className="mb-4 h-28 w-28 rounded-full border object-cover" />}
         <dl className="grid grid-cols-2 gap-3 text-sm">
           {[["Full Name", `${profile.firstName} ${profile.middleName ?? ""} ${profile.lastName}`], ["Gender", profile.gender], ["Date of Birth", profile.dateOfBirth?.slice(0,10)], ["Phone", profile.phone], ["Email", profile.email], ["Nationality", profile.nationality], ["Address", profile.address]].map(([k, v]) => (
             <div key={String(k)}><dt className="text-gray-500">{k}</dt><dd className="font-medium">{v ?? "—"}</dd></div>

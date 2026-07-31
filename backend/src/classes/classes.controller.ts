@@ -3,8 +3,11 @@ import { ClassesService } from './classes.service.js';
 import { CreateClassDto } from './dto/create-class.dto.js';
 import { UpdateClassDto } from './dto/update-class.dto.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { Roles } from '../common/decorators/roles.decorator.js';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('SUPER_ADMIN')
 @Controller('classes')
 export class ClassesController {
   constructor(private readonly classesService: ClassesService) {}

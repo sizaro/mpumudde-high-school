@@ -1,16 +1,12 @@
 ﻿import { useEffect, useState } from "react";
 import TeacherService from "../../services/teacherService";
-import { useAuth } from "../../context/AuthContext";
 
 export default function MyDocuments() {
-  const { user } = useAuth();
   const [docs, setDocs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
     TeacherService.getMyProfile().then((p) => {
-      setProfile(p);
       return TeacherService.getDocuments(p.id);
     }).then(setDocs).finally(() => setLoading(false));
   }, []);

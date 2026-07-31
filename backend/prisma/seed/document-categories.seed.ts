@@ -32,7 +32,12 @@ export async function seedDocumentCategories() {
 
   for (const cat of categories) {
     await prisma.documentCategory.upsert({
-      where: { name: cat.name },
+      where: {
+        name_entityType: {
+          name: cat.name,
+          entityType: cat.entityType,
+        },
+      },
       update: {},
       create: {
         name: cat.name,

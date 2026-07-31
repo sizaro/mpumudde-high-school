@@ -7,20 +7,17 @@ export class TeachingAssignmentsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateTeachingAssignmentDto) {
-    const [teacher, schoolClass, subject] = await Promise.all([
+    const [teacher, subject] = await Promise.all([
       this.prisma.teacher.findUnique({ where: { id: dto.teacherId } }),
-      this.prisma.schoolClass.findUnique({ where: { id: dto.classId } }),
       this.prisma.subject.findUnique({ where: { id: dto.subjectId } }),
     ]);
     if (!teacher) throw new NotFoundException('Teacher not found');
-    if (!schoolClass) throw new NotFoundException('Class not found');
     if (!subject) throw new NotFoundException('Subject not found');
     try {
       return await this.prisma.teacherAssignment.create({
-        data: { teacherId: dto.teacherId, classId: dto.classId, subjectId: dto.subjectId },
+        data: { teacherId: dto.teacherId, subjectId: dto.subjectId },
         include: {
           teacher: { select: { id: true, firstName: true, lastName: true } },
-          schoolClass: { select: { id: true, name: true } },
           subject: { select: { id: true, name: true, code: true } },
         },
       });
@@ -31,7 +28,6 @@ export class TeachingAssignmentsService {
     return this.prisma.teacherAssignment.findMany({
       include: {
         teacher: { select: { id: true, firstName: true, lastName: true } },
-        schoolClass: { select: { id: true, name: true } },
         subject: { select: { id: true, name: true, code: true } },
       },
     });
@@ -41,7 +37,6 @@ export class TeachingAssignmentsService {
     return this.prisma.teacherAssignment.findMany({
       where: { teacherId },
       include: {
-        schoolClass: { select: { id: true, name: true } },
         subject: { select: { id: true, name: true, code: true } },
       },
     });

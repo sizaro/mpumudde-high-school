@@ -9,10 +9,6 @@ export default function TeacherProfile() {
   const [teacher, setTeacher] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const [classes, setClasses] = useState<any[]>([]);
-  const [subjects, setSubjects] = useState<any[]>([]);
-  const [newClassId, setNewClassId] = useState("");
-  const [newSubjectId, setNewSubjectId] = useState("");
   const [assignments, setAssignments] = useState<any[]>([]);
 
   useEffect(() => {
@@ -20,12 +16,6 @@ export default function TeacherProfile() {
     Promise.all([
       TeacherService.findOne(id),
       TeachingAssignmentService.findByTeacher(id),
-      fetch("/classes")
-        .then((r) => r.json())
-        .catch(() => []),
-      fetch("/subjects")
-        .then((r) => r.json())
-        .catch(() => []),
     ])
       .then(([t, a]) => {
         setTeacher(t);
@@ -131,7 +121,6 @@ export default function TeacherProfile() {
           <table className="min-w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2">Class</th>
                 <th className="text-left py-2">Subject</th>
                 <th />
               </tr>
@@ -139,7 +128,6 @@ export default function TeacherProfile() {
             <tbody>
               {assignments.map((a) => (
                 <tr key={a.id} className="border-b">
-                  <td className="py-2">{a.schoolClass?.name}</td>
                   <td className="py-2">{a.subject?.name}</td>
                   <td className="py-2 text-right">
                     <button

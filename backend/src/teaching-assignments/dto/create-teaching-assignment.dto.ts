@@ -7,9 +7,5 @@ export class CreateTeachingAssignmentDto {
 
   @IsString()
   @IsNotEmpty()
-  classId!: string;
-
-  @IsString()
-  @IsNotEmpty()
   subjectId!: string;
 }

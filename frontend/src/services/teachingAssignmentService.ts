@@ -1,8 +1,8 @@
 ﻿import api from "../api/axios";
 
 class TeachingAssignmentService {
-  async create(teacherId: string, classId: string, subjectId: string) {
-    const { data } = await api.post("/teaching-assignments", { teacherId, classId, subjectId });
+  async create(teacherId: string, subjectId: string) {
+    const { data } = await api.post("/teaching-assignments", { teacherId, subjectId });
     return data;
   }
 

@@ -8,13 +8,20 @@ import * as bcrypt from 'bcrypt';
 import { CreateTeacherDto } from './dto/create-teacher.dto.js';
 import { UpdateTeacherDto } from './dto/update-teacher.dto.js';
 import { CreateEmploymentDto } from './dto/create-employment.dto.js';
-import { CreateTeacherAccountDto } from './dto/create-account.dto.js';
 import { CreateEmergencyContactDto } from './dto/create-emergency-contact.dto.js';
 import { UpdateEmergencyContactDto } from './dto/update-emergency-contact.dto.js';
 import { CreateMedicalInfoDto } from './dto/create-medical-info.dto.js';
 import { CreateQualificationDto } from './dto/create-qualification.dto.js';
 import { UpdateQualificationDto } from './dto/update-qualification.dto.js';
 import { CreateDocumentDto } from './dto/create-document.dto.js';
+
+type CompleteTeacherRegistration = {
+  personal: CreateTeacherDto;
+  subjectIds?: string[];
+  contacts?: CreateEmergencyContactDto[];
+  medical?: CreateMedicalInfoDto;
+  documents?: CreateDocumentDto[];
+};
 
 function generateTempPassword(length = 10): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';
@@ -25,6 +32,16 @@ function generateTempPassword(length = 10): string {
   return result;
 }
 
+function loginEmailBase(firstName: string, lastName: string): string {
+  const normalize = (value: string) =>
+    value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '');
+  return `${normalize(firstName)}.${normalize(lastName)}`;
+}
+
 const TEACHER_INCLUDE = {
   user: { select: { id: true, email: true, isActive: true } },
   employment: true,
@@ -33,7 +50,6 @@ const TEACHER_INCLUDE = {
   qualifications: { orderBy: { createdAt: 'asc' as const } },
   teachingAssignments: {
     include: {
-      schoolClass: { select: { id: true, name: true } },
       subject: { select: { id: true, name: true, code: true } },
     },
   },
@@ -45,12 +61,11 @@ export class TeachersService {
 
   async createWithAccount(
     personalDto: CreateTeacherDto,
-    accountDto: CreateTeacherAccountDto,
   ) {
-    const existing = await this.prisma.user.findUnique({
-      where: { email: accountDto.email },
-    });
-    if (existing) throw new BadRequestException('Email is already in use');
+    const loginEmail = await this.generateLoginEmail(
+      personalDto.firstName,
+      personalDto.lastName,
+    );
 
     const role = await this.prisma.role.findFirst({
       where: { name: 'TEACHER' },
@@ -80,13 +95,53 @@ export class TeachersService {
         profilePhoto: personalDto.profilePhoto,
         user: {
           create: {
-            email: accountDto.email,
+            email: loginEmail,
             password: hashedPassword,
             roles: { create: { roleId: role.id } },
           },
         },
       },
       include: TEACHER_INCLUDE,
+    });
+
+    return { teacher, temporaryPassword: tempPassword };
+  }
+
+  async createComplete(
+    registration: CompleteTeacherRegistration,
+    uploadedByUserId: string,
+  ) {
+    const { personal, subjectIds = [], contacts = [], medical, documents = [] } = registration;
+    const loginEmail = await this.generateLoginEmail(personal.firstName, personal.lastName);
+    const role = await this.prisma.role.findFirst({ where: { name: 'TEACHER' } });
+    if (!role) throw new BadRequestException('TEACHER role not found. Ensure roles are seeded.');
+
+    const tempPassword = generateTempPassword();
+    const password = await bcrypt.hash(tempPassword, 12);
+    const hasMedicalInfo = medical && Object.values(medical).some(Boolean);
+
+    const teacher = await this.prisma.$transaction(async (tx) => {
+      const created = await tx.teacher.create({
+        data: {
+          ...personal,
+          dateOfBirth: personal.dateOfBirth ? new Date(personal.dateOfBirth) : undefined,
+          user: { create: { email: loginEmail, password, roles: { create: { roleId: role.id } } } },
+          teachingAssignments: { create: [...new Set(subjectIds)].map((subjectId) => ({ subjectId })) },
+          emergencyContacts: { create: contacts.map((contact) => ({ ...contact, isNextOfKin: contact.isNextOfKin ?? false })) },
+          medicalInformation: hasMedicalInfo ? { create: medical } : undefined,
+        },
+        include: TEACHER_INCLUDE,
+      });
+
+      if (documents.length) {
+        await tx.document.createMany({
+          data: documents.map((document) => ({
+            entityType: 'TEACHER', entityId: created.id, uploadedByUserId,
+            ...document,
+          })),
+        });
+      }
+      return created;
     });
 
     return { teacher, temporaryPassword: tempPassword };
@@ -350,13 +405,10 @@ export class TeachersService {
   async getMyClasses(userId: string) {
     const teacher = await this.prisma.teacher.findUnique({ where: { userId } });
     if (!teacher) throw new NotFoundException('Teacher profile not found');
-    const assignments = await this.prisma.teacherAssignment.findMany({
-      where: { teacherId: teacher.id },
-      include: { schoolClass: true },
+    return this.prisma.schoolClass.findMany({
+      where: { isActive: true },
+      orderBy: { name: 'asc' },
     });
-    const classMap = new Map<string, (typeof assignments)[0]['schoolClass']>();
-    for (const a of assignments) classMap.set(a.classId, a.schoolClass);
-    return Array.from(classMap.values());
   }
 
   async getMySubjects(userId: string) {
@@ -377,7 +429,6 @@ export class TeachersService {
     return this.prisma.teacherAssignment.findMany({
       where: { teacherId: teacher.id },
       include: {
-        schoolClass: { select: { id: true, name: true } },
         subject: { select: { id: true, name: true, code: true } },
       },
     });
@@ -387,5 +438,17 @@ export class TeachersService {
     const teacher = await this.prisma.teacher.findUnique({ where: { id } });
     if (!teacher) throw new NotFoundException('Teacher not found');
     return teacher;
+  }
+
+  private async generateLoginEmail(firstName: string, lastName: string) {
+    const base = loginEmailBase(firstName, lastName) || 'teacher';
+    let suffix = 0;
+
+    while (true) {
+      const email = `${base}${suffix || ''}@mhs.com`;
+      const existing = await this.prisma.user.findUnique({ where: { email } });
+      if (!existing) return email;
+      suffix += 1;
+    }
   }
 }

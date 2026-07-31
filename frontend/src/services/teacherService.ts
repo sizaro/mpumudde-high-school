@@ -13,8 +13,6 @@ export interface TeacherPersonal {
   profilePhoto?: string;
 }
 
-export interface TeacherAccount { email: string; }
-
 export interface EmploymentInfo {
   employeeNumber: string;
   position?: string;
@@ -69,8 +67,13 @@ export interface TeacherDocument {
 
 class TeacherService {
   // ── Director ─────────────────────────────────────────────
-  async createWithAccount(personal: TeacherPersonal, account: TeacherAccount) {
-    const { data } = await api.post("/teachers", { personal, account });
+  async createWithAccount(personal: TeacherPersonal) {
+    const { data } = await api.post("/teachers", { personal });
+    return data;
+  }
+
+  async createComplete(payload: { personal: TeacherPersonal; subjectIds: string[]; contacts: EmergencyContact[]; medical: MedicalInfo; documents: TeacherDocument[] }) {
+    const { data } = await api.post("/teachers/complete-registration", payload);
     return data;
   }
 

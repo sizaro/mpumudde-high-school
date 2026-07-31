@@ -1,10 +1,13 @@
 ﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import TeacherService from "../../../services/teacherService";
 
 export default function TeacherList() {
   const [teachers, setTeachers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [actionError, setActionError] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,6 +15,18 @@ export default function TeacherList() {
       .then(setTeachers)
       .finally(() => setLoading(false));
   }, []);
+
+  async function deleteTeacher(teacher: any) {
+    const name = `${teacher.firstName} ${teacher.lastName}`;
+    if (!window.confirm(`Delete ${name}'s teacher profile? This cannot be undone.`)) return;
+    setActionError(""); setDeletingId(teacher.id);
+    try {
+      await TeacherService.remove(teacher.id);
+      setTeachers((current) => current.filter((item) => item.id !== teacher.id));
+    } catch {
+      setActionError("The teacher could not be deleted. They may have records that must be kept; you can deactivate them instead.");
+    } finally { setDeletingId(null); }
+  }
 
   if (loading) return <div className="p-8">Loading teachers...</div>;
 
@@ -26,6 +41,8 @@ export default function TeacherList() {
           Add Teacher
         </button>
       </div>
+
+      {actionError && <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{actionError}</p>}
 
       {teachers.length === 0 ? (
         <p className="text-gray-500">No teachers found. Add one to get started.</p>
@@ -53,12 +70,11 @@ export default function TeacherList() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <button
-                      onClick={() => navigate(`/director/teachers/${t.id}`)}
-                      className="text-blue-600 hover:underline text-sm mr-3"
-                    >
-                      View
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button title="View teacher profile" aria-label={`View ${t.firstName} ${t.lastName}`} onClick={() => navigate(`/director/teachers/${t.id}`)} className="rounded-lg p-2 text-blue-700 hover:bg-blue-50"><Eye size={18} /></button>
+                      <button title="Edit teacher information" aria-label={`Edit ${t.firstName} ${t.lastName}`} onClick={() => navigate(`/director/teachers/${t.id}/edit`)} className="rounded-lg p-2 text-amber-700 hover:bg-amber-50"><Pencil size={18} /></button>
+                      <button title="Delete teacher" aria-label={`Delete ${t.firstName} ${t.lastName}`} disabled={deletingId === t.id} onClick={() => void deleteTeacher(t)} className="rounded-lg p-2 text-red-700 hover:bg-red-50 disabled:opacity-50"><Trash2 size={18} /></button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateFinanceDto } from './dto/create-finance.dto.js';
 import { UpdateFinanceDto } from './dto/update-finance.dto.js';
@@ -32,45 +32,52 @@ export class FinanceService {
       }
     }
 
-    const payment = await this.prisma.payment.create({
-      data: {
-        studentId: createFinanceDto.studentId,
-        studentTermFeeId: studentTermFeeId || undefined,
-        financeStructureId: createFinanceDto.financeStructureId || undefined,
-        amount: createFinanceDto.amount,
-        method: createFinanceDto.method,
-        status: createFinanceDto.status ?? 'completed',
-        description: createFinanceDto.description,
-        date: createFinanceDto.date ? new Date(createFinanceDto.date) : undefined,
-      },
-      include: {
-        student: true,
-        studentTermFee: true,
-        financeStructure: {
-          include: {
-            academicYear: true,
-            term: true,
-            schoolClass: true,
-            studentCategory: true,
-            feeType: true,
-          },
-        },
-      },
-    });
+    return this.prisma.$transaction(async (tx) => {
+      if (studentTermFeeId) {
+        const termFee = await tx.studentTermFee.findUnique({
+          where: { id: studentTermFeeId },
+          select: { studentId: true },
+        });
+        if (!termFee || termFee.studentId !== createFinanceDto.studentId) {
+          throw new BadRequestException('The term fee does not belong to this student');
+        }
+      }
 
-    // Update StudentTermFee amountPaid if linked to a term fee
-    if (studentTermFeeId) {
-      await this.prisma.studentTermFee.update({
-        where: { id: studentTermFeeId },
+      const payment = await tx.payment.create({
         data: {
-          amountPaid: {
-            increment: createFinanceDto.amount,
+          studentId: createFinanceDto.studentId,
+          studentTermFeeId: studentTermFeeId || undefined,
+          financeStructureId: createFinanceDto.financeStructureId || undefined,
+          amount: createFinanceDto.amount,
+          method: createFinanceDto.method,
+          status: createFinanceDto.status ?? 'completed',
+          description: createFinanceDto.description,
+          date: createFinanceDto.date ? new Date(createFinanceDto.date) : undefined,
+        },
+        include: {
+          student: true,
+          studentTermFee: true,
+          financeStructure: {
+            include: {
+              academicYear: true,
+              term: true,
+              schoolClass: true,
+              studentCategory: true,
+              feeType: true,
+            },
           },
         },
       });
-    }
 
-    return payment;
+      if (studentTermFeeId) {
+        await tx.studentTermFee.update({
+          where: { id: studentTermFeeId },
+          data: { amountPaid: { increment: createFinanceDto.amount } },
+        });
+      }
+
+      return payment;
+    });
   }
 
   async findAll() {
@@ -94,22 +101,48 @@ export class FinanceService {
   }
 
   async update(id: string, updateFinanceDto: UpdateFinanceDto) {
-    return this.prisma.payment.update({
-      where: { id },
-      data: {
-        amount: updateFinanceDto.amount,
-        method: updateFinanceDto.method,
-        status: updateFinanceDto.status,
-        description: updateFinanceDto.description,
-        date: updateFinanceDto.date ? new Date(updateFinanceDto.date) : undefined,
-      },
-      include: { student: true, studentTermFee: true },
+    return this.prisma.$transaction(async (tx) => {
+      const existing = await tx.payment.findUnique({ where: { id } });
+      if (!existing) throw new NotFoundException('Payment not found');
+
+      const amount = updateFinanceDto.amount ?? existing.amount;
+      const payment = await tx.payment.update({
+        where: { id },
+        data: {
+          amount,
+          method: updateFinanceDto.method,
+          status: updateFinanceDto.status,
+          description: updateFinanceDto.description,
+          date: updateFinanceDto.date ? new Date(updateFinanceDto.date) : undefined,
+        },
+        include: { student: true, studentTermFee: true },
+      });
+
+      if (existing.studentTermFeeId && amount !== existing.amount) {
+        await tx.studentTermFee.update({
+          where: { id: existing.studentTermFeeId },
+          data: { amountPaid: { increment: amount - existing.amount } },
+        });
+      }
+
+      return payment;
     });
   }
 
   async remove(id: string) {
-    return this.prisma.payment.delete({
-      where: { id },
+    return this.prisma.$transaction(async (tx) => {
+      const existing = await tx.payment.findUnique({ where: { id } });
+      if (!existing) throw new NotFoundException('Payment not found');
+
+      const payment = await tx.payment.delete({ where: { id } });
+      if (existing.studentTermFeeId) {
+        await tx.studentTermFee.update({
+          where: { id: existing.studentTermFeeId },
+          data: { amountPaid: { decrement: existing.amount } },
+        });
+      }
+
+      return payment;
     });
   }
 

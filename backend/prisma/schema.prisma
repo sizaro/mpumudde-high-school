@@ -275,16 +275,11 @@ model TeacherAssignment {
 
   teacherId String
 
-  classId String
-
   subjectId String
 
 
 
   teacher Teacher @relation(fields: [teacherId], references: [id])
-
-
-  schoolClass SchoolClass @relation(fields: [classId], references: [id])
 
 
   subject Subject @relation(fields: [subjectId], references: [id])
@@ -295,7 +290,7 @@ model TeacherAssignment {
 
 
 
-  @@unique([teacherId, classId, subjectId])
+  @@unique([teacherId, subjectId])
 
 }
 
@@ -456,7 +451,7 @@ model DocumentCategory {
 
   id String @id @default(cuid())
 
-  name String @unique
+  name String
   // National ID
   // Passport
   // LC1 Introduction Letter
@@ -497,6 +492,8 @@ model DocumentCategory {
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+
+  @@unique([name, entityType])
 
 }
 
@@ -805,8 +802,6 @@ model SchoolClass {
   isActive Boolean @default(true)
 
   students Student[]
-
-  teachers TeacherAssignment[]
 
   attendanceSessions AttendanceSession[]
 

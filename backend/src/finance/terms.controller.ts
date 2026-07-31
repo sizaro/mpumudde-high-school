@@ -1,8 +1,13 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { TermsService } from './terms.service.js';
 import { CreateTermDto } from './dto/create-term.dto.js';
 import { CreateStudentTermFeeDto } from './dto/create-student-term-fee.dto.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { Roles } from '../common/decorators/roles.decorator.js';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('SUPER_ADMIN')
 @Controller('terms')
 export class TermsController {
   constructor(private readonly termsService: TermsService) {}

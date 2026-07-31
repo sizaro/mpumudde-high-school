@@ -7,9 +7,7 @@ export default function TeacherAssignments() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [assignments, setAssignments] = useState<any[]>([]);
-  const [classes, setClasses] = useState<any[]>([]);
   const [subjects, setSubjects] = useState<any[]>([]);
-  const [classId, setClassId] = useState("");
   const [subjectId, setSubjectId] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -17,17 +15,16 @@ export default function TeacherAssignments() {
   useEffect(() => {
     if (!id) return;
     TeachingAssignmentService.findByTeacher(id).then(setAssignments);
-    api.get("/classes").then((r) => setClasses(r.data));
     api.get("/subjects").then((r) => setSubjects(r.data));
   }, [id]);
 
   async function add() {
-    if (!id || !classId || !subjectId) return;
+    if (!id || !subjectId) return;
     setSaving(true); setError("");
     try {
-      const newA = await TeachingAssignmentService.create(id, classId, subjectId);
+      const newA = await TeachingAssignmentService.create(id, subjectId);
       setAssignments((prev) => [...prev, newA]);
-      setClassId(""); setSubjectId("");
+      setSubjectId("");
     } catch (e: any) {
       setError(e?.response?.data?.message ?? "Failed to add assignment");
     } finally { setSaving(false); }
@@ -48,15 +45,9 @@ export default function TeacherAssignments() {
       {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded p-3">{error}</div>}
 
       <div className="bg-white border rounded-lg p-6">
-        <h2 className="font-semibold mb-4">Add Assignment</h2>
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Class</label>
-            <select value={classId} onChange={(e) => setClassId(e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2">
-              <option value="">Select class</option>
-              {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-          </div>
+        <h2 className="font-semibold mb-1">Assign Subjects</h2>
+        <p className="text-sm text-gray-500 mb-4">Assigned subjects may be taught in any class.</p>
+        <div className="mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
             <select value={subjectId} onChange={(e) => setSubjectId(e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2">
@@ -65,7 +56,7 @@ export default function TeacherAssignments() {
             </select>
           </div>
         </div>
-        <button onClick={add} disabled={!classId || !subjectId || saving} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50">
+        <button onClick={add} disabled={!subjectId || saving} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50">
           {saving ? "Adding..." : "Add Assignment"}
         </button>
       </div>
@@ -74,11 +65,10 @@ export default function TeacherAssignments() {
         <h2 className="font-semibold mb-4">Current Assignments ({assignments.length})</h2>
         {assignments.length === 0 ? <p className="text-gray-500 text-sm">None yet.</p> : (
           <table className="min-w-full text-sm">
-            <thead><tr className="border-b"><th className="text-left py-2">Class</th><th className="text-left py-2">Subject</th><th /></tr></thead>
+            <thead><tr className="border-b"><th className="text-left py-2">Subject</th><th /></tr></thead>
             <tbody>
               {assignments.map((a) => (
                 <tr key={a.id} className="border-b">
-                  <td className="py-2">{a.schoolClass?.name}</td>
                   <td className="py-2">{a.subject?.name}</td>
                   <td className="py-2 text-right"><button onClick={() => remove(a.id)} className="text-red-500 hover:underline text-xs">Remove</button></td>
                 </tr>

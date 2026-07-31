@@ -6,6 +6,7 @@ export type SchoolClass = { id: string; name: string; isActive: boolean };
 export type StudentCategory = { id: string; name: string; isActive: boolean };
 export type FeeType = { id: string; name: string; isActive: boolean };
 export type FinanceStructure = { id: string; academicYearId: string; termId: string; classId: string; studentCategoryId: string; feeTypeId: string; expectedAmount: number; academicYear?: AcademicYear; term?: Term; schoolClass?: SchoolClass; studentCategory?: StudentCategory; feeType?: FeeType };
+export type Subject = { id: string; name: string; code?: string; isActive: boolean };
 
 class SetupService {
   async getAcademicYears(): Promise<AcademicYear[]> {
@@ -50,6 +51,16 @@ class SetupService {
 
   async updateClass(id: string, payload: Partial<SchoolClass>): Promise<SchoolClass> {
     const { data } = await api.patch<SchoolClass>(`/setup/classes/${id}`, payload);
+    return data;
+  }
+
+  async getSubjects(): Promise<Subject[]> {
+    const { data } = await api.get<Subject[]>("/subjects");
+    return data;
+  }
+
+  async createSubject(payload: { name: string; code?: string; isActive?: boolean }): Promise<Subject> {
+    const { data } = await api.post<Subject>("/subjects", payload);
     return data;
   }
 

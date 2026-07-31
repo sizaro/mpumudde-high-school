@@ -11,7 +11,7 @@ export class AttendanceService {
     if (!teacher) throw new NotFoundException('Teacher profile not found');
 
     const assignment = await this.prisma.teacherAssignment.findFirst({
-      where: { teacherId: teacher.id, classId: dto.classId, subjectId: dto.subjectId },
+      where: { teacherId: teacher.id, subjectId: dto.subjectId },
     });
     if (!assignment)
       throw new ForbiddenException('Not assigned to this class/subject combination');

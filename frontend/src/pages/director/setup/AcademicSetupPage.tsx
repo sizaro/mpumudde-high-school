@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import SetupService, { type AcademicYear, type FeeType, type FinanceStructure, type SchoolClass, type StudentCategory, type Term } from "../../../services/setupService";
+import SetupService, { type AcademicYear, type FeeType, type FinanceStructure, type SchoolClass, type StudentCategory, type Subject, type Term } from "../../../services/setupService";
 
 const tabItems = [
   { key: "academicYears", label: "Academic Year" },
   { key: "terms", label: "Terms" },
   { key: "classes", label: "Classes" },
+  { key: "subjects", label: "Subjects" },
   { key: "studentCategories", label: "Student Categories" },
   { key: "feeTypes", label: "Fee Types" },
   { key: "financeStructures", label: "Finance Structure" },
@@ -15,6 +16,7 @@ export default function AcademicSetupPage() {
   const [academicYears, setAcademicYears] = useState<AcademicYear[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
   const [classes, setClasses] = useState<SchoolClass[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [studentCategories, setStudentCategories] = useState<StudentCategory[]>([]);
   const [feeTypes, setFeeTypes] = useState<FeeType[]>([]);
   const [financeStructures, setFinanceStructures] = useState<FinanceStructure[]>([]);
@@ -28,6 +30,8 @@ export default function AcademicSetupPage() {
     termFeeAmount: "",
     termEditId: "",
     className: "",
+    subjectName: "",
+    subjectCode: "",
     studentCategoryName: "",
     feeTypeName: "",
     financeAcademicYearId: "",
@@ -42,10 +46,11 @@ export default function AcademicSetupPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [years, termsData, classesData, categoriesData, feeTypesData, financeData] = await Promise.all([
+      const [years, termsData, classesData, subjectsData, categoriesData, feeTypesData, financeData] = await Promise.all([
         SetupService.getAcademicYears(),
         SetupService.getTerms(),
         SetupService.getClasses(),
+        SetupService.getSubjects(),
         SetupService.getStudentCategories(),
         SetupService.getFeeTypes(),
         SetupService.getFinanceStructures(),
@@ -53,6 +58,7 @@ export default function AcademicSetupPage() {
       setAcademicYears(years);
       setTerms(termsData);
       setClasses(classesData);
+      setSubjects(subjectsData);
       setStudentCategories(categoriesData);
       setFeeTypes(feeTypesData);
       setFinanceStructures(financeData);
@@ -107,6 +113,14 @@ export default function AcademicSetupPage() {
     await loadData();
   };
 
+  const handleCreateSubject = async () => {
+    if (!form.subjectName.trim()) return;
+    await SetupService.createSubject({ name: form.subjectName.trim(), code: form.subjectCode.trim() || undefined });
+    setForm((current) => ({ ...current, subjectName: "", subjectCode: "" }));
+    setMessage("Subject saved. It can now be assigned to teachers.");
+    await loadData();
+  };
+
   const handleCreateStudentCategory = async () => {
     if (!form.studentCategoryName.trim()) return;
     await SetupService.createStudentCategory({ name: form.studentCategoryName.trim() });
@@ -143,7 +157,7 @@ export default function AcademicSetupPage() {
       <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Academic Setup</h1>
-          <p className="mt-2 text-sm text-slate-500">Configure academic years, terms, classes, student categories, fee types, and finance structures.</p>
+          <p className="mt-2 text-sm text-slate-500">Configure academic years, terms, classes, subjects, student categories, fee types, and finance structures.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">
           {selectedYearNames.length > 0 ? `${selectedYearNames.join(", ")}` : "No academic years yet"}
@@ -297,6 +311,24 @@ export default function AcademicSetupPage() {
               </select>
             </label>
             <button type="button" onClick={handleCreateClass} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Class</button>
+          </div>
+        </div>
+      ) : null}
+
+      {!loading && activeTab === "subjects" ? (
+        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.85fr]">
+          <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900">Subjects</h2>
+            <p className="mt-2 text-sm text-slate-500">Create the school subject catalogue once. Teachers are assigned subjects, then may choose any active class when taking attendance.</p>
+            <div className="mt-4 space-y-3">
+              {subjects.length ? subjects.map((item) => <div key={item.id} className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"><div><p className="font-medium text-slate-900">{item.name}</p>{item.code && <p className="text-sm text-slate-500">{item.code}</p>}</div><span className={`rounded-full px-3 py-1 text-xs font-semibold ${item.isActive ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"}`}>{item.isActive ? "Active" : "Inactive"}</span></div>) : <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-500">No subjects created yet.</div>}
+            </div>
+          </div>
+          <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900">Add Subject</h2>
+            <label className="mt-4 block text-sm font-medium text-slate-700">Subject Name<input value={form.subjectName} onChange={(event) => setForm((current) => ({ ...current, subjectName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. Mathematics" /></label>
+            <label className="mt-4 block text-sm font-medium text-slate-700">Code (optional)<input value={form.subjectCode} onChange={(event) => setForm((current) => ({ ...current, subjectCode: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. MTC" /></label>
+            <button type="button" onClick={handleCreateSubject} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Subject</button>
           </div>
         </div>
       ) : null}

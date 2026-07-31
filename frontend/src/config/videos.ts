@@ -82,23 +82,17 @@ export const promotionalVideos = {
  * Video Loading Configuration
  */
 export const videoLoadingConfig = {
-  // Lazy load videos below the fold
-  lazyLoad: true,
-  
   // Preload strategy for hero video
   preload: "metadata" as const, // "none" | "metadata" | "auto"
   
-  // Enable Picture-in-Picture
-  pip: false,
+  // Disable Picture-in-Picture for the decorative background video.
+  disablePictureInPicture: true,
   
   // Video playback settings
-  autoplay: true,
+  autoPlay: true,
   loop: true,
   muted: true, // Must be true for autoplay to work
   playsInline: true, // Required for mobile devices
-  
-  // Performance settings
-  loading: "lazy" as const,
 };
 
 /**

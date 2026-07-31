@@ -14,9 +14,8 @@ export default function TeacherOverview() {
       <p className="text-gray-500 mb-6">Here is your portal overview.</p>
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Assigned Classes", value: profile?.teachingAssignments ? new Set(profile.teachingAssignments.map((a: any) => a.classId)).size : "—" },
           { label: "Assigned Subjects", value: profile?.teachingAssignments ? new Set(profile.teachingAssignments.map((a: any) => a.subjectId)).size : "—" },
-          { label: "Total Assignments", value: profile?.teachingAssignments?.length ?? "—" },
+          { label: "Available Classes", value: "All active classes" },
         ].map((c) => (
           <div key={c.label} className="bg-white border rounded-lg p-5">
             <p className="text-3xl font-bold text-blue-600">{c.value}</p>

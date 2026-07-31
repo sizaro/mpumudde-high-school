@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { LoginDto } from './dto/login.dto.js';
 import { RegisterDto } from './dto/register.dto.js';
+import { ChangePasswordDto } from './dto/change-password.dto.js';
 
 
 @Injectable()
@@ -242,6 +243,20 @@ export class AuthService {
         permissions,
       },
     };
+  }
+
+  async changePassword(userId: string, dto: ChangePasswordDto) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user || !(await bcrypt.compare(dto.currentPassword, user.password))) {
+      throw new UnauthorizedException('Your current password is incorrect.');
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: await bcrypt.hash(dto.newPassword, 12) },
+    });
+
+    return { message: 'Password changed successfully.' };
   }
 
 }

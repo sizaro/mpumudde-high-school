@@ -43,6 +43,7 @@ import AttendanceHistory from "../pages/teacher/AttendanceHistory";
 import TeacherProfilePage from "../pages/teacher/TeacherProfilePage";
 import MyDocuments from "../pages/teacher/MyDocuments";
 import MyMedical from "../pages/teacher/MyMedical";
+import ChangePassword from "../pages/teacher/ChangePassword";
 
 import ParentDashboard from "../pages/parent/Dashboard";
 import StudentDashboard from "../pages/student/Dashboard";
@@ -115,6 +116,7 @@ export default function AppRoutes() {
         <Route path="profile" element={<TeacherProfilePage />} />
         <Route path="documents" element={<MyDocuments />} />
         <Route path="medical" element={<MyMedical />} />
+        <Route path="change-password" element={<ChangePassword />} />
       </Route>
 
       <Route

@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import TermsService from "../../../services/termsService";
-import { Plus } from "lucide-react";
 
 type Term = {
   id: string;
@@ -11,101 +10,37 @@ type Term = {
   isActive: boolean;
 };
 
-type CreateTermFormState = {
-  name: string;
-  feeAmount: string;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-};
-
 export default function TermsManagement() {
   const [terms, setTerms] = useState<Term[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
   const [assigningTermId, setAssigningTermId] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState<CreateTermFormState>({
-    name: "",
-    feeAmount: "1000000",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(Date.now() + 120 * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .split("T")[0],
-    isActive: true,
-  });
 
   useEffect(() => {
-    loadTerms();
+    void loadTerms();
   }, []);
 
-  const loadTerms = async () => {
+  async function loadTerms() {
     try {
       setLoading(true);
       const termsData = await TermsService.getAllTerms();
       setTerms(termsData);
-    } catch (err) {
+    } catch {
       setError("Failed to load terms");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleCreateTerm = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!form.name || !form.feeAmount || !form.startDate || !form.endDate) {
-      setFeedback("Please fill in all fields");
-      return;
-    }
-
-    setSubmitting(true);
-    setFeedback(null);
-
-    try {
-      await TermsService.createTerm({
-        name: form.name,
-        feeAmount: Number(form.feeAmount),
-        startDate: form.startDate,
-        endDate: form.endDate,
-        isActive: form.isActive,
-      });
-
-      setFeedback("Term created successfully!");
-      setForm({
-        name: "",
-        feeAmount: "1000000",
-        startDate: new Date().toISOString().split("T")[0],
-        endDate: new Date(Date.now() + 120 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split("T")[0],
-        isActive: true,
-      });
-      setShowForm(false);
-      await loadTerms();
-    } catch (err) {
-      setFeedback("Failed to create term");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  }
 
   const handleAssignFeesToStudents = async (termId: string) => {
     setAssigningTermId(termId);
-    setFeedback(null);
     try {
-      const result = await TermsService.assignTermFeeToAllStudents(termId);
-      console.log("Assign result:", result);
-      setFeedback(`Successfully assigned fees to all students for this term!`);
-      // Give it a moment to process
+      await TermsService.assignTermFeeToAllStudents(termId);
       setTimeout(() => {
-        loadTerms();
+        void loadTerms();
       }, 500);
-    } catch (err) {
-      console.error("Assign error:", err);
-      setFeedback("Failed to assign fees to students. Please check the console for details.");
+    } catch {
+      setError("Failed to assign fees to students");
     } finally {
       setAssigningTermId(null);
     }

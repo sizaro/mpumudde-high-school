@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
@@ -15,7 +15,7 @@ export function AnimatedSection({
   delay = 0,
   direction = "up" 
 }: AnimatedSectionProps) {
-  const { ref, isVisible } = useScrollAnimation({ threshold: 0.15 });
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
 
   const variants = {
     up: { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } },
@@ -29,7 +29,7 @@ export function AnimatedSection({
 
   return (
     <motion.div
-      ref={ref as any}
+      ref={ref}
       className={className}
       initial={selectedVariant.initial}
       animate={isVisible ? selectedVariant.animate : selectedVariant.initial}
