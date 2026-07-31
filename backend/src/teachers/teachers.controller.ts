@@ -69,6 +69,7 @@ export class TeachersController {
       personal: CreateTeacherDto;
       subjectIds?: string[];
       contacts?: CreateEmergencyContactDto[];
+      employment?: CreateEmploymentDto;
       medical?: CreateMedicalInfoDto;
       documents?: CreateDocumentDto[];
     },

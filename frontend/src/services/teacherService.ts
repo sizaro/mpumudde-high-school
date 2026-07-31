@@ -21,6 +21,7 @@ export interface EmploymentInfo {
   employmentDate?: string;
   probationEndDate?: string;
   salary?: number;
+  payFrequency?: string;
   status?: string;
 }
 
@@ -72,7 +73,7 @@ class TeacherService {
     return data;
   }
 
-  async createComplete(payload: { personal: TeacherPersonal; subjectIds: string[]; contacts: EmergencyContact[]; medical: MedicalInfo; documents: TeacherDocument[] }) {
+  async createComplete(payload: { personal: TeacherPersonal; subjectIds: string[]; contacts: EmergencyContact[]; employment: Partial<EmploymentInfo>; medical: MedicalInfo; documents: TeacherDocument[] }) {
     const { data } = await api.post("/teachers/complete-registration", payload);
     return data;
   }

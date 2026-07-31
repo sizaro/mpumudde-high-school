@@ -2,6 +2,7 @@ import { Controller, Get, Post, Param, Body, Patch, Delete, UseGuards } from '@n
 import { StudentsService } from './students.service.js';
 import { CreateStudentDto } from './dto/create-student.dto.js';
 import { UpdateStudentDto } from './dto/update-student.dto.js';
+import { CompleteStudentRegistrationDto } from './dto/complete-student-registration.dto.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
 import { Roles } from '../common/decorators/roles.decorator.js';
@@ -15,6 +16,11 @@ export class StudentsController {
   @Post()
   async create(@Body() createStudentDto: CreateStudentDto) {
     return this.studentsService.create(createStudentDto);
+  }
+
+  @Post('complete-registration')
+  async createComplete(@Body() dto: CompleteStudentRegistrationDto) {
+    return this.studentsService.createCompleteRegistration(dto);
   }
 
   @Get()

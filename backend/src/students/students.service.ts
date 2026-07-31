@@ -2,15 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateStudentDto } from './dto/create-student.dto.js';
 import { UpdateStudentDto } from './dto/update-student.dto.js';
+import { CompleteStudentRegistrationDto } from './dto/complete-student-registration.dto.js';
 
 @Injectable()
 export class StudentsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createStudentDto: CreateStudentDto) {
-    return this.prisma.student.create({
+    return this.prisma.$transaction(async (tx) => tx.student.create({
       data: {
-        admissionNumber: createStudentDto.admissionNumber,
+        admissionNumber: await this.generateStudentNumber(tx),
         firstName: createStudentDto.firstName,
         lastName: createStudentDto.lastName,
         dateOfBirth: createStudentDto.dateOfBirth ? new Date(createStudentDto.dateOfBirth) : undefined,
@@ -28,7 +29,66 @@ export class StudentsService {
         schoolClass: true,
         studentCategory: true,
       },
-    });
+    }));
+  }
+
+  async createCompleteRegistration(dto: CompleteStudentRegistrationDto) {
+    const { student, primaryGuardian, additionalGuardians = [], payments = [] } = dto;
+    const registrationFee = await this.prisma.feeType.findFirst({ where: { name: { equals: 'Registration', mode: 'insensitive' } } });
+    if (!registrationFee) throw new Error('Create the Registration fee type in Academic Setup before registering a student.');
+    if (!payments.some((payment) => payment.feeTypeId === registrationFee.id && payment.amount > 0)) throw new Error('A Registration payment is required.');
+    return this.prisma.$transaction(async (tx) => {
+      const admissionNumber = await this.generateStudentNumber(tx);
+      const created = await tx.student.create({
+        data: {
+          admissionNumber,
+          firstName: student.firstName,
+          lastName: student.lastName,
+          dateOfBirth: student.dateOfBirth ? new Date(student.dateOfBirth) : undefined,
+          gender: student.gender,
+          passportPhoto: student.passportPhoto,
+          nationality: student.nationality,
+          address: student.address,
+          previousSchool: student.previousSchool,
+          bloodGroup: student.bloodGroup,
+          allergies: student.allergies,
+          medicalConditions: student.medicalConditions,
+          specialNeeds: student.specialNeeds,
+          medicalNotes: student.medicalNotes,
+          isActive: student.isActive ?? true,
+          academicYearId: student.academicYearId,
+          termId: student.termId,
+          classId: student.classId,
+          studentCategoryId: student.studentCategoryId,
+        },
+      });
+
+      const guardians = [
+        ...(primaryGuardian?.fullName ? [{ ...primaryGuardian, primary: true }] : []),
+        ...additionalGuardians.filter((guardian) => guardian.name.trim()).map((guardian) => ({ fullName: guardian.name, phone: guardian.phone, relationship: 'Additional Guardian', primary: false })),
+      ];
+      for (const guardian of guardians) {
+        const names = guardian.fullName.trim().split(/\s+/);
+        const parent = await tx.parent.create({
+          data: {
+            firstName: names[0] || 'Guardian', lastName: names.slice(1).join(' ') || 'Guardian',
+            phone: guardian.phone, relationship: guardian.relationship,
+            email: 'email' in guardian ? guardian.email : undefined,
+            occupation: 'occupation' in guardian ? guardian.occupation : undefined,
+            address: 'address' in guardian ? guardian.address : undefined,
+            profilePhoto: 'profilePhoto' in guardian ? guardian.profilePhoto : undefined,
+            identityDocumentType: 'identityDocumentType' in guardian ? guardian.identityDocumentType : undefined,
+            identityDocumentUrl: 'identityDocumentUrl' in guardian ? guardian.identityDocumentUrl : undefined,
+          },
+        });
+        await tx.studentParent.create({ data: { studentId: created.id, parentId: parent.id, relationship: guardian.relationship } });
+      }
+      for (const payment of payments) {
+        const structure = await tx.financeStructure.findFirst({ where: { academicYearId: payment.academicYearId, termId: payment.termId, classId: student.classId, studentCategoryId: student.studentCategoryId, feeTypeId: payment.feeTypeId } });
+        await tx.payment.create({ data: { studentId: created.id, feeTypeId: payment.feeTypeId, financeStructureId: structure?.id, amount: payment.amount, method: payment.method, receiptUrl: payment.receiptUrl, status: 'completed' } });
+      }
+      return tx.student.findUniqueOrThrow({ where: { id: created.id }, include: { parents: { include: { parent: true } }, academicYear: true, term: true, schoolClass: true, studentCategory: true } });
+    }, { maxWait: 10_000, timeout: 20_000 });
   }
 
   async findAll() {
@@ -181,5 +241,15 @@ export class StudentsService {
       totalPaid: summary.reduce((sum, item) => sum + item.paidAmount, 0),
       totalBalance: summary.reduce((sum, item) => sum + item.balance, 0),
     };
+  }
+
+  private async generateStudentNumber(tx: any) {
+    const year = new Date().getFullYear();
+    const counter = await tx.studentNumberSequence.upsert({
+      where: { year },
+      create: { year, nextNumber: 2 },
+      update: { nextNumber: { increment: 1 } },
+    });
+    return `MHS-${year}-${String(counter.nextNumber - 1).padStart(4, '0')}`;
   }
 }

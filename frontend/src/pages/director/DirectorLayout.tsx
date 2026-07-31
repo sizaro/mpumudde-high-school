@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { Bell, LogOut, ChevronDown } from "lucide-react";
+import { Bell, LogOut, ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -21,19 +21,24 @@ export default function DirectorLayout() {
   const { logout } = useAuth();
   const [studentsMenuOpen, setStudentsMenuOpen] = useState(false);
   const [teachersMenuOpen, setTeachersMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        <aside className="w-full border-b border-slate-200 bg-white p-6 shadow-sm lg:w-72 lg:border-r lg:border-b-0 lg:shadow-none">
+        {mobileNavOpen && <button type="button" aria-label="Close navigation" onClick={() => setMobileNavOpen(false)} className="fixed inset-0 z-40 bg-slate-950/40 lg:hidden" />}
+        <aside className={`fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto border-r border-slate-200 bg-white p-6 shadow-xl transition-transform duration-200 lg:static lg:z-auto lg:min-h-screen lg:translate-x-0 lg:shadow-none ${mobileNavOpen ? "translate-x-0" : "-translate-x-full"}`}>
           <div className="sticky top-0 space-y-4">
-            <div>
+            <div className="flex items-start justify-between gap-3">
+              <div>
               <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
                 Director Portal
               </h2>
               <p className="mt-2 text-sm text-slate-500">
                 Manage students and school finance.
               </p>
+              </div>
+              <button type="button" onClick={() => setMobileNavOpen(false)} className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden" aria-label="Close navigation"><X size={20} /></button>
             </div>
 
             <nav className="mt-6 space-y-2 text-sm">
@@ -116,7 +121,8 @@ export default function DirectorLayout() {
         </aside>
 
         <main className="flex-1 p-6 lg:p-10">
-          <div className="mb-6 flex justify-end">
+          <div className="mb-6 flex justify-between">
+            <button type="button" onClick={() => setMobileNavOpen(true)} className="inline-flex h-12 w-12 items-center justify-center rounded-3xl border border-slate-200 bg-white text-slate-700 shadow-sm lg:hidden" aria-label="Open navigation"><Menu size={21} /></button>
             <div className="flex items-center gap-3">
               <button
                 type="button"

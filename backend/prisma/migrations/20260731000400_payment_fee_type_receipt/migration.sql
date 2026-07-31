@@ -1,0 +1,3 @@
+ALTER TABLE "Payment" ADD COLUMN "feeTypeId" TEXT;
+ALTER TABLE "Payment" ADD COLUMN "receiptUrl" TEXT;
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_feeTypeId_fkey" FOREIGN KEY ("feeTypeId") REFERENCES "FeeType"("id") ON DELETE SET NULL ON UPDATE CASCADE;

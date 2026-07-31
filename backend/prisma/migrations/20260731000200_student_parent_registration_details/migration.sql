@@ -1,0 +1,15 @@
+ALTER TABLE "Parent" ALTER COLUMN "userId" DROP NOT NULL;
+ALTER TABLE "Parent" ADD COLUMN "email" TEXT;
+ALTER TABLE "Parent" ADD COLUMN "occupation" TEXT;
+ALTER TABLE "Parent" ADD COLUMN "address" TEXT;
+ALTER TABLE "Parent" ADD COLUMN "profilePhoto" TEXT;
+ALTER TABLE "Parent" ADD COLUMN "identityDocumentType" TEXT;
+ALTER TABLE "Parent" ADD COLUMN "identityDocumentUrl" TEXT;
+ALTER TABLE "Student" ADD COLUMN "nationality" TEXT;
+ALTER TABLE "Student" ADD COLUMN "address" TEXT;
+ALTER TABLE "Student" ADD COLUMN "previousSchool" TEXT;
+ALTER TABLE "Student" ADD COLUMN "bloodGroup" TEXT;
+ALTER TABLE "Student" ADD COLUMN "allergies" TEXT;
+ALTER TABLE "Student" ADD COLUMN "medicalConditions" TEXT;
+ALTER TABLE "Student" ADD COLUMN "specialNeeds" TEXT;
+ALTER TABLE "Student" ADD COLUMN "medicalNotes" TEXT;

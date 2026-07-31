@@ -65,8 +65,8 @@ export default function TeacherList() {
                   <td className="px-4 py-3 text-gray-600">{t.user?.email ?? "—"}</td>
                   <td className="px-4 py-3 text-gray-600">{t.employment?.employeeNumber ?? "—"}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-1 text-xs rounded-full ${t.employment?.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                      {t.employment?.status ?? "unset"}
+                    <span className={`px-2 py-1 text-xs rounded-full ${(t.employment?.status ?? (t.user?.isActive ? "active" : "inactive")) === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                      {t.employment?.status ?? (t.user?.isActive ? "active" : "inactive")}
                     </span>
                   </td>
                   <td className="px-4 py-3">

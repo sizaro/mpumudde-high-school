@@ -10,8 +10,21 @@ export class SetupService {
       data: {
         name: data.name,
         isActive: data.isActive ?? true,
+        terms: { create: ['Term 1', 'Term 2', 'Term 3'].map((name) => ({ name })) },
       },
+      include: { terms: true },
     });
+  }
+
+  async ensureStandardTerms(academicYearId: string) {
+    await this.prisma.$transaction(['Term 1', 'Term 2', 'Term 3'].map((name) =>
+      this.prisma.term.upsert({
+        where: { academicYearId_name: { academicYearId, name } },
+        create: { academicYearId, name, isActive: true },
+        update: {},
+      }),
+    ));
+    return this.prisma.term.findMany({ where: { academicYearId }, orderBy: { name: 'asc' } });
   }
 
   async listAcademicYears() {

@@ -1,9 +1,9 @@
 import { IsBoolean, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateStudentDto {
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  admissionNumber!: string;
+  admissionNumber?: string;
 
   @IsString()
   @IsNotEmpty()

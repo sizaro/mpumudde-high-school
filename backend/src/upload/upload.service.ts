@@ -6,9 +6,9 @@ import { ConfigService } from '@nestjs/config';
 export class UploadService {
   constructor(private readonly config: ConfigService) {
     cloudinary.config({
-      cloud_name: config.get('CLOUDINARY_CLOUD_NAME'),
-      api_key: config.get('CLOUDINARY_API_KEY'),
-      api_secret: config.get('CLOUDINARY_API_SECRET'),
+      cloud_name: config.get<string>('CLOUDINARY_CLOUD_NAME')?.trim(),
+      api_key: config.get<string>('CLOUDINARY_API_KEY')?.trim(),
+      api_secret: config.get<string>('CLOUDINARY_API_SECRET')?.trim(),
     });
   }
 
@@ -17,9 +17,10 @@ export class UploadService {
     originalName: string,
     folder = 'school-uploads',
   ): Promise<UploadApiResponse> {
+    const resourceType = originalName.toLowerCase().endsWith('.pdf') ? 'raw' : 'image';
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { folder, resource_type: 'auto', use_filename: true, unique_filename: true },
+        { folder, resource_type: resourceType, use_filename: true, unique_filename: true },
         (error, result) => {
           if (error || !result) return reject(error ?? new BadRequestException('Upload failed'));
           resolve(result);

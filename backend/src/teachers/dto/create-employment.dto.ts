@@ -38,6 +38,10 @@ export class CreateEmploymentDto {
 
   @IsOptional()
   @IsString()
+  payFrequency?: string;
+
+  @IsOptional()
+  @IsString()
   status?: string;
   // active | inactive | suspended
 }

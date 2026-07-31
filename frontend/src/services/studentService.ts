@@ -12,6 +12,16 @@ class StudentService {
     return data;
   }
 
+  async uploadPhoto(file: FormData): Promise<{ url: string }> {
+    const { data } = await api.post<{ url: string }>("/upload", file, { headers: { "Content-Type": "multipart/form-data" } });
+    return data;
+  }
+
+  async createCompleteRegistration(payload: Record<string, unknown>): Promise<Student> {
+    const { data } = await api.post<Student>("/students/complete-registration", payload);
+    return data;
+  }
+
   async updateStudent(
     id: string,
     student: Partial<Omit<Student, 'id' | 'createdAt' | 'updatedAt'>>,

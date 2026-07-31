@@ -20,6 +20,11 @@ export class SetupController {
     return this.setupService.createAcademicYear(body);
   }
 
+  @Post('academic-years/:id/ensure-terms')
+  ensureStandardTerms(@Param('id') id: string) {
+    return this.setupService.ensureStandardTerms(id);
+  }
+
   @Patch('academic-years/:id')
   updateAcademicYear(@Param('id') id: string, @Body() body: any) {
     return this.setupService.updateAcademicYear(id, body);

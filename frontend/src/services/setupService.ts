@@ -54,6 +54,11 @@ class SetupService {
     return data;
   }
 
+  async ensureStandardTerms(academicYearId: string): Promise<Term[]> {
+    const { data } = await api.post<Term[]>(`/setup/academic-years/${academicYearId}/ensure-terms`);
+    return data;
+  }
+
   async getSubjects(): Promise<Subject[]> {
     const { data } = await api.get<Subject[]>("/subjects");
     return data;

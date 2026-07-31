@@ -28,6 +28,7 @@ export default function AcademicSetupPage() {
     termStartDate: "",
     termEndDate: "",
     termFeeAmount: "",
+    termIsActive: true,
     termEditId: "",
     className: "",
     subjectName: "",
@@ -73,6 +74,11 @@ export default function AcademicSetupPage() {
     void loadData();
   }, []);
 
+  const prepareTerms = async () => {
+    await Promise.all(academicYears.map((year) => SetupService.ensureStandardTerms(year.id)));
+    await loadData();
+  };
+
   const selectedYearNames = useMemo(() => academicYears.map((item) => item.name), [academicYears]);
 
   const handleCreateAcademicYear = async () => {
@@ -90,16 +96,17 @@ export default function AcademicSetupPage() {
       // Update existing term
       const termToUpdate = terms.find(t => t.id === editingTermId);
       if (termToUpdate) {
-        await SetupService.createTerm({
+        await SetupService.updateTerm(editingTermId, {
           academicYearId: termToUpdate.academicYearId,
           name: termToUpdate.name,
           feeAmount: form.termFeeAmount ? Number(form.termFeeAmount) : termToUpdate.feeAmount,
           startDate: form.termStartDate,
           endDate: form.termEndDate,
+          isActive: form.termIsActive,
         });
         setMessage("Term updated successfully.");
         setEditingTermId(null);
-        setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termFeeAmount: "", termEditId: "" }));
+        setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termFeeAmount: "", termIsActive: true, termEditId: "" }));
         await loadData();
       }
     }
@@ -213,7 +220,7 @@ export default function AcademicSetupPage() {
         <div className="grid gap-4 lg:grid-cols-[1.1fr_0.85fr]">
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-xl font-semibold text-slate-900">Terms</h2>
-            <p className="mt-2 text-sm text-slate-500">Term 1, 2, and 3 are predefined. Edit their features as needed.</p>
+            <p className="mt-2 text-sm text-slate-500">Each academic year always has Term 1, Term 2, and Term 3. Turn a term on or off when needed.</p>
             <div className="mt-4 space-y-3">
               {["Term 1", "Term 2", "Term 3"].map((termName) => (
                 <div key={termName} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
@@ -239,7 +246,8 @@ export default function AcademicSetupPage() {
                             ...current, 
                             termStartDate: term.startDate || "", 
                             termEndDate: term.endDate || "",
-                            termFeeAmount: term.feeAmount ? String(term.feeAmount) : ""
+                            termFeeAmount: term.feeAmount ? String(term.feeAmount) : "",
+                            termIsActive: term.isActive,
                           }));
                         }
                       }}
@@ -253,7 +261,7 @@ export default function AcademicSetupPage() {
             </div>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold text-slate-900">{editingTermId ? "Edit Term" : "Term Features"}</h2>
+            <h2 className="text-xl font-semibold text-slate-900">{editingTermId ? "Term settings" : "Set up standard terms"}</h2>
             {editingTermId ? (
               <>
                 <label className="mt-4 block text-sm font-medium text-slate-700">
@@ -268,16 +276,17 @@ export default function AcademicSetupPage() {
                   Fee Amount (UGX) (Optional)
                   <input type="number" value={form.termFeeAmount} onChange={(event) => setForm((current) => ({ ...current, termFeeAmount: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="0" />
                 </label>
+                <label className="mt-4 flex items-center gap-2 text-sm font-medium text-slate-700"><input type="checkbox" checked={form.termIsActive} onChange={(event) => setForm((current) => ({ ...current, termIsActive: event.target.checked }))} />Active term</label>
                 <div className="mt-4 flex gap-2">
                   <button type="button" onClick={handleCreateTerm} className="flex-1 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Changes</button>
                   <button type="button" onClick={() => {
                     setEditingTermId(null);
-                    setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termFeeAmount: "" }));
+                    setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termFeeAmount: "", termIsActive: true }));
                   }} className="flex-1 rounded-2xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700">Cancel</button>
                 </div>
               </>
             ) : (
-              <p className="mt-4 text-sm text-slate-500">Select a term to edit its start date, end date, and fee amount.</p>
+              <><p className="mt-4 text-sm text-slate-500">Create any missing standard terms for the academic years already in the system.</p><button type="button" onClick={() => void prepareTerms()} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Create missing Term 1, 2 and 3</button></>
             )}
           </div>
         </div>
@@ -378,13 +387,7 @@ export default function AcademicSetupPage() {
             <h2 className="text-xl font-semibold text-slate-900">Add Fee Type</h2>
             <label className="mt-4 block text-sm font-medium text-slate-700">
               Fee Type Name
-              <select value={form.feeTypeName} onChange={(event) => setForm((current) => ({ ...current, feeTypeName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
-                <option value="">Select a fee type</option>
-                <option value="Tuition">Tuition</option>
-                <option value="Examination">Examination</option>
-                <option value="Utilities">Utilities</option>
-                <option value="Activities">Activities</option>
-              </select>
+              <input value={form.feeTypeName} onChange={(event) => setForm((current) => ({ ...current, feeTypeName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. Registration, Tuition, Reams, Development" />
             </label>
             <button type="button" onClick={handleCreateFeeType} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Fee Type</button>
           </div>
@@ -415,9 +418,9 @@ export default function AcademicSetupPage() {
             </label>
             <label className="mt-4 block text-sm font-medium text-slate-700">
               Term
-              <select value={form.financeTermId} onChange={(event) => setForm((current) => ({ ...current, financeTermId: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
-                <option value="">Select term</option>
-                {terms.filter((t) => (t.name === "Term 1" || t.name === "Term 2" || t.name === "Term 3") && t.academicYearId === form.financeAcademicYearId).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+              <select value={form.financeTermId} disabled={!form.financeAcademicYearId} onChange={(event) => setForm((current) => ({ ...current, financeTermId: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 disabled:bg-slate-100">
+                <option value="">{form.financeAcademicYearId ? "Select term" : "Select academic year first"}</option>
+                {terms.filter((term) => term.academicYearId === form.financeAcademicYearId).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
               </select>
             </label>
             <label className="mt-4 block text-sm font-medium text-slate-700">

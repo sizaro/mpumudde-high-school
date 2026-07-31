@@ -19,6 +19,7 @@ type CompleteTeacherRegistration = {
   personal: CreateTeacherDto;
   subjectIds?: string[];
   contacts?: CreateEmergencyContactDto[];
+  employment?: CreateEmploymentDto;
   medical?: CreateMedicalInfoDto;
   documents?: CreateDocumentDto[];
 };
@@ -111,7 +112,7 @@ export class TeachersService {
     registration: CompleteTeacherRegistration,
     uploadedByUserId: string,
   ) {
-    const { personal, subjectIds = [], contacts = [], medical, documents = [] } = registration;
+    const { personal, subjectIds = [], contacts = [], employment, medical, documents = [] } = registration;
     const loginEmail = await this.generateLoginEmail(personal.firstName, personal.lastName);
     const role = await this.prisma.role.findFirst({ where: { name: 'TEACHER' } });
     if (!role) throw new BadRequestException('TEACHER role not found. Ensure roles are seeded.');
@@ -119,6 +120,7 @@ export class TeachersService {
     const tempPassword = generateTempPassword();
     const password = await bcrypt.hash(tempPassword, 12);
     const hasMedicalInfo = medical && Object.values(medical).some(Boolean);
+    const hasEmploymentInfo = employment && Object.values(employment).some(Boolean);
 
     const teacher = await this.prisma.$transaction(async (tx) => {
       const created = await tx.teacher.create({
@@ -128,6 +130,17 @@ export class TeachersService {
           user: { create: { email: loginEmail, password, roles: { create: { roleId: role.id } } } },
           teachingAssignments: { create: [...new Set(subjectIds)].map((subjectId) => ({ subjectId })) },
           emergencyContacts: { create: contacts.map((contact) => ({ ...contact, isNextOfKin: contact.isNextOfKin ?? false })) },
+          employment: hasEmploymentInfo ? { create: {
+            employeeNumber: employment?.employeeNumber || `MHS-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+            position: employment?.position,
+            department: employment?.department,
+            employmentType: employment?.employmentType,
+            employmentDate: employment?.employmentDate ? new Date(employment.employmentDate) : undefined,
+            probationEndDate: employment?.probationEndDate ? new Date(employment.probationEndDate) : undefined,
+            salary: employment?.salary,
+            payFrequency: employment?.payFrequency,
+            status: employment?.status ?? 'active',
+          } } : undefined,
           medicalInformation: hasMedicalInfo ? { create: medical } : undefined,
         },
         include: TEACHER_INCLUDE,
@@ -142,7 +155,7 @@ export class TeachersService {
         });
       }
       return created;
-    });
+    }, { maxWait: 10_000, timeout: 20_000 });
 
     return { teacher, temporaryPassword: tempPassword };
   }
@@ -223,6 +236,7 @@ export class TeachersService {
           ? new Date(dto.probationEndDate)
           : undefined,
         salary: dto.salary,
+        payFrequency: dto.payFrequency,
         status: dto.status ?? 'active',
       },
       update: {
@@ -237,6 +251,7 @@ export class TeachersService {
           ? new Date(dto.probationEndDate)
           : undefined,
         salary: dto.salary,
+        payFrequency: dto.payFrequency,
         status: dto.status,
       },
     });
