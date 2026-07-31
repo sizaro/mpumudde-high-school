@@ -31,27 +31,32 @@ export class AuthController {
 
     @Res({ passthrough: true }) response: Response,
   ) {
-    const result = await this.authService.login(loginDto);
+    try {
+      const result = await this.authService.login(loginDto);
 
-    response.cookie(
-      'access_token',
+      response.cookie(
+        'access_token',
 
-      result.access_token,
+        result.access_token,
 
-      {
-        httpOnly: true,
+        {
+          httpOnly: true,
 
-        secure: process.env.NODE_ENV === 'production',
+          secure: process.env.NODE_ENV === 'production',
 
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
 
-        maxAge: 24 * 60 * 60 * 1000,
-      },
-    );
+          maxAge: 24 * 60 * 60 * 1000,
+        },
+      );
 
-    return {
-      user: result.user,
-    };
+      return {
+        user: result.user,
+      };
+    } catch (error) {
+      console.error('AuthController.login error:', error);
+      throw error;
+    }
   }
 
   @Post('register')

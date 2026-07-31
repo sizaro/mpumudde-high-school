@@ -97,6 +97,13 @@ export class AuthService {
 
     }
 
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        lastLogin: new Date(),
+        isLoggedIn: true,
+      },
+    });
 
 
     const roles = user.roles.map(
@@ -184,6 +191,7 @@ export class AuthService {
     const newUser = await this.prisma.user.create({
       data: {
         email: registerDto.email,
+        username: registerDto.username,
         password: hashedPassword,
         roles: {
           create: {
@@ -207,7 +215,7 @@ export class AuthService {
                   firstName: registerDto.firstName ?? 'Parent',
                   lastName: registerDto.lastName ?? 'User',
                   phone: registerDto.phone,
-                  relationship: registerDto.relationship,
+                  email: registerDto.email,
                 },
               }
             : undefined,

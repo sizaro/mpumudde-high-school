@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Param, Body, Patch, Delete, UseGuards } from '@nestjs/common';
 import { StudentsService } from './students.service.js';
 import { CreateStudentDto } from './dto/create-student.dto.js';
+import { LinkParentDto } from './dto/link-parent.dto.js';
 import { UpdateStudentDto } from './dto/update-student.dto.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
@@ -35,6 +36,11 @@ export class StudentsController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
     return this.studentsService.update(id, updateStudentDto);
+  }
+
+  @Post(':id/link-parent')
+  async linkParent(@Param('id') id: string, @Body() linkParentDto: LinkParentDto) {
+    return this.studentsService.linkParent(id, linkParentDto);
   }
 
   @Delete(':id')

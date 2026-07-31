@@ -16,9 +16,15 @@ model User {
 
   email String @unique
 
+  username String? @unique
+
   password String
 
   isActive Boolean @default(true)
+
+  isLoggedIn Boolean @default(false)
+
+  lastLogin DateTime?
 
   roles UserRole[]
 
@@ -621,12 +627,17 @@ model Parent {
 
   lastName String
 
+  gender String?
+
   phone String?
 
-  relationship String?
-  // Father
-  // Mother
-  // Guardian
+  email String? @unique
+
+  address String?
+
+  occupation String?
+
+  profilePhoto String?
 
   userId String @unique
 
@@ -730,6 +741,8 @@ model StudentParent {
   // Father
   // Mother
   // Guardian
+
+  isPrimary Boolean @default(false)
 
   student Student @relation(fields: [studentId], references: [id])
 

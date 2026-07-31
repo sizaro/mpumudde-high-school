@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import AuthService from '../../services/authService';
 import type { RegisterDto } from '../../types/auth';
@@ -24,7 +24,21 @@ export default function AccountManagement() {
     relationship: '',
   });
   const [status, setStatus] = useState<string | null>(null);
+  const [createdPassword, setCreatedPassword] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  function generatePassword(length = 12) {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';
+    return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  }
+
+  useEffect(() => {
+    if (activeView === 'create' && !form.password) {
+      setForm((current) => ({ ...current, password: generatePassword() }));
+      setShowPassword(true);
+    }
+  }, [activeView, form.password]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -33,6 +47,7 @@ export default function AccountManagement() {
 
     try {
       await AuthService.register(form);
+      setCreatedPassword(form.password);
       setStatus('Account created successfully.');
       setForm({
         email: '',
@@ -43,6 +58,7 @@ export default function AccountManagement() {
         phone: '',
         relationship: '',
       });
+      setShowPassword(false);
     } catch (error: any) {
       setStatus(error.response?.data?.message ?? 'Unable to create account.');
     } finally {
@@ -170,14 +186,33 @@ export default function AccountManagement() {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Password</label>
-                  <input
-                    type="password"
-                    required
-                    minLength={6}
-                    value={form.password}
-                    onChange={(e) => setForm({ ...form, password: e.target.value })}
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
-                  />
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      minLength={6}
+                      value={form.password}
+                      onChange={(e) => setForm({ ...form, password: e.target.value })}
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((current) => !current)}
+                      className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"
+                    >
+                      {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
+                    <span>Auto-generated password can be shown here.</span>
+                    <button
+                      type="button"
+                      onClick={() => setForm((current) => ({ ...current, password: generatePassword() }))}
+                      className="font-medium text-slate-700 underline"
+                    >
+                      Regenerate
+                    </button>
+                  </div>
                 </div>
 
                 <div>
@@ -253,6 +288,9 @@ export default function AccountManagement() {
           {status && (
             <p className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
               {status}
+              {createdPassword ? (
+                <span className="block mt-2 font-mono text-slate-900">Password: {createdPassword}</span>
+              ) : null}
             </p>
           )}
         </section>
