@@ -131,114 +131,133 @@ export class ParentsService {
   }
 
   async getDashboard(userId: string, studentId?: string) {
-    const parent = await this.prisma.parent.findUnique({
-      where: { userId },
-      include: {
-        students: {
-          include: {
-            student: {
-              include: {
-                schoolClass: true,
-                academicYear: true,
-                term: true,
-                studentCategory: true,
-                attendanceRecords: {
-                  orderBy: { createdAt: 'desc' },
-                  take: 20,
-                  include: {
-                    attendanceSession: {
-                      select: {
-                        date: true,
-                        subject: { select: { id: true, name: true } },
-                        teacher: { select: { firstName: true, lastName: true } },
+    try {
+      console.log('ParentsService.getDashboard userId=', userId, 'studentId=', studentId);
+      const parent = await this.prisma.parent.findUnique({
+        where: { userId },
+        include: {
+          students: {
+            select: {
+              id: true,
+              relationship: true,
+              isPrimary: true,
+              student: {
+                include: {
+                  schoolClass: true,
+                  academicYear: true,
+                  term: true,
+                  studentCategory: true,
+                  attendanceRecords: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 20,
+                    include: {
+                      attendanceSession: {
+                        select: {
+                          date: true,
+                          subject: { select: { id: true, name: true } },
+                          teacher: { select: { firstName: true, lastName: true } },
+                        },
                       },
                     },
                   },
+                  payments: true,
                 },
-                payments: true,
               },
             },
           },
         },
-      },
-    });
+      });
 
-    if (!parent) {
-      throw new NotFoundException('Parent profile not found.');
+      if (!parent) {
+        throw new NotFoundException('Parent profile not found.');
+      }
+
+      const children = (parent.students ?? [])
+        .filter((relation) => relation.student !== null)
+        .map((relation) => ({
+          relationId: relation.id,
+          relationship: relation.relationship ?? null,
+          isPrimary: relation.isPrimary ?? false,
+          student: relation.student!,
+        }));
+
+      console.log('ParentsService.getDashboard parent found, children count=', children.length);
+
+      const parentPayload = {
+        id: parent.id,
+        firstName: parent.firstName,
+        lastName: parent.lastName,
+        phone: parent.phone,
+        email: parent.email,
+        address: parent.address,
+        occupation: parent.occupation,
+        profilePhoto: parent.profilePhoto,
+      };
+
+      const childrenPayload = children.map((child) => ({
+        studentId: child.student.id,
+        admissionNumber: child.student.admissionNumber,
+        firstName: child.student.firstName,
+        lastName: child.student.lastName,
+        isPrimary: child.isPrimary,
+        relationship: child.relationship,
+        className: child.student.schoolClass?.name ?? null,
+        academicYear: child.student.academicYear?.name ?? null,
+        term: child.student.term?.name ?? null,
+      }));
+
+      const selectedChild = studentId
+        ? children.find((child) => child.student.id === studentId)
+        : children[0];
+
+      const response: Record<string, unknown> = {
+        parent: parentPayload,
+        children: childrenPayload,
+      };
+
+      if (selectedChild?.student) {
+        response.student = this.buildStudentDashboard(selectedChild.student);
+      }
+
+      if (studentId && !selectedChild) {
+        throw new NotFoundException('Student not found for this parent.');
+      }
+
+      return response;
+    } catch (error) {
+      console.error('ParentsService.getDashboard error:', error);
+      throw error;
     }
-
-    const children = (parent.students ?? [])
-      .map((relation) => ({
-        relationId: relation.id,
-        relationship: relation.relationship,
-        isPrimary: relation.isPrimary,
-        student: relation.student,
-      }))
-      .filter((entry) => entry.student !== null);
-
-    const parentPayload = {
-      id: parent.id,
-      firstName: parent.firstName,
-      lastName: parent.lastName,
-      phone: parent.phone,
-      email: parent.email,
-      address: parent.address,
-      occupation: parent.occupation,
-      profilePhoto: parent.profilePhoto,
-    };
-
-    const childrenPayload = children.map((child) => ({
-      studentId: child.student.id,
-      admissionNumber: child.student.admissionNumber,
-      firstName: child.student.firstName,
-      lastName: child.student.lastName,
-      isPrimary: child.isPrimary,
-      relationship: child.relationship,
-      className: child.student.schoolClass?.name,
-      academicYear: child.student.academicYear?.name,
-      term: child.student.term?.name,
-    }));
-
-    const selectedChild = studentId
-      ? children.find((child) => child.student.id === studentId)
-      : children[0];
-
-    const response: Record<string, unknown> = {
-      parent: parentPayload,
-      children: childrenPayload,
-    };
-
-    if (selectedChild) {
-      response.student = this.buildStudentDashboard(selectedChild.student);
-    }
-
-    if (studentId && !selectedChild) {
-      throw new NotFoundException('Student not found for this parent.');
-    }
-
-    return response;
   }
 
   private buildStudentDashboard(student: any) {
-    const attendance = student.attendanceRecords.map((record: any) => ({
+    const attendanceRecords = Array.isArray(student.attendanceRecords)
+      ? student.attendanceRecords
+      : [];
+    const payments = Array.isArray(student.payments) ? student.payments : [];
+
+    const attendance = attendanceRecords.map((record: any) => ({
       date: record.attendanceSession?.date,
-      subject: record.attendanceSession?.subject?.name,
+      subject: record.attendanceSession?.subject?.name ?? null,
       teacher: record.attendanceSession?.teacher
         ? `${record.attendanceSession.teacher.firstName} ${record.attendanceSession.teacher.lastName}`
         : null,
-      status: record.status,
+      status: record.status ?? null,
     }));
 
     const financeSummary = {
-      payments: student.payments.map((payment: any) => ({
+      payments: payments.map((payment: any) => ({
         id: payment.id,
-        amount: payment.amount,
-        method: payment.method,
-        status: payment.status,
-        date: payment.date,
-        description: payment.description,
+        amount: payment.amount ?? 0,
+        method: payment.method ?? null,
+        status: payment.status ?? null,
+        date: payment.date ?? null,
+        description: payment.description ?? null,
       })),
-      totalPaid: student.payments.reduce((sum: number, payment: any) => sum + payment.amount, 0),
+      totalPaid: payments.reduce(
+        (sum: number, payment: any) => sum + (payment.amount ?? 0),
+        0,
+      ),
     };
 
     return {
@@ -247,15 +266,15 @@ export class ParentsService {
         admissionNumber: student.admissionNumber,
         firstName: student.firstName,
         lastName: student.lastName,
-        passportPhoto: student.passportPhoto,
-        className: student.schoolClass?.name,
-        academicYear: student.academicYear?.name,
+        passportPhoto: student.passportPhoto ?? null,
+        className: student.schoolClass?.name ?? null,
+        academicYear: student.academicYear?.name ?? null,
       },
       attendance,
       finance: financeSummary,
       academicPerformance: {
         message: 'Academic performance details are not available in the current schema.',
-        grades: student.grades ?? [],
+        grades: Array.isArray(student.grades) ? student.grades : [],
       },
     };
   }
@@ -279,6 +298,9 @@ export class ParentsService {
       const existingUser = await this.prisma.user.findUnique({ where: { email: updateParentDto.email } });
       if (existingUser && existingUser.id !== parent.userId) {
         throw new BadRequestException('Email is already in use by another account.');
+      }
+      if (!parent.userId) {
+        throw new NotFoundException('Parent account is not linked to a user.');
       }
       data.email = updateParentDto.email;
       await this.prisma.user.update({

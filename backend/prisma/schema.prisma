@@ -639,9 +639,9 @@ model Parent {
 
   profilePhoto String?
 
-  userId String @unique
+  userId String? @unique
 
-  user User @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
 
   students StudentParent[]
 

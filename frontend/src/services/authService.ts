@@ -1,6 +1,5 @@
 import api from "../api/axios";
 
-
 import type {
   LoginDto,
   LoginResponse,
@@ -8,7 +7,27 @@ import type {
   User,
 } from "../types/auth";
 
+const ACCESS_TOKEN_KEY = "mpumudde_access_token";
 
+function setClientToken(token?: string) {
+  if (token) {
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common.Authorization;
+  }
+}
+
+function getStoredToken(): string | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  return localStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
+const storedToken = getStoredToken();
+if (storedToken) {
+  setClientToken(storedToken);
+}
 
 class AuthService {
 
@@ -53,6 +72,10 @@ class AuthService {
 
     );
 
+    if (data.access_token) {
+      localStorage.setItem(ACCESS_TOKEN_KEY, data.access_token);
+      setClientToken(data.access_token);
+    }
 
     return data;
 
