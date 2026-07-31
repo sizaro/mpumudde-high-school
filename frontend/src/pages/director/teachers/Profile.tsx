@@ -29,16 +29,16 @@ export default function TeacherProfile() {
     setAssignments((prev) => prev.filter((a) => a.id !== assignId));
   }
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return <div className="text-sm text-slate-500">Loading...</div>;
   if (!teacher)
-    return <div className="p-8 text-red-500">Teacher not found.</div>;
+    return <div className="text-sm text-red-600">Teacher not found.</div>;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-8">
+    <div className="space-y-8">
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate("/director/teachers")}
-          className="text-gray-500 hover:text-gray-700"
+          className="text-sm text-slate-500 hover:text-slate-700"
         >
           ← Back
         </button>
@@ -46,7 +46,7 @@ export default function TeacherProfile() {
           {teacher.firstName} {teacher.middleName} {teacher.lastName}
         </h1>
         <span
-          className={`ml-auto px-3 py-1 rounded-full text-sm ${teacher.employment?.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+          className={`ml-auto rounded-full px-3 py-1 text-sm font-semibold ${teacher.employment?.status === "active" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}
         >
           {teacher.employment?.status ?? "No Employment Record"}
         </span>
@@ -64,7 +64,7 @@ export default function TeacherProfile() {
           <button
             key={a.path}
             onClick={() => navigate(`/director/teachers/${id}/${a.path}`)}
-            className="border border-gray-300 text-sm px-4 py-1.5 rounded-lg hover:bg-gray-50"
+            className="rounded-2xl border border-slate-200 px-4 py-1.5 text-sm text-slate-700 transition hover:bg-slate-50"
           >
             {a.label}
           </button>
@@ -72,8 +72,8 @@ export default function TeacherProfile() {
       </div>
 
       {/* Personal */}
-      <section className="bg-white border rounded-lg p-6">
-        <h2 className="font-semibold text-lg mb-4">Personal Information</h2>
+      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 text-lg font-semibold">Personal Information</h2>
         <dl className="grid grid-cols-2 gap-3 text-sm">
           {[
             ["Email (login)", teacher.user?.email],
@@ -84,8 +84,8 @@ export default function TeacherProfile() {
             ["Address", teacher.address],
           ].map(([k, v]) => (
             <div key={String(k)}>
-              <dt className="text-gray-500">{k}</dt>
-              <dd className="font-medium">{v ?? "—"}</dd>
+              <dt className="text-slate-500">{k}</dt>
+              <dd className="font-medium text-slate-900">{v ?? "—"}</dd>
             </div>
           ))}
         </dl>
@@ -93,8 +93,8 @@ export default function TeacherProfile() {
 
       {/* Employment */}
       {teacher.employment && (
-        <section className="bg-white border rounded-lg p-6">
-          <h2 className="font-semibold text-lg mb-4">Employment</h2>
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold">Employment</h2>
           <dl className="grid grid-cols-2 gap-3 text-sm">
             {[
               ["Employee #", teacher.employment.employeeNumber],
@@ -104,8 +104,8 @@ export default function TeacherProfile() {
               ["Date", teacher.employment.employmentDate?.slice(0, 10)],
             ].map(([k, v]) => (
               <div key={String(k)}>
-                <dt className="text-gray-500">{k}</dt>
-                <dd className="font-medium">{v ?? "—"}</dd>
+                <dt className="text-slate-500">{k}</dt>
+                <dd className="font-medium text-slate-900">{v ?? "—"}</dd>
               </div>
             ))}
           </dl>
@@ -113,26 +113,26 @@ export default function TeacherProfile() {
       )}
 
       {/* Assignments */}
-      <section className="bg-white border rounded-lg p-6">
-        <h2 className="font-semibold text-lg mb-4">Teaching Assignments</h2>
+      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 text-lg font-semibold">Teaching Assignments</h2>
         {assignments.length === 0 ? (
-          <p className="text-gray-500 text-sm">No assignments yet.</p>
+          <p className="text-sm text-slate-500">No assignments yet.</p>
         ) : (
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b">
-                <th className="text-left py-2">Subject</th>
+              <tr className="border-b border-slate-200">
+                <th className="py-2 text-left text-slate-500">Subject</th>
                 <th />
               </tr>
             </thead>
             <tbody>
               {assignments.map((a) => (
-                <tr key={a.id} className="border-b">
-                  <td className="py-2">{a.subject?.name}</td>
+                <tr key={a.id} className="border-b border-slate-100">
+                  <td className="py-2 text-slate-700">{a.subject?.name}</td>
                   <td className="py-2 text-right">
                     <button
                       onClick={() => removeAssignment(a.id)}
-                      className="text-red-500 hover:underline text-xs"
+                      className="text-xs text-red-600 hover:underline"
                     >
                       Remove
                     </button>
@@ -144,30 +144,30 @@ export default function TeacherProfile() {
         )}
         <button
           onClick={() => navigate(`/director/teachers/${id}/assignments`)}
-          className="mt-3 text-blue-600 hover:underline text-sm"
+          className="mt-3 text-sm text-blue-600 hover:underline"
         >
           Manage Assignments →
         </button>
       </section>
 
       {/* Emergency Contacts */}
-      <section className="bg-white border rounded-lg p-6">
-        <h2 className="font-semibold text-lg mb-4">Emergency Contacts</h2>
+      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 text-lg font-semibold">Emergency Contacts</h2>
         {(teacher.emergencyContacts ?? []).length === 0 ? (
-          <p className="text-gray-500 text-sm">No emergency contacts.</p>
+          <p className="text-sm text-slate-500">No emergency contacts.</p>
         ) : (
           <div className="space-y-3">
             {teacher.emergencyContacts.map((c: any) => (
-              <div key={c.id} className="border rounded p-3 text-sm">
-                <p className="font-medium">
+              <div key={c.id} className="rounded-2xl border border-slate-200 p-3 text-sm">
+                <p className="font-medium text-slate-900">
                   {c.fullName}{" "}
                   {c.isNextOfKin && (
-                    <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-1 rounded">
+                    <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">
                       Next of Kin
                     </span>
                   )}
                 </p>
-                <p className="text-gray-500">
+                <p className="text-slate-500">
                   {c.relationship} · {c.phone}
                 </p>
               </div>

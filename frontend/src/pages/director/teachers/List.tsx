@@ -28,52 +28,55 @@ export default function TeacherList() {
     } finally { setDeletingId(null); }
   }
 
-  if (loading) return <div className="p-8">Loading teachers...</div>;
+  if (loading) return <div className="text-sm text-slate-500">Loading teachers...</div>;
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Teachers</h1>
+    <div>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Teachers</h1>
+          <p className="mt-2 text-slate-500">Manage teacher profiles, assignments, and employment records.</p>
+        </div>
         <button
           onClick={() => navigate("/director/teachers/create")}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
         >
           Add Teacher
         </button>
       </div>
 
-      {actionError && <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{actionError}</p>}
+      {actionError && <p className="mt-6 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">{actionError}</p>}
 
       {teachers.length === 0 ? (
-        <p className="text-gray-500">No teachers found. Add one to get started.</p>
+        <p className="mt-8 text-sm text-slate-500">No teachers found. Add one to get started.</p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-            <thead className="bg-gray-50">
+        <div className="mt-8 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <table className="min-w-full divide-y divide-slate-200 text-left">
+            <thead className="bg-slate-50 text-slate-500">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Name</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Email</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Employee #</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Status</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Actions</th>
+                <th className="px-6 py-4 text-sm font-semibold">Name</th>
+                <th className="px-6 py-4 text-sm font-semibold">Email</th>
+                <th className="px-6 py-4 text-sm font-semibold">Employee #</th>
+                <th className="px-6 py-4 text-sm font-semibold">Status</th>
+                <th className="px-6 py-4 text-sm font-semibold">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-slate-200">
               {teachers.map((t) => (
-                <tr key={t.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{t.firstName} {t.lastName}</td>
-                  <td className="px-4 py-3 text-gray-600">{t.user?.email ?? "—"}</td>
-                  <td className="px-4 py-3 text-gray-600">{t.employment?.employeeNumber ?? "—"}</td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-1 text-xs rounded-full ${t.employment?.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                <tr key={t.id} className="hover:bg-slate-50">
+                  <td className="px-6 py-4 text-sm font-medium text-slate-900">{t.firstName} {t.lastName}</td>
+                  <td className="px-6 py-4 text-sm text-slate-700">{t.user?.email ?? "—"}</td>
+                  <td className="px-6 py-4 text-sm text-slate-700">{t.employment?.employeeNumber ?? "—"}</td>
+                  <td className="px-6 py-4 text-sm">
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${t.employment?.status === "active" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
                       {t.employment?.status ?? "unset"}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-6 py-4 text-sm">
                     <div className="flex items-center gap-1">
-                      <button title="View teacher profile" aria-label={`View ${t.firstName} ${t.lastName}`} onClick={() => navigate(`/director/teachers/${t.id}`)} className="rounded-lg p-2 text-blue-700 hover:bg-blue-50"><Eye size={18} /></button>
-                      <button title="Edit teacher information" aria-label={`Edit ${t.firstName} ${t.lastName}`} onClick={() => navigate(`/director/teachers/${t.id}/edit`)} className="rounded-lg p-2 text-amber-700 hover:bg-amber-50"><Pencil size={18} /></button>
-                      <button title="Delete teacher" aria-label={`Delete ${t.firstName} ${t.lastName}`} disabled={deletingId === t.id} onClick={() => void deleteTeacher(t)} className="rounded-lg p-2 text-red-700 hover:bg-red-50 disabled:opacity-50"><Trash2 size={18} /></button>
+                      <button title="View teacher profile" aria-label={`View ${t.firstName} ${t.lastName}`} onClick={() => navigate(`/director/teachers/${t.id}`)} className="rounded-xl p-2 text-blue-700 hover:bg-blue-50"><Eye size={18} /></button>
+                      <button title="Edit teacher information" aria-label={`Edit ${t.firstName} ${t.lastName}`} onClick={() => navigate(`/director/teachers/${t.id}/edit`)} className="rounded-xl p-2 text-amber-700 hover:bg-amber-50"><Pencil size={18} /></button>
+                      <button title="Delete teacher" aria-label={`Delete ${t.firstName} ${t.lastName}`} disabled={deletingId === t.id} onClick={() => void deleteTeacher(t)} className="rounded-xl p-2 text-red-700 hover:bg-red-50 disabled:opacity-50"><Trash2 size={18} /></button>
                     </div>
                   </td>
                 </tr>

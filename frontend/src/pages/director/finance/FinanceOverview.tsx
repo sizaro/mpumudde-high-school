@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { AlertCircle, Receipt, Wallet } from "lucide-react";
 import FinanceService from "../../../services/financeService";
 import StudentService from "../../../services/studentService";
 import TermsService from "../../../services/termsService";
@@ -166,7 +167,7 @@ export default function FinanceOverview() {
           onClick={() => setActiveTab("payments")}
           className={`rounded-2xl px-4 py-2 text-sm font-medium transition ${
             activeTab === "payments"
-              ? "bg-slate-900 text-white"
+              ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/20"
               : "bg-slate-100 text-slate-700 hover:bg-slate-200"
           }`}
         >
@@ -177,7 +178,7 @@ export default function FinanceOverview() {
           onClick={() => setActiveTab("history")}
           className={`rounded-2xl px-4 py-2 text-sm font-medium transition ${
             activeTab === "history"
-              ? "bg-slate-900 text-white"
+              ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/20"
               : "bg-slate-100 text-slate-700 hover:bg-slate-200"
           }`}
         >
@@ -188,7 +189,7 @@ export default function FinanceOverview() {
           onClick={() => setActiveTab("terms")}
           className={`rounded-2xl px-4 py-2 text-sm font-medium transition ${
             activeTab === "terms"
-              ? "bg-slate-900 text-white"
+              ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/20"
               : "bg-slate-100 text-slate-700 hover:bg-slate-200"
           }`}
         >
@@ -197,18 +198,27 @@ export default function FinanceOverview() {
       </div>
 
       {activeTab !== "terms" && (
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <p className="text-sm text-slate-500">Total fee records</p>
-            <p className="mt-4 text-3xl font-semibold">{loading ? "..." : totals.recordCount}</p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-3xl bg-gradient-to-br from-blue-500 to-blue-600 p-5 text-white shadow-lg">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-white/80">Total fee records</p>
+              <Receipt size={20} className="text-white/80" />
+            </div>
+            <p className="mt-3 text-2xl font-bold">{loading ? "…" : totals.recordCount}</p>
           </div>
-          <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <p className="text-sm text-slate-500">Total payments received</p>
-            <p className="mt-4 text-3xl font-semibold">UGX {loading ? "..." : totals.totalReceived.toLocaleString()}</p>
+          <div className="rounded-3xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-5 text-white shadow-lg">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-white/80">Total payments received</p>
+              <Wallet size={20} className="text-white/80" />
+            </div>
+            <p className="mt-3 text-2xl font-bold">UGX {loading ? "…" : totals.totalReceived.toLocaleString()}</p>
           </div>
-          <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <p className="text-sm text-slate-500">Outstanding balances</p>
-            <p className="mt-4 text-3xl font-semibold">UGX 0</p>
+          <div className="rounded-3xl bg-gradient-to-br from-rose-500 to-rose-600 p-5 text-white shadow-lg">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-white/80">Outstanding balances</p>
+              <AlertCircle size={20} className="text-white/80" />
+            </div>
+            <p className="mt-3 text-2xl font-bold">UGX 0</p>
           </div>
         </div>
       )}
@@ -252,7 +262,7 @@ export default function FinanceOverview() {
                     }}
                     className={`flex w-full items-center justify-between rounded-2xl px-3 py-3 text-left transition ${
                       selectedStudentId === student.id
-                        ? "bg-slate-900 text-white"
+                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-900/20"
                         : "bg-white text-slate-700 hover:bg-slate-100"
                     }`}
                   >
@@ -349,7 +359,7 @@ export default function FinanceOverview() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+                className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:from-blue-700 hover:to-indigo-700 disabled:cursor-not-allowed disabled:from-slate-400 disabled:to-slate-400 disabled:shadow-none"
               >
                 {submitting ? "Saving payment..." : "Add payment"}
               </button>
@@ -405,7 +415,19 @@ export default function FinanceOverview() {
                         {studentBalance ? (balanceAmount === 0 ? "Cleared" : `UGX ${balanceAmount.toLocaleString()}`) : "No fees assigned"}
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-700">{payment.method}</td>
-                      <td className="px-6 py-4 text-sm text-slate-700">{payment.status}</td>
+                      <td className="px-6 py-4 text-sm">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                            payment.status === "completed"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : payment.status === "pending"
+                                ? "bg-amber-100 text-amber-700"
+                                : "bg-rose-100 text-rose-700"
+                          }`}
+                        >
+                          {payment.status}
+                        </span>
+                      </td>
                     </tr>
                   );
                 })

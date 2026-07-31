@@ -94,13 +94,13 @@ export default function AccountManagement() {
                 }}
                 className={`w-full rounded-2xl border px-4 py-4 text-left transition ${
                   activeView === 'manage'
-                    ? 'border-slate-900 bg-slate-950 text-white'
+                    ? 'border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/20'
                     : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400'
                 }`}
               >
                 <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                   <span className="text-base font-semibold break-words">Manage my account</span>
-                  <span className="text-sm text-slate-500 break-words">View current director details</span>
+                  <span className={`text-sm break-words ${activeView === 'manage' ? 'text-white/80' : 'text-slate-500'}`}>View current director details</span>
                 </div>
               </button>
 
@@ -112,13 +112,13 @@ export default function AccountManagement() {
                 }}
                 className={`w-full rounded-2xl border px-4 py-4 text-left transition ${
                   activeView === 'create'
-                    ? 'border-slate-900 bg-slate-950 text-white'
+                    ? 'border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/20'
                     : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400'
                 }`}
               >
                 <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                   <span className="text-base font-semibold break-words">Create new account</span>
-                  <span className="text-sm text-slate-500 break-words">Add a teacher, student, parent, bursar, or secretary</span>
+                  <span className={`text-sm break-words ${activeView === 'create' ? 'text-white/80' : 'text-slate-500'}`}>Add a teacher, student, parent, bursar, or secretary</span>
                 </div>
               </button>
             </div>
