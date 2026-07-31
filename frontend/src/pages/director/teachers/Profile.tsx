@@ -2,6 +2,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import TeacherService from "../../../services/teacherService";
 import TeachingAssignmentService from "../../../services/teachingAssignmentService";
+import { Pencil } from "lucide-react";
 
 export default function TeacherProfile() {
   const { id } = useParams<{ id: string }>();
@@ -10,6 +11,8 @@ export default function TeacherProfile() {
   const [loading, setLoading] = useState(true);
 
   const [assignments, setAssignments] = useState<any[]>([]);
+  const [editing, setEditing] = useState<"personal" | "employment" | "medical" | null>(null);
+  const [draft, setDraft] = useState<any>({});
 
   useEffect(() => {
     if (!id) return;
@@ -19,6 +22,7 @@ export default function TeacherProfile() {
     ])
       .then(([t, a]) => {
         setTeacher(t);
+        setDraft(t);
         setAssignments(a);
       })
       .finally(() => setLoading(false));
@@ -27,6 +31,18 @@ export default function TeacherProfile() {
   async function removeAssignment(assignId: string) {
     await TeachingAssignmentService.remove(assignId);
     setAssignments((prev) => prev.filter((a) => a.id !== assignId));
+  }
+
+  async function saveSection(section: "personal" | "employment" | "medical") {
+    if (!id) return;
+    try {
+      const updated = section === "personal"
+        ? await TeacherService.updatePersonal(id, { firstName: draft.firstName, middleName: draft.middleName, lastName: draft.lastName, phone: draft.phone, gender: draft.gender, nationality: draft.nationality, address: draft.address })
+        : section === "employment"
+          ? await TeacherService.upsertEmployment(id, { ...teacher.employment, position: draft.employment?.position, department: draft.employment?.department, employmentType: draft.employment?.employmentType, salary: draft.employment?.salary ? Number(draft.employment.salary) : undefined, payFrequency: draft.employment?.payFrequency, status: draft.employment?.status })
+          : await TeacherService.upsertMedical(id, { ...draft.medicalInformation });
+      setTeacher((current: any) => section === "personal" ? updated : section === "employment" ? { ...current, employment: updated } : { ...current, medicalInformation: updated }); setEditing(null);
+    } catch { alert("Unable to save this section."); }
   }
 
   if (loading) return <div className="p-8">Loading...</div>;
@@ -52,13 +68,11 @@ export default function TeacherProfile() {
         </span>
       </div>
 
-      {/* Quick actions */}
+      {/* Management actions for records that contain multiple entries. */}
       <div className="flex flex-wrap gap-2">
         {[
-          { label: "Edit Info", path: "edit" },
           { label: "Assignments", path: "assignments" },
           { label: "Contacts", path: "contacts" },
-          { label: "Medical", path: "medical" },
           { label: "Documents", path: "documents" },
         ].map((a) => (
           <button
@@ -73,7 +87,7 @@ export default function TeacherProfile() {
 
       {/* Personal */}
       <section className="bg-white border rounded-lg p-6">
-        <h2 className="font-semibold text-lg mb-4">Personal Information</h2>
+        <div className="mb-4 flex items-center justify-between"><h2 className="font-semibold text-lg">Personal Information</h2><button onClick={() => { setDraft(teacher); setEditing("personal"); }} className="rounded-lg p-2 text-amber-700 hover:bg-amber-50" title="Edit personal information"><Pencil size={17} /></button></div>
         <dl className="grid grid-cols-2 gap-3 text-sm">
           {[
             ["Email (login)", teacher.user?.email],
@@ -91,10 +105,12 @@ export default function TeacherProfile() {
         </dl>
       </section>
 
+      {editing === "personal" && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"><div className="w-full max-w-xl rounded-xl bg-white p-6"><h2 className="font-semibold">Edit Personal Information</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{(["firstName", "middleName", "lastName", "phone", "gender", "nationality", "address"] as const).map((field) => <label key={field}><span className="text-sm capitalize">{field.replace(/([A-Z])/g, " $1")}</span><input value={draft[field] ?? ""} onChange={(event) => setDraft((current: any) => ({ ...current, [field]: event.target.value }))} className="mt-1 w-full rounded-lg border px-3 py-2" /></label>)}</div><div className="mt-5 flex justify-end gap-2"><button onClick={() => setEditing(null)} className="rounded-lg border px-4 py-2">Cancel</button><button onClick={() => void saveSection("personal")} className="rounded-lg bg-blue-600 px-4 py-2 text-white">Save section</button></div></div></div>}
+
       {/* Employment */}
       {teacher.employment && (
         <section className="bg-white border rounded-lg p-6">
-          <h2 className="font-semibold text-lg mb-4">Employment</h2>
+        <div className="mb-4 flex items-center justify-between"><h2 className="font-semibold text-lg">Employment & Pay</h2><button onClick={() => { setDraft(teacher); setEditing("employment"); }} className="rounded-lg p-2 text-amber-700 hover:bg-amber-50" title="Edit employment"><Pencil size={17} /></button></div>
           <dl className="grid grid-cols-2 gap-3 text-sm">
             {[
               ["Employee #", teacher.employment.employeeNumber],
@@ -111,6 +127,15 @@ export default function TeacherProfile() {
           </dl>
         </section>
       )}
+
+      {editing === "employment" && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"><div className="w-full max-w-xl rounded-xl bg-white p-6"><h2 className="font-semibold">Edit Employment & Pay</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{(["position", "department", "employmentType", "salary", "payFrequency", "status"] as const).map((field) => <label key={field}><span className="text-sm capitalize">{field.replace(/([A-Z])/g, " $1")}</span><input value={draft.employment?.[field] ?? ""} onChange={(event) => setDraft((current: any) => ({ ...current, employment: { ...current.employment, [field]: event.target.value } }))} className="mt-1 w-full rounded-lg border px-3 py-2" /></label>)}</div><div className="mt-5 flex justify-end gap-2"><button onClick={() => setEditing(null)} className="rounded-lg border px-4 py-2">Cancel</button><button onClick={() => void saveSection("employment")} className="rounded-lg bg-blue-600 px-4 py-2 text-white">Save section</button></div></div></div>}
+
+      <section className="bg-white border rounded-lg p-6">
+        <div className="mb-4 flex items-center justify-between"><h2 className="font-semibold text-lg">Medical Information</h2><button onClick={() => { setDraft(teacher); setEditing("medical"); }} className="rounded-lg p-2 text-amber-700 hover:bg-amber-50" title="Edit medical information"><Pencil size={17} /></button></div>
+        <dl className="grid grid-cols-2 gap-3 text-sm">{[["Blood group", teacher.medicalInformation?.bloodGroup], ["Allergies", teacher.medicalInformation?.allergies], ["Conditions", teacher.medicalInformation?.medicalConditions], ["Medication", teacher.medicalInformation?.medication], ["Disability", teacher.medicalInformation?.disability], ["Notes", teacher.medicalInformation?.notes]].map(([label, value]) => <div key={String(label)}><dt className="text-gray-500">{label}</dt><dd className="font-medium">{value ?? "—"}</dd></div>)}</dl>
+      </section>
+
+      {editing === "medical" && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"><div className="w-full max-w-xl rounded-xl bg-white p-6"><h2 className="font-semibold">Edit Medical Information</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{(["bloodGroup", "allergies", "medicalConditions", "medication", "disability", "notes"] as const).map((field) => <label key={field}><span className="text-sm capitalize">{field.replace(/([A-Z])/g, " $1")}</span><input value={draft.medicalInformation?.[field] ?? ""} onChange={(event) => setDraft((current: any) => ({ ...current, medicalInformation: { ...current.medicalInformation, [field]: event.target.value } }))} className="mt-1 w-full rounded-lg border px-3 py-2" /></label>)}</div><div className="mt-5 flex justify-end gap-2"><button onClick={() => setEditing(null)} className="rounded-lg border px-4 py-2">Cancel</button><button onClick={() => void saveSection("medical")} className="rounded-lg bg-blue-600 px-4 py-2 text-white">Save section</button></div></div></div>}
 
       {/* Assignments */}
       <section className="bg-white border rounded-lg p-6">

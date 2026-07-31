@@ -7,10 +7,11 @@ import { Pool } from 'pg';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    console.log('DATABASE_URL:', process.env.DATABASE_URL);
-
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,
+      max: 5,
+      connectionTimeoutMillis: 10_000,
+      idleTimeoutMillis: 30_000,
       ssl: {
         rejectUnauthorized: false,
       },
@@ -21,17 +22,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   }
 
   async onModuleInit() {
-    console.log('Connecting Prisma...');
-
     await this.$connect();
-
-    console.log('Prisma connected.');
-
-    const result = await this.$queryRaw`
-      SELECT current_user, current_database();
-    `;
-
-    console.log(result);
   }
 
   async onModuleDestroy() {

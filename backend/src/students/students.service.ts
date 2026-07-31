@@ -100,7 +100,7 @@ export class StudentsService {
     return this.prisma.student.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        parents: true,
+        parents: { include: { parent: true } },
         payments: true,
         academicYear: true,
         term: true,
@@ -114,7 +114,7 @@ export class StudentsService {
     return this.prisma.student.findUnique({
       where: { id },
       include: {
-        parents: true,
+        parents: { include: { parent: true } },
         payments: true,
         academicYear: true,
         term: true,
