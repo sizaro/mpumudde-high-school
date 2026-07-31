@@ -1,4 +1,5 @@
 ﻿import { NavLink, Outlet } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const links = [
   { to: "/teacher/overview", label: "Overview" },
@@ -13,6 +14,8 @@ const links = [
 ];
 
 export default function TeacherLayout() {
+  const { logout } = useAuth();
+
   return (
     <div className="flex min-h-screen">
       <aside className="w-56 bg-gray-900 text-white flex flex-col py-6 px-3 gap-1 shrink-0">
@@ -30,6 +33,13 @@ export default function TeacherLayout() {
             {l.label}
           </NavLink>
         ))}
+        <button
+          type="button"
+          onClick={logout}
+          className="mt-auto px-3 py-2 rounded text-sm text-left text-gray-300 hover:bg-gray-700"
+        >
+          Log out
+        </button>
       </aside>
       <main className="flex-1 bg-gray-50 overflow-auto">
         <Outlet />

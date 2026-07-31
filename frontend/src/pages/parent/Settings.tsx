@@ -100,7 +100,16 @@ export default function ParentSettings() {
             <h1 className="text-2xl font-semibold">Settings</h1>
             <p className="mt-2 text-sm text-slate-500">Update your parent contact details and profile photo.</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-slate-200">
+              {data.parent.profilePhoto ? (
+                <img src={data.parent.profilePhoto} alt="Profile" className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full items-center justify-center text-sm font-semibold text-slate-500">
+                  {data.parent.firstName?.[0]?.toUpperCase()}
+                </div>
+              )}
+            </div>
             {isEditing ? (
               <button
                 type="button"

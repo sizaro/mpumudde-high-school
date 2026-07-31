@@ -297,12 +297,17 @@ export default function StudentProfile() {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700">Relationship</label>
-            <input
+            <select
               value={relationship}
               onChange={(event) => setRelationship(event.target.value)}
               className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3"
-              placeholder="Father, Mother, Guardian, etc."
-            />
+            >
+              <option value="">Select relationship</option>
+              <option value="Father">Father</option>
+              <option value="Mother">Mother</option>
+              <option value="Guardian">Guardian</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
           <div className="flex items-center gap-3">
             <label className="inline-flex items-center gap-2 text-sm text-slate-700">
