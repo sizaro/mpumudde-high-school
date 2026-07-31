@@ -145,6 +145,9 @@ export class StudentsService {
     if (updateStudentDto.passportPhoto !== undefined) {
       data.passportPhoto = updateStudentDto.passportPhoto;
     }
+    for (const field of ['nationality', 'address', 'previousSchool', 'bloodGroup', 'allergies', 'medicalConditions', 'specialNeeds', 'medicalNotes'] as const) {
+      if (updateStudentDto[field] !== undefined) data[field] = updateStudentDto[field];
+    }
     if (updateStudentDto.isActive !== undefined) {
       data.isActive = updateStudentDto.isActive;
     }

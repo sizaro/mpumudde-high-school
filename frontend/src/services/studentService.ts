@@ -39,6 +39,10 @@ class StudentService {
     const { data } = await api.get(`/students/${studentId}/finance-summary`);
     return data;
   }
+
+  async deleteStudent(studentId: string): Promise<void> {
+    await api.delete(`/students/${studentId}`);
+  }
 }
 
 export default new StudentService();
