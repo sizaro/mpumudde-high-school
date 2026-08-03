@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
@@ -9,11 +9,11 @@ interface AnimatedSectionProps {
   direction?: "up" | "down" | "left" | "right" | "fade";
 }
 
-export function AnimatedSection({ 
-  children, 
-  className = "", 
+export function AnimatedSection({
+  children,
+  className = "",
   delay = 0,
-  direction = "up" 
+  direction = "up",
 }: AnimatedSectionProps) {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.15 });
 
