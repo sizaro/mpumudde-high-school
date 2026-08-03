@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { toKampalaLocalDateTime } from '../common/utils/kampala-date-time.js';
 import { CreateStudentDto } from './dto/create-student.dto.js';
 import { UpdateStudentDto } from './dto/update-student.dto.js';
 import { CompleteStudentRegistrationDto } from './dto/complete-student-registration.dto.js';
@@ -68,6 +69,22 @@ export class StudentsService {
         },
       });
 
+      const matchingStructures = await tx.financeStructure.findMany({
+        where: {
+          academicYearId: student.academicYearId,
+          termId: student.termId,
+          classId: student.classId,
+          studentCategoryId: student.studentCategoryId,
+          isActive: true,
+        },
+      });
+      if (matchingStructures.length) {
+        await tx.studentCharge.createMany({
+          data: matchingStructures.map((structure) => ({ studentId: created.id, financeStructureId: structure.id, expectedAmount: structure.expectedAmount })),
+          skipDuplicates: true,
+        });
+      }
+
       const guardians = [
         ...(primaryGuardian?.fullName ? [{ ...primaryGuardian, primary: true }] : []),
         ...additionalGuardians.filter((guardian) => guardian.name.trim()).map((guardian) => ({ fullName: guardian.name, phone: guardian.phone, relationship: 'Additional Guardian', primary: false })),
@@ -89,8 +106,15 @@ export class StudentsService {
         await tx.studentParent.create({ data: { studentId: created.id, parentId: parent.id, relationship: guardian.relationship } });
       }
       for (const payment of normalizedPayments) {
-        const structure = await tx.financeStructure.findFirst({ where: { academicYearId: payment.academicYearId, termId: payment.termId, classId: student.classId, studentCategoryId: student.studentCategoryId, feeTypeId: payment.feeTypeId } });
-        await tx.payment.create({ data: { studentId: created.id, feeTypeId: payment.feeTypeId, financeStructureId: structure?.id, amount: payment.amount, method: payment.method, receiptUrl: payment.receiptUrl, status: 'completed' } });
+        const structure = matchingStructures.find((item) => item.feeTypeId === payment.feeTypeId && item.academicYearId === payment.academicYearId && item.termId === payment.termId);
+        const charge = structure ? await tx.studentCharge.findUnique({ where: { studentId_financeStructureId: { studentId: created.id, financeStructureId: structure.id } } }) : null;
+        await tx.payment.create({ data: { studentId: created.id, feeTypeId: payment.feeTypeId, financeStructureId: structure?.id, studentChargeId: charge?.id, amount: payment.amount, method: payment.method, receiptUrl: payment.receiptUrl, status: 'COMPLETED', date: toKampalaLocalDateTime() } });
+        if (charge) {
+          const paidAmount = charge.paidAmount + payment.amount;
+          const balance = charge.expectedAmount - paidAmount - charge.waivedAmount;
+          const status = balance < 0 ? 'OVERPAID' : balance === 0 ? 'FULLY_PAID' : 'PARTIALLY_PAID';
+          await tx.studentCharge.update({ where: { id: charge.id }, data: { paidAmount, status } });
+        }
       }
       return tx.student.findUniqueOrThrow({ where: { id: created.id }, include: { parents: { include: { parent: true } }, academicYear: true, term: true, schoolClass: true, studentCategory: true } });
     }, { maxWait: 10_000, timeout: 20_000 });

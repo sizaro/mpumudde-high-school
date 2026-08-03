@@ -120,7 +120,7 @@ export default function DirectorLayout() {
           </div>
         </aside>
 
-        <main className="flex-1 p-6 lg:p-10">
+        <main className="min-w-0 flex-1 overflow-x-hidden p-6 lg:p-10">
           <div className="mb-6 flex justify-between">
             <button type="button" onClick={() => setMobileNavOpen(true)} className="inline-flex h-12 w-12 items-center justify-center rounded-3xl border border-slate-200 bg-white text-slate-700 shadow-sm lg:hidden" aria-label="Open navigation"><Menu size={21} /></button>
             <div className="flex items-center gap-3">

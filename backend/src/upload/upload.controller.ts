@@ -1,12 +1,16 @@
 ﻿import {
   Controller,
+  Get,
   Post,
   Body,
+  Query,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
   BadRequestException,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
@@ -42,6 +46,52 @@ export class UploadController {
       fileSize: file.size,
       fileExtension: file.originalname.split('.').pop()?.toLowerCase(),
     };
+  }
+
+  @Get('view')
+  async viewUpload(
+    @Query('url') url: string,
+    @Query('fileName') fileName: string | undefined,
+    @Res() response: Response,
+  ) {
+    if (!url) throw new BadRequestException('Upload URL is required');
+    const parsed = new URL(url);
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME?.trim();
+    if (
+      parsed.protocol !== 'https:' ||
+      parsed.hostname !== 'res.cloudinary.com' ||
+      !cloudName ||
+      !parsed.pathname.startsWith(`/${cloudName}/`)
+    ) {
+      throw new BadRequestException(
+        'Only this school Cloudinary account can be viewed',
+      );
+    }
+    const upstream = await fetch(parsed.toString());
+    if (!upstream.ok) {
+      throw new BadRequestException('The uploaded proof could not be opened');
+    }
+    const bytes = Buffer.from(await upstream.arrayBuffer());
+    const safeName = (
+      fileName ||
+      parsed.pathname.split('/').pop() ||
+      'payment-proof'
+    ).replace(/[^a-zA-Z0-9._-]/g, '_');
+    const lowerName = safeName.toLowerCase();
+    const contentType = lowerName.endsWith('.pdf')
+      ? 'application/pdf'
+      : lowerName.endsWith('.png')
+        ? 'image/png'
+        : lowerName.endsWith('.webp')
+          ? 'image/webp'
+          : lowerName.endsWith('.jpg') || lowerName.endsWith('.jpeg')
+            ? 'image/jpeg'
+            : upstream.headers.get('content-type') ||
+              'application/octet-stream';
+    response.setHeader('Content-Type', contentType);
+    response.setHeader('Content-Disposition', `inline; filename="${safeName}"`);
+    response.setHeader('Content-Length', bytes.length.toString());
+    response.send(bytes);
   }
 
   @Post('delete')

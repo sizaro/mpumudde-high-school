@@ -16,6 +16,9 @@ model User {
 
   email String @unique
 
+  // Existing production column retained while the legacy username path is phased out.
+  username String? @unique
+
   password String
 
   isActive Boolean @default(true)
@@ -29,6 +32,22 @@ model User {
   roles UserRole[]
 
   director Director?
+
+  financeStructuresCreated FinanceStructure[] @relation("FinanceStructureCreatedBy")
+
+  financeStructuresUpdated FinanceStructure[] @relation("FinanceStructureUpdatedBy")
+
+  recordedPayments Payment[] @relation("PaymentRecordedBy")
+
+  reversedPayments Payment[] @relation("PaymentReversedBy")
+
+  paymentAudits PaymentAudit[] @relation("PaymentAuditActor")
+
+  expensesCreated Expense[] @relation("ExpenseCreatedBy")
+
+  expensesApproved Expense[] @relation("ExpenseApprovedBy")
+
+  otherIncomeRecorded OtherIncome[] @relation("OtherIncomeRecordedBy")
 
   teacher Teacher?
 
@@ -195,6 +214,8 @@ model Teacher {
 
 
   attendanceSessions AttendanceSession[]
+
+  expenses Expense[]
 
 
   createdAt DateTime @default(now())
@@ -643,6 +664,8 @@ model Parent {
 
   identityDocumentUrl String?
 
+  gender String?
+
   relationship String?
   // Father
   // Mother
@@ -736,6 +759,8 @@ model Student {
 
   payments Payment[]
 
+  financeCharges StudentCharge[]
+
 
   termFees StudentTermFee[]
 
@@ -772,6 +797,8 @@ model StudentParent {
   // Father
   // Mother
   // Guardian
+
+  isPrimary Boolean @default(false)
 
   student Student @relation(fields: [studentId], references: [id])
 
@@ -901,6 +928,12 @@ model FinanceStructure {
 
   expectedAmount Int
 
+  isActive Boolean @default(true)
+
+  createdByUserId String?
+
+  updatedByUserId String?
+
   academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
 
   term Term @relation(fields: [termId], references: [id])
@@ -911,7 +944,13 @@ model FinanceStructure {
 
   feeType FeeType @relation(fields: [feeTypeId], references: [id])
 
+  createdBy User? @relation("FinanceStructureCreatedBy", fields: [createdByUserId], references: [id])
+
+  updatedBy User? @relation("FinanceStructureUpdatedBy", fields: [updatedByUserId], references: [id])
+
   payments Payment[]
+
+  studentCharges StudentCharge[]
 
   createdAt DateTime @default(now())
 
@@ -944,6 +983,36 @@ model StudentTermFee {
   @@unique([studentId, termId])
 }
 
+model StudentCharge {
+  id String @id @default(cuid())
+
+  studentId String
+
+  financeStructureId String
+
+  expectedAmount Int
+
+  paidAmount Int @default(0)
+
+  waivedAmount Int @default(0)
+
+  status String @default("NOT_PAID")
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  financeStructure FinanceStructure @relation(fields: [financeStructureId], references: [id])
+
+  payments Payment[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, financeStructureId])
+
+  @@index([studentId, status])
+}
+
 model Payment {
   id String @id @default(cuid())
 
@@ -955,7 +1024,17 @@ model Payment {
 
   feeTypeId String?
 
+  studentChargeId String?
+
   receiptUrl String?
+
+  receiptNumber String? @unique
+
+  transactionReference String?
+
+  proofUrl String?
+
+  proofFileName String?
 
   amount Int
 
@@ -963,9 +1042,17 @@ model Payment {
 
   status String @default("completed")
 
+  reversalReason String?
+
+  reversedAt DateTime?
+
+  recordedByUserId String?
+
+  reversedByUserId String?
+
   description String?
 
-  date DateTime @default(now())
+  date String @db.VarChar(19)
 
   student Student @relation(fields: [studentId], references: [id])
 
@@ -975,7 +1062,100 @@ model Payment {
 
   feeType FeeType? @relation(fields: [feeTypeId], references: [id])
 
+  studentCharge StudentCharge? @relation(fields: [studentChargeId], references: [id])
+
+  recordedBy User? @relation("PaymentRecordedBy", fields: [recordedByUserId], references: [id])
+
+  reversedBy User? @relation("PaymentReversedBy", fields: [reversedByUserId], references: [id])
+
+  audits PaymentAudit[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+
+  @@index([studentId, date])
+
+  @@index([studentChargeId])
+}
+
+model PaymentAudit {
+  id String @id @default(cuid())
+
+  paymentId String
+
+  action String
+
+  changes Json?
+
+  reason String?
+
+  actorUserId String?
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  actor User? @relation("PaymentAuditActor", fields: [actorUserId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([paymentId, createdAt])
+}
+
+model Expense {
+  id String @id @default(cuid())
+  category String
+  amount Int
+  payeeType String
+  payeeName String
+  teacherId String?
+  method String
+  expenseDate DateTime @default(now())
+  description String?
+  referenceNumber String?
+  proofUrl String?
+  proofFileName String?
+  status String @default("DRAFT")
+  approvalReason String?
+  createdByUserId String?
+  approvedByUserId String?
+  approvedAt DateTime?
+  payrollPeriod String?
+  basicSalary Int?
+  allowances Int @default(0)
+  deductions Int @default(0)
+  advances Int @default(0)
+  grossPay Int?
+  netPay Int?
+
+  teacher Teacher? @relation(fields: [teacherId], references: [id])
+  createdBy User? @relation("ExpenseCreatedBy", fields: [createdByUserId], references: [id])
+  approvedBy User? @relation("ExpenseApprovedBy", fields: [approvedByUserId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([expenseDate, status])
+  @@index([teacherId])
+  @@unique([teacherId, payrollPeriod, category])
+}
+
+model OtherIncome {
+  id String @id @default(cuid())
+  category String
+  amount Int
+  source String
+  method String
+  incomeDate DateTime @default(now())
+  description String?
+  referenceNumber String?
+  proofUrl String?
+  proofFileName String?
+  status String @default("RECEIVED")
+  recordedByUserId String?
+  recordedBy User? @relation("OtherIncomeRecordedBy", fields: [recordedByUserId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([incomeDate, status])
+  @@index([recordedByUserId])
 }

@@ -66,6 +66,33 @@ export interface TeacherDocument {
   fileSize?: number;
 }
 
+export interface TeacherFinanceRecord {
+  id: string;
+  category: string;
+  amount: number;
+  status: string;
+  expenseDate: string;
+  proofUrl?: string | null;
+  referenceNumber?: string | null;
+  payrollPeriod?: string | null;
+  basicSalary?: number | null;
+  allowances?: number;
+  deductions?: number;
+  advances?: number;
+  grossPay?: number | null;
+  netPay?: number | null;
+}
+
+export interface MyTeacherFinance {
+  teacher: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    employment?: EmploymentInfo | null;
+  };
+  payments: TeacherFinanceRecord[];
+}
+
 class TeacherService {
   // ── Director ─────────────────────────────────────────────
   async createWithAccount(personal: TeacherPersonal) {
@@ -176,6 +203,11 @@ class TeacherService {
 
   async getMyAssignments() {
     const { data } = await api.get("/teachers/me/assignments");
+    return data;
+  }
+
+  async getMyFinance(): Promise<MyTeacherFinance> {
+    const { data } = await api.get<MyTeacherFinance>("/teachers/me/finance");
     return data;
   }
 }

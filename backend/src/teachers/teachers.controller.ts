@@ -50,6 +50,11 @@ export class TeachersController {
     return this.teachersService.getMyAssignments(req.user.id);
   }
 
+  @Get('me/finance')
+  getMyFinance(@Req() req: any) {
+    return this.teachersService.getMyFinance(req.user.id);
+  }
+
   // --- Director: CRUD -------------------------------------------------
   @Post()
   @UseGuards(RolesGuard)
