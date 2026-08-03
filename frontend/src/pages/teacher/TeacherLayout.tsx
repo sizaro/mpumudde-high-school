@@ -11,6 +11,7 @@ const links = [
   { to: "/teacher/profile", label: "My Profile" },
   { to: "/teacher/documents", label: "My Documents" },
   { to: "/teacher/medical", label: "Medical Info" },
+  { to: "/teacher/finance", label: "My Salary & Payments" },
   { to: "/teacher/change-password", label: "Change Password" },
 ];
 

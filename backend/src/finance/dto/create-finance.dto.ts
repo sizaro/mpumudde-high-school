@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsString, IsNumber, IsOptional, Matches, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateFinanceDto {
@@ -8,6 +8,10 @@ export class CreateFinanceDto {
   @IsOptional()
   @IsString()
   studentTermFeeId?: string;
+
+  @IsOptional()
+  @IsString()
+  studentChargeId?: string;
 
   @Type(() => Number)
   @IsNumber()
@@ -26,7 +30,7 @@ export class CreateFinanceDto {
   description?: string;
 
   @IsOptional()
-  @IsString()
+  @Matches(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?$/)
   date?: string;
 
   @IsOptional()
@@ -36,4 +40,16 @@ export class CreateFinanceDto {
   @IsOptional()
   @IsString()
   feeTypeId?: string;
+
+  @IsOptional()
+  @IsString()
+  transactionReference?: string;
+
+  @IsOptional()
+  @IsString()
+  proofUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  proofFileName?: string;
 }

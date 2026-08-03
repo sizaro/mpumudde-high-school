@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { ParentsService } from './parents.service.js';
 import { CreateParentDto } from './dto/create-parent.dto.js';
 import { UpdateParentDto } from './dto/update-parent.dto.js';
@@ -11,6 +11,12 @@ import { Roles } from '../common/decorators/roles.decorator.js';
 @Controller('parents')
 export class ParentsController {
   constructor(private readonly parentsService: ParentsService) {}
+
+  @Get('me/finance')
+  @Roles('PARENT')
+  getMyFinance(@Req() req: any) {
+    return this.parentsService.getMyFinance(req.user.id);
+  }
 
   @Post()
   create(@Body() createParentDto: CreateParentDto) {

@@ -7,6 +7,36 @@ import { PrismaService } from '../prisma/prisma.service.js';
 export class ParentsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getMyFinance(userId: string) {
+    const parent = await this.prisma.parent.findUnique({
+      where: { userId },
+      include: {
+        students: {
+          include: {
+            student: {
+              include: {
+                schoolClass: true,
+                studentCategory: true,
+                financeCharges: { include: { financeStructure: { include: { feeType: true, term: true, academicYear: true } } } },
+                payments: { orderBy: { date: 'desc' } },
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!parent) return null;
+    return {
+      parent: { id: parent.id, firstName: parent.firstName, lastName: parent.lastName },
+      children: parent.students.map(({ student }) => {
+        const expected = student.financeCharges.reduce((sum, charge) => sum + charge.expectedAmount, 0);
+        const paid = student.financeCharges.reduce((sum, charge) => sum + charge.paidAmount, 0);
+        const waived = student.financeCharges.reduce((sum, charge) => sum + charge.waivedAmount, 0);
+        return { ...student, financeSummary: { expected, paid, waived, balance: expected - paid - waived } };
+      }),
+    };
+  }
+
   async create(createParentDto: CreateParentDto) {
     const { studentId, primary: _primary, ...data } = createParentDto;
     return this.prisma.parent.create({

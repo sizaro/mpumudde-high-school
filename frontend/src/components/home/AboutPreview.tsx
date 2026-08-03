@@ -17,7 +17,7 @@ const values = [
 
 export default function AboutPreview() {
   return (
-    <section className="py-24">
+    <section className="home-section">
       <AnimatedSection delay={0.1}>
       <div className="site-container">
 
@@ -28,9 +28,11 @@ export default function AboutPreview() {
           <div className="relative">
 
             <img
-              src="/images/school_class_school_children.jpg"
-              alt="Mpumudde High School"
-              className="rounded-3xl shadow-2xl w-full h-[620px] object-cover"
+              src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=82"
+              alt="Students learning together in a classroom"
+              loading="lazy"
+              decoding="async"
+              className="h-[420px] w-full rounded-3xl object-cover shadow-2xl sm:h-[520px] lg:h-[560px]"
             />
 
             {/* Floating Card */}

@@ -1,0 +1,9 @@
+import { useEffect, useState } from "react";
+import type { FinanceFeeType } from "../../../../services/feeTypeService";
+
+export default function FeeTypeForm({ feeType, saving, onSubmit, onCancel }: { feeType: FinanceFeeType | null; saving: boolean; onSubmit: (values: { name: string; isActive: boolean }) => Promise<void>; onCancel: () => void }) {
+  const [name, setName] = useState("");
+  const [isActive, setIsActive] = useState(true);
+  useEffect(() => { setName(feeType?.name ?? ""); setIsActive(feeType?.isActive ?? true); }, [feeType]);
+  return <form onSubmit={(event) => { event.preventDefault(); void onSubmit({ name, isActive }); }} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"><h3 className="text-xl font-semibold">{feeType ? "Edit fee type" : "Add fee type"}</h3><p className="mt-1 text-sm text-slate-500">Create a reusable fee name before connecting it to a fee structure.</p><label className="mt-5 block text-sm font-medium text-slate-700">Fee type name<input required value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Tuition or Registration" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"/></label><label className="mt-4 flex items-center gap-2 text-sm font-medium text-slate-700"><input type="checkbox" checked={isActive} onChange={(event) => setIsActive(event.target.checked)}/>Active and available for fee structures</label><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={onCancel} className="rounded-xl border px-4 py-2 text-sm font-semibold">Cancel</button><button disabled={saving || !name.trim()} className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">{saving ? "Saving..." : feeType ? "Save changes" : "Add fee type"}</button></div></form>;
+}

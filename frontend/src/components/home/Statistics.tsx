@@ -84,7 +84,7 @@ export default function Statistics() {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
 
   return (
-    <section className="py-24" ref={ref as any}>
+    <section className="home-section" ref={ref as any}>
       <div className="site-container">
 
         {/* Header */}

@@ -1,23 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
 import FinanceService from "../../../services/financeService";
 import StudentService from "../../../services/studentService";
+import StudentAccountService, { type StudentAccount } from "../../../services/studentAccountService";
 import type { Payment, Student } from "../../../types/api.types";
+import { DateTime } from "luxon";
 
 export default function DirectorReports() {
   const [students, setStudents] = useState<Student[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [studentAccounts, setStudentAccounts] = useState<StudentAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [studentData, paymentData] = await Promise.all([
+        const [studentData, paymentData, accountData] = await Promise.all([
           StudentService.getStudents(),
           FinanceService.getPayments(),
+          StudentAccountService.list(),
         ]);
         setStudents(studentData);
         setPayments(paymentData);
+        setStudentAccounts(accountData);
       } catch (err) {
         setError("Unable to load report data.");
       } finally {
@@ -29,34 +34,31 @@ export default function DirectorReports() {
   }, []);
 
   const totalCollected = useMemo(
-    () => payments.reduce((sum, payment) => sum + payment.amount, 0),
+    () => payments.filter((payment) => payment.status.toUpperCase() === "COMPLETED").reduce((sum, payment) => sum + payment.amount, 0),
     [payments],
   );
 
   const outstandingPayments = useMemo(
-    () =>
-      payments
-        .filter((payment) => payment.status !== "completed")
-        .reduce((sum, payment) => sum + payment.amount, 0),
-    [payments],
+    () => studentAccounts.reduce((sum, account) => sum + Math.max(0, account.outstandingBalance), 0),
+    [studentAccounts],
   );
 
   const paymentTrend = useMemo(() => {
     const now = new Date();
     const thisMonthTotal = payments
       .filter((payment) => {
-        const date = new Date(payment.date);
-        return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
+        const date = DateTime.fromFormat(payment.date, "yyyy-LL-dd'T'HH:mm:ss");
+        return date.year === now.getFullYear() && date.month === now.getMonth() + 1;
       })
       .reduce((sum, payment) => sum + payment.amount, 0);
 
     const previousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const lastMonthTotal = payments
       .filter((payment) => {
-        const date = new Date(payment.date);
+        const date = DateTime.fromFormat(payment.date, "yyyy-LL-dd'T'HH:mm:ss");
         return (
-          date.getFullYear() === previousMonth.getFullYear() &&
-          date.getMonth() === previousMonth.getMonth()
+          date.year === previousMonth.getFullYear() &&
+          date.month === previousMonth.getMonth() + 1
         );
       })
       .reduce((sum, payment) => sum + payment.amount, 0);
@@ -90,7 +92,7 @@ export default function DirectorReports() {
         </div>
 
         <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Outstanding payments</p>
+          <p className="text-sm text-slate-500">Outstanding student balances</p>
           <p className="mt-4 text-3xl font-semibold text-slate-900">
             {loading ? "..." : `UGX ${outstandingPayments.toLocaleString()}`}
           </p>

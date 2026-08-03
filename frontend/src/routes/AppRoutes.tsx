@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 
 import PublicLayout from "../layouts/PublicLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -7,9 +7,14 @@ import Home from "../pages/public/Home";
 import About from "../pages/public/About";
 import Academics from "../pages/public/Academics";
 import Admissions from "../pages/public/Admissions";
-import News from "../pages/public/News";
 import Gallery from "../pages/public/Gallery";
 import Contact from "../pages/public/Contact";
+import Calendar from "../pages/public/Calendar";
+import Newsroom from "../pages/public/newsroom/index";
+import NewsroomCategory from "../pages/public/newsroom/CategoryPage";
+import NewsroomArticle from "../pages/public/newsroom/ArticlePage";
+import NewsroomSearch from "../pages/public/newsroom/SearchPage";
+import NotFound from "../pages/public/NotFound";
 
 import DirectorDashboard from "../pages/director/Dashboard";
 import DirectorOverview from "../pages/director/Overview";
@@ -17,7 +22,7 @@ import StudentRegister from "../pages/director/students/RegistrationWizard";
 import StudentList from "../pages/director/students/List";
 import StudentStatus from "../pages/director/students/Status";
 import StudentProfile from "../pages/director/students/Profile";
-import FinanceOverview from "../pages/director/finance/FinanceOverview";
+import DirectorFinancePage from "../pages/director/finance";
 import PaymentHistory from "../pages/director/finance/History";
 import DirectorReports from "../pages/director/reports/Reports";
 import AcademicSetupPage from "../pages/director/setup/AcademicSetupPage";
@@ -44,6 +49,8 @@ import TeacherProfilePage from "../pages/teacher/TeacherProfilePage";
 import MyDocuments from "../pages/teacher/MyDocuments";
 import MyMedical from "../pages/teacher/MyMedical";
 import ChangePassword from "../pages/teacher/ChangePassword";
+import MyFinance from "../pages/teacher/MyFinance";
+import FinancePortal from "../pages/finance/FinancePortal";
 
 import ParentDashboard from "../pages/parent/Dashboard";
 import StudentDashboard from "../pages/student/Dashboard";
@@ -57,9 +64,16 @@ export default function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/academics" element={<Academics />} />
         <Route path="/admissions" element={<Admissions />} />
-        <Route path="/news" element={<News />} />
+        <Route path="/news" element={<Navigate to="/newsroom/news" replace />} />
+        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/events" element={<Navigate to="/newsroom/events" replace />} />
+        <Route path="/newsroom" element={<Newsroom />} />
+        <Route path="/newsroom/search" element={<NewsroomSearch />} />
+        <Route path="/newsroom/articles/:slug" element={<NewsroomArticle />} />
+        <Route path="/newsroom/:category" element={<NewsroomCategory />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
 
       {/* DIRECTOR DASHBOARD */}
@@ -76,7 +90,7 @@ export default function AppRoutes() {
         <Route path="students" element={<StudentList />} />
         <Route path="students/status" element={<StudentStatus />} />
         <Route path="students/profile" element={<StudentProfile />} />
-        <Route path="finance" element={<FinanceOverview />} />
+        <Route path="finance" element={<DirectorFinancePage />} />
         <Route path="finance/history" element={<PaymentHistory />} />
         <Route path="academic-setup" element={<AcademicSetupPage />} />
         <Route path="account-management" element={<AccountManagement />} />
@@ -116,8 +130,18 @@ export default function AppRoutes() {
         <Route path="profile" element={<TeacherProfilePage />} />
         <Route path="documents" element={<MyDocuments />} />
         <Route path="medical" element={<MyMedical />} />
+        <Route path="finance" element={<MyFinance />} />
         <Route path="change-password" element={<ChangePassword />} />
       </Route>
+
+      <Route
+        path="/finance-portal"
+        element={
+          <ProtectedRoute roles={["BURSAR", "FINANCE_CLERK"]}>
+            <FinancePortal />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/parent"

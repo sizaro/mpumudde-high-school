@@ -13,7 +13,7 @@ const images = [
 
 export default function GalleryPreview() {
   return (
-    <section className="py-24">
+    <section className="home-section">
       <AnimatedSection delay={0.2}>
       <div className="site-container">
 
@@ -60,6 +60,8 @@ export default function GalleryPreview() {
               <img
                 src={img}
                 alt={`Gallery ${index + 1}`}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
               />
 

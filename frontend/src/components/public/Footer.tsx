@@ -9,16 +9,7 @@ import {
   FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
-
-const navLinks = [
-  { label: "Home", to: "/" },
-  { label: "About", to: "/about" },
-  { label: "Academics", to: "/academics" },
-  { label: "Admissions", to: "/admissions" },
-  { label: "News", to: "/news" },
-  { label: "Gallery", to: "/gallery" },
-  { label: "Contact", to: "/contact" },
-];
+import { publicNavigation } from "../../config/publicNavigation";
 
 const socials = [
   { href: "https://facebook.com/mpumuddehighschool", label: "Facebook", icon: FaFacebook },
@@ -49,7 +40,7 @@ export default function Footer() {
         <div>
           <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-900 dark:text-white">Explore</h4>
           <ul className="mt-4 space-y-3 text-sm">
-            {navLinks.map((link) => (
+            {publicNavigation.map((link) => (
               <li key={link.to}>
                 <Link to={link.to} className="text-slate-600 dark:text-white/70 transition-colors hover:text-emerald-600 dark:hover:text-emerald-300">
                   {link.label}

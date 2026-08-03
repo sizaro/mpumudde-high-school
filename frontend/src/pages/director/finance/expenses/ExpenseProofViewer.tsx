@@ -1,0 +1,1 @@
+export default function ExpenseProofViewer({ url }: { url?: string | null }) { return url ? <a href={url} target="_blank" rel="noreferrer" className="text-sm font-semibold text-sky-700 underline">Open invoice or receipt</a> : <p className="text-sm text-slate-500">No proof attached.</p>; }

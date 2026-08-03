@@ -40,6 +40,7 @@
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "luxon": "^3.7.2",
     "multer": "^2.2.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -58,6 +59,7 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
+    "@types/luxon": "^3.7.3",
     "@types/multer": "^2.2.0",
     "@types/node": "^24.0.0",
     "@types/passport-jwt": "^4.0.1",
@@ -87,14 +89,23 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
-    "extensionsToTreatAsEsm": [".ts"],
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
     "transform": {
-      "^.+\\.ts$": ["ts-jest", { "useESM": true }]
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
     },
     "moduleNameMapper": {
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },
-    "setupFilesAfterEnv": ["<rootDir>/../test/jest.setup.ts"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/../test/jest.setup.ts"
+    ],
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],

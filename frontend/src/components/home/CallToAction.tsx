@@ -3,14 +3,13 @@ import { ArrowRight, Phone } from "lucide-react";
 
 export default function CallToAction() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="home-section relative overflow-hidden">
 
       {/* Glass container */}
       <div className="relative glass-card-solid site-container py-16">
 
         {/* Decorative gradient orbs */}
-        <div className="absolute w-72 h-72 rounded-full -top-20 -left-20 blur-3xl" style={{ background: 'rgba(139, 92, 246, 0.3)' }} />
-        <div className="absolute w-72 h-72 rounded-full -bottom-20 -right-20 blur-3xl" style={{ background: 'rgba(16, 185, 129, 0.3)' }} />
+        <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" aria-hidden="true" />
 
         <div className="relative text-center">
 

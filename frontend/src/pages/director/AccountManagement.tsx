@@ -9,6 +9,7 @@ const roles = [
   { value: 'TEACHER', label: 'Teacher' },
   { value: 'SECRETARY', label: 'Secretary' },
   { value: 'BURSAR', label: 'Bursar' },
+  { value: 'FINANCE_CLERK', label: 'Finance Clerk' },
 ];
 
 export default function AccountManagement() {

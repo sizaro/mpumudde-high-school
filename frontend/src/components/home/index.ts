@@ -9,3 +9,6 @@ export { default as UpcomingEvents } from "./UpcomingEvents";
 export { default as GalleryPreview } from "./GalleryPreview";
 export { default as Testimonials } from "./Testimonials";
 export { default as CallToAction } from "./CallToAction";
+export { AnnouncementsStrip, LeadershipMessage, MissionVisionValues } from "./SchoolIdentity";
+export { TeacherSpotlight, PeopleWhoSupportLearning, StudentLeadership, LifeBeyondClassroom } from "./SchoolCommunity";
+export { FacilitiesPreview, AchievementsPreview, AdmissionsJourney, CommunityPartnership, VisitSchool } from "./SchoolJourney";

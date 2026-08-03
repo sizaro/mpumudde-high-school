@@ -60,6 +60,20 @@ const TEACHER_INCLUDE = {
 export class TeachersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getMyFinance(userId: string) {
+    const teacher = await this.prisma.teacher.findUnique({
+      where: { userId },
+      include: { employment: true },
+    });
+    if (!teacher) return null;
+    const payments = await this.prisma.expense.findMany({
+      where: { teacherId: teacher.id },
+      orderBy: { expenseDate: 'desc' },
+        select: { id: true, category: true, amount: true, status: true, expenseDate: true, proofUrl: true, referenceNumber: true, payrollPeriod: true, basicSalary: true, allowances: true, deductions: true, advances: true, grossPay: true, netPay: true },
+    });
+    return { teacher: { id: teacher.id, firstName: teacher.firstName, lastName: teacher.lastName, employment: teacher.employment }, payments };
+  }
+
   async createWithAccount(
     personalDto: CreateTeacherDto,
   ) {
