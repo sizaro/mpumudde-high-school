@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { toKampalaLocalDateTime } from '../common/utils/kampala-date-time.js';
 import { CreateStudentDto } from './dto/create-student.dto.js';
+import { LinkParentDto } from './dto/link-parent.dto.js';
 import { UpdateStudentDto } from './dto/update-student.dto.js';
 import { CompleteStudentRegistrationDto } from './dto/complete-student-registration.dto.js';
 
@@ -21,15 +22,6 @@ export class StudentsService {
         isActive: createStudentDto.isActive ?? true,
         academicYearId: createStudentDto.academicYearId,
         termId: createStudentDto.termId,
-        classId: createStudentDto.classId,
-        studentCategoryId: createStudentDto.studentCategoryId,
-      },
-      include: {
-        academicYear: true,
-        term: true,
-        schoolClass: true,
-        studentCategory: true,
-      },
     }));
   }
 

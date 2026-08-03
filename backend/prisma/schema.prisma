@@ -650,9 +650,11 @@ model Parent {
 
   lastName String
 
+  gender String?
+
   phone String?
 
-  email String?
+  email String? @unique
 
   occupation String?
 
@@ -664,15 +666,12 @@ model Parent {
 
   identityDocumentUrl String?
 
-  gender String?
-
   relationship String?
   // Father
   // Mother
   // Guardian
 
   userId String? @unique
-
   user User? @relation(fields: [userId], references: [id])
 
   students StudentParent[]

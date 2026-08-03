@@ -1,6 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreateParentDto {
+export class CreateStudentParentDto {
+  @IsOptional()
+  @IsString()
+  parentId?: string;
+
   @IsString()
   @IsNotEmpty()
   firstName!: string;
@@ -35,5 +39,12 @@ export class CreateParentDto {
   @IsOptional()
   @IsString()
   username?: string;
-}
 
+  @IsOptional()
+  @IsString()
+  relationship?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isPrimary?: boolean;
+}

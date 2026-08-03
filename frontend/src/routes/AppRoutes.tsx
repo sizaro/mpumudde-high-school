@@ -52,7 +52,11 @@ import ChangePassword from "../pages/teacher/ChangePassword";
 import MyFinance from "../pages/teacher/MyFinance";
 import FinancePortal from "../pages/finance/FinancePortal";
 
-import ParentDashboard from "../pages/parent/Dashboard";
+import ParentLayout from "../pages/parent/ParentLayout";
+import ParentChildren from "../pages/parent/Children";
+import ParentAttendance from "../pages/parent/Attendance";
+import ParentFinance from "../pages/parent/Finance";
+import ParentSettings from "../pages/parent/Settings";
 import StudentDashboard from "../pages/student/Dashboard";
 
 export default function AppRoutes() {
@@ -147,10 +151,16 @@ export default function AppRoutes() {
         path="/parent"
         element={
           <ProtectedRoute roles={["PARENT"]}>
-            <ParentDashboard />
+            <ParentLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<ParentChildren />} />
+        <Route path="children" element={<ParentChildren />} />
+        <Route path="attendance" element={<ParentAttendance />} />
+        <Route path="finance" element={<ParentFinance />} />
+        <Route path="settings" element={<ParentSettings />} />
+      </Route>
       <Route
         path="/student"
         element={

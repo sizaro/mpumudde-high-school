@@ -31,27 +31,28 @@ export class AuthController {
 
     @Res({ passthrough: true }) response: Response,
   ) {
-    const result = await this.authService.login(loginDto);
+    try {
+      const result = await this.authService.login(loginDto);
 
-    response.cookie(
-      'access_token',
-
-      result.access_token,
-
-      {
+      const isProduction = process.env.NODE_ENV === 'production';
+      const cookieOptions: { httpOnly: true; secure: boolean; sameSite: 'none' | 'lax'; maxAge: number } = {
         httpOnly: true,
-
-        secure: process.env.NODE_ENV === 'production',
-
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-
+        secure: isProduction,
+        // SameSite=None requires Secure, so browsers reject it over plain http in dev
+        sameSite: isProduction ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000,
-      },
-    );
+      };
 
-    return {
-      user: result.user,
-    };
+      response.cookie('access_token', result.access_token, cookieOptions);
+
+      return {
+        access_token: result.access_token,
+        user: result.user,
+      };
+    } catch (error) {
+      console.error('AuthController.login error:', error instanceof Error ? error.stack ?? error.message : error);
+      throw error;
+    }
   }
 
   @Post('register')
@@ -64,23 +65,18 @@ export class AuthController {
   ) {
     const result = await this.authService.register(registerDto);
 
-    response.cookie(
-      'access_token',
+    const isProduction = process.env.NODE_ENV === 'production';
+    const cookieOptions: { httpOnly: true; secure: boolean; sameSite: 'none' | 'lax'; maxAge: number } = {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
+    };
 
-      result.access_token,
-
-      {
-        httpOnly: true,
-
-        secure: process.env.NODE_ENV === 'production',
-
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-
-        maxAge: 24 * 60 * 60 * 1000,
-      },
-    );
+    response.cookie('access_token', result.access_token, cookieOptions);
 
     return {
+      access_token: result.access_token,
       user: result.user,
     };
   }

@@ -1,64 +1,321 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { CreateParentDto } from './dto/create-parent.dto.js';
 import { UpdateParentDto } from './dto/update-parent.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+
+function generateTempPassword(length = 12): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';
+  return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+}
 
 @Injectable()
 export class ParentsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMyFinance(userId: string) {
+  async create(createParentDto: CreateParentDto) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: createParentDto.email },
+    });
+    if (existingUser) {
+      throw new BadRequestException('A user with this email already exists.');
+    }
+
+    const role = await this.prisma.role.findUnique({
+      where: { name: 'PARENT' },
+    });
+    if (!role) {
+      throw new BadRequestException('PARENT role is not configured.');
+    }
+
+    const tempPassword = generateTempPassword();
+    const hashedPassword = await bcrypt.hash(tempPassword, 12);
+
+    const parent = await this.prisma.parent.create({
+      data: {
+        firstName: createParentDto.firstName,
+        lastName: createParentDto.lastName,
+        gender: createParentDto.gender,
+        phone: createParentDto.phone,
+        email: createParentDto.email,
+        address: createParentDto.address,
+        occupation: createParentDto.occupation,
+        profilePhoto: createParentDto.profilePhoto,
+        user: {
+          create: {
+            email: createParentDto.email,
+            username: createParentDto.username,
+            password: hashedPassword,
+            roles: { create: { roleId: role.id } },
+          },
+        },
+      },
+      include: { user: { select: { id: true, email: true, username: true, isActive: true } } },
+    });
+
+    return {
+      parent,
+      temporaryPassword: tempPassword,
+      credentials: {
+        email: createParentDto.email,
+        username: createParentDto.username || createParentDto.email,
+      },
+    };
+  }
+
+  async findAll() {
+    return this.prisma.parent.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: { select: { id: true, email: true, username: true, isActive: true } },
+        students: { include: { student: true } },
+      },
+    });
+  }
+
+  async findOne(id: string) {
+    const parent = await this.prisma.parent.findUnique({
+      where: { id },
+      include: {
+        user: { select: { id: true, email: true, username: true, isActive: true } },
+        students: { include: { student: true } },
+      },
+    });
+    if (!parent) {
+      throw new NotFoundException('Parent not found.');
+    }
+    return parent;
+  }
+
+  async findByUserId(userId: string) {
     const parent = await this.prisma.parent.findUnique({
       where: { userId },
       include: {
+        user: { select: { id: true, email: true, username: true, isActive: true } },
         students: {
           include: {
             student: {
               include: {
                 schoolClass: true,
+                academicYear: true,
+                term: true,
                 studentCategory: true,
-                financeCharges: { include: { financeStructure: { include: { feeType: true, term: true, academicYear: true } } } },
-                payments: { orderBy: { date: 'desc' } },
+                attendanceRecords: {
+                  orderBy: { createdAt: 'desc' },
+                  take: 20,
+                  include: {
+                    attendanceSession: {
+                      select: {
+                        date: true,
+                        subject: { select: { id: true, name: true } },
+                        teacher: { select: { firstName: true, lastName: true } },
+                      },
+                    },
+                  },
+                },
+                payments: true,
               },
             },
           },
         },
       },
     });
-    if (!parent) return null;
+    if (!parent) {
+      throw new NotFoundException('Parent profile not found.');
+    }
+    return parent;
+  }
+
+  async getDashboard(userId: string, studentId?: string) {
+    try {
+      console.log('ParentsService.getDashboard userId=', userId, 'studentId=', studentId);
+      const parent = await this.prisma.parent.findUnique({
+        where: { userId },
+        include: {
+          students: {
+            select: {
+              id: true,
+              relationship: true,
+              isPrimary: true,
+              student: {
+                include: {
+                  schoolClass: true,
+                  academicYear: true,
+                  term: true,
+                  studentCategory: true,
+                  attendanceRecords: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 20,
+                    include: {
+                      attendanceSession: {
+                        select: {
+                          date: true,
+                          subject: { select: { id: true, name: true } },
+                          teacher: { select: { firstName: true, lastName: true } },
+                        },
+                      },
+                    },
+                  },
+                  payments: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!parent) {
+        throw new NotFoundException('Parent profile not found.');
+      }
+
+      const children = (parent.students ?? [])
+        .filter((relation) => relation.student !== null)
+        .map((relation) => ({
+          relationId: relation.id,
+          relationship: relation.relationship ?? null,
+          isPrimary: relation.isPrimary ?? false,
+          student: relation.student!,
+        }));
+
+      console.log('ParentsService.getDashboard parent found, children count=', children.length);
+
+      const parentPayload = {
+        id: parent.id,
+        firstName: parent.firstName,
+        lastName: parent.lastName,
+        phone: parent.phone,
+        email: parent.email,
+        address: parent.address,
+        occupation: parent.occupation,
+        profilePhoto: parent.profilePhoto,
+      };
+
+      const childrenPayload = children.map((child) => ({
+        studentId: child.student.id,
+        admissionNumber: child.student.admissionNumber,
+        firstName: child.student.firstName,
+        lastName: child.student.lastName,
+        isPrimary: child.isPrimary,
+        relationship: child.relationship,
+        className: child.student.schoolClass?.name ?? null,
+        academicYear: child.student.academicYear?.name ?? null,
+        term: child.student.term?.name ?? null,
+      }));
+
+      const selectedChild = studentId
+        ? children.find((child) => child.student.id === studentId)
+        : children[0];
+
+      const response: Record<string, unknown> = {
+        parent: parentPayload,
+        children: childrenPayload,
+      };
+
+      if (selectedChild?.student) {
+        response.student = this.buildStudentDashboard(selectedChild.student);
+      }
+
+      if (studentId && !selectedChild) {
+        throw new NotFoundException('Student not found for this parent.');
+      }
+
+      return response;
+    } catch (error) {
+      console.error('ParentsService.getDashboard error:', error);
+      throw error;
+    }
+  }
+
+  private buildStudentDashboard(student: any) {
+    const attendanceRecords = Array.isArray(student.attendanceRecords)
+      ? student.attendanceRecords
+      : [];
+    const payments = Array.isArray(student.payments) ? student.payments : [];
+
+    const attendance = attendanceRecords.map((record: any) => ({
+      date: record.attendanceSession?.date,
+      subject: record.attendanceSession?.subject?.name ?? null,
+      teacher: record.attendanceSession?.teacher
+        ? `${record.attendanceSession.teacher.firstName} ${record.attendanceSession.teacher.lastName}`
+        : null,
+      status: record.status ?? null,
+    }));
+
+    const financeSummary = {
+      payments: payments.map((payment: any) => ({
+        id: payment.id,
+        amount: payment.amount ?? 0,
+        method: payment.method ?? null,
+        status: payment.status ?? null,
+        date: payment.date ?? null,
+        description: payment.description ?? null,
+      })),
+      totalPaid: payments.reduce(
+        (sum: number, payment: any) => sum + (payment.amount ?? 0),
+        0,
+      ),
+    };
+
     return {
-      parent: { id: parent.id, firstName: parent.firstName, lastName: parent.lastName },
-      children: parent.students.map(({ student }) => {
-        const expected = student.financeCharges.reduce((sum, charge) => sum + charge.expectedAmount, 0);
-        const paid = student.financeCharges.reduce((sum, charge) => sum + charge.paidAmount, 0);
-        const waived = student.financeCharges.reduce((sum, charge) => sum + charge.waivedAmount, 0);
-        return { ...student, financeSummary: { expected, paid, waived, balance: expected - paid - waived } };
-      }),
+      profile: {
+        id: student.id,
+        admissionNumber: student.admissionNumber,
+        firstName: student.firstName,
+        lastName: student.lastName,
+        passportPhoto: student.passportPhoto ?? null,
+        className: student.schoolClass?.name ?? null,
+        academicYear: student.academicYear?.name ?? null,
+      },
+      attendance,
+      finance: financeSummary,
+      academicPerformance: {
+        message: 'Academic performance details are not available in the current schema.',
+        grades: Array.isArray(student.grades) ? student.grades : [],
+      },
     };
   }
 
-  async create(createParentDto: CreateParentDto) {
-    const { studentId, primary: _primary, ...data } = createParentDto;
-    return this.prisma.parent.create({
-      data: {
-        ...data,
-        students: studentId ? { create: { studentId, relationship: data.relationship } } : undefined,
+  async update(userId: string, updateParentDto: UpdateParentDto) {
+    const parent = await this.prisma.parent.findUnique({ where: { userId } });
+    if (!parent) {
+      throw new NotFoundException('Parent profile not found.');
+    }
+
+    const data: Record<string, unknown> = {};
+    if (updateParentDto.firstName !== undefined) data.firstName = updateParentDto.firstName;
+    if (updateParentDto.lastName !== undefined) data.lastName = updateParentDto.lastName;
+    if (updateParentDto.gender !== undefined) data.gender = updateParentDto.gender;
+    if (updateParentDto.phone !== undefined) data.phone = updateParentDto.phone;
+    if (updateParentDto.address !== undefined) data.address = updateParentDto.address;
+    if (updateParentDto.occupation !== undefined) data.occupation = updateParentDto.occupation;
+    if (updateParentDto.profilePhoto !== undefined) data.profilePhoto = updateParentDto.profilePhoto;
+
+    if (updateParentDto.email !== undefined) {
+      const existingUser = await this.prisma.user.findUnique({ where: { email: updateParentDto.email } });
+      if (existingUser && existingUser.id !== parent.userId) {
+        throw new BadRequestException('Email is already in use by another account.');
+      }
+      if (!parent.userId) {
+        throw new NotFoundException('Parent account is not linked to a user.');
+      }
+      data.email = updateParentDto.email;
+      await this.prisma.user.update({
+        where: { id: parent.userId },
+        data: { email: updateParentDto.email },
+      });
+    }
+
+    return this.prisma.parent.update({
+      where: { id: parent.id },
+      data,
+      include: {
+        user: { select: { id: true, email: true, username: true, isActive: true } },
       },
-      include: { students: { include: { student: true } } },
     });
-  }
-
-  async findAll() {
-    return this.prisma.parent.findMany({ include: { students: { include: { student: true } } }, orderBy: { createdAt: 'desc' } });
-  }
-
-  async findOne(id: string) {
-    return this.prisma.parent.findUnique({ where: { id }, include: { students: { include: { student: true } } } });
-  }
-
-  async update(id: string, updateParentDto: UpdateParentDto) {
-    const { studentId: _studentId, primary: _primary, ...data } = updateParentDto;
-    return this.prisma.parent.update({ where: { id }, data });
   }
 
   async remove(id: string) {
