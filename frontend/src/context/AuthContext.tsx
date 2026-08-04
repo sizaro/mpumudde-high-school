@@ -20,9 +20,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!AuthService.hasStoredToken()) {
+      setLoading(false);
+      return;
+    }
+
     AuthService.me()
       .then(setUser)
-      .catch(() => setUser(null))
+      .catch(() => {
+        AuthService.clearStoredToken();
+        setUser(null);
+      })
       .finally(() => setLoading(false));
   }, []);
 

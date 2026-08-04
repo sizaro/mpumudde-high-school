@@ -20,6 +20,15 @@ if (typeof window !== 'undefined') {
 }
 
 class AuthService {
+  hasStoredToken(): boolean {
+    return typeof window !== 'undefined' && Boolean(localStorage.getItem(ACCESS_TOKEN_KEY));
+  }
+
+  clearStoredToken(): void {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    setClientToken();
+  }
+
   async login(loginDto: LoginDto): Promise<LoginResponse> {
     const { data } = await api.post<LoginResponse>('/auth/login', loginDto);
     localStorage.setItem(ACCESS_TOKEN_KEY, data.access_token);
@@ -50,8 +59,7 @@ class AuthService {
     try {
       await api.post('/auth/logout');
     } finally {
-      localStorage.removeItem(ACCESS_TOKEN_KEY);
-      setClientToken();
+      this.clearStoredToken();
     }
   }
 }
