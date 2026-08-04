@@ -6,10 +6,13 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "build": "prisma generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start --sourceRoot . --entryFile src/main",
+    "start": "node dist/src/main.js",
     "start:dev": "nest start --watch --sourceRoot . --entryFile src/main",
     "start:debug": "nest start --debug --watch --sourceRoot . --entryFile src/main",
     "start:prod": "node dist/src/main.js",
