@@ -7,12 +7,10 @@ const tabItems = [
   { key: "classes", label: "Classes" },
   { key: "subjects", label: "Subjects" },
   { key: "studentCategories", label: "Student Categories" },
-  { key: "feeTypes", label: "Fee Types" },
-  { key: "financeStructures", label: "Finance Structure" },
 ] as const;
 
 export default function AcademicSetupPage() {
-  const [activeTab, setActiveTab] = useState<(typeof tabItems)[number]["key"]>("academicYears");
+  const [activeTab, setActiveTab] = useState<string>("academicYears");
   const [academicYears, setAcademicYears] = useState<AcademicYear[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
   const [classes, setClasses] = useState<SchoolClass[]>([]);
@@ -164,7 +162,7 @@ export default function AcademicSetupPage() {
       <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Academic Setup</h1>
-          <p className="mt-2 text-sm text-slate-500">Configure academic years, terms, classes, subjects, student categories, fee types, and finance structures.</p>
+          <p className="mt-2 text-sm text-slate-500">Configure academic years, terms, classes, subjects, and student categories. Fee types and fee structures are managed in Finance.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">
           {selectedYearNames.length > 0 ? `${selectedYearNames.join(", ")}` : "No academic years yet"}

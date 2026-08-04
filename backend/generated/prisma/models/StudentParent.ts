@@ -30,7 +30,12 @@ export type StudentParentMinAggregateOutputType = {
   parentId: string | null
   relationship: string | null
   isPrimary: boolean | null
+  isActive: boolean | null
+  unlinkedAt: Date | null
+  unlinkedByUserId: string | null
+  unlinkReason: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type StudentParentMaxAggregateOutputType = {
@@ -39,7 +44,12 @@ export type StudentParentMaxAggregateOutputType = {
   parentId: string | null
   relationship: string | null
   isPrimary: boolean | null
+  isActive: boolean | null
+  unlinkedAt: Date | null
+  unlinkedByUserId: string | null
+  unlinkReason: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type StudentParentCountAggregateOutputType = {
@@ -48,7 +58,12 @@ export type StudentParentCountAggregateOutputType = {
   parentId: number
   relationship: number
   isPrimary: number
+  isActive: number
+  unlinkedAt: number
+  unlinkedByUserId: number
+  unlinkReason: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -59,7 +74,12 @@ export type StudentParentMinAggregateInputType = {
   parentId?: true
   relationship?: true
   isPrimary?: true
+  isActive?: true
+  unlinkedAt?: true
+  unlinkedByUserId?: true
+  unlinkReason?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type StudentParentMaxAggregateInputType = {
@@ -68,7 +88,12 @@ export type StudentParentMaxAggregateInputType = {
   parentId?: true
   relationship?: true
   isPrimary?: true
+  isActive?: true
+  unlinkedAt?: true
+  unlinkedByUserId?: true
+  unlinkReason?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type StudentParentCountAggregateInputType = {
@@ -77,7 +102,12 @@ export type StudentParentCountAggregateInputType = {
   parentId?: true
   relationship?: true
   isPrimary?: true
+  isActive?: true
+  unlinkedAt?: true
+  unlinkedByUserId?: true
+  unlinkReason?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -159,7 +189,12 @@ export type StudentParentGroupByOutputType = {
   parentId: string
   relationship: string | null
   isPrimary: boolean
+  isActive: boolean
+  unlinkedAt: Date | null
+  unlinkedByUserId: string | null
+  unlinkReason: string | null
   createdAt: Date
+  updatedAt: Date
   _count: StudentParentCountAggregateOutputType | null
   _min: StudentParentMinAggregateOutputType | null
   _max: StudentParentMaxAggregateOutputType | null
@@ -189,7 +224,12 @@ export type StudentParentWhereInput = {
   parentId?: Prisma.StringFilter<"StudentParent"> | string
   relationship?: Prisma.StringNullableFilter<"StudentParent"> | string | null
   isPrimary?: Prisma.BoolFilter<"StudentParent"> | boolean
+  isActive?: Prisma.BoolFilter<"StudentParent"> | boolean
+  unlinkedAt?: Prisma.DateTimeNullableFilter<"StudentParent"> | Date | string | null
+  unlinkedByUserId?: Prisma.StringNullableFilter<"StudentParent"> | string | null
+  unlinkReason?: Prisma.StringNullableFilter<"StudentParent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentParent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"StudentParent"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   parent?: Prisma.XOR<Prisma.ParentScalarRelationFilter, Prisma.ParentWhereInput>
 }
@@ -200,7 +240,12 @@ export type StudentParentOrderByWithRelationInput = {
   parentId?: Prisma.SortOrder
   relationship?: Prisma.SortOrderInput | Prisma.SortOrder
   isPrimary?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  unlinkedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  unlinkedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  unlinkReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   parent?: Prisma.ParentOrderByWithRelationInput
 }
@@ -215,7 +260,12 @@ export type StudentParentWhereUniqueInput = Prisma.AtLeast<{
   parentId?: Prisma.StringFilter<"StudentParent"> | string
   relationship?: Prisma.StringNullableFilter<"StudentParent"> | string | null
   isPrimary?: Prisma.BoolFilter<"StudentParent"> | boolean
+  isActive?: Prisma.BoolFilter<"StudentParent"> | boolean
+  unlinkedAt?: Prisma.DateTimeNullableFilter<"StudentParent"> | Date | string | null
+  unlinkedByUserId?: Prisma.StringNullableFilter<"StudentParent"> | string | null
+  unlinkReason?: Prisma.StringNullableFilter<"StudentParent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentParent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"StudentParent"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   parent?: Prisma.XOR<Prisma.ParentScalarRelationFilter, Prisma.ParentWhereInput>
 }, "id" | "studentId_parentId">
@@ -226,7 +276,12 @@ export type StudentParentOrderByWithAggregationInput = {
   parentId?: Prisma.SortOrder
   relationship?: Prisma.SortOrderInput | Prisma.SortOrder
   isPrimary?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  unlinkedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  unlinkedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  unlinkReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentParentCountOrderByAggregateInput
   _max?: Prisma.StudentParentMaxOrderByAggregateInput
   _min?: Prisma.StudentParentMinOrderByAggregateInput
@@ -241,14 +296,24 @@ export type StudentParentScalarWhereWithAggregatesInput = {
   parentId?: Prisma.StringWithAggregatesFilter<"StudentParent"> | string
   relationship?: Prisma.StringNullableWithAggregatesFilter<"StudentParent"> | string | null
   isPrimary?: Prisma.BoolWithAggregatesFilter<"StudentParent"> | boolean
+  isActive?: Prisma.BoolWithAggregatesFilter<"StudentParent"> | boolean
+  unlinkedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StudentParent"> | Date | string | null
+  unlinkedByUserId?: Prisma.StringNullableWithAggregatesFilter<"StudentParent"> | string | null
+  unlinkReason?: Prisma.StringNullableWithAggregatesFilter<"StudentParent"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StudentParent"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StudentParent"> | Date | string
 }
 
 export type StudentParentCreateInput = {
   id?: string
   relationship?: string | null
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: Date | string | null
+  unlinkedByUserId?: string | null
+  unlinkReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutParentsInput
   parent: Prisma.ParentCreateNestedOneWithoutStudentsInput
 }
@@ -259,14 +324,24 @@ export type StudentParentUncheckedCreateInput = {
   parentId: string
   relationship?: string | null
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: Date | string | null
+  unlinkedByUserId?: string | null
+  unlinkReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentParentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutParentsNestedInput
   parent?: Prisma.ParentUpdateOneRequiredWithoutStudentsNestedInput
 }
@@ -277,7 +352,12 @@ export type StudentParentUncheckedUpdateInput = {
   parentId?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentParentCreateManyInput = {
@@ -286,14 +366,24 @@ export type StudentParentCreateManyInput = {
   parentId: string
   relationship?: string | null
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: Date | string | null
+  unlinkedByUserId?: string | null
+  unlinkReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentParentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentParentUncheckedUpdateManyInput = {
@@ -302,7 +392,12 @@ export type StudentParentUncheckedUpdateManyInput = {
   parentId?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentParentListRelationFilter = {
@@ -326,7 +421,12 @@ export type StudentParentCountOrderByAggregateInput = {
   parentId?: Prisma.SortOrder
   relationship?: Prisma.SortOrder
   isPrimary?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  unlinkedAt?: Prisma.SortOrder
+  unlinkedByUserId?: Prisma.SortOrder
+  unlinkReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StudentParentMaxOrderByAggregateInput = {
@@ -335,7 +435,12 @@ export type StudentParentMaxOrderByAggregateInput = {
   parentId?: Prisma.SortOrder
   relationship?: Prisma.SortOrder
   isPrimary?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  unlinkedAt?: Prisma.SortOrder
+  unlinkedByUserId?: Prisma.SortOrder
+  unlinkReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StudentParentMinOrderByAggregateInput = {
@@ -344,7 +449,12 @@ export type StudentParentMinOrderByAggregateInput = {
   parentId?: Prisma.SortOrder
   relationship?: Prisma.SortOrder
   isPrimary?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  unlinkedAt?: Prisma.SortOrder
+  unlinkedByUserId?: Prisma.SortOrder
+  unlinkReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StudentParentCreateNestedManyWithoutParentInput = {
@@ -435,7 +545,12 @@ export type StudentParentCreateWithoutParentInput = {
   id?: string
   relationship?: string | null
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: Date | string | null
+  unlinkedByUserId?: string | null
+  unlinkReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutParentsInput
 }
 
@@ -444,7 +559,12 @@ export type StudentParentUncheckedCreateWithoutParentInput = {
   studentId: string
   relationship?: string | null
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: Date | string | null
+  unlinkedByUserId?: string | null
+  unlinkReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentParentCreateOrConnectWithoutParentInput = {
@@ -482,14 +602,24 @@ export type StudentParentScalarWhereInput = {
   parentId?: Prisma.StringFilter<"StudentParent"> | string
   relationship?: Prisma.StringNullableFilter<"StudentParent"> | string | null
   isPrimary?: Prisma.BoolFilter<"StudentParent"> | boolean
+  isActive?: Prisma.BoolFilter<"StudentParent"> | boolean
+  unlinkedAt?: Prisma.DateTimeNullableFilter<"StudentParent"> | Date | string | null
+  unlinkedByUserId?: Prisma.StringNullableFilter<"StudentParent"> | string | null
+  unlinkReason?: Prisma.StringNullableFilter<"StudentParent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentParent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"StudentParent"> | Date | string
 }
 
 export type StudentParentCreateWithoutStudentInput = {
   id?: string
   relationship?: string | null
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: Date | string | null
+  unlinkedByUserId?: string | null
+  unlinkReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   parent: Prisma.ParentCreateNestedOneWithoutStudentsInput
 }
 
@@ -498,7 +628,12 @@ export type StudentParentUncheckedCreateWithoutStudentInput = {
   parentId: string
   relationship?: string | null
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: Date | string | null
+  unlinkedByUserId?: string | null
+  unlinkReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentParentCreateOrConnectWithoutStudentInput = {
@@ -532,14 +667,24 @@ export type StudentParentCreateManyParentInput = {
   studentId: string
   relationship?: string | null
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: Date | string | null
+  unlinkedByUserId?: string | null
+  unlinkReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentParentUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutParentsNestedInput
 }
 
@@ -548,7 +693,12 @@ export type StudentParentUncheckedUpdateWithoutParentInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentParentUncheckedUpdateManyWithoutParentInput = {
@@ -556,7 +706,12 @@ export type StudentParentUncheckedUpdateManyWithoutParentInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentParentCreateManyStudentInput = {
@@ -564,14 +719,24 @@ export type StudentParentCreateManyStudentInput = {
   parentId: string
   relationship?: string | null
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: Date | string | null
+  unlinkedByUserId?: string | null
+  unlinkReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentParentUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ParentUpdateOneRequiredWithoutStudentsNestedInput
 }
 
@@ -580,7 +745,12 @@ export type StudentParentUncheckedUpdateWithoutStudentInput = {
   parentId?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentParentUncheckedUpdateManyWithoutStudentInput = {
@@ -588,7 +758,12 @@ export type StudentParentUncheckedUpdateManyWithoutStudentInput = {
   parentId?: Prisma.StringFieldUpdateOperationsInput | string
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  unlinkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  unlinkedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unlinkReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -599,7 +774,12 @@ export type StudentParentSelect<ExtArgs extends runtime.Types.Extensions.Interna
   parentId?: boolean
   relationship?: boolean
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: boolean
+  unlinkedByUserId?: boolean
+  unlinkReason?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.ParentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentParent"]>
@@ -610,7 +790,12 @@ export type StudentParentSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   parentId?: boolean
   relationship?: boolean
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: boolean
+  unlinkedByUserId?: boolean
+  unlinkReason?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.ParentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentParent"]>
@@ -621,7 +806,12 @@ export type StudentParentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   parentId?: boolean
   relationship?: boolean
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: boolean
+  unlinkedByUserId?: boolean
+  unlinkReason?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.ParentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentParent"]>
@@ -632,10 +822,15 @@ export type StudentParentSelectScalar = {
   parentId?: boolean
   relationship?: boolean
   isPrimary?: boolean
+  isActive?: boolean
+  unlinkedAt?: boolean
+  unlinkedByUserId?: boolean
+  unlinkReason?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type StudentParentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "parentId" | "relationship" | "isPrimary" | "createdAt", ExtArgs["result"]["studentParent"]>
+export type StudentParentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "parentId" | "relationship" | "isPrimary" | "isActive" | "unlinkedAt" | "unlinkedByUserId" | "unlinkReason" | "createdAt" | "updatedAt", ExtArgs["result"]["studentParent"]>
 export type StudentParentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.ParentDefaultArgs<ExtArgs>
@@ -661,7 +856,12 @@ export type $StudentParentPayload<ExtArgs extends runtime.Types.Extensions.Inter
     parentId: string
     relationship: string | null
     isPrimary: boolean
+    isActive: boolean
+    unlinkedAt: Date | null
+    unlinkedByUserId: string | null
+    unlinkReason: string | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["studentParent"]>
   composites: {}
 }
@@ -1092,7 +1292,12 @@ export interface StudentParentFieldRefs {
   readonly parentId: Prisma.FieldRef<"StudentParent", 'String'>
   readonly relationship: Prisma.FieldRef<"StudentParent", 'String'>
   readonly isPrimary: Prisma.FieldRef<"StudentParent", 'Boolean'>
+  readonly isActive: Prisma.FieldRef<"StudentParent", 'Boolean'>
+  readonly unlinkedAt: Prisma.FieldRef<"StudentParent", 'DateTime'>
+  readonly unlinkedByUserId: Prisma.FieldRef<"StudentParent", 'String'>
+  readonly unlinkReason: Prisma.FieldRef<"StudentParent", 'String'>
   readonly createdAt: Prisma.FieldRef<"StudentParent", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"StudentParent", 'DateTime'>
 }
     
 

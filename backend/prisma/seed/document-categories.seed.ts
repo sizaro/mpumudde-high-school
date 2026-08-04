@@ -25,6 +25,11 @@ export async function seedDocumentCategories() {
     { name: "Previous Report Card", entityType: "STUDENT", description: "Previous School Report Card", isRequired: false, allowMultiple: true },
     { name: "Transfer Letter", entityType: "STUDENT", description: "Transfer Letter from Previous School", isRequired: false, allowMultiple: false },
     { name: "Other", entityType: "STUDENT", description: "Other document", isRequired: false, allowMultiple: true },
+    // Parent / Guardian Identification Documents
+    { name: "National ID", entityType: "PARENT", description: "National Identity Card", isRequired: false, allowMultiple: false },
+    { name: "Passport", entityType: "PARENT", description: "International Passport", isRequired: false, allowMultiple: false },
+    { name: "LC1 Introduction Letter", entityType: "PARENT", description: "Local Council 1 Introduction Letter", isRequired: false, allowMultiple: false },
+    { name: "Other", entityType: "PARENT", description: "Other guardian identification document", isRequired: false, allowMultiple: true },
     // Finance
     { name: "Invoice", entityType: "FINANCE", description: "Payment Invoice", isRequired: false, allowMultiple: true },
     { name: "Receipt", entityType: "FINANCE", description: "Payment Receipt", isRequired: false, allowMultiple: true },

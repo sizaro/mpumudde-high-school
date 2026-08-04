@@ -5,14 +5,21 @@ import { CreateStudentDto } from './dto/create-student.dto.js';
 import { LinkParentDto } from './dto/link-parent.dto.js';
 import { UpdateStudentDto } from './dto/update-student.dto.js';
 import { CompleteStudentRegistrationDto } from './dto/complete-student-registration.dto.js';
+import * as bcrypt from 'bcrypt';
+
+function generateGuardianTempPassword(length = 12) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';
+  return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+}
 
 @Injectable()
 export class StudentsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createStudentDto: CreateStudentDto) {
-    return this.prisma.$transaction(async (tx) => tx.student.create({
-      data: {
+    return this.prisma.$transaction(async (tx) => {
+      const created = await tx.student.create({
+        data: {
         admissionNumber: await this.generateStudentNumber(tx),
         firstName: createStudentDto.firstName,
         lastName: createStudentDto.lastName,
@@ -22,11 +29,71 @@ export class StudentsService {
         isActive: createStudentDto.isActive ?? true,
         academicYearId: createStudentDto.academicYearId,
         termId: createStudentDto.termId,
-    }));
+          classId: createStudentDto.classId,
+          studentCategoryId: createStudentDto.studentCategoryId,
+        },
+      });
+
+      for (const parentInput of createStudentDto.parents ?? []) {
+        let parentId = parentInput.parentId;
+
+        if (parentId) {
+          const existing = await tx.parent.findUnique({ where: { id: parentId } });
+          if (!existing) throw new BadRequestException('The selected parent does not exist.');
+        } else {
+          const parent = await tx.parent.create({
+            data: {
+              firstName: parentInput.firstName,
+              lastName: parentInput.lastName,
+              gender: parentInput.gender,
+              phone: parentInput.phone,
+              email: parentInput.email,
+              address: parentInput.address,
+              occupation: parentInput.occupation,
+              profilePhoto: parentInput.profilePhoto,
+              relationship: parentInput.relationship,
+            },
+          });
+          parentId = parent.id;
+        }
+
+        await tx.studentParent.create({
+          data: {
+            studentId: created.id,
+            parentId,
+            relationship: parentInput.relationship,
+            isPrimary: parentInput.isPrimary ?? false,
+          },
+        });
+      }
+
+      return tx.student.findUniqueOrThrow({
+        where: { id: created.id },
+        include: {
+          parents: { include: { parent: true } },
+          academicYear: true,
+          term: true,
+          schoolClass: true,
+          studentCategory: true,
+        },
+      });
+    });
   }
 
   async createCompleteRegistration(dto: CompleteStudentRegistrationDto) {
     const { student, primaryGuardian, additionalGuardians = [], payments = [] } = dto;
+    const parentRole = primaryGuardian?.fullName
+      ? await this.prisma.role.findUnique({ where: { name: 'PARENT' } })
+      : null;
+    if (primaryGuardian?.fullName && !parentRole) {
+      throw new BadRequestException('PARENT role is not configured.');
+    }
+    const guardianTemporaryPassword = primaryGuardian?.fullName
+      ? generateGuardianTempPassword()
+      : undefined;
+    const guardianPasswordHash = guardianTemporaryPassword
+      ? await bcrypt.hash(guardianTemporaryPassword, 12)
+      : undefined;
     const feeTypes = await this.prisma.feeType.findMany({ where: { isActive: true } });
     const normalizedPayments = payments.map((payment) => ({
       ...payment,
@@ -81,21 +148,76 @@ export class StudentsService {
         ...(primaryGuardian?.fullName ? [{ ...primaryGuardian, primary: true }] : []),
         ...additionalGuardians.filter((guardian) => guardian.name.trim()).map((guardian) => ({ fullName: guardian.name, phone: guardian.phone, relationship: 'Additional Guardian', primary: false })),
       ];
+      let guardianCredentials: { email: string; temporaryPassword: string } | undefined;
       for (const guardian of guardians) {
         const names = guardian.fullName.trim().split(/\s+/);
-        const parent = await tx.parent.create({
-          data: {
-            firstName: names[0] || 'Guardian', lastName: names.slice(1).join(' ') || 'Guardian',
-            phone: guardian.phone, relationship: guardian.relationship,
-            email: 'email' in guardian ? guardian.email : undefined,
-            occupation: 'occupation' in guardian ? guardian.occupation : undefined,
-            address: 'address' in guardian ? guardian.address : undefined,
-            profilePhoto: 'profilePhoto' in guardian ? guardian.profilePhoto : undefined,
-            identityDocumentType: 'identityDocumentType' in guardian ? guardian.identityDocumentType : undefined,
-            identityDocumentUrl: 'identityDocumentUrl' in guardian ? guardian.identityDocumentUrl : undefined,
+        const communicationEmail = 'email' in guardian ? guardian.email?.trim() || undefined : undefined;
+        const phone = guardian.phone?.trim() || undefined;
+        const existingParent = communicationEmail || phone
+          ? await tx.parent.findFirst({
+              where: {
+                isActive: true,
+                OR: [
+                  ...(communicationEmail ? [{ email: { equals: communicationEmail, mode: 'insensitive' as const } }] : []),
+                  ...(phone ? [{ phone }] : []),
+                ],
+              },
+              orderBy: { createdAt: 'asc' },
+            })
+          : null;
+
+        const parent = existingParent
+          ? await tx.parent.update({
+              where: { id: existingParent.id },
+              data: {
+                phone: phone ?? existingParent.phone,
+                email: communicationEmail ?? existingParent.email,
+                relationship: guardian.relationship ?? existingParent.relationship,
+                occupation: 'occupation' in guardian ? guardian.occupation || existingParent.occupation : existingParent.occupation,
+                address: 'address' in guardian ? guardian.address || existingParent.address : existingParent.address,
+                profilePhoto: 'profilePhoto' in guardian ? guardian.profilePhoto || existingParent.profilePhoto : existingParent.profilePhoto,
+                identityDocumentType: 'identityDocumentType' in guardian ? guardian.identityDocumentType || existingParent.identityDocumentType : existingParent.identityDocumentType,
+                identityDocumentUrl: 'identityDocumentUrl' in guardian ? guardian.identityDocumentUrl || existingParent.identityDocumentUrl : existingParent.identityDocumentUrl,
+              },
+            })
+          : await tx.parent.create({
+              data: {
+                firstName: names[0] || 'Guardian',
+                lastName: names.slice(1).join(' ') || 'Guardian',
+                phone,
+                relationship: guardian.relationship,
+                email: communicationEmail,
+                occupation: 'occupation' in guardian ? guardian.occupation : undefined,
+                address: 'address' in guardian ? guardian.address : undefined,
+                profilePhoto: 'profilePhoto' in guardian ? guardian.profilePhoto : undefined,
+                identityDocumentType: 'identityDocumentType' in guardian ? guardian.identityDocumentType : undefined,
+                identityDocumentUrl: 'identityDocumentUrl' in guardian ? guardian.identityDocumentUrl : undefined,
+              },
+            });
+
+        if (guardian.primary && !parent.userId && guardianPasswordHash && guardianTemporaryPassword) {
+          const loginEmail = await this.generateGuardianLoginEmail(tx, parent.firstName, parent.lastName, admissionNumber);
+          await tx.user.create({
+            data: {
+              email: loginEmail,
+              password: guardianPasswordHash,
+              parent: { connect: { id: parent.id } },
+              roles: { create: { roleId: parentRole!.id } },
+            },
+          });
+          guardianCredentials = { email: loginEmail, temporaryPassword: guardianTemporaryPassword };
+        }
+
+        await tx.studentParent.upsert({
+          where: { studentId_parentId: { studentId: created.id, parentId: parent.id } },
+          create: {
+            studentId: created.id,
+            parentId: parent.id,
+            relationship: guardian.relationship,
+            isPrimary: guardian.primary,
           },
+          update: { relationship: guardian.relationship, isPrimary: guardian.primary },
         });
-        await tx.studentParent.create({ data: { studentId: created.id, parentId: parent.id, relationship: guardian.relationship } });
       }
       for (const payment of normalizedPayments) {
         const structure = matchingStructures.find((item) => item.feeTypeId === payment.feeTypeId && item.academicYearId === payment.academicYearId && item.termId === payment.termId);
@@ -108,7 +230,8 @@ export class StudentsService {
           await tx.studentCharge.update({ where: { id: charge.id }, data: { paidAmount, status } });
         }
       }
-      return tx.student.findUniqueOrThrow({ where: { id: created.id }, include: { parents: { include: { parent: true } }, academicYear: true, term: true, schoolClass: true, studentCategory: true } });
+      const registeredStudent = await tx.student.findUniqueOrThrow({ where: { id: created.id }, include: { parents: { include: { parent: { include: { user: { select: { email: true, isActive: true } } } } } }, academicYear: true, term: true, schoolClass: true, studentCategory: true } });
+      return { student: registeredStudent, guardianCredentials };
     }, { maxWait: 10_000, timeout: 20_000 });
   }
 
@@ -116,7 +239,7 @@ export class StudentsService {
     return this.prisma.student.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        parents: { include: { parent: true } },
+        parents: { where: { isActive: true, parent: { isActive: true } }, include: { parent: true } },
         payments: true,
         academicYear: true,
         term: true,
@@ -130,7 +253,7 @@ export class StudentsService {
     return this.prisma.student.findUnique({
       where: { id },
       include: {
-        parents: { include: { parent: true } },
+        parents: { where: { isActive: true, parent: { isActive: true } }, include: { parent: true } },
         payments: true,
         academicYear: true,
         term: true,
@@ -189,6 +312,42 @@ export class StudentsService {
         schoolClass: true,
         studentCategory: true,
       },
+    });
+  }
+
+  async linkParent(studentId: string, linkParentDto: LinkParentDto) {
+    const [student, parent] = await Promise.all([
+      this.prisma.student.findUnique({ where: { id: studentId }, select: { id: true } }),
+      this.prisma.parent.findUnique({ where: { id: linkParentDto.parentId }, select: { id: true } }),
+    ]);
+
+    if (!student) throw new BadRequestException('Student not found.');
+    if (!parent) throw new BadRequestException('Parent not found.');
+
+    return this.prisma.$transaction(async (tx) => {
+      if (linkParentDto.isPrimary) {
+        await tx.studentParent.updateMany({
+          where: { studentId },
+          data: { isPrimary: false },
+        });
+      }
+
+      return tx.studentParent.upsert({
+        where: {
+          studentId_parentId: { studentId, parentId: linkParentDto.parentId },
+        },
+        create: {
+          studentId,
+          parentId: linkParentDto.parentId,
+          relationship: linkParentDto.relationship,
+          isPrimary: linkParentDto.isPrimary ?? false,
+        },
+        update: {
+          relationship: linkParentDto.relationship,
+          isPrimary: linkParentDto.isPrimary ?? false,
+        },
+        include: { parent: true, student: true },
+      });
     });
   }
 
@@ -275,5 +434,18 @@ export class StudentsService {
       update: { nextNumber: { increment: 1 } },
     });
     return `MHS-${year}-${String(counter.nextNumber - 1).padStart(4, '0')}`;
+  }
+
+  private async generateGuardianLoginEmail(tx: any, firstName: string, lastName: string, admissionNumber: string) {
+    const clean = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.|\.$/g, '');
+    const studentSuffix = admissionNumber.toLowerCase().replace(/[^a-z0-9]+/g, '');
+    const base = `${clean(firstName) || 'guardian'}.${clean(lastName) || 'parent'}.${studentSuffix}`;
+    let email = `${base}@mhs.com`;
+    let suffix = 2;
+    while (await tx.user.findUnique({ where: { email }, select: { id: true } })) {
+      email = `${base}.${suffix}@mhs.com`;
+      suffix += 1;
+    }
+    return email;
   }
 }

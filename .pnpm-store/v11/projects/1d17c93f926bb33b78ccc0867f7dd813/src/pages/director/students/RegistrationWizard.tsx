@@ -70,6 +70,7 @@ export default function RegistrationWizard() {
   const [status, setStatus] = useState<string | null>(null);
   const [payments, setPayments] = useState([{ feeTypeId: "", amount: "", method: "cash", receiptDataUrl: "", receiptName: "" }]);
   const [draftReady, setDraftReady] = useState(false);
+  const [completed, setCompleted] = useState<{ studentId: string; studentName: string; guardianCredentials?: { email: string; temporaryPassword: string } } | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -179,16 +180,17 @@ export default function RegistrationWizard() {
         nationality: form.nationality || undefined, address: form.address || undefined, previousSchool: form.previousSchool || undefined,
         bloodGroup: form.bloodGroup || undefined, allergies: form.allergies || undefined, medicalConditions: form.medicalConditions || undefined, specialNeeds: form.specialNeeds || undefined, medicalNotes: form.medicalNotes || undefined,
       };
-      await StudentService.createCompleteRegistration({ student, primaryGuardian: form.parentName ? { fullName: form.parentName, relationship: form.parentRelationship, phone: form.parentPhone, email: form.parentEmail, occupation: form.parentOccupation, address: form.parentAddress, profilePhoto: parentPhoto, identityDocumentType: form.parentDocumentType || undefined, identityDocumentUrl: parentDocumentUrl } : undefined, additionalGuardians: form.guardians, payments: paymentPayload });
+      const result = await StudentService.createCompleteRegistration({ student, primaryGuardian: form.parentName ? { fullName: form.parentName, relationship: form.parentRelationship, phone: form.parentPhone, email: form.parentEmail, occupation: form.parentOccupation, address: form.parentAddress, profilePhoto: parentPhoto, identityDocumentType: form.parentDocumentType || undefined, identityDocumentUrl: parentDocumentUrl } : undefined, additionalGuardians: form.guardians, payments: paymentPayload });
       localStorage.removeItem(DRAFT_KEY);
-      setStatus("Student registered successfully.");
-      navigate("/director/students");
+      setCompleted({ studentId: result.student.id, studentName: `${result.student.firstName} ${result.student.lastName}`, guardianCredentials: result.guardianCredentials });
     } catch (error) {
       const response = error as { response?: { data?: { message?: string | string[] } } };
       const message = response.response?.data?.message;
       setStatus(Array.isArray(message) ? message.join(", ") : message ?? "Unable to register the student. Please try again.");
     }
   };
+
+  if (completed) return <div className="mx-auto max-w-3xl rounded-3xl border border-emerald-200 bg-emerald-50 p-7"><h1 className="text-2xl font-bold text-emerald-950">Student registration complete</h1><p className="mt-2 text-emerald-800">{completed.studentName} was registered successfully.</p>{completed.guardianCredentials ? <div className="mt-6"><p className="text-sm font-semibold text-emerald-950">Primary guardian portal credentials</p><p className="mt-1 text-sm text-emerald-800">Give these details to the guardian once. The password cannot be viewed again.</p><dl className="mt-4 space-y-3 rounded-2xl bg-white p-5"><div><dt className="text-xs text-slate-500">Login email</dt><dd className="font-semibold">{completed.guardianCredentials.email}</dd></div><div><dt className="text-xs text-slate-500">Temporary password</dt><dd className="font-mono text-lg font-semibold">{completed.guardianCredentials.temporaryPassword}</dd></div></dl></div> : <p className="mt-5 rounded-2xl bg-white p-4 text-sm text-slate-600">The selected guardian already had a portal account, so no new password was generated.</p>}<div className="mt-6 flex flex-wrap gap-3"><button onClick={() => navigate(`/director/students/profile?id=${completed.studentId}`)} className="rounded-2xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white">View student</button><button onClick={() => navigate('/director/guardians')} className="rounded-2xl border border-emerald-300 px-5 py-3 text-sm font-semibold text-emerald-900">View guardians</button></div></div>;
 
   return (
     <div>

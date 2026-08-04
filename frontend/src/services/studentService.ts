@@ -12,13 +12,13 @@ class StudentService {
     return data;
   }
 
-  async uploadPhoto(file: FormData): Promise<{ url: string }> {
-    const { data } = await api.post<{ url: string }>("/upload", file, { headers: { "Content-Type": "multipart/form-data" } });
+  async uploadPhoto(file: FormData): Promise<{ url: string; originalName?: string; mimeType?: string; fileSize?: number; fileExtension?: string }> {
+    const { data } = await api.post<{ url: string; originalName?: string; mimeType?: string; fileSize?: number; fileExtension?: string }>("/upload", file, { headers: { "Content-Type": "multipart/form-data" } });
     return data;
   }
 
-  async createCompleteRegistration(payload: Record<string, unknown>): Promise<Student> {
-    const { data } = await api.post<Student>("/students/complete-registration", payload);
+  async createCompleteRegistration(payload: Record<string, unknown>): Promise<{ student: Student; guardianCredentials?: { email: string; temporaryPassword: string } }> {
+    const { data } = await api.post<{ student: Student; guardianCredentials?: { email: string; temporaryPassword: string } }>("/students/complete-registration", payload);
     return data;
   }
 

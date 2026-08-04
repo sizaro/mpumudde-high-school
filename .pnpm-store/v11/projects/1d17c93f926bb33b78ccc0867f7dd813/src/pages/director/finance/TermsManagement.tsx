@@ -100,7 +100,7 @@ export default function TermsManagement() {
                 type="button"
                 onClick={() => handleAssignFeesToStudents(term.id)}
                 disabled={assigningTermId === term.id}
-                className="w-full rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:bg-slate-400"
+                className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-indigo-700 disabled:from-slate-400 disabled:to-slate-400"
               >
                 {assigningTermId === term.id ? "Assigning..." : "Assign to All Students"}
               </button>

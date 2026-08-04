@@ -27,6 +27,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
       onClose();
 
       if (user.roles.includes("SUPER_ADMIN")) navigate("/director");
+      else if (user.roles.includes("BURSAR") || user.roles.includes("FINANCE_CLERK")) navigate("/finance-portal");
       else if (user.roles.includes("TEACHER")) navigate("/teacher");
       else if (user.roles.includes("PARENT")) navigate("/parent");
       else if (user.roles.includes("STUDENT")) navigate("/student");

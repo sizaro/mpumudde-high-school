@@ -28,6 +28,7 @@ export type ParentMinAggregateOutputType = {
   id: string | null
   firstName: string | null
   lastName: string | null
+  gender: string | null
   phone: string | null
   email: string | null
   occupation: string | null
@@ -35,9 +36,11 @@ export type ParentMinAggregateOutputType = {
   profilePhoto: string | null
   identityDocumentType: string | null
   identityDocumentUrl: string | null
-  gender: string | null
   relationship: string | null
   userId: string | null
+  isActive: boolean | null
+  archivedAt: Date | null
+  archivedByUserId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +49,7 @@ export type ParentMaxAggregateOutputType = {
   id: string | null
   firstName: string | null
   lastName: string | null
+  gender: string | null
   phone: string | null
   email: string | null
   occupation: string | null
@@ -53,9 +57,11 @@ export type ParentMaxAggregateOutputType = {
   profilePhoto: string | null
   identityDocumentType: string | null
   identityDocumentUrl: string | null
-  gender: string | null
   relationship: string | null
   userId: string | null
+  isActive: boolean | null
+  archivedAt: Date | null
+  archivedByUserId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,6 +70,7 @@ export type ParentCountAggregateOutputType = {
   id: number
   firstName: number
   lastName: number
+  gender: number
   phone: number
   email: number
   occupation: number
@@ -71,9 +78,11 @@ export type ParentCountAggregateOutputType = {
   profilePhoto: number
   identityDocumentType: number
   identityDocumentUrl: number
-  gender: number
   relationship: number
   userId: number
+  isActive: number
+  archivedAt: number
+  archivedByUserId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -84,6 +93,7 @@ export type ParentMinAggregateInputType = {
   id?: true
   firstName?: true
   lastName?: true
+  gender?: true
   phone?: true
   email?: true
   occupation?: true
@@ -91,9 +101,11 @@ export type ParentMinAggregateInputType = {
   profilePhoto?: true
   identityDocumentType?: true
   identityDocumentUrl?: true
-  gender?: true
   relationship?: true
   userId?: true
+  isActive?: true
+  archivedAt?: true
+  archivedByUserId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -102,6 +114,7 @@ export type ParentMaxAggregateInputType = {
   id?: true
   firstName?: true
   lastName?: true
+  gender?: true
   phone?: true
   email?: true
   occupation?: true
@@ -109,9 +122,11 @@ export type ParentMaxAggregateInputType = {
   profilePhoto?: true
   identityDocumentType?: true
   identityDocumentUrl?: true
-  gender?: true
   relationship?: true
   userId?: true
+  isActive?: true
+  archivedAt?: true
+  archivedByUserId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -120,6 +135,7 @@ export type ParentCountAggregateInputType = {
   id?: true
   firstName?: true
   lastName?: true
+  gender?: true
   phone?: true
   email?: true
   occupation?: true
@@ -127,9 +143,11 @@ export type ParentCountAggregateInputType = {
   profilePhoto?: true
   identityDocumentType?: true
   identityDocumentUrl?: true
-  gender?: true
   relationship?: true
   userId?: true
+  isActive?: true
+  archivedAt?: true
+  archivedByUserId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -211,6 +229,7 @@ export type ParentGroupByOutputType = {
   id: string
   firstName: string
   lastName: string
+  gender: string | null
   phone: string | null
   email: string | null
   occupation: string | null
@@ -218,9 +237,11 @@ export type ParentGroupByOutputType = {
   profilePhoto: string | null
   identityDocumentType: string | null
   identityDocumentUrl: string | null
-  gender: string | null
   relationship: string | null
   userId: string | null
+  isActive: boolean
+  archivedAt: Date | null
+  archivedByUserId: string | null
   createdAt: Date
   updatedAt: Date
   _count: ParentCountAggregateOutputType | null
@@ -250,6 +271,7 @@ export type ParentWhereInput = {
   id?: Prisma.StringFilter<"Parent"> | string
   firstName?: Prisma.StringFilter<"Parent"> | string
   lastName?: Prisma.StringFilter<"Parent"> | string
+  gender?: Prisma.StringNullableFilter<"Parent"> | string | null
   phone?: Prisma.StringNullableFilter<"Parent"> | string | null
   email?: Prisma.StringNullableFilter<"Parent"> | string | null
   occupation?: Prisma.StringNullableFilter<"Parent"> | string | null
@@ -257,9 +279,11 @@ export type ParentWhereInput = {
   profilePhoto?: Prisma.StringNullableFilter<"Parent"> | string | null
   identityDocumentType?: Prisma.StringNullableFilter<"Parent"> | string | null
   identityDocumentUrl?: Prisma.StringNullableFilter<"Parent"> | string | null
-  gender?: Prisma.StringNullableFilter<"Parent"> | string | null
   relationship?: Prisma.StringNullableFilter<"Parent"> | string | null
   userId?: Prisma.StringNullableFilter<"Parent"> | string | null
+  isActive?: Prisma.BoolFilter<"Parent"> | boolean
+  archivedAt?: Prisma.DateTimeNullableFilter<"Parent"> | Date | string | null
+  archivedByUserId?: Prisma.StringNullableFilter<"Parent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Parent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Parent"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -270,6 +294,7 @@ export type ParentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   occupation?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -277,9 +302,11 @@ export type ParentOrderByWithRelationInput = {
   profilePhoto?: Prisma.SortOrderInput | Prisma.SortOrder
   identityDocumentType?: Prisma.SortOrderInput | Prisma.SortOrder
   identityDocumentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  gender?: Prisma.SortOrderInput | Prisma.SortOrder
   relationship?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  archivedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -294,6 +321,7 @@ export type ParentWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ParentWhereInput | Prisma.ParentWhereInput[]
   firstName?: Prisma.StringFilter<"Parent"> | string
   lastName?: Prisma.StringFilter<"Parent"> | string
+  gender?: Prisma.StringNullableFilter<"Parent"> | string | null
   phone?: Prisma.StringNullableFilter<"Parent"> | string | null
   email?: Prisma.StringNullableFilter<"Parent"> | string | null
   occupation?: Prisma.StringNullableFilter<"Parent"> | string | null
@@ -301,8 +329,10 @@ export type ParentWhereUniqueInput = Prisma.AtLeast<{
   profilePhoto?: Prisma.StringNullableFilter<"Parent"> | string | null
   identityDocumentType?: Prisma.StringNullableFilter<"Parent"> | string | null
   identityDocumentUrl?: Prisma.StringNullableFilter<"Parent"> | string | null
-  gender?: Prisma.StringNullableFilter<"Parent"> | string | null
   relationship?: Prisma.StringNullableFilter<"Parent"> | string | null
+  isActive?: Prisma.BoolFilter<"Parent"> | boolean
+  archivedAt?: Prisma.DateTimeNullableFilter<"Parent"> | Date | string | null
+  archivedByUserId?: Prisma.StringNullableFilter<"Parent"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Parent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Parent"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -313,6 +343,7 @@ export type ParentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   occupation?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -320,9 +351,11 @@ export type ParentOrderByWithAggregationInput = {
   profilePhoto?: Prisma.SortOrderInput | Prisma.SortOrder
   identityDocumentType?: Prisma.SortOrderInput | Prisma.SortOrder
   identityDocumentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  gender?: Prisma.SortOrderInput | Prisma.SortOrder
   relationship?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  archivedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ParentCountOrderByAggregateInput
@@ -337,6 +370,7 @@ export type ParentScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Parent"> | string
   firstName?: Prisma.StringWithAggregatesFilter<"Parent"> | string
   lastName?: Prisma.StringWithAggregatesFilter<"Parent"> | string
+  gender?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   occupation?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
@@ -344,9 +378,11 @@ export type ParentScalarWhereWithAggregatesInput = {
   profilePhoto?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   identityDocumentType?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   identityDocumentUrl?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
-  gender?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   relationship?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   userId?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
+  isActive?: Prisma.BoolWithAggregatesFilter<"Parent"> | boolean
+  archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Parent"> | Date | string | null
+  archivedByUserId?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Parent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Parent"> | Date | string
 }
@@ -355,6 +391,7 @@ export type ParentCreateInput = {
   id?: string
   firstName: string
   lastName: string
+  gender?: string | null
   phone?: string | null
   email?: string | null
   occupation?: string | null
@@ -362,8 +399,10 @@ export type ParentCreateInput = {
   profilePhoto?: string | null
   identityDocumentType?: string | null
   identityDocumentUrl?: string | null
-  gender?: string | null
   relationship?: string | null
+  isActive?: boolean
+  archivedAt?: Date | string | null
+  archivedByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutParentInput
@@ -374,6 +413,7 @@ export type ParentUncheckedCreateInput = {
   id?: string
   firstName: string
   lastName: string
+  gender?: string | null
   phone?: string | null
   email?: string | null
   occupation?: string | null
@@ -381,9 +421,11 @@ export type ParentUncheckedCreateInput = {
   profilePhoto?: string | null
   identityDocumentType?: string | null
   identityDocumentUrl?: string | null
-  gender?: string | null
   relationship?: string | null
   userId?: string | null
+  isActive?: boolean
+  archivedAt?: Date | string | null
+  archivedByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentParentUncheckedCreateNestedManyWithoutParentInput
@@ -393,6 +435,7 @@ export type ParentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -400,8 +443,10 @@ export type ParentUpdateInput = {
   profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutParentNestedInput
@@ -412,6 +457,7 @@ export type ParentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -419,9 +465,11 @@ export type ParentUncheckedUpdateInput = {
   profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentParentUncheckedUpdateManyWithoutParentNestedInput
@@ -431,6 +479,7 @@ export type ParentCreateManyInput = {
   id?: string
   firstName: string
   lastName: string
+  gender?: string | null
   phone?: string | null
   email?: string | null
   occupation?: string | null
@@ -438,9 +487,11 @@ export type ParentCreateManyInput = {
   profilePhoto?: string | null
   identityDocumentType?: string | null
   identityDocumentUrl?: string | null
-  gender?: string | null
   relationship?: string | null
   userId?: string | null
+  isActive?: boolean
+  archivedAt?: Date | string | null
+  archivedByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -449,6 +500,7 @@ export type ParentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -456,8 +508,10 @@ export type ParentUpdateManyMutationInput = {
   profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -466,6 +520,7 @@ export type ParentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -473,9 +528,11 @@ export type ParentUncheckedUpdateManyInput = {
   profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -489,6 +546,7 @@ export type ParentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   occupation?: Prisma.SortOrder
@@ -496,9 +554,11 @@ export type ParentCountOrderByAggregateInput = {
   profilePhoto?: Prisma.SortOrder
   identityDocumentType?: Prisma.SortOrder
   identityDocumentUrl?: Prisma.SortOrder
-  gender?: Prisma.SortOrder
   relationship?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
+  archivedByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -507,6 +567,7 @@ export type ParentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   occupation?: Prisma.SortOrder
@@ -514,9 +575,11 @@ export type ParentMaxOrderByAggregateInput = {
   profilePhoto?: Prisma.SortOrder
   identityDocumentType?: Prisma.SortOrder
   identityDocumentUrl?: Prisma.SortOrder
-  gender?: Prisma.SortOrder
   relationship?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
+  archivedByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -525,6 +588,7 @@ export type ParentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   occupation?: Prisma.SortOrder
@@ -532,9 +596,11 @@ export type ParentMinOrderByAggregateInput = {
   profilePhoto?: Prisma.SortOrder
   identityDocumentType?: Prisma.SortOrder
   identityDocumentUrl?: Prisma.SortOrder
-  gender?: Prisma.SortOrder
   relationship?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
+  archivedByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -594,6 +660,7 @@ export type ParentCreateWithoutUserInput = {
   id?: string
   firstName: string
   lastName: string
+  gender?: string | null
   phone?: string | null
   email?: string | null
   occupation?: string | null
@@ -601,8 +668,10 @@ export type ParentCreateWithoutUserInput = {
   profilePhoto?: string | null
   identityDocumentType?: string | null
   identityDocumentUrl?: string | null
-  gender?: string | null
   relationship?: string | null
+  isActive?: boolean
+  archivedAt?: Date | string | null
+  archivedByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentParentCreateNestedManyWithoutParentInput
@@ -612,6 +681,7 @@ export type ParentUncheckedCreateWithoutUserInput = {
   id?: string
   firstName: string
   lastName: string
+  gender?: string | null
   phone?: string | null
   email?: string | null
   occupation?: string | null
@@ -619,8 +689,10 @@ export type ParentUncheckedCreateWithoutUserInput = {
   profilePhoto?: string | null
   identityDocumentType?: string | null
   identityDocumentUrl?: string | null
-  gender?: string | null
   relationship?: string | null
+  isActive?: boolean
+  archivedAt?: Date | string | null
+  archivedByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentParentUncheckedCreateNestedManyWithoutParentInput
@@ -646,6 +718,7 @@ export type ParentUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -653,8 +726,10 @@ export type ParentUpdateWithoutUserInput = {
   profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentParentUpdateManyWithoutParentNestedInput
@@ -664,6 +739,7 @@ export type ParentUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -671,8 +747,10 @@ export type ParentUncheckedUpdateWithoutUserInput = {
   profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentParentUncheckedUpdateManyWithoutParentNestedInput
@@ -682,6 +760,7 @@ export type ParentCreateWithoutStudentsInput = {
   id?: string
   firstName: string
   lastName: string
+  gender?: string | null
   phone?: string | null
   email?: string | null
   occupation?: string | null
@@ -689,8 +768,10 @@ export type ParentCreateWithoutStudentsInput = {
   profilePhoto?: string | null
   identityDocumentType?: string | null
   identityDocumentUrl?: string | null
-  gender?: string | null
   relationship?: string | null
+  isActive?: boolean
+  archivedAt?: Date | string | null
+  archivedByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutParentInput
@@ -700,6 +781,7 @@ export type ParentUncheckedCreateWithoutStudentsInput = {
   id?: string
   firstName: string
   lastName: string
+  gender?: string | null
   phone?: string | null
   email?: string | null
   occupation?: string | null
@@ -707,9 +789,11 @@ export type ParentUncheckedCreateWithoutStudentsInput = {
   profilePhoto?: string | null
   identityDocumentType?: string | null
   identityDocumentUrl?: string | null
-  gender?: string | null
   relationship?: string | null
   userId?: string | null
+  isActive?: boolean
+  archivedAt?: Date | string | null
+  archivedByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -734,6 +818,7 @@ export type ParentUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -741,8 +826,10 @@ export type ParentUpdateWithoutStudentsInput = {
   profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutParentNestedInput
@@ -752,6 +839,7 @@ export type ParentUncheckedUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -759,9 +847,11 @@ export type ParentUncheckedUpdateWithoutStudentsInput = {
   profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   identityDocumentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -801,6 +891,7 @@ export type ParentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   id?: boolean
   firstName?: boolean
   lastName?: boolean
+  gender?: boolean
   phone?: boolean
   email?: boolean
   occupation?: boolean
@@ -808,9 +899,11 @@ export type ParentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   profilePhoto?: boolean
   identityDocumentType?: boolean
   identityDocumentUrl?: boolean
-  gender?: boolean
   relationship?: boolean
   userId?: boolean
+  isActive?: boolean
+  archivedAt?: boolean
+  archivedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.Parent$userArgs<ExtArgs>
@@ -822,6 +915,7 @@ export type ParentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   firstName?: boolean
   lastName?: boolean
+  gender?: boolean
   phone?: boolean
   email?: boolean
   occupation?: boolean
@@ -829,9 +923,11 @@ export type ParentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   profilePhoto?: boolean
   identityDocumentType?: boolean
   identityDocumentUrl?: boolean
-  gender?: boolean
   relationship?: boolean
   userId?: boolean
+  isActive?: boolean
+  archivedAt?: boolean
+  archivedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.Parent$userArgs<ExtArgs>
@@ -841,6 +937,7 @@ export type ParentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   firstName?: boolean
   lastName?: boolean
+  gender?: boolean
   phone?: boolean
   email?: boolean
   occupation?: boolean
@@ -848,9 +945,11 @@ export type ParentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   profilePhoto?: boolean
   identityDocumentType?: boolean
   identityDocumentUrl?: boolean
-  gender?: boolean
   relationship?: boolean
   userId?: boolean
+  isActive?: boolean
+  archivedAt?: boolean
+  archivedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.Parent$userArgs<ExtArgs>
@@ -860,6 +959,7 @@ export type ParentSelectScalar = {
   id?: boolean
   firstName?: boolean
   lastName?: boolean
+  gender?: boolean
   phone?: boolean
   email?: boolean
   occupation?: boolean
@@ -867,14 +967,16 @@ export type ParentSelectScalar = {
   profilePhoto?: boolean
   identityDocumentType?: boolean
   identityDocumentUrl?: boolean
-  gender?: boolean
   relationship?: boolean
   userId?: boolean
+  isActive?: boolean
+  archivedAt?: boolean
+  archivedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ParentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "phone" | "email" | "occupation" | "address" | "profilePhoto" | "identityDocumentType" | "identityDocumentUrl" | "gender" | "relationship" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["parent"]>
+export type ParentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "gender" | "phone" | "email" | "occupation" | "address" | "profilePhoto" | "identityDocumentType" | "identityDocumentUrl" | "relationship" | "userId" | "isActive" | "archivedAt" | "archivedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["parent"]>
 export type ParentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Parent$userArgs<ExtArgs>
   students?: boolean | Prisma.Parent$studentsArgs<ExtArgs>
@@ -897,6 +999,7 @@ export type $ParentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     id: string
     firstName: string
     lastName: string
+    gender: string | null
     phone: string | null
     email: string | null
     occupation: string | null
@@ -904,9 +1007,11 @@ export type $ParentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     profilePhoto: string | null
     identityDocumentType: string | null
     identityDocumentUrl: string | null
-    gender: string | null
     relationship: string | null
     userId: string | null
+    isActive: boolean
+    archivedAt: Date | null
+    archivedByUserId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["parent"]>
@@ -1337,6 +1442,7 @@ export interface ParentFieldRefs {
   readonly id: Prisma.FieldRef<"Parent", 'String'>
   readonly firstName: Prisma.FieldRef<"Parent", 'String'>
   readonly lastName: Prisma.FieldRef<"Parent", 'String'>
+  readonly gender: Prisma.FieldRef<"Parent", 'String'>
   readonly phone: Prisma.FieldRef<"Parent", 'String'>
   readonly email: Prisma.FieldRef<"Parent", 'String'>
   readonly occupation: Prisma.FieldRef<"Parent", 'String'>
@@ -1344,9 +1450,11 @@ export interface ParentFieldRefs {
   readonly profilePhoto: Prisma.FieldRef<"Parent", 'String'>
   readonly identityDocumentType: Prisma.FieldRef<"Parent", 'String'>
   readonly identityDocumentUrl: Prisma.FieldRef<"Parent", 'String'>
-  readonly gender: Prisma.FieldRef<"Parent", 'String'>
   readonly relationship: Prisma.FieldRef<"Parent", 'String'>
   readonly userId: Prisma.FieldRef<"Parent", 'String'>
+  readonly isActive: Prisma.FieldRef<"Parent", 'Boolean'>
+  readonly archivedAt: Prisma.FieldRef<"Parent", 'DateTime'>
+  readonly archivedByUserId: Prisma.FieldRef<"Parent", 'String'>
   readonly createdAt: Prisma.FieldRef<"Parent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Parent", 'DateTime'>
 }

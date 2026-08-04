@@ -27,6 +27,10 @@ import PaymentHistory from "../pages/director/finance/History";
 import DirectorReports from "../pages/director/reports/Reports";
 import AcademicSetupPage from "../pages/director/setup/AcademicSetupPage";
 import AccountManagement from "../pages/director/AccountManagement";
+import GuardiansPage from "../pages/director/guardians";
+import CreateGuardianPage from "../pages/director/guardians/Create";
+import GuardianDetailsPage from "../pages/director/guardians/Details";
+import EditGuardianPage from "../pages/director/guardians/Edit";
 
 // Director — Teacher management
 import TeacherListPage from "../pages/director/teachers/List";
@@ -52,7 +56,8 @@ import ChangePassword from "../pages/teacher/ChangePassword";
 import MyFinance from "../pages/teacher/MyFinance";
 import FinancePortal from "../pages/finance/FinancePortal";
 
-import ParentLayout from "../pages/parent/ParentLayout";
+  import ParentLayout from "../pages/parent/ParentLayout";
+  import ParentDashboard from "../pages/parent/Dashboard";
 import ParentChildren from "../pages/parent/Children";
 import ParentAttendance from "../pages/parent/Attendance";
 import ParentFinance from "../pages/parent/Finance";
@@ -94,6 +99,10 @@ export default function AppRoutes() {
         <Route path="students" element={<StudentList />} />
         <Route path="students/status" element={<StudentStatus />} />
         <Route path="students/profile" element={<StudentProfile />} />
+        <Route path="guardians" element={<GuardiansPage />} />
+        <Route path="guardians/create" element={<CreateGuardianPage />} />
+        <Route path="guardians/:id" element={<GuardianDetailsPage />} />
+        <Route path="guardians/:id/edit" element={<EditGuardianPage />} />
         <Route path="finance" element={<DirectorFinancePage />} />
         <Route path="finance/history" element={<PaymentHistory />} />
         <Route path="academic-setup" element={<AcademicSetupPage />} />
@@ -155,7 +164,7 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<ParentChildren />} />
+        <Route index element={<ParentDashboard />} />
         <Route path="children" element={<ParentChildren />} />
         <Route path="attendance" element={<ParentAttendance />} />
         <Route path="finance" element={<ParentFinance />} />

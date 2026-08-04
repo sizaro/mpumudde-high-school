@@ -60,25 +60,10 @@ export class AuthController {
   @Roles('SUPER_ADMIN')
   async register(
     @Body() registerDto: RegisterDto,
-
-    @Res({ passthrough: true }) response: Response,
   ) {
-    const result = await this.authService.register(registerDto);
-
-    const isProduction = process.env.NODE_ENV === 'production';
-    const cookieOptions: { httpOnly: true; secure: boolean; sameSite: 'none' | 'lax'; maxAge: number } = {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
-      maxAge: 24 * 60 * 60 * 1000,
-    };
-
-    response.cookie('access_token', result.access_token, cookieOptions);
-
-    return {
-      access_token: result.access_token,
-      user: result.user,
-    };
+    // Registration is an administrator action. It must not replace the
+    // director's browser session with the newly created user's session.
+    return this.authService.register(registerDto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -91,5 +76,13 @@ export class AuthController {
   @Patch('change-password')
   async changePassword(@Req() req: any, @Body() dto: ChangePasswordDto) {
     return this.authService.changePassword(req.user.id, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(@Req() req: any, @Res({ passthrough: true }) response: Response) {
+    const result = await this.authService.logout(req.user.id);
+    response.clearCookie('access_token');
+    return result;
   }
 }

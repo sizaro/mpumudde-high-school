@@ -1,4 +1,8 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { ArrayMinSize, IsArray, IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
+import { LinkParentStudentDto } from './link-parent-student.dto.js';
+import { GuardianDocumentDto } from './guardian-document.dto.js';
 
 export class CreateParentDto {
   @IsString()
@@ -13,12 +17,14 @@ export class CreateParentDto {
   @IsString()
   gender?: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  phone!: string;
+  phone?: string;
 
+  @IsOptional()
+  @Transform(({ value }) => typeof value === 'string' && value.trim() === '' ? undefined : value)
   @IsEmail()
-  email!: string;
+  email?: string;
 
   @IsOptional()
   @IsString()
@@ -35,5 +41,47 @@ export class CreateParentDto {
   @IsOptional()
   @IsString()
   username?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => typeof value === 'string' && value.trim() === '' ? undefined : value)
+  @IsEmail()
+  loginEmail?: string;
+
+  @IsOptional()
+  @IsString()
+  relationship?: string;
+
+  @IsOptional()
+  @IsString()
+  identityDocumentType?: string;
+
+  @IsOptional()
+  @IsString()
+  identityDocumentUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  studentId?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isPrimary?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  createLoginAccount?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => LinkParentStudentDto)
+  students?: LinkParentStudentDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => GuardianDocumentDto)
+  documents?: GuardianDocumentDto[];
 }
 

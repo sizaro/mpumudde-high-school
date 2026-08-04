@@ -654,7 +654,8 @@ model Parent {
 
   phone String?
 
-  email String? @unique
+  // Personal communication email. Login identity remains User.email.
+  email String?
 
   occupation String?
 
@@ -676,9 +677,17 @@ model Parent {
 
   students StudentParent[]
 
+  isActive Boolean @default(true)
+
+  archivedAt DateTime?
+
+  archivedByUserId String?
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+
+  @@index([isActive])
 }
 
 // ==========================
@@ -799,13 +808,25 @@ model StudentParent {
 
   isPrimary Boolean @default(false)
 
+  isActive Boolean @default(true)
+
+  unlinkedAt DateTime?
+
+  unlinkedByUserId String?
+
+  unlinkReason String?
+
   student Student @relation(fields: [studentId], references: [id])
 
   parent Parent @relation(fields: [parentId], references: [id])
 
   createdAt DateTime @default(now())
 
+  updatedAt DateTime @updatedAt
+
   @@unique([studentId, parentId])
+  @@index([parentId, isActive])
+  @@index([studentId, isActive])
 }
 
 // ==========================

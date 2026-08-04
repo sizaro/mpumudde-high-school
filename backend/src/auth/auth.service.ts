@@ -71,7 +71,7 @@ export class AuthService {
 
 
 
-    if (!user) {
+    if (!user || !user.isActive) {
 
       throw new UnauthorizedException(
         'Invalid credentials',
@@ -188,16 +188,22 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
 
+    const existingParent = registerDto.role === 'PARENT'
+      ? await this.prisma.parent.findFirst({
+          where: {
+            email: registerDto.email,
+            userId: null,
+          },
+          orderBy: { createdAt: 'asc' },
+        })
+      : null;
+
     const newUser = await this.prisma.user.create({
       data: {
         email: registerDto.email,
         username: registerDto.username,
         password: hashedPassword,
-        roles: {
-          create: {
-            roleId: role.id,
-          },
-        },
+        roles: { create: { roleId: role.id } },
         teacher:
           registerDto.role === 'TEACHER'
             ? {
@@ -210,20 +216,27 @@ export class AuthService {
             : undefined,
         parent:
           registerDto.role === 'PARENT'
-            ? {
-                create: {
-                  firstName: registerDto.firstName ?? 'Parent',
-                  lastName: registerDto.lastName ?? 'User',
-                  phone: registerDto.phone,
-                  email: registerDto.email,
-                },
-              }
+            ? existingParent
+              ? { connect: { id: existingParent.id } }
+              : {
+                  create: {
+                    firstName: registerDto.firstName ?? 'Parent',
+                    lastName: registerDto.lastName ?? 'User',
+                    phone: registerDto.phone,
+                    email: registerDto.email,
+                    relationship: registerDto.relationship,
+                  },
+                }
             : undefined,
       },
       include: {
         roles: {
           include: {
-            role: true,
+            role: {
+              include: {
+                permissions: { include: { permission: true } },
+              },
+            },
           },
         },
       },
@@ -233,17 +246,11 @@ export class AuthService {
       userRole => userRole.role.name,
     );
 
-    const permissions: string[] = [];
-
-    const payload = {
-      sub: newUser.id,
-      email: newUser.email,
-      roles,
-      permissions,
-    };
+    const permissions = newUser.roles.flatMap((item) =>
+      item.role.permissions.map((rolePermission) => rolePermission.permission.name),
+    );
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
       user: {
         id: newUser.id,
         email: newUser.email,
@@ -251,6 +258,14 @@ export class AuthService {
         permissions,
       },
     };
+  }
+
+  async logout(userId: string) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { isLoggedIn: false },
+    });
+    return { message: 'Logged out successfully.' };
   }
 
   async changePassword(userId: string, dto: ChangePasswordDto) {
