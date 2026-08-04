@@ -1,4 +1,4 @@
-﻿-- DropIndex
+-- DropIndex
 DROP INDEX "Term_name_key";
 
 -- AlterTable
@@ -125,4 +125,5 @@ ALTER TABLE "FinanceStructure" ADD CONSTRAINT "FinanceStructure_feeTypeId_fkey" 
 
 -- AddForeignKey
 ALTER TABLE "Payment" ADD CONSTRAINT "Payment_financeStructureId_fkey" FOREIGN KEY ("financeStructureId") REFERENCES "FinanceStructure"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
 

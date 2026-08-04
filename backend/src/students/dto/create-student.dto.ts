@@ -1,9 +1,19 @@
-import { IsBoolean, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { CreateStudentParentDto } from './create-student-parent.dto.js';
 
 export class CreateStudentDto {
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  admissionNumber!: string;
+  admissionNumber?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -20,6 +30,10 @@ export class CreateStudentDto {
   @IsOptional()
   @IsString()
   gender?: string;
+
+  @IsOptional()
+  @IsString()
+  passportPhoto?: string;
 
   @IsOptional()
   @IsBoolean()
@@ -40,4 +54,10 @@ export class CreateStudentDto {
   @IsOptional()
   @IsString()
   studentCategoryId?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateStudentParentDto)
+  parents?: CreateStudentParentDto[];
 }

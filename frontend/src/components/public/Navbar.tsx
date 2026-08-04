@@ -1,247 +1,101 @@
-import { useState } from "react";
-import { CalendarDays, Mail, Menu, Moon, PhoneCall, Sun, X, ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CalendarDays, ChevronDown, Mail, Menu, Moon, PhoneCall, Sun, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import LoginModal from "../auth/LoginModal";
+import { publicNavigation } from "../../config/publicNavigation";
 import { useTheme } from "../../context/ThemeContext";
-
-const navLinks = [
-  { label: "Home", to: "/", end: true },
-  { label: "About", to: "/about" },
-  { label: "Academics", to: "/academics" },
-  { label: "Admissions", to: "/admissions" },
-  { 
-    label: "Newsroom", 
-    to: "/newsroom",
-    dropdown: [
-      { label: "News", to: "/newsroom/news" },
-      { label: "Events", to: "/newsroom/events" },
-      { label: "Announcements", to: "/newsroom/announcements" },
-      { label: "School Updates", to: "/newsroom/updates" },
-      { label: "Media Gallery", to: "/newsroom/media" },
-    ]
-  },
-  { label: "Gallery", to: "/gallery" },
-  { label: "Contact", to: "/contact" },
-];
+import LoginModal from "../auth/LoginModal";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `text-sm font-semibold tracking-wide transition-all duration-300 ${
-    isActive 
-      ? "text-emerald-400 dark:text-emerald-300" 
-      : "text-slate-700 dark:text-white/80 hover:text-emerald-500 dark:hover:text-emerald-200"
-  }`;
+  `public-nav-link ${isActive ? "public-nav-link--active" : ""}`;
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
   const [newsroomOpen, setNewsroomOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
+  useEffect(() => {
+    setMobileOpen(false);
+    setNewsroomOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setMobileOpen(false); };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobileOpen]);
+
   return (
-    <nav className="fixed inset-x-0 top-0 z-50">
-      {/* Top info bar with glass effect */}
-      <div className="border-b border-slate-200/50 dark:border-white/10 transition-colors" style={{ 
-        background: theme === 'dark' ? 'rgba(5, 8, 15, 0.7)' : 'rgba(255, 255, 255, 0.7)',
-        backdropFilter: 'blur(20px) saturate(180%)'
-      }}>
-        <div className="site-container flex flex-wrap items-center justify-center gap-x-6 gap-y-2 py-2 text-xs sm:justify-between">
-          <p className="inline-flex items-center gap-2 text-slate-600 dark:text-white/70">
-            <CalendarDays size={14} className="text-emerald-500 dark:text-emerald-400" />
-            Admissions open for 2026 intake
-          </p>
-          <div className="flex items-center gap-5 text-slate-600 dark:text-white/70">
-            <span className="inline-flex items-center gap-2">
-              <PhoneCall size={13} className="text-emerald-500 dark:text-emerald-400" />
-              +256 312 345 678
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <Mail size={13} className="text-emerald-500 dark:text-emerald-400" />
-              info@mpumuddehs.ac.ug
-            </span>
+    <header className="public-header">
+      <div className="hidden border-b border-white/10 bg-[var(--brand-ink)] text-white md:block">
+        <div className="site-container flex h-10 items-center justify-between text-xs">
+          <p className="inline-flex items-center gap-2 text-white/75"><CalendarDays size={14} className="text-[var(--brand-gold)]" />Admissions open for the 2026 intake</p>
+          <div className="flex items-center gap-5 text-white/75">
+            <a href="tel:+256312345678" className="inline-flex items-center gap-2 hover:text-white"><PhoneCall size={13} />+256 312 345 678</a>
+            <a href="mailto:info@mpumuddehs.ac.ug" className="inline-flex items-center gap-2 hover:text-white"><Mail size={13} />info@mpumuddehs.ac.ug</a>
           </div>
         </div>
       </div>
 
-      {/* Main navbar with stronger glass effect */}
-      <div className="border-b border-slate-200/50 dark:border-white/10 transition-colors" style={{
-        background: theme === 'dark' ? 'rgba(5, 8, 15, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: 'blur(24px) saturate(200%)'
-      }}>
-        <div className="site-container flex items-center justify-between py-4">
-          <Link
-            to="/"
-            className="flex items-center gap-3 transition-transform hover:scale-105"
-            aria-label="Go to Mpumudde High School homepage"
-          >
-            <div className="glass-card-solid h-12 w-12 rounded-xl p-2">
-              <img
-                src="/logo.png"
-                alt="Mpumudde High School logo"
-                className="h-full w-full object-contain"
-              />
-            </div>
-            <div className="leading-tight">
-              <p className="text-base font-extrabold text-slate-900 dark:text-white sm:text-lg transition-colors">
-                Mpumudde High School
-              </p>
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-300 transition-colors">
-                Excellence • Discipline • Service
-              </p>
-            </div>
+      <div className="border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-[rgba(8,26,43,.94)]">
+        <div className="site-container flex h-[4.5rem] items-center justify-between gap-5">
+          <Link to="/" className="flex min-w-0 items-center gap-3" aria-label="Mpumudde High School home">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand-green)] text-xs font-black tracking-tight text-white shadow-lg shadow-emerald-900/15">MHS</span>
+            <span className="min-w-0 leading-tight">
+              <span className="block truncate text-base font-extrabold text-[var(--brand-ink)] dark:text-white sm:text-lg">Mpumudde High School</span>
+              <span className="hidden text-[.65rem] font-bold uppercase tracking-[.18em] text-[var(--brand-green)] sm:block">Excellence · Discipline · Service</span>
+            </span>
           </Link>
 
-          <div className="hidden items-center gap-6 xl:flex">
-            {navLinks.map((link) => (
-              link.dropdown ? (
-                <div 
-                  key={link.to}
-                  className="relative"
-                  onMouseEnter={() => setNewsroomOpen(true)}
-                  onMouseLeave={() => setNewsroomOpen(false)}
-                >
-                  <button
-                    className={`inline-flex items-center gap-1 text-sm font-semibold tracking-wide transition-all duration-300 ${
-                      location.pathname.startsWith('/newsroom')
-                        ? "text-emerald-400 dark:text-emerald-300"
-                        : "text-slate-700 dark:text-white/80 hover:text-emerald-500 dark:hover:text-emerald-200"
-                    }`}
-                  >
-                    {link.label}
-                    <ChevronDown size={16} className={`transition-transform ${newsroomOpen ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {newsroomOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-56 glass-card-solid rounded-xl shadow-2xl overflow-hidden">
-                      {link.dropdown.map((item) => (
-                        <NavLink
-                          key={item.to}
-                          to={item.to}
-                          className={({ isActive }) => `block px-5 py-3 text-sm font-semibold transition-all ${
-                            isActive
-                              ? "bg-emerald-400/20 text-emerald-400"
-                              : "text-slate-700 dark:text-white/80 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-emerald-500 dark:hover:text-emerald-300"
-                          }`}
-                        >
-                          {item.label}
-                        </NavLink>
-                      ))}
-                    </div>
-                  )}
+          <nav aria-label="Main navigation" className="hidden items-center gap-5 xl:flex">
+            {publicNavigation.map((item) => item.children ? (
+              <div key={item.to} className="relative" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setNewsroomOpen(false); }}>
+                <div className="flex items-center">
+                  <NavLink to={item.to} onClick={() => setNewsroomOpen(false)} className={navLinkClass}>{item.label}</NavLink>
+                  <button type="button" onClick={() => setNewsroomOpen((value) => !value)} className="ml-1 rounded-lg p-1 text-slate-500 hover:bg-slate-100 dark:text-white/65 dark:hover:bg-white/10" aria-label="Toggle Newsroom menu" aria-expanded={newsroomOpen}><ChevronDown size={15} className={`transition-transform ${newsroomOpen ? "rotate-180" : ""}`} /></button>
                 </div>
-              ) : (
-                <NavLink key={link.to} to={link.to} end={link.end} className={navLinkClass}>
-                  {link.label}
-                </NavLink>
-              )
-            ))}
+                {newsroomOpen && <div className="absolute left-0 top-full z-20 mt-3 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl dark:border-white/10 dark:bg-[var(--brand-ink)]">{item.children.map((child) => <NavLink key={child.to} to={child.to} onClick={() => setNewsroomOpen(false)} className={({ isActive }) => `block rounded-xl px-4 py-2.5 text-sm font-semibold ${isActive ? "bg-emerald-50 text-[var(--brand-green)] dark:bg-white/10" : "text-slate-700 hover:bg-slate-50 dark:text-white/75 dark:hover:bg-white/5"}`}>{child.label}</NavLink>)}</div>}
+              </div>
+            ) : <NavLink key={item.to} to={item.to} end={item.end} className={navLinkClass}>{item.label}</NavLink>)}
+          </nav>
 
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="glass-card rounded-xl p-2.5 transition-all hover:scale-110 hover:rotate-12"
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-              {theme === 'dark' ? (
-                <Sun size={18} className="text-amber-400" />
-              ) : (
-                <Moon size={18} className="text-indigo-600" />
-              )}
-            </button>
-
-            <button
-              onClick={() => setShowLogin(true)}
-              className="glass-button text-sm"
-            >
-              Portal Login
-            </button>
+          <div className="hidden items-center gap-2 xl:flex">
+            <button type="button" onClick={toggleTheme} className="public-icon-button" aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}>{theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}</button>
+            <button type="button" onClick={() => setLoginOpen(true)} className="public-primary-button">Portal Login</button>
           </div>
 
-          <button
-            className="glass-card inline-flex rounded-xl p-2 text-slate-700 dark:text-white/90 xl:hidden"
-            onClick={() => setOpen(true)}
-            aria-label="Open menu"
-          >
-            <Menu size={22} />
-          </button>
+          <button type="button" className="public-icon-button xl:hidden" onClick={() => setMobileOpen(true)} aria-label="Open navigation" aria-expanded={mobileOpen}><Menu size={22} /></button>
         </div>
       </div>
 
-      {open && (
-        <>
-          <button
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setOpen(false)}
-            aria-label="Close menu overlay"
-          />
+      <AnimatePresence>
+      {mobileOpen && <div className="fixed inset-0 z-[60] xl:hidden">
+        <motion.button type="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .22 }} className="absolute inset-0 bg-slate-950/55 backdrop-blur-sm" onClick={() => setMobileOpen(false)} aria-label="Close navigation overlay" />
+        <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "tween", duration: .3, ease: [0.22, 1, 0.36, 1] }} role="dialog" aria-modal="true" aria-label="Mobile navigation" className="absolute right-0 top-0 h-full w-[min(88vw,24rem)] overflow-y-auto bg-white p-5 shadow-2xl dark:bg-[var(--brand-ink)]">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-4 dark:border-white/10"><span className="font-bold text-[var(--brand-ink)] dark:text-white">Navigation</span><button type="button" onClick={() => setMobileOpen(false)} className="public-icon-button" aria-label="Close navigation"><X size={20} /></button></div>
+          <nav className="mt-5 space-y-1" aria-label="Mobile navigation">
+            {publicNavigation.map((item) => <div key={item.to}>
+              <div className="flex items-center">
+                <NavLink to={item.to} end={item.end} className={({ isActive }) => `min-w-0 flex-1 rounded-xl px-4 py-3 text-sm font-semibold ${isActive ? "bg-emerald-50 text-[var(--brand-green)] dark:bg-white/10" : "text-slate-700 dark:text-white/80"}`}>{item.label}</NavLink>
+                {item.children && <button type="button" onClick={() => setNewsroomOpen((value) => !value)} className="ml-1 rounded-lg p-3 text-slate-500 dark:text-white/65" aria-label="Toggle Newsroom links" aria-expanded={newsroomOpen}><ChevronDown size={17} className={`transition-transform ${newsroomOpen ? "rotate-180" : ""}`} /></button>}
+              </div>
+              {item.children && newsroomOpen && <div className="ml-4 border-l border-slate-200 pl-3 dark:border-white/10">{item.children.map((child) => <NavLink key={child.to} to={child.to} className={({ isActive }) => `block rounded-lg px-3 py-2 text-sm ${isActive ? "font-semibold text-[var(--brand-green)]" : "text-slate-600 dark:text-white/65"}`}>{child.label}</NavLink>)}</div>}
+            </div>)}
+          </nav>
+          <div className="mt-6 grid gap-3 border-t border-slate-200 pt-5 dark:border-white/10"><button type="button" onClick={toggleTheme} className="public-secondary-button justify-between">{theme === "dark" ? "Use light mode" : "Use dark mode"}{theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}</button><button type="button" onClick={() => { setMobileOpen(false); setLoginOpen(true); }} className="public-primary-button justify-center">Portal Login</button></div>
+        </motion.div>
+      </div>}
+      </AnimatePresence>
 
-          <div className="glass-card-solid fixed right-0 top-0 h-screen w-[82vw] max-w-sm overflow-y-auto border-l border-slate-200/50 dark:border-white/10 p-5 shadow-2xl">
-            <div className="mb-6 flex items-center justify-between">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-600 dark:text-white/60">
-                Navigation
-              </p>
-              <button
-                onClick={() => setOpen(false)}
-                className="glass-card rounded-lg p-2 text-slate-700 dark:text-white/90"
-                aria-label="Close menu"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="space-y-2">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  end={link.end}
-                  onClick={() => setOpen(false)}
-                  className={({ isActive }) =>
-                    `block rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      isActive
-                        ? "glass-card-solid text-emerald-600 dark:text-emerald-300"
-                        : "text-slate-700 dark:text-white/80 hover:bg-slate-200/50 dark:hover:bg-white/5"
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-            </div>
-
-            {/* Theme Toggle in Mobile Menu */}
-            <div className="my-4 border-t border-slate-200/50 dark:border-white/10 pt-4">
-              <button
-                onClick={toggleTheme}
-                className="glass-card w-full rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all hover:bg-slate-200/50 dark:hover:bg-white/5 flex items-center justify-between"
-              >
-                <span className="text-slate-700 dark:text-white/80">
-                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                </span>
-                {theme === 'dark' ? (
-                  <Sun size={18} className="text-amber-400" />
-                ) : (
-                  <Moon size={18} className="text-indigo-600" />
-                )}
-              </button>
-            </div>
-
-            <button
-              onClick={() => {
-                setOpen(false);
-                setShowLogin(true);
-              }}
-              className="glass-button mt-6 w-full text-sm"
-            >
-              Portal Login
-            </button>
-          </div>
-        </>
-      )}
-
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
-    </nav>
+      {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} />}
+    </header>
   );
 }

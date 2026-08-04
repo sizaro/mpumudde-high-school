@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import FinanceService from "../../../services/financeService";
 import type { Payment } from "../../../types/api.types";
+import { formatKampalaDateTime } from "../../../utils/kampalaDateTime";
 
 export default function PaymentHistory() {
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -62,7 +63,7 @@ export default function PaymentHistory() {
                   <td className="px-6 py-4 text-sm text-slate-700">
                     {payment.student ? `${payment.student.firstName} ${payment.student.lastName}` : payment.studentId}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-700">{new Date(payment.date).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-sm text-slate-700">{formatKampalaDateTime(payment.date)}</td>
                   <td className="px-6 py-4 text-sm text-slate-700">UGX {payment.amount.toLocaleString()}</td>
                   <td className="px-6 py-4 text-sm text-slate-700">{payment.method}</td>
                 </tr>

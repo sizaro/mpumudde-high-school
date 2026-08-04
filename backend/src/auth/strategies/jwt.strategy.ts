@@ -21,33 +21,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
 
 
+    const cookieExtractor = (request: any) => request?.cookies?.access_token;
+    const authHeaderExtractor = (request: any) => {
+      const authorization = request?.headers?.authorization || request?.headers?.Authorization;
+      if (typeof authorization === 'string' && authorization.startsWith('Bearer ')) {
+        return authorization.slice(7);
+      }
+      return null;
+    };
+
     super({
-
-
-      jwtFromRequest:
-
-        ExtractJwt.fromExtractors([
-
-          (request) => {
-
-            return request?.cookies?.access_token;
-
-          },
-
-        ]),
-
-
-
+      jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor, authHeaderExtractor]),
       ignoreExpiration: false,
-
-
-
-      secretOrKey:
-
-        configService.getOrThrow<string>('JWT_SECRET'),
-
-
-
+      secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
     });
 
 

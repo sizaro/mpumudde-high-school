@@ -1,0 +1,21 @@
+import { CalendarCheck, Wallet } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import ChildTabs from './ChildTabs';
+import { useParentDashboard } from './ParentDashboardContext';
+
+const money = (value: number) => `UGX ${value.toLocaleString()}`;
+
+export default function ParentChildren() {
+  const { data, loading, error } = useParentDashboard();
+  if (loading) return <p className="text-slate-600">Loading children…</p>;
+  if (error || !data) return <p className="rounded-2xl bg-red-50 p-4 text-red-700">{error || 'No parent dashboard data is available.'}</p>;
+  const student = data.student;
+  return <div className="space-y-6"><div><h1 className="text-3xl font-bold">Children</h1><p className="mt-2 text-sm text-slate-500">School-maintained, read-only information for every child linked to your account.</p></div><ChildTabs />
+    {student ? <><section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"><div className="flex flex-col gap-5 sm:flex-row sm:items-center"><div className="h-24 w-24 overflow-hidden rounded-full bg-slate-200">{student.profile.passportPhoto ? <img src={student.profile.passportPhoto} alt="" className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-2xl font-bold text-slate-500">{student.profile.firstName[0]}</div>}</div><div><h2 className="text-2xl font-bold">{student.profile.firstName} {student.profile.lastName}</h2><p className="mt-1 text-slate-500">{student.profile.admissionNumber}</p><p className="mt-1 text-sm text-slate-500">{student.profile.className || 'No class'} · {student.profile.academicYear || 'No academic year'}</p></div></div><p className="mt-5 rounded-2xl bg-blue-50 p-4 text-sm text-blue-800">This profile is maintained by the school. Contact the administration if any student information is incorrect.</p></section>
+      <div className="grid gap-6 xl:grid-cols-2"><section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"><div className="flex items-center justify-between"><div><h2 className="text-xl font-semibold">Recent attendance</h2><p className="mt-1 text-sm text-slate-500">Latest records for {student.profile.firstName}</p></div><CalendarCheck className="text-blue-600" /></div><div className="mt-5 space-y-2">{student.attendance.slice(0, 5).map((record, index) => <div key={`${record.date}-${index}`} className="flex items-center justify-between rounded-2xl bg-slate-50 p-3 text-sm"><div><p className="font-medium">{record.subject || 'School attendance'}</p><p className="text-xs text-slate-500">{record.date ? new Date(record.date).toLocaleDateString() : 'No date'}</p></div><Status value={record.status} /></div>)}{student.attendance.length === 0 && <p className="text-sm text-slate-500">No attendance records available.</p>}</div><Link to="../attendance" className="mt-5 inline-flex rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white">Open attendance and filters</Link></section>
+      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"><div className="flex items-center justify-between"><div><h2 className="text-xl font-semibold">Finance snapshot</h2><p className="mt-1 text-sm text-slate-500">Current charge position</p></div><Wallet className="text-blue-600" /></div><div className="mt-5 space-y-3"><Row label="Expected" value={money(student.finance.totalExpected)} /><Row label="Paid" value={money(student.finance.totalPaid)} /><Row label="Balance" value={money(student.finance.outstandingBalance)} /></div><Link to="../finance" className="mt-5 inline-flex rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white">Open full finance account</Link></section></div></> : <p className="rounded-3xl border bg-white p-6 text-slate-500">Select a child to view their information.</p>}
+  </div>;
+}
+
+function Row({ label, value }: { label: string; value: string }) { return <div className="flex justify-between rounded-2xl bg-slate-50 p-4"><span className="text-slate-600">{label}</span><strong>{value}</strong></div>; }
+function Status({ value }: { value: string }) { const status = value.toUpperCase(); return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${status === 'PRESENT' ? 'bg-emerald-100 text-emerald-800' : status === 'LATE' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'}`}>{value}</span>; }

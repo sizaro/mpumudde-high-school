@@ -1,12 +1,11 @@
-import { prisma } from "./prisma.js";
-import { seedRoles } from "./roles.seed.js";
-import { seedPermissions } from "./permissions.seed.js";
-import { seedRolePermissions } from "./role-permissions.seed.js";
-import { seedDirector } from "./director.seed.js";
-
+import { prisma } from './prisma.js';
+import { seedRoles } from './roles.seed.js';
+import { seedPermissions } from './permissions.seed.js';
+import { seedRolePermissions } from './role-permissions.seed.js';
+import { seedDirector } from './director.seed.js';
+import { seedDocumentCategories } from './document-categories.seed.js';
 
 async function main() {
-
   await seedRoles();
 
   await seedPermissions();
@@ -15,21 +14,16 @@ async function main() {
 
   await seedDirector();
 
+  await seedDocumentCategories();
 }
 
-
 main()
+  .catch((error) => {
+    console.error(error);
 
-.catch((error)=>{
+    process.exit(1);
+  })
 
-  console.error(error);
-
-  process.exit(1);
-
-})
-
-.finally(async()=>{
-
-  await prisma.$disconnect();
-
-});
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

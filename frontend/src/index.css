@@ -3,6 +3,11 @@
 @layer base {
   /* CSS Variables for Theme System */
   :root {
+    --brand-ink: #081a2b;
+    --brand-green: #0f8a5f;
+    --brand-gold: #d9a21b;
+    --brand-cyan: #168ca4;
+    --public-header-height: 4.5rem;
     /* Light Theme Colors */
     --bg-primary: 255, 255, 255;
     --bg-secondary: 249, 250, 251;
@@ -34,9 +39,7 @@
   :root body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
-    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #ffffff 100%) fixed;
-    background-attachment: fixed;
-    background-size: cover;
+    background: #f8fafc;
     color: rgb(71, 85, 105);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -45,7 +48,7 @@
 
   /* Ultra Dark Theme Background - MUCH DARKER! */
   .dark body {
-    background: linear-gradient(135deg, #05080f 0%, #0a0f19 50%, #05080f 100%) fixed;
+    background: #050d16;
     color: rgb(255, 255, 255);
   }
 
@@ -55,8 +58,174 @@
   }
 
   a {
-    transition: all 0.3s;
+    transition-property: color, background-color, border-color, opacity, transform;
+    transition-duration: 200ms;
   }
+}
+
+@layer components {
+  .public-site {
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    background: linear-gradient(180deg, rgba(248, 250, 252, .96), rgba(255, 255, 255, .98));
+  }
+
+  .dark .public-site {
+    background: linear-gradient(180deg, #07111d, #050d16);
+  }
+
+  .public-main { padding-top: var(--public-header-height); }
+  .public-header { position: fixed; inset: 0 0 auto; z-index: 50; }
+
+  .public-ambient {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .public-ambient__glow {
+    position: absolute;
+    width: min(34rem, 70vw);
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    filter: blur(100px);
+    opacity: .08;
+  }
+
+  .public-ambient__glow--one { top: 42rem; left: -15rem; background: var(--brand-green); }
+  .public-ambient__glow--two { top: 125rem; right: -18rem; background: var(--brand-cyan); }
+  .dark .public-ambient__glow { opacity: .11; }
+
+  .home-section {
+    padding-block: clamp(4rem, 7vw, 6.5rem);
+  }
+
+  .public-nav-link {
+    position: relative;
+    padding-block: .7rem;
+    font-size: .875rem;
+    font-weight: 650;
+    color: rgb(51 65 85);
+  }
+
+  .dark .public-nav-link { color: rgb(226 232 240 / .82); }
+  .public-nav-link:hover, .public-nav-link--active { color: var(--brand-green); }
+  .public-nav-link--active::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 .25rem;
+    height: 2px;
+    border-radius: 99px;
+    background: var(--brand-green);
+  }
+
+  .public-icon-button {
+    display: inline-flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: .9rem;
+    border: 1px solid rgb(226 232 240);
+    color: rgb(51 65 85);
+    background: rgb(255 255 255 / .8);
+  }
+
+  .public-icon-button:hover { border-color: rgb(148 163 184); background: rgb(248 250 252); }
+  .dark .public-icon-button { border-color: rgb(255 255 255 / .12); color: white; background: rgb(255 255 255 / .05); }
+
+  .public-primary-button, .public-secondary-button {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: .55rem;
+    border-radius: 9999px;
+    padding: .7rem 1.25rem;
+    font-size: .875rem;
+    font-weight: 700;
+  }
+
+  .public-primary-button { background: var(--brand-green); color: white; box-shadow: 0 12px 30px rgb(15 138 95 / .2); }
+  .public-primary-button:hover { background: #0b724f; transform: translateY(-1px); }
+  .public-secondary-button { border: 1px solid rgb(203 213 225); background: rgb(255 255 255 / .7); color: var(--brand-ink); }
+  .dark .public-secondary-button { border-color: rgb(255 255 255 / .15); background: rgb(255 255 255 / .05); color: white; }
+
+  .skip-link {
+    position: fixed;
+    left: 1rem;
+    top: -5rem;
+    z-index: 100;
+    border-radius: .75rem;
+    background: var(--brand-ink);
+    padding: .75rem 1rem;
+    color: white;
+    font-weight: 700;
+  }
+
+  .skip-link:focus { top: 1rem; }
+
+  .public-video-control {
+    display: inline-flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid rgb(255 255 255 / .24);
+    background: rgb(5 15 25 / .58);
+    color: white;
+    backdrop-filter: blur(10px);
+  }
+
+  .public-video-control:hover { background: rgb(5 15 25 / .8); }
+
+  .public-content-card {
+    position: relative;
+    border-radius: 1.5rem;
+    border: 1px solid rgb(226 232 240 / .9);
+    background: rgb(255 255 255 / .92);
+    padding: 1.5rem;
+    box-shadow: 0 18px 45px rgb(15 23 42 / .06);
+  }
+
+  .public-content-card:hover { border-color: rgb(15 138 95 / .28); transform: translateY(-2px); }
+  .dark .public-content-card { border-color: rgb(255 255 255 / .1); background: rgb(255 255 255 / .045); box-shadow: none; }
+
+  .public-feature-icon {
+    display: inline-flex;
+    height: 3rem;
+    width: 3rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background: rgb(15 138 95 / .1);
+    color: var(--brand-green);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (min-width: 768px) {
+  :root { --public-header-height: 7rem; }
+}
+
+@media (min-width: 1024px) and (max-height: 780px) {
+  .public-hero__inner { padding-block: 1.25rem; }
+  .public-hero__eyebrow { padding-block: .4rem; }
+  .public-hero__title { margin-top: .75rem; font-size: clamp(2.65rem, 7vh, 3.35rem); }
+  .public-hero__copy { margin-top: .65rem; max-width: 44rem; font-size: .95rem; line-height: 1.55; }
+  .public-hero__actions { margin-top: 1rem; }
+  .public-hero__proof { margin-top: 1.25rem; padding-top: .8rem; }
 }
 
 @layer utilities {
@@ -64,7 +233,7 @@
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-    max-width: 80rem;
+    max-width: 76rem;
     padding-left: 1rem;
     padding-right: 1rem;
   }
@@ -87,7 +256,7 @@
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-    max-width: 80rem;
+    max-width: 76rem;
     padding: 4rem 1rem;
   }
 
@@ -174,7 +343,7 @@
 
   @media (min-width: 768px) {
     .section-title {
-      font-size: 3rem;
+      font-size: clamp(2.25rem, 4vw, 3rem);
     }
   }
 
@@ -183,7 +352,7 @@
     margin-top: 1rem;
     max-width: 48rem;
     font-size: 1rem;
-    line-height: 2;
+    line-height: 1.75;
     transition: color 0.3s ease;
   }
 

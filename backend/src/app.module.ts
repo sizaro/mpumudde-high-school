@@ -14,11 +14,15 @@ import { RolesModule } from './roles/roles.module.js';
 import { TeachingAssignmentsModule } from './teaching-assignments/teaching-assignments.module.js';
 import { DashboardModule } from './dashboard/dashboard.module.js';
 import { SetupModule } from './setup/setup.module.js';
+import { UploadModule } from './upload/upload.module.js';
+import { DocumentCategoriesModule } from './document-categories/document-categories.module.js';
+import { ConfigModule } from '@nestjs/config';
 
 import { PrismaModule } from './prisma/prisma.module.js';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     AuthModule,
     StudentsModule,
@@ -33,6 +37,8 @@ import { PrismaModule } from './prisma/prisma.module.js';
     TeachingAssignmentsModule,
     DashboardModule,
     SetupModule,
+    UploadModule,
+    DocumentCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

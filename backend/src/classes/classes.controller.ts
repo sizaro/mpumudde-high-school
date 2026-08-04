@@ -1,34 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+﻿import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ClassesService } from './classes.service.js';
 import { CreateClassDto } from './dto/create-class.dto.js';
 import { UpdateClassDto } from './dto/update-class.dto.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { Roles } from '../common/decorators/roles.decorator.js';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('SUPER_ADMIN')
 @Controller('classes')
 export class ClassesController {
   constructor(private readonly classesService: ClassesService) {}
 
   @Post()
-  create(@Body() createClassDto: CreateClassDto) {
-    return this.classesService.create(createClassDto);
-  }
+  create(@Body() dto: CreateClassDto) { return this.classesService.create(dto); }
 
   @Get()
-  findAll() {
-    return this.classesService.findAll();
-  }
+  findAll() { return this.classesService.findAll(); }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.classesService.findOne(+id);
-  }
+  findOne(@Param('id') id: string) { return this.classesService.findOne(id); }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClassDto: UpdateClassDto) {
-    return this.classesService.update(+id, updateClassDto);
-  }
+  update(@Param('id') id: string, @Body() dto: UpdateClassDto) { return this.classesService.update(id, dto); }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.classesService.remove(+id);
-  }
+  remove(@Param('id') id: string) { return this.classesService.remove(id); }
 }

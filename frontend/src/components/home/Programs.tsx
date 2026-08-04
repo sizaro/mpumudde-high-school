@@ -55,7 +55,7 @@ const programs = [
 
 export default function Programs() {
   return (
-    <section className="py-24">
+    <section className="home-section">
       <AnimatedSection delay={0.15}>
       <div className="site-container">
 

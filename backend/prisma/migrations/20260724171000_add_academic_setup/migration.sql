@@ -1,14 +1,14 @@
-﻿-- DropIndex
-DROP INDEX "Term_name_key";
+-- DropIndex
+DROP INDEX IF EXISTS "Term_name_key";
 
 -- AlterTable
-ALTER TABLE "Payment" ADD COLUMN     "financeStructureId" TEXT;
+ALTER TABLE "Payment" ADD COLUMN IF NOT EXISTS     "financeStructureId" TEXT;
 
 -- AlterTable
-ALTER TABLE "Student" ADD COLUMN     "academicYearId" TEXT,
-ADD COLUMN     "classId" TEXT,
-ADD COLUMN     "studentCategoryId" TEXT,
-ADD COLUMN     "termId" TEXT;
+ALTER TABLE "Student" ADD COLUMN IF NOT EXISTS     "academicYearId" TEXT,
+ADD COLUMN IF NOT EXISTS     "classId" TEXT,
+ADD COLUMN IF NOT EXISTS     "studentCategoryId" TEXT,
+ADD COLUMN IF NOT EXISTS     "termId" TEXT;
 
 -- AlterTable
 ALTER TABLE "Term" ADD COLUMN     "academicYearId" TEXT NOT NULL,

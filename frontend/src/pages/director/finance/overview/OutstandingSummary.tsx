@@ -1,0 +1,6 @@
+import type { FinanceSummary } from "../../../../services/financeOverviewService";
+
+export default function OutstandingSummary({ summary }: { summary: FinanceSummary }) {
+  const items = [["Fully paid", summary.outstandingSummary.fullyPaid, "text-emerald-600"], ["Partially paid", summary.outstandingSummary.partiallyPaid, "text-amber-600"], ["Not paid", summary.outstandingSummary.unpaid, "text-rose-600"]] as const;
+  return <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"><h3 className="font-semibold text-slate-900">Student account status</h3><div className="mt-5 grid gap-3 sm:grid-cols-3">{items.map(([label, value, color]) => <div key={label} className="rounded-2xl bg-slate-50 p-4"><p className={`text-2xl font-bold ${color}`}>{value}</p><p className="mt-1 text-sm text-slate-600">{label}</p></div>)}</div><div className="mt-4 flex flex-wrap justify-between gap-3 border-t border-slate-100 pt-4 text-sm"><span className="text-slate-600">Students with balances: <b>{summary.outstandingSummary.studentsWithBalances}</b></span><span className="text-rose-600">Overdue: <b>UGX {summary.outstandingSummary.overdueBalances.toLocaleString()}</b></span><span className="text-violet-600">Upcoming salaries: <b>UGX {summary.upcomingStaffSalaryObligations.toLocaleString()}</b></span></div></section>;
+}

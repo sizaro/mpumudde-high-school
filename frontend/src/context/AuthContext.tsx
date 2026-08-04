@@ -1,414 +1,62 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-
-
-import type { ReactNode } from "react";
-
-
-import AuthService from "../services/authService";
-
-
-import type {
-  User,
-  LoginDto,
-} from "../types/auth";
-
-
-
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
+import AuthService from '../services/authService';
+import type { LoginDto, User } from '../types/auth';
 
 interface AuthContextType {
-
-
   user: User | null;
-
-
   loading: boolean;
-
-
   isAuthenticated: boolean;
-
-
-
-  login: (
-
-    loginDto: LoginDto
-
-  ) => Promise<User>;
-
-
-
+  login: (loginDto: LoginDto) => Promise<User>;
   logout: () => void;
-
-
-
-  hasRole: (
-
-    role: string
-
-  ) => boolean;
-
-
-
-  hasPermission: (
-
-    permission: string
-
-  ) => boolean;
-
-
-
+  hasRole: (role: string) => boolean;
+  hasPermission: (permission: string) => boolean;
 }
 
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
-
-
-
-const AuthContext = createContext<
-
-  AuthContextType | undefined
-
->(undefined);
-
-
-
-
-
-
-interface Props {
-
-  children: ReactNode;
-
-}
-
-
-
-
-
-
-
-export function AuthProvider({
-
-  children,
-
-}: Props) {
-
-
-
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-
-
-
   const [loading, setLoading] = useState(true);
 
-
-
-
-
-
   useEffect(() => {
-
-
-    async function loadUser() {
-
-
-      try {
-
-
-        const currentUser =
-
-          await AuthService.me();
-
-
-
-        setUser(currentUser);
-
-
-
-      }
-
-
-      catch {
-
-
-        setUser(null);
-
-
-      }
-
-
-      finally {
-
-
-        setLoading(false);
-
-
-      }
-
-
-    }
-
-
-
-    loadUser();
-
-
-
+    AuthService.me()
+      .then(setUser)
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
   }, []);
 
-
-
-
-
-
-
-
-
-  async function login(
-
-    loginDto: LoginDto,
-
-  ): Promise<User> {
-
-
-
+  async function login(loginDto: LoginDto): Promise<User> {
     setLoading(true);
-
-
-
     try {
-
-
-
-      const response =
-
-        await AuthService.login(loginDto);
-
-
-
-
+      const response = await AuthService.login(loginDto);
       setUser(response.user);
-
-
-
       return response.user;
-
-
-
-    }
-
-
-
-    finally {
-
-
+    } finally {
       setLoading(false);
-
-
     }
-
-
   }
-
-
-
-
-
-
-
-
 
   function logout() {
-
-
-
     setUser(null);
-
-
-
+    void AuthService.logout();
   }
 
-
-
-
-
-
-
-
-
-  function hasRole(
-
-    role: string,
-
-  ) {
-
-
-
-    return (
-
-      user?.roles.includes(role)
-
-      ?? false
-
-    );
-
-
-  }
-
-
-
-
-
-
-
-
-
-  function hasPermission(
-
-    permission: string,
-
-  ) {
-
-
-
-    return (
-
-      user?.permissions.includes(permission)
-
-      ?? false
-
-    );
-
-
-  }
-
-
-
-
-
-
-
-
-
-  const value = useMemo(
-
-
-    () => ({
-
-
-
-      user,
-
-
-
-      loading,
-
-
-
-      isAuthenticated: !!user,
-
-
-
-      login,
-
-
-
-      logout,
-
-
-
-      hasRole,
-
-
-
-      hasPermission,
-
-
-
-    }),
-
-
-
-    [
-
-
-      user,
-
-
-      loading,
-
-
-    ],
-
-
-
-  );
-
-
-
-
-
-
-
-
-  return (
-
-
-    <AuthContext.Provider
-
-      value={value}
-
-    >
-
-
-      {children}
-
-
-    </AuthContext.Provider>
-
-
-  );
-
-
+  const value = useMemo<AuthContextType>(() => ({
+    user,
+    loading,
+    isAuthenticated: Boolean(user),
+    login,
+    logout,
+    hasRole: (role) => user?.roles.includes(role) ?? false,
+    hasPermission: (permission) => user?.permissions.includes(permission) ?? false,
+  }), [user, loading]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-
-
-
-
-
-
-
-
 export function useAuth() {
-
-
-
   const context = useContext(AuthContext);
-
-
-
-  if (!context) {
-
-
-    throw new Error(
-
-      "useAuth must be used inside AuthProvider",
-
-    );
-
-
-  }
-
-
-
+  if (!context) throw new Error('useAuth must be used inside AuthProvider');
   return context;
-
-
-
 }

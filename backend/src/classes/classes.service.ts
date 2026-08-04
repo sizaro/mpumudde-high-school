@@ -1,26 +1,33 @@
-import { Injectable } from '@nestjs/common';
+﻿import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateClassDto } from './dto/create-class.dto.js';
 import { UpdateClassDto } from './dto/update-class.dto.js';
 
 @Injectable()
 export class ClassesService {
-  create(createClassDto: CreateClassDto) {
-    return 'This action adds a new class';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(dto: CreateClassDto) {
+    return this.prisma.schoolClass.create({ data: { name: dto.name, isActive: dto.isActive ?? true } });
   }
 
-  findAll() {
-    return `This action returns all classes`;
+  async findAll() {
+    return this.prisma.schoolClass.findMany({ orderBy: { name: 'asc' } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} class`;
+  async findOne(id: string) {
+    const c = await this.prisma.schoolClass.findUnique({ where: { id } });
+    if (!c) throw new NotFoundException('Class not found');
+    return c;
   }
 
-  update(id: number, updateClassDto: UpdateClassDto) {
-    return `This action updates a #${id} class`;
+  async update(id: string, dto: UpdateClassDto) {
+    await this.findOne(id);
+    return this.prisma.schoolClass.update({ where: { id }, data: dto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} class`;
+  async remove(id: string) {
+    await this.findOne(id);
+    return this.prisma.schoolClass.delete({ where: { id } });
   }
 }

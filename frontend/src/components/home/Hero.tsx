@@ -1,147 +1,184 @@
-import { ArrowRight, GraduationCap, BookOpen, Users, Trophy } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowRight,
+  BookOpenCheck,
+  MapPin,
+  Pause,
+  Play,
+  ShieldCheck,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
+import { gsap } from "gsap";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { heroVideo, getVideoProps } from "../../config/videos";
+
+const heroPoster =
+  "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1800&q=88";
+const heroVideo =
+  import.meta.env.VITE_PUBLIC_HERO_VIDEO_URL ||
+  "https://res.cloudinary.com/dp76nuyie/video/upload/v1785771683/mhstrial_geiacr.mp4";
 
 export default function Hero() {
-  const videoProps = getVideoProps(heroVideo);
-  
+  const rootRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(true);
+  const [muted, setMuted] = useState(true);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (reduceMotion) {
+      videoRef.current?.pause();
+      setPlaying(false);
+      return;
+    }
+    const context = gsap.context(() => {
+      gsap.from("[data-hero-reveal]", {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+      });
+      gsap.fromTo(
+        "[data-hero-orb]",
+        { x: -14, y: 4 },
+        {
+          x: 16,
+          y: -8,
+          duration: 7,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        },
+      );
+    }, rootRef);
+    return () => context.revert();
+  }, []);
+
+  const togglePlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) void video.play().catch(() => setPlaying(false));
+    else video.pause();
+  };
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    setMuted(video.muted);
+  };
+
   return (
-    <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+    <section
+      ref={rootRef}
+      className="public-hero relative flex min-h-[calc(100svh-var(--public-header-height))] items-center overflow-hidden bg-[var(--brand-ink)]"
+    >
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster={heroPoster}
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        className="absolute inset-0 h-full w-full object-cover"
+        aria-label="Mpumudde High School campus life"
+      >
+        <source src={heroVideo} type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(4,18,31,.96)_0%,rgba(4,18,31,.82)_52%,rgba(4,18,31,.42)_100%)]" />
+      <div
+        data-hero-orb
+        className="absolute -left-20 top-1/3 h-44 w-44 rounded-full bg-emerald-400/12 blur-[85px]"
+        aria-hidden="true"
+      />
 
-      {/* Video Background with Fallback */}
-      <div className="absolute inset-0">
-        <video
-          {...videoProps}
-          className="w-full h-full object-cover"
-        >
-          {heroVideo.sources.map((source, index) => (
-            <source key={index} src={source.src} type={source.type} />
-          ))}
-          {/* Fallback image if video fails */}
-          <img
-            src={heroVideo.poster}
-            alt={heroVideo.title}
-            className="w-full h-full object-cover"
-          />
-        </video>
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-violet-900/80 to-slate-900/90" />
-
-      {/* Content */}
-      <div className="relative max-w-7xl mx-auto px-6 w-full">
-
-        <motion.div 
-          className="max-w-3xl"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-
-          {/* Badge with glass effect */}
-          <motion.div 
-            className="section-badge mb-8"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+      <div className="public-hero__inner site-container relative py-12 sm:py-14 lg:py-10 xl:py-12">
+        <div className="max-w-3xl">
+          <p
+            data-hero-reveal
+            className="public-hero__eyebrow inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[.18em] text-emerald-200 backdrop-blur-md"
           >
-            Excellence • Discipline • Service
-          </motion.div>
-
-          {/* Heading with gradient */}
-          <motion.h1 
-            className="text-5xl md:text-7xl font-extrabold leading-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            Excellence · Discipline · Service
+          </p>
+          <h1
+            data-hero-reveal
+            className="public-hero__title mt-5 max-w-3xl text-3xl font-black leading-[1.04] tracking-[-.035em] text-white sm:text-3xl lg:text-[3.5rem] xl:text-6xl"
           >
-            <span className="block bg-gradient-to-r from-white via-cyan-100 to-white bg-clip-text text-transparent">
-              Building Tomorrow's
-            </span>
-            <span className="block bg-gradient-to-r from-emerald-300 via-cyan-300 to-emerald-300 bg-clip-text text-transparent">
-              Leaders Today
-            </span>
-          </motion.h1>
-
-          {/* Description */}
-          <motion.p 
-            className="mt-8 text-lg md:text-xl text-slate-700 dark:text-white/80 leading-8 max-w-2xl"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+            Learning that shapes character, purpose, and possibility.
+          </h1>
+          <p
+            data-hero-reveal
+            className="public-hero__copy mt-4 max-w-2xl text-base leading-7 text-slate-200 lg:text-[1.05rem]"
           >
-            Welcome to Mpumudde High School, where academic excellence,
-            innovation, discipline, and character development prepare every
-            learner for a successful future.
-          </motion.p>
-
-          {/* Buttons */}
-          <motion.div 
-            className="flex flex-wrap gap-5 mt-10"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
+            Mpumudde High School nurtures knowledgeable, disciplined and
+            responsible learners through committed teaching, leadership, talent
+            development and a safe school community.
+          </p>
+          <div
+            data-hero-reveal
+            className="public-hero__actions mt-6 flex w-full max-w-md items-center gap-2 sm:gap-3"
           >
-
             <Link
               to="/admissions"
-              className="group glass-button flex items-center gap-2 text-base"
+              className="public-primary-button min-w-0 flex-1 justify-center whitespace-nowrap px-3 py-2.5 text-xs sm:px-6 sm:py-3 sm:text-sm"
             >
-              Apply Now
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+              <span className="sm:hidden">Admissions</span>
+              <span className="hidden sm:inline">Explore admissions</span>
+              <ArrowRight size={16} />
             </Link>
-
             <Link
               to="/about"
-              className="glass-card rounded-full px-8 py-4 font-semibold text-slate-900 dark:text-white transition-all hover:bg-slate-200/30 dark:hover:bg-white/10"
+              className="inline-flex min-h-11 min-w-0 flex-1 items-center justify-center whitespace-nowrap rounded-full border border-white/25 bg-white/8 px-3 py-2.5 text-xs font-bold text-white backdrop-blur-md hover:bg-white/15 sm:min-h-12 sm:px-6 sm:py-3 sm:text-sm"
             >
-              Explore Our School
+              <span className="sm:hidden">Our school</span>
+              <span className="hidden sm:inline">Discover our school</span>
             </Link>
+          </div>
+        </div>
 
-          </motion.div>
-
-        </motion.div>
-
-        {/* Bottom Cards with enhanced glass effect */}
-        <motion.div 
-          className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-24"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
+        <div
+          data-hero-reveal
+          className="public-hero__proof mt-8 grid max-w-3xl gap-3 border-t border-white/15 pt-4 text-sm text-slate-200 sm:grid-cols-3"
         >
-
-          {[
-            { icon: GraduationCap, value: "98%", label: "Examination Success", color: "emerald" },
-            { icon: Users, value: "1,500+", label: "Students", color: "cyan" },
-            { icon: BookOpen, value: "40+", label: "Qualified Teachers", color: "violet" },
-            { icon: Trophy, value: "30+", label: "Years of Excellence", color: "amber" }
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              className="glass-card-solid p-6 transition-transform hover:scale-105"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
-            >
-              <stat.icon
-                className={`text-${stat.color}-400 mb-3`}
-                size={32}
-              />
-
-              <h3 className="text-slate-900 dark:text-white text-3xl font-bold">
-                {stat.value}
-              </h3>
-
-              <p className="text-slate-600 dark:text-white/70">
-                {stat.label}
-              </p>
-            </motion.div>
-          ))}
-
-        </motion.div>
-
+          <span className="flex items-center gap-2">
+            <BookOpenCheck size={18} className="text-emerald-300" />
+            O-Level and A-Level
+          </span>
+          <span className="flex items-center gap-2">
+            <ShieldCheck size={18} className="text-emerald-300" />
+            Learning with discipline
+          </span>
+          <span className="flex items-center gap-2">
+            <MapPin size={18} className="text-emerald-300" />
+            Jinja, Uganda
+          </span>
+        </div>
       </div>
 
+      <div className="absolute bottom-5 right-5 flex gap-2">
+        <button
+          type="button"
+          onClick={toggleMute}
+          className="public-video-control"
+          aria-label={muted ? "Turn hero video sound on" : "Mute hero video"}
+        >
+          {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+        </button>
+        <button
+          type="button"
+          onClick={togglePlayback}
+          className="public-video-control"
+          aria-label={playing ? "Pause hero video" : "Play hero video"}
+        >
+          {playing ? <Pause size={18} /> : <Play size={18} />}
+        </button>
+      </div>
     </section>
   );
 }

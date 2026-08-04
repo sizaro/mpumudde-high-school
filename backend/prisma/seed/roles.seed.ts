@@ -42,6 +42,10 @@ export async function seedRoles() {
       description:
         "Bursar access role.",
     },
+    {
+      name: "FINANCE_CLERK",
+      description: "Finance clerk access for recording payments and expenses.",
+    },
   ];
 
 
