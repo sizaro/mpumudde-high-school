@@ -54,7 +54,7 @@ export default function TeacherLayout() {
           </NavLink>
         ))}
       </aside>
-      <main className="flex-1 overflow-auto bg-gray-50 min-w-0 w-full p-1 md:p-6">
+      <main className="flex-1 overflow-auto bg-gray-50">
         <div className="border-b bg-white p-3 lg:hidden">
           <button
             type="button"

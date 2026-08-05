@@ -1,7 +1,7 @@
+import { NavLink, Outlet } from "react-router-dom";
 import { Bell, LogOut, ChevronDown, Menu, X } from "lucide-react";
+import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { useEffect, useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 const navButton = ({ isActive }: { isActive: boolean }) =>
   `block rounded-3xl px-4 py-3 text-left text-sm transition duration-200 ease-out ${
@@ -19,15 +19,9 @@ const subNavButton = ({ isActive }: { isActive: boolean }) =>
 
 export default function DirectorLayout() {
   const { logout } = useAuth();
-  const location = useLocation();
-
   const [studentsMenuOpen, setStudentsMenuOpen] = useState(false);
   const [teachersMenuOpen, setTeachersMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-
-  useEffect(() => {
-    setMobileNavOpen(false);
-  }, [location.pathname]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -146,7 +140,7 @@ export default function DirectorLayout() {
           </div>
         </aside>
 
-        <main className="min-w-0 flex-1 overflow-x-hidden p-1 md:p-6 lg:p-10">
+        <main className="min-w-0 flex-1 overflow-x-hidden p-6 lg:p-10">
           <div className="mb-6 flex justify-between">
             <button
               type="button"
@@ -176,7 +170,7 @@ export default function DirectorLayout() {
             </div>
           </div>
 
-          <div className="animate-[fadeIn_0.4s_ease-out] rounded-3xl border border-slate-200 bg-white/90 p-1 md:p-8 shadow-xl shadow-slate-900/5 backdrop-blur-sm">
+          <div className="animate-[fadeIn_0.4s_ease-out] rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-xl shadow-slate-900/5 backdrop-blur-sm">
             <Outlet />
           </div>
         </main>
