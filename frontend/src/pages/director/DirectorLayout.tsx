@@ -140,7 +140,7 @@ export default function DirectorLayout() {
           </div>
         </aside>
 
-        <main className="min-w-0 flex-1 overflow-x-hidden p-6 lg:p-10">
+        <main className="min-w-0 flex-1 overflow-x-hidden p-1 lg:p-10">
           <div className="mb-6 flex justify-between">
             <button
               type="button"
@@ -170,7 +170,7 @@ export default function DirectorLayout() {
             </div>
           </div>
 
-          <div className="animate-[fadeIn_0.4s_ease-out] rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-xl shadow-slate-900/5 backdrop-blur-sm">
+          <div className="animate-[fadeIn_0.4s_ease-out] rounded-3xl border border-slate-200 bg-white/90 p-2 md:p-6 shadow-xl shadow-slate-900/5 backdrop-blur-sm">
             <Outlet />
           </div>
         </main>
