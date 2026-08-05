@@ -1,7 +1,7 @@
-import { NavLink, Outlet } from "react-router-dom";
 import { Bell, LogOut, ChevronDown, Menu, X } from "lucide-react";
-import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 const navButton = ({ isActive }: { isActive: boolean }) =>
   `block rounded-3xl px-4 py-3 text-left text-sm transition duration-200 ease-out ${
@@ -19,9 +19,15 @@ const subNavButton = ({ isActive }: { isActive: boolean }) =>
 
 export default function DirectorLayout() {
   const { logout } = useAuth();
+  const location = useLocation();
+
   const [studentsMenuOpen, setStudentsMenuOpen] = useState(false);
   const [teachersMenuOpen, setTeachersMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
