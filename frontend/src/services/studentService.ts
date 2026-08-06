@@ -7,24 +7,48 @@ class StudentService {
     return data;
   }
 
-  async createStudent(student: Omit<Student, 'id' | 'createdAt' | 'updatedAt'>): Promise<Student> {
+  async createStudent(
+    student: Omit<Student, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Student> {
     const { data } = await api.post<Student>("/students", student);
     return data;
   }
 
-  async uploadPhoto(file: FormData): Promise<{ url: string; originalName?: string; mimeType?: string; fileSize?: number; fileExtension?: string }> {
-    const { data } = await api.post<{ url: string; originalName?: string; mimeType?: string; fileSize?: number; fileExtension?: string }>("/upload", file, { headers: { "Content-Type": "multipart/form-data" } });
+  async uploadPhoto(
+    file: FormData,
+  ): Promise<{
+    url: string;
+    originalName?: string;
+    mimeType?: string;
+    fileSize?: number;
+    fileExtension?: string;
+  }> {
+    const { data } = await api.post<{
+      url: string;
+      originalName?: string;
+      mimeType?: string;
+      fileSize?: number;
+      fileExtension?: string;
+    }>("/upload", file, { headers: { "Content-Type": "multipart/form-data" } });
     return data;
   }
 
-  async createCompleteRegistration(payload: Record<string, unknown>): Promise<{ student: Student; guardianCredentials?: { email: string; temporaryPassword: string } }> {
-    const { data } = await api.post<{ student: Student; guardianCredentials?: { email: string; temporaryPassword: string } }>("/students/complete-registration", payload);
+  async createCompleteRegistration(
+    payload: Record<string, unknown>,
+  ): Promise<{
+    student: Student;
+    guardianCredentials?: { email: string; temporaryPassword: string };
+  }> {
+    const { data } = await api.post<{
+      student: Student;
+      guardianCredentials?: { email: string; temporaryPassword: string };
+    }>("/students/complete-registration", payload);
     return data;
   }
 
   async updateStudent(
     id: string,
-    student: Partial<Omit<Student, 'id' | 'createdAt' | 'updatedAt'>>,
+    student: Partial<Omit<Student, "id" | "createdAt" | "updatedAt">>,
   ): Promise<Student> {
     const { data } = await api.patch<Student>(`/students/${id}`, student);
     return data;
@@ -40,8 +64,9 @@ class StudentService {
     return data;
   }
 
-  async deleteStudent(studentId: string): Promise<void> {
-    await api.delete(`/students/${studentId}`);
+  async deleteStudent(studentId: string) {
+    const { data } = await api.delete(`/students/${studentId}`);
+    return data;
   }
 }
 

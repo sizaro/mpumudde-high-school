@@ -38,6 +38,18 @@ class AttendanceService {
     return data;
   }
 
+  async updateRecordStatus(
+    sessionId: string,
+    recordId: string,
+    status: AttendanceRecordInput["status"],
+  ) {
+    const { data } = await api.patch(
+      `/attendance/sessions/${sessionId}/records/${recordId}`,
+      { status },
+    );
+    return data;
+  }
+
   async getStudentsForClass(classId: string) {
     const { data } = await api.get(`/attendance/students/class/${classId}`);
     return data;

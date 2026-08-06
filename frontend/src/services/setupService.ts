@@ -1,12 +1,45 @@
 import api from "../api/axios";
 
-export type AcademicYear = { id: string; name: string; isActive: boolean; createdAt?: string; updatedAt?: string };
-export type Term = { id: string; name: string; academicYearId: string; academicYear?: AcademicYear; feeAmount: number; startDate?: string; endDate?: string; isActive: boolean };
+export type AcademicYear = {
+  id: string;
+  name: string;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+export type Term = {
+  id: string;
+  name: string;
+  academicYearId: string;
+  academicYear?: AcademicYear;
+  feeAmount: number;
+  startDate?: string;
+  endDate?: string;
+  isActive: boolean;
+};
 export type SchoolClass = { id: string; name: string; isActive: boolean };
 export type StudentCategory = { id: string; name: string; isActive: boolean };
 export type FeeType = { id: string; name: string; isActive: boolean };
-export type FinanceStructure = { id: string; academicYearId: string; termId: string; classId: string; studentCategoryId: string; feeTypeId: string; expectedAmount: number; academicYear?: AcademicYear; term?: Term; schoolClass?: SchoolClass; studentCategory?: StudentCategory; feeType?: FeeType };
-export type Subject = { id: string; name: string; code?: string; isActive: boolean };
+export type FinanceStructure = {
+  id: string;
+  academicYearId: string;
+  termId: string;
+  classId: string;
+  studentCategoryId: string;
+  feeTypeId: string;
+  expectedAmount: number;
+  academicYear?: AcademicYear;
+  term?: Term;
+  schoolClass?: SchoolClass;
+  studentCategory?: StudentCategory;
+  feeType?: FeeType;
+};
+export type Subject = {
+  id: string;
+  name: string;
+  code?: string;
+  isActive: boolean;
+};
 
 class SetupService {
   async getAcademicYears(): Promise<AcademicYear[]> {
@@ -14,13 +47,25 @@ class SetupService {
     return data;
   }
 
-  async createAcademicYear(payload: { name: string; isActive?: boolean }): Promise<AcademicYear> {
-    const { data } = await api.post<AcademicYear>("/setup/academic-years", payload);
+  async createAcademicYear(payload: {
+    name: string;
+    isActive?: boolean;
+  }): Promise<AcademicYear> {
+    const { data } = await api.post<AcademicYear>(
+      "/setup/academic-years",
+      payload,
+    );
     return data;
   }
 
-  async updateAcademicYear(id: string, payload: Partial<AcademicYear>): Promise<AcademicYear> {
-    const { data } = await api.patch<AcademicYear>(`/setup/academic-years/${id}`, payload);
+  async updateAcademicYear(
+    id: string,
+    payload: Partial<AcademicYear>,
+  ): Promise<AcademicYear> {
+    const { data } = await api.patch<AcademicYear>(
+      `/setup/academic-years/${id}`,
+      payload,
+    );
     return data;
   }
 
@@ -29,7 +74,14 @@ class SetupService {
     return data;
   }
 
-  async createTerm(payload: { academicYearId: string; name: string; feeAmount?: number; startDate?: string; endDate?: string; isActive?: boolean }): Promise<Term> {
+  async createTerm(payload: {
+    academicYearId: string;
+    name: string;
+    feeAmount?: number;
+    startDate?: string;
+    endDate?: string;
+    isActive?: boolean;
+  }): Promise<Term> {
     const { data } = await api.post<Term>("/setup/terms", payload);
     return data;
   }
@@ -44,18 +96,29 @@ class SetupService {
     return data;
   }
 
-  async createClass(payload: { name: string; isActive?: boolean }): Promise<SchoolClass> {
+  async createClass(payload: {
+    name: string;
+    isActive?: boolean;
+  }): Promise<SchoolClass> {
     const { data } = await api.post<SchoolClass>("/setup/classes", payload);
     return data;
   }
 
-  async updateClass(id: string, payload: Partial<SchoolClass>): Promise<SchoolClass> {
-    const { data } = await api.patch<SchoolClass>(`/setup/classes/${id}`, payload);
+  async updateClass(
+    id: string,
+    payload: Partial<SchoolClass>,
+  ): Promise<SchoolClass> {
+    const { data } = await api.patch<SchoolClass>(
+      `/setup/classes/${id}`,
+      payload,
+    );
     return data;
   }
 
   async ensureStandardTerms(academicYearId: string): Promise<Term[]> {
-    const { data } = await api.post<Term[]>(`/setup/academic-years/${academicYearId}/ensure-terms`);
+    const { data } = await api.post<Term[]>(
+      `/setup/academic-years/${academicYearId}/ensure-terms`,
+    );
     return data;
   }
 
@@ -64,23 +127,50 @@ class SetupService {
     return data;
   }
 
-  async createSubject(payload: { name: string; code?: string; isActive?: boolean }): Promise<Subject> {
+  async createSubject(payload: {
+    name: string;
+    code?: string;
+    isActive?: boolean;
+  }): Promise<Subject> {
     const { data } = await api.post<Subject>("/subjects", payload);
     return data;
   }
 
+  async updateSubject(id: string, payload: Partial<Subject>): Promise<Subject> {
+    const { data } = await api.patch<Subject>(`/subjects/${id}`, payload);
+    return data;
+  }
+
+  async removeSubject(id: string): Promise<void> {
+    await api.delete(`/subjects/${id}`);
+  }
+
   async getStudentCategories(): Promise<StudentCategory[]> {
-    const { data } = await api.get<StudentCategory[]>("/setup/student-categories");
+    const { data } = await api.get<StudentCategory[]>(
+      "/setup/student-categories",
+    );
     return data;
   }
 
-  async createStudentCategory(payload: { name: string; isActive?: boolean }): Promise<StudentCategory> {
-    const { data } = await api.post<StudentCategory>("/setup/student-categories", payload);
+  async createStudentCategory(payload: {
+    name: string;
+    isActive?: boolean;
+  }): Promise<StudentCategory> {
+    const { data } = await api.post<StudentCategory>(
+      "/setup/student-categories",
+      payload,
+    );
     return data;
   }
 
-  async updateStudentCategory(id: string, payload: Partial<StudentCategory>): Promise<StudentCategory> {
-    const { data } = await api.patch<StudentCategory>(`/setup/student-categories/${id}`, payload);
+  async updateStudentCategory(
+    id: string,
+    payload: Partial<StudentCategory>,
+  ): Promise<StudentCategory> {
+    const { data } = await api.patch<StudentCategory>(
+      `/setup/student-categories/${id}`,
+      payload,
+    );
     return data;
   }
 
@@ -89,28 +179,52 @@ class SetupService {
     return data;
   }
 
-  async createFeeType(payload: { name: string; isActive?: boolean }): Promise<FeeType> {
+  async createFeeType(payload: {
+    name: string;
+    isActive?: boolean;
+  }): Promise<FeeType> {
     const { data } = await api.post<FeeType>("/setup/fee-types", payload);
     return data;
   }
 
   async updateFeeType(id: string, payload: Partial<FeeType>): Promise<FeeType> {
-    const { data } = await api.patch<FeeType>(`/setup/fee-types/${id}`, payload);
+    const { data } = await api.patch<FeeType>(
+      `/setup/fee-types/${id}`,
+      payload,
+    );
     return data;
   }
 
   async getFinanceStructures(): Promise<FinanceStructure[]> {
-    const { data } = await api.get<FinanceStructure[]>("/setup/finance-structures");
+    const { data } = await api.get<FinanceStructure[]>(
+      "/setup/finance-structures",
+    );
     return data;
   }
 
-  async createFinanceStructure(payload: { academicYearId: string; termId: string; classId: string; studentCategoryId: string; feeTypeId: string; expectedAmount: number }): Promise<FinanceStructure> {
-    const { data } = await api.post<FinanceStructure>("/setup/finance-structures", payload);
+  async createFinanceStructure(payload: {
+    academicYearId: string;
+    termId: string;
+    classId: string;
+    studentCategoryId: string;
+    feeTypeId: string;
+    expectedAmount: number;
+  }): Promise<FinanceStructure> {
+    const { data } = await api.post<FinanceStructure>(
+      "/setup/finance-structures",
+      payload,
+    );
     return data;
   }
 
-  async updateFinanceStructure(id: string, payload: Partial<FinanceStructure>): Promise<FinanceStructure> {
-    const { data } = await api.patch<FinanceStructure>(`/setup/finance-structures/${id}`, payload);
+  async updateFinanceStructure(
+    id: string,
+    payload: Partial<FinanceStructure>,
+  ): Promise<FinanceStructure> {
+    const { data } = await api.patch<FinanceStructure>(
+      `/setup/finance-structures/${id}`,
+      payload,
+    );
     return data;
   }
 

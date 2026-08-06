@@ -25,6 +25,7 @@ import StudentProfile from "../pages/director/students/Profile";
 import DirectorFinancePage from "../pages/director/finance";
 import PaymentHistory from "../pages/director/finance/History";
 import DirectorReports from "../pages/director/reports/Reports";
+import DirectorAttendancePage from "../pages/director/attendance";
 import AcademicSetupPage from "../pages/director/setup/AcademicSetupPage";
 import AccountManagement from "../pages/director/AccountManagement";
 import GuardiansPage from "../pages/director/guardians";
@@ -56,8 +57,8 @@ import ChangePassword from "../pages/teacher/ChangePassword";
 import MyFinance from "../pages/teacher/MyFinance";
 import FinancePortal from "../pages/finance/FinancePortal";
 
-  import ParentLayout from "../pages/parent/ParentLayout";
-  import ParentDashboard from "../pages/parent/Dashboard";
+import ParentLayout from "../pages/parent/ParentLayout";
+import ParentDashboard from "../pages/parent/Dashboard";
 import ParentChildren from "../pages/parent/Children";
 import ParentAttendance from "../pages/parent/Attendance";
 import ParentFinance from "../pages/parent/Finance";
@@ -73,9 +74,15 @@ export default function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/academics" element={<Academics />} />
         <Route path="/admissions" element={<Admissions />} />
-        <Route path="/news" element={<Navigate to="/newsroom/news" replace />} />
+        <Route
+          path="/news"
+          element={<Navigate to="/newsroom/news" replace />}
+        />
         <Route path="/calendar" element={<Calendar />} />
-        <Route path="/events" element={<Navigate to="/newsroom/events" replace />} />
+        <Route
+          path="/events"
+          element={<Navigate to="/newsroom/events" replace />}
+        />
         <Route path="/newsroom" element={<Newsroom />} />
         <Route path="/newsroom/search" element={<NewsroomSearch />} />
         <Route path="/newsroom/articles/:slug" element={<NewsroomArticle />} />
@@ -108,6 +115,7 @@ export default function AppRoutes() {
         <Route path="academic-setup" element={<AcademicSetupPage />} />
         <Route path="account-management" element={<AccountManagement />} />
         <Route path="reports" element={<DirectorReports />} />
+        <Route path="attendance" element={<DirectorAttendancePage />} />
         {/* Teacher management */}
         <Route path="teachers" element={<TeacherListPage />} />
         <Route path="teachers/create" element={<CreateTeacherWizard />} />

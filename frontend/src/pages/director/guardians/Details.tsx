@@ -40,6 +40,11 @@ export default function GuardianDetailsPage() {
   useEffect(() => {
     load().catch(() => setMessage("Unable to load guardian details."));
   }, [id]);
+  useEffect(() => {
+    if (guardian?.user?.email) {
+      setLoginEmail(guardian.user.email);
+    }
+  }, [guardian?.user?.email]);
   const activeLinks = guardian?.students.filter((link) => link.isActive) ?? [];
   const previousLinks =
     guardian?.students.filter((link) => !link.isActive) ?? [];
@@ -74,7 +79,10 @@ export default function GuardianDetailsPage() {
     )
       return;
     try {
-      const result = await ParentService.resetPortalPassword(id);
+      const result = await ParentService.resetPortalPassword(
+        id,
+        loginEmail || undefined,
+      );
       setCredentials({
         email: result.user?.email ?? "",
         temporaryPassword: result.temporaryPassword,
@@ -230,6 +238,13 @@ export default function GuardianDetailsPage() {
           {guardian.user ? (
             <div className="space-y-4">
               <Info label="Login email" value={guardian.user.email} />
+              <input
+                type="email"
+                value={loginEmail}
+                onChange={(event) => setLoginEmail(event.target.value)}
+                placeholder="Update portal email (optional)"
+                className="w-full rounded-2xl border px-4 py-3"
+              />
               <Info
                 label="Account status"
                 value={guardian.user.isActive ? "Active" : "Inactive"}
@@ -248,7 +263,7 @@ export default function GuardianDetailsPage() {
                   className="inline-flex items-center gap-2 rounded-2xl border px-4 py-2 text-sm"
                 >
                   <KeyRound size={16} />
-                  Reset password
+                  Reset password {loginEmail ? "and update email" : ""}
                 </button>
                 <button
                   onClick={() => void toggleStatus()}
