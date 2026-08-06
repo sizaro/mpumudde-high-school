@@ -12,6 +12,11 @@ export interface CreateAttendanceSessionInput {
   records: AttendanceRecordInput[];
 }
 
+export interface AttendanceBulkRecordUpdateInput {
+  recordId: string;
+  status: AttendanceRecordInput["status"];
+}
+
 class AttendanceService {
   async createSession(dto: CreateAttendanceSessionInput) {
     const { data } = await api.post("/attendance/sessions", dto);
@@ -46,6 +51,19 @@ class AttendanceService {
     const { data } = await api.patch(
       `/attendance/sessions/${sessionId}/records/${recordId}`,
       { status },
+    );
+    return data;
+  }
+
+  async bulkUpdateRecordStatuses(
+    sessionId: string,
+    records: AttendanceBulkRecordUpdateInput[],
+  ) {
+    const { data } = await api.patch(
+      `/attendance/sessions/${sessionId}/records`,
+      {
+        records,
+      },
     );
     return data;
   }

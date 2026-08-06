@@ -19,9 +19,9 @@ import NotFound from "../pages/public/NotFound";
 import DirectorDashboard from "../pages/director/Dashboard";
 import DirectorOverview from "../pages/director/Overview";
 import StudentRegister from "../pages/director/students/RegistrationWizard";
-import StudentList from "../pages/director/students/List";
+import StudentList from "../pages/director/students/List.tsx";
 import StudentStatus from "../pages/director/students/Status";
-import StudentProfile from "../pages/director/students/Profile";
+import StudentProfile from "../pages/director/students/Profile.tsx";
 import DirectorFinancePage from "../pages/director/finance";
 import PaymentHistory from "../pages/director/finance/History";
 import DirectorReports from "../pages/director/reports/Reports";
@@ -35,7 +35,7 @@ import EditGuardianPage from "../pages/director/guardians/Edit";
 
 // Director — Teacher management
 import TeacherListPage from "../pages/director/teachers/List";
-import CreateTeacherWizard from "../pages/director/teachers/CreateWizard";
+import CreateTeacherWizard from "../pages/director/teachers/CreateWizard.tsx";
 import TeacherProfileDirector from "../pages/director/teachers/Profile";
 import TeacherAssignmentsPage from "../pages/director/teachers/Assignments";
 import EditTeacherPage from "../pages/director/teachers/EditTeacher";

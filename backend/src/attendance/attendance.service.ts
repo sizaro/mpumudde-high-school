@@ -238,7 +238,9 @@ export class AttendanceService {
     const recordIds = updates.map((item) => item.recordId);
     const uniqueRecordIds = Array.from(new Set(recordIds));
     if (uniqueRecordIds.length !== recordIds.length) {
-      throw new BadRequestException("Duplicate attendance record IDs were provided.");
+      throw new BadRequestException(
+        "Duplicate attendance record IDs were provided.",
+      );
     }
 
     const existingRecords = await this.prisma.attendanceRecord.findMany({
@@ -246,7 +248,9 @@ export class AttendanceService {
       select: { id: true, attendanceSessionId: true },
     });
     if (existingRecords.length !== uniqueRecordIds.length) {
-      throw new NotFoundException("One or more attendance records were not found.");
+      throw new NotFoundException(
+        "One or more attendance records were not found.",
+      );
     }
 
     if (

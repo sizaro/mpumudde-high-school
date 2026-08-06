@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import AttendanceService from "../../../services/attendanceService";
+import AttendanceService, {
+  type AttendanceBulkRecordUpdateInput,
+} from "../../../services/attendanceService";
 
 const STATUSES = ["Present", "Absent", "Late", "Excused"] as const;
 type AttendanceStatus = (typeof STATUSES)[number];
@@ -41,7 +43,10 @@ type SessionDetails = {
 function teacherName(session: {
   teacher?: { firstName?: string; lastName?: string } | null;
 }) {
-  return `${session.teacher?.firstName ?? ""} ${session.teacher?.lastName ?? ""}`.trim() || "Unknown teacher";
+  return (
+    `${session.teacher?.firstName ?? ""} ${session.teacher?.lastName ?? ""}`.trim() ||
+    "Unknown teacher"
+  );
 }
 
 function statusClass(status: string) {
@@ -206,7 +211,9 @@ export default function DirectorAttendancePage() {
   const changedRecordIds = useMemo(() => {
     if (!selectedSession) return [] as string[];
     return (selectedSession.records ?? [])
-      .filter((record) => drafts[record.id] && drafts[record.id] !== record.status)
+      .filter(
+        (record) => drafts[record.id] && drafts[record.id] !== record.status,
+      )
       .map((record) => record.id);
   }, [selectedSession, drafts]);
 
@@ -215,7 +222,9 @@ export default function DirectorAttendancePage() {
     setError("");
     setInfo("");
     try {
-      const data = (await AttendanceService.findOne(sessionId)) as SessionDetails;
+      const data = (await AttendanceService.findOne(
+        sessionId,
+      )) as SessionDetails;
       setSelectedSessionId(sessionId);
       setSelectedSession(data);
       setDrafts({});
@@ -287,11 +296,17 @@ export default function DirectorAttendancePage() {
 
     const updates = changedRecordIds.map((recordId) => {
       const status = drafts[recordId];
-      return AttendanceService.updateRecordStatus(selectedSession.id, recordId, status);
+      return AttendanceService.updateRecordStatus(
+        selectedSession.id,
+        recordId,
+        status,
+      );
     });
 
     const settled = await Promise.allSettled(updates);
-    const failed = settled.filter((result) => result.status === "rejected").length;
+    const failed = settled.filter(
+      (result) => result.status === "rejected",
+    ).length;
     const succeeded = settled.length - failed;
 
     if (succeeded > 0) {
@@ -328,6 +343,29 @@ export default function DirectorAttendancePage() {
     });
   }
 
+  function applyBulkToFiltered() {
+    if (!filteredRecords.length) return;
+    setDrafts((current) => {
+      const next = { ...current };
+      for (const record of filteredRecords) {
+        next[record.id] = bulkStatus;
+      }
+      return next;
+    });
+  }
+
+  function applyBulkToSession() {
+    const all = selectedSession?.records ?? [];
+    if (!all.length) return;
+    setDrafts((current) => {
+      const next = { ...current };
+      for (const record of all) {
+        next[record.id] = bulkStatus;
+      }
+      return next;
+    });
+  }
+
   function clearVisibleDrafts() {
     setDrafts((current) => {
       const next = { ...current };
@@ -357,23 +395,29 @@ export default function DirectorAttendancePage() {
               Back to Sessions
             </button>
             <h1 className="text-2xl font-bold text-slate-900">
-              {selectedSession?.schoolClass?.name ?? "Class"} · {" "}
+              {selectedSession?.schoolClass?.name ?? "Class"} ·{" "}
               {selectedSession?.subject?.name ?? "Subject"}
             </h1>
             <p className="mt-1 text-sm text-slate-600">
               Teacher: {teacherName(selectedSession ?? {})}
             </p>
             <p className="text-sm text-slate-500">
-              Session time: {selectedSession?.date ? new Date(selectedSession.date).toLocaleString() : "—"}
+              Session time:{" "}
+              {selectedSession?.date
+                ? new Date(selectedSession.date).toLocaleString()
+                : "—"}
             </p>
             <p className="text-sm text-slate-500">
-              Total students in session: {(selectedSession?.records ?? []).length}
+              Total students in session:{" "}
+              {(selectedSession?.records ?? []).length}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => selectedSessionId && void openSession(selectedSessionId)}
+              onClick={() =>
+                selectedSessionId && void openSession(selectedSessionId)
+              }
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"
               disabled={loadingSession || savingBulk}
             >
@@ -423,17 +467,17 @@ export default function DirectorAttendancePage() {
               </option>
             ))}
           </select>
-          <div className="flex gap-2 lg:col-span-2">
+          <div className="flex flex-wrap gap-2 lg:col-span-2">
             <select
               value={bulkStatus}
               onChange={(event) =>
                 setBulkStatus(event.target.value as AttendanceStatus)
               }
-              className="flex-1 rounded-lg border px-3 py-2"
+              className="rounded-lg border px-3 py-2"
             >
               {STATUSES.map((status) => (
                 <option key={status} value={status}>
-                  Set visible to {status}
+                  {status}
                 </option>
               ))}
             </select>
@@ -442,14 +486,28 @@ export default function DirectorAttendancePage() {
               onClick={applyBulkToVisible}
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"
             >
-              Apply
+              Apply to page
+            </button>
+            <button
+              type="button"
+              onClick={applyBulkToFiltered}
+              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"
+            >
+              Apply to filtered
+            </button>
+            <button
+              type="button"
+              onClick={applyBulkToSession}
+              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"
+            >
+              Apply to entire session
             </button>
             <button
               type="button"
               onClick={clearVisibleDrafts}
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"
             >
-              Clear
+              Clear page edits
             </button>
           </div>
         </section>
@@ -469,7 +527,10 @@ export default function DirectorAttendancePage() {
               <tbody>
                 {visibleRecords.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
+                    <td
+                      colSpan={5}
+                      className="px-4 py-8 text-center text-slate-500"
+                    >
                       No students match your filters.
                     </td>
                   </tr>
@@ -486,7 +547,9 @@ export default function DirectorAttendancePage() {
                           {record.student?.admissionNumber ?? "—"}
                         </td>
                         <td className="px-4 py-3">
-                          <span className={`rounded-full px-2 py-1 text-xs font-semibold ${statusClass(record.status)}`}>
+                          <span
+                            className={`rounded-full px-2 py-1 text-xs font-semibold ${statusClass(record.status)}`}
+                          >
                             {record.status}
                           </span>
                         </td>
@@ -496,7 +559,8 @@ export default function DirectorAttendancePage() {
                             onChange={(event) =>
                               setDrafts((current) => ({
                                 ...current,
-                                [record.id]: event.target.value as AttendanceStatus,
+                                [record.id]: event.target
+                                  .value as AttendanceStatus,
                               }))
                             }
                             className="rounded-lg border px-2 py-1"
@@ -536,21 +600,25 @@ export default function DirectorAttendancePage() {
           </div>
           <div className="flex flex-col gap-2 border-t border-slate-200 px-4 py-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
             <p>
-              Showing {filteredRecords.length === 0 ? 0 : studentPagination.start + 1}
-              -
-              {Math.min(filteredRecords.length, studentPagination.end)} of {filteredRecords.length} students
+              Showing{" "}
+              {filteredRecords.length === 0 ? 0 : studentPagination.start + 1}-
+              {Math.min(filteredRecords.length, studentPagination.end)} of{" "}
+              {filteredRecords.length} students
             </p>
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() => setStudentPage((current) => Math.max(1, current - 1))}
+                onClick={() =>
+                  setStudentPage((current) => Math.max(1, current - 1))
+                }
                 disabled={studentPagination.normalizedPage <= 1}
                 className="rounded-lg border border-slate-300 px-3 py-1.5 disabled:opacity-50"
               >
                 Previous
               </button>
               <span className="rounded-lg bg-slate-100 px-3 py-1.5">
-                Page {studentPagination.normalizedPage} of {studentPagination.totalPages}
+                Page {studentPagination.normalizedPage} of{" "}
+                {studentPagination.totalPages}
               </span>
               <button
                 type="button"
@@ -560,7 +628,8 @@ export default function DirectorAttendancePage() {
                   )
                 }
                 disabled={
-                  studentPagination.normalizedPage >= studentPagination.totalPages
+                  studentPagination.normalizedPage >=
+                  studentPagination.totalPages
                 }
                 className="rounded-lg border border-slate-300 px-3 py-1.5 disabled:opacity-50"
               >
@@ -664,7 +733,9 @@ export default function DirectorAttendancePage() {
                 </div>
                 <div className="text-left sm:text-right">
                   <p className="text-sm text-slate-500">
-                    {session.date ? new Date(session.date).toLocaleString() : "—"}
+                    {session.date
+                      ? new Date(session.date).toLocaleString()
+                      : "—"}
                   </p>
                   <button
                     type="button"
@@ -685,20 +756,23 @@ export default function DirectorAttendancePage() {
         <section className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
           <p>
             Showing {sessionPagination.start + 1}-
-            {Math.min(filteredSessions.length, sessionPagination.end)} of {" "}
+            {Math.min(filteredSessions.length, sessionPagination.end)} of{" "}
             {filteredSessions.length} sessions
           </p>
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={() => setSessionPage((current) => Math.max(1, current - 1))}
+              onClick={() =>
+                setSessionPage((current) => Math.max(1, current - 1))
+              }
               disabled={sessionPagination.normalizedPage <= 1}
               className="rounded-lg border border-slate-300 px-3 py-1.5 disabled:opacity-50"
             >
               Previous
             </button>
             <span className="rounded-lg bg-slate-100 px-3 py-1.5">
-              Page {sessionPagination.normalizedPage} of {sessionPagination.totalPages}
+              Page {sessionPagination.normalizedPage} of{" "}
+              {sessionPagination.totalPages}
             </span>
             <button
               type="button"
