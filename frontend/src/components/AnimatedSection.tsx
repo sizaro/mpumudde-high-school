@@ -9,11 +9,11 @@ interface AnimatedSectionProps {
   direction?: "up" | "down" | "left" | "right" | "fade";
 }
 
-export function AnimatedSection({
-  children,
-  className = "",
+export function AnimatedSection({ 
+  children, 
+  className = "", 
   delay = 0,
-  direction = "up",
+  direction = "up" 
 }: AnimatedSectionProps) {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
 
