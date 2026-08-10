@@ -9,48 +9,50 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common';
-import { TeachersService } from './teachers.service.js';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
-import { RolesGuard } from '../auth/guards/roles.guard.js';
-import { Roles } from '../common/decorators/roles.decorator.js';
-import { CreateTeacherDto } from './dto/create-teacher.dto.js';
-import { UpdateTeacherDto } from './dto/update-teacher.dto.js';
-import { CreateEmploymentDto } from './dto/create-employment.dto.js';
-import { CreateEmergencyContactDto } from './dto/create-emergency-contact.dto.js';
-import { UpdateEmergencyContactDto } from './dto/update-emergency-contact.dto.js';
-import { CreateMedicalInfoDto } from './dto/create-medical-info.dto.js';
-import { CreateQualificationDto } from './dto/create-qualification.dto.js';
-import { UpdateQualificationDto } from './dto/update-qualification.dto.js';
-import { CreateDocumentDto } from './dto/create-document.dto.js';
+} from "@nestjs/common";
+import { TeachersService } from "./teachers.service.js";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard.js";
+import { RolesGuard } from "../auth/guards/roles.guard.js";
+import { Roles } from "../common/decorators/roles.decorator.js";
+import { CreateTeacherDto } from "./dto/create-teacher.dto.js";
+import { UpdateTeacherDto } from "./dto/update-teacher.dto.js";
+import { CreateEmploymentDto } from "./dto/create-employment.dto.js";
+import { CreateEmergencyContactDto } from "./dto/create-emergency-contact.dto.js";
+import { UpdateEmergencyContactDto } from "./dto/update-emergency-contact.dto.js";
+import { CreateMedicalInfoDto } from "./dto/create-medical-info.dto.js";
+import { CreateQualificationDto } from "./dto/create-qualification.dto.js";
+import { UpdateQualificationDto } from "./dto/update-qualification.dto.js";
+import { CreateDocumentDto } from "./dto/create-document.dto.js";
+import { CreateTeacherAccountDto } from "./dto/create-account.dto.js";
+import { UpdateTeacherPortalAccountStatusDto } from "./dto/update-portal-account-status.dto.js";
 
 @UseGuards(JwtAuthGuard)
-@Controller('teachers')
+@Controller("teachers")
 export class TeachersController {
   constructor(private readonly teachersService: TeachersService) {}
 
   // --- Teacher: own endpoints (must come before :id routes) ----------
-  @Get('me/profile')
+  @Get("me/profile")
   getMyProfile(@Req() req: any) {
     return this.teachersService.getMyProfile(req.user.id);
   }
 
-  @Get('me/classes')
+  @Get("me/classes")
   getMyClasses(@Req() req: any) {
     return this.teachersService.getMyClasses(req.user.id);
   }
 
-  @Get('me/subjects')
+  @Get("me/subjects")
   getMySubjects(@Req() req: any) {
     return this.teachersService.getMySubjects(req.user.id);
   }
 
-  @Get('me/assignments')
+  @Get("me/assignments")
   getMyAssignments(@Req() req: any) {
     return this.teachersService.getMyAssignments(req.user.id);
   }
 
-  @Get('me/finance')
+  @Get("me/finance")
   getMyFinance(@Req() req: any) {
     return this.teachersService.getMyFinance(req.user.id);
   }
@@ -58,19 +60,22 @@ export class TeachersController {
   // --- Director: CRUD -------------------------------------------------
   @Post()
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles("SUPER_ADMIN")
   createWithAccount(
     @Body()
-    body: { personal: CreateTeacherDto },
+    body: {
+      personal: CreateTeacherDto;
+    },
   ) {
     return this.teachersService.createWithAccount(body.personal);
   }
 
-  @Post('complete-registration')
+  @Post("complete-registration")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles("SUPER_ADMIN")
   createComplete(
-    @Body() body: {
+    @Body()
+    body: {
       personal: CreateTeacherDto;
       subjectIds?: string[];
       contacts?: CreateEmergencyContactDto[];
@@ -85,139 +90,160 @@ export class TeachersController {
 
   @Get()
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles("SUPER_ADMIN")
   findAll() {
     return this.teachersService.findAll();
   }
 
-  @Get(':id')
+  @Get(":id")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  findOne(@Param('id') id: string) {
+  @Roles("SUPER_ADMIN")
+  findOne(@Param("id") id: string) {
     return this.teachersService.findOne(id);
   }
 
-  @Patch(':id/personal')
+  @Patch(":id/personal")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  updatePersonal(@Param('id') id: string, @Body() dto: UpdateTeacherDto) {
+  @Roles("SUPER_ADMIN")
+  updatePersonal(@Param("id") id: string, @Body() dto: UpdateTeacherDto) {
     return this.teachersService.updatePersonal(id, dto);
   }
 
-  @Put(':id/employment')
+  @Put(":id/employment")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  upsertEmployment(
-    @Param('id') id: string,
-    @Body() dto: CreateEmploymentDto,
-  ) {
+  @Roles("SUPER_ADMIN")
+  upsertEmployment(@Param("id") id: string, @Body() dto: CreateEmploymentDto) {
     return this.teachersService.upsertEmployment(id, dto);
   }
 
-  @Put(':id/medical')
+  @Put(":id/medical")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  upsertMedical(
-    @Param('id') id: string,
-    @Body() dto: CreateMedicalInfoDto,
-  ) {
+  @Roles("SUPER_ADMIN")
+  upsertMedical(@Param("id") id: string, @Body() dto: CreateMedicalInfoDto) {
     return this.teachersService.upsertMedicalInfo(id, dto);
   }
 
-  // --- Emergency Contacts ----------------------------------------------
-  @Post(':id/contacts')
+  @Post(":id/portal-account")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  addContact(
-    @Param('id') id: string,
-    @Body() dto: CreateEmergencyContactDto,
+  @Roles("SUPER_ADMIN")
+  createPortalAccount(
+    @Param("id") id: string,
+    @Body() dto: CreateTeacherAccountDto,
   ) {
+    return this.teachersService.createPortalAccount(id, dto.email);
+  }
+
+  @Post(":id/reset-password")
+  @UseGuards(RolesGuard)
+  @Roles("SUPER_ADMIN")
+  resetPortalPassword(
+    @Param("id") id: string,
+    @Body() dto: CreateTeacherAccountDto,
+  ) {
+    return this.teachersService.resetPortalPassword(id, dto.email);
+  }
+
+  @Patch(":id/account-status")
+  @UseGuards(RolesGuard)
+  @Roles("SUPER_ADMIN")
+  updatePortalStatus(
+    @Param("id") id: string,
+    @Body() dto: UpdateTeacherPortalAccountStatusDto,
+  ) {
+    return this.teachersService.updatePortalStatus(id, dto.isActive);
+  }
+
+  // --- Emergency Contacts ----------------------------------------------
+  @Post(":id/contacts")
+  @UseGuards(RolesGuard)
+  @Roles("SUPER_ADMIN")
+  addContact(@Param("id") id: string, @Body() dto: CreateEmergencyContactDto) {
     return this.teachersService.addEmergencyContact(id, dto);
   }
 
-  @Patch(':id/contacts/:contactId')
+  @Patch(":id/contacts/:contactId")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles("SUPER_ADMIN")
   updateContact(
-    @Param('contactId') contactId: string,
+    @Param("contactId") contactId: string,
     @Body() dto: UpdateEmergencyContactDto,
   ) {
     return this.teachersService.updateEmergencyContact(contactId, dto);
   }
 
-  @Delete(':id/contacts/:contactId')
+  @Delete(":id/contacts/:contactId")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  removeContact(@Param('contactId') contactId: string) {
+  @Roles("SUPER_ADMIN")
+  removeContact(@Param("contactId") contactId: string) {
     return this.teachersService.removeEmergencyContact(contactId);
   }
 
   // --- Qualifications --------------------------------------------------
-  @Post(':id/qualifications')
+  @Post(":id/qualifications")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles("SUPER_ADMIN")
   addQualification(
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Body() dto: CreateQualificationDto,
   ) {
     return this.teachersService.addQualification(id, dto);
   }
 
-  @Patch(':id/qualifications/:qualId')
+  @Patch(":id/qualifications/:qualId")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles("SUPER_ADMIN")
   updateQualification(
-    @Param('qualId') qualId: string,
+    @Param("qualId") qualId: string,
     @Body() dto: UpdateQualificationDto,
   ) {
     return this.teachersService.updateQualification(qualId, dto);
   }
 
-  @Delete(':id/qualifications/:qualId')
+  @Delete(":id/qualifications/:qualId")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  removeQualification(@Param('qualId') qualId: string) {
+  @Roles("SUPER_ADMIN")
+  removeQualification(@Param("qualId") qualId: string) {
     return this.teachersService.removeQualification(qualId);
   }
 
   // --- Documents -------------------------------------------------------
-  @Get(':id/documents')
+  @Get(":id/documents")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  getDocuments(@Param('id') id: string) {
+  @Roles("SUPER_ADMIN")
+  getDocuments(@Param("id") id: string) {
     return this.teachersService.getDocuments(id);
   }
 
-  @Post(':id/documents')
+  @Post(":id/documents")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles("SUPER_ADMIN")
   addDocument(
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Body() dto: CreateDocumentDto,
     @Req() req: any,
   ) {
     return this.teachersService.addDocument(id, dto, req.user.id);
   }
 
-  @Delete(':id/documents/:docId')
+  @Delete(":id/documents/:docId")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  removeDocument(@Param('docId') docId: string) {
+  @Roles("SUPER_ADMIN")
+  removeDocument(@Param("docId") docId: string) {
     return this.teachersService.removeDocument(docId);
   }
 
   // --- Status ----------------------------------------------------------
-  @Patch(':id/deactivate')
+  @Patch(":id/deactivate")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  deactivate(@Param('id') id: string) {
+  @Roles("SUPER_ADMIN")
+  deactivate(@Param("id") id: string) {
     return this.teachersService.deactivate(id);
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @UseGuards(RolesGuard)
-  @Roles('SUPER_ADMIN')
-  remove(@Param('id') id: string) {
+  @Roles("SUPER_ADMIN")
+  remove(@Param("id") id: string) {
     return this.teachersService.remove(id);
   }
 }

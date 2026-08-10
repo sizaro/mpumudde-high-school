@@ -775,6 +775,8 @@ model Student {
 
   attendanceRecords AttendanceRecord[]
 
+  enrollments StudentEnrollment[]
+
 
 
   createdAt DateTime @default(now())
@@ -846,6 +848,10 @@ model AcademicYear {
 
   students Student[]
 
+  classOfferings AcademicYearClass[]
+
+  studentEnrollments StudentEnrollment[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -876,6 +882,8 @@ model Term {
 
   students Student[]
 
+  studentEnrollments StudentEnrollment[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -896,9 +904,75 @@ model SchoolClass {
 
   financeStructures FinanceStructure[]
 
+  academicYears AcademicYearClass[]
+
+  studentEnrollments StudentEnrollment[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+}
+
+model AcademicYearClass {
+  id String @id @default(cuid())
+
+  academicYearId String
+
+  classId String
+
+  isActive Boolean @default(true)
+
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  schoolClass SchoolClass @relation(fields: [classId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicYearId, classId])
+  @@index([academicYearId, isActive])
+}
+
+model StudentEnrollment {
+  id String @id @default(cuid())
+
+  studentId String
+
+  academicYearId String
+
+  termId String
+
+  classId String
+
+  studentCategoryId String?
+
+  status String @default("ACTIVE")
+
+  isCurrent Boolean @default(true)
+
+  startedAt DateTime @default(now())
+
+  endedAt DateTime?
+
+  notes String?
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  term Term @relation(fields: [termId], references: [id])
+
+  schoolClass SchoolClass @relation(fields: [classId], references: [id])
+
+  studentCategory StudentCategory? @relation(fields: [studentCategoryId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([studentId, isCurrent])
+  @@index([academicYearId, classId])
 }
 
 model StudentCategory {
@@ -911,6 +985,8 @@ model StudentCategory {
   students Student[]
 
   financeStructures FinanceStructure[]
+
+  studentEnrollments StudentEnrollment[]
 
   createdAt DateTime @default(now())
 

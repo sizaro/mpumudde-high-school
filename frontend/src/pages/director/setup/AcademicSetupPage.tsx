@@ -41,6 +41,9 @@ export default function AcademicSetupPage() {
     financeExpectedAmount: "",
   });
   const [editingTermId, setEditingTermId] = useState<string | null>(null);
+  const [classAcademicYearId, setClassAcademicYearId] = useState("");
+  const [offeredClassIds, setOfferedClassIds] = useState<string[]>([]);
+  const [savingClassOfferings, setSavingClassOfferings] = useState(false);
 
   const loadData = async () => {
     try {
@@ -116,6 +119,30 @@ export default function AcademicSetupPage() {
     setForm((current) => ({ ...current, className: "" }));
     setMessage("Class saved.");
     await loadData();
+  };
+
+  const selectClassAcademicYear = async (academicYearId: string) => {
+    setClassAcademicYearId(academicYearId);
+    if (!academicYearId) {
+      setOfferedClassIds([]);
+      return;
+    }
+    const offerings = await SetupService.getAcademicYearClasses(academicYearId);
+    setOfferedClassIds(offerings.map((offering) => offering.classId));
+  };
+
+  const saveClassOfferings = async () => {
+    if (!classAcademicYearId) {
+      setMessage("Select an academic year before assigning classes.");
+      return;
+    }
+    setSavingClassOfferings(true);
+    try {
+      await SetupService.setAcademicYearClasses(classAcademicYearId, offeredClassIds);
+      setMessage("Classes available in the selected academic year were updated.");
+    } finally {
+      setSavingClassOfferings(false);
+    }
   };
 
   const handleCreateSubject = async () => {
@@ -304,7 +331,17 @@ export default function AcademicSetupPage() {
             </div>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold text-slate-900">Add Class</h2>
+            <h2 className="text-xl font-semibold text-slate-900">Classes offered by academic year</h2>
+            <p className="mt-2 text-sm text-slate-500">Only selected classes will be available when registering or promoting students in that year.</p>
+            <select value={classAcademicYearId} onChange={(event) => void selectClassAcademicYear(event.target.value)} className="mt-4 w-full rounded-2xl border border-slate-200 px-4 py-3">
+              <option value="">Select academic year</option>
+              {academicYears.filter((year) => year.isActive).map((year) => <option key={year.id} value={year.id}>{year.name}</option>)}
+            </select>
+            {classAcademicYearId && <div className="mt-4 grid gap-2 sm:grid-cols-2">{classes.filter((item) => item.isActive).map((item) => <label key={item.id} className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 text-sm font-medium"><input type="checkbox" checked={offeredClassIds.includes(item.id)} onChange={(event) => setOfferedClassIds((current) => event.target.checked ? [...current, item.id] : current.filter((id) => id !== item.id))} />{item.name}</label>)}</div>}
+            <button type="button" disabled={!classAcademicYearId || savingClassOfferings} onClick={() => void saveClassOfferings()} className="mt-4 w-full rounded-2xl bg-blue-700 px-5 py-3 text-sm font-medium text-white disabled:opacity-50">{savingClassOfferings ? "Saving..." : "Save classes for this year"}</button>
+
+            <div className="my-6 border-t border-slate-200" />
+            <h2 className="text-xl font-semibold text-slate-900">Add to class catalogue</h2>
             <label className="mt-4 block text-sm font-medium text-slate-700">
               Class Name
               <select value={form.className} onChange={(event) => setForm((current) => ({ ...current, className: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">

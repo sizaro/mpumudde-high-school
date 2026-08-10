@@ -184,6 +184,7 @@ export type StudentCategoryWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"StudentCategory"> | Date | string
   students?: Prisma.StudentListRelationFilter
   financeStructures?: Prisma.FinanceStructureListRelationFilter
+  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
 }
 
 export type StudentCategoryOrderByWithRelationInput = {
@@ -194,6 +195,7 @@ export type StudentCategoryOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   students?: Prisma.StudentOrderByRelationAggregateInput
   financeStructures?: Prisma.FinanceStructureOrderByRelationAggregateInput
+  studentEnrollments?: Prisma.StudentEnrollmentOrderByRelationAggregateInput
 }
 
 export type StudentCategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -207,6 +209,7 @@ export type StudentCategoryWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"StudentCategory"> | Date | string
   students?: Prisma.StudentListRelationFilter
   financeStructures?: Prisma.FinanceStructureListRelationFilter
+  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
 }, "id" | "name">
 
 export type StudentCategoryOrderByWithAggregationInput = {
@@ -239,6 +242,7 @@ export type StudentCategoryCreateInput = {
   updatedAt?: Date | string
   students?: Prisma.StudentCreateNestedManyWithoutStudentCategoryInput
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutStudentCategoryInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentCategoryInput
 }
 
 export type StudentCategoryUncheckedCreateInput = {
@@ -249,6 +253,7 @@ export type StudentCategoryUncheckedCreateInput = {
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutStudentCategoryInput
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutStudentCategoryInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentCategoryInput
 }
 
 export type StudentCategoryUpdateInput = {
@@ -259,6 +264,7 @@ export type StudentCategoryUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUpdateManyWithoutStudentCategoryNestedInput
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutStudentCategoryNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentCategoryNestedInput
 }
 
 export type StudentCategoryUncheckedUpdateInput = {
@@ -269,6 +275,7 @@ export type StudentCategoryUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutStudentCategoryNestedInput
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutStudentCategoryNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentCategoryNestedInput
 }
 
 export type StudentCategoryCreateManyInput = {
@@ -345,6 +352,22 @@ export type StudentCategoryUpdateOneWithoutStudentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentCategoryUpdateToOneWithWhereWithoutStudentsInput, Prisma.StudentCategoryUpdateWithoutStudentsInput>, Prisma.StudentCategoryUncheckedUpdateWithoutStudentsInput>
 }
 
+export type StudentCategoryCreateNestedOneWithoutStudentEnrollmentsInput = {
+  create?: Prisma.XOR<Prisma.StudentCategoryCreateWithoutStudentEnrollmentsInput, Prisma.StudentCategoryUncheckedCreateWithoutStudentEnrollmentsInput>
+  connectOrCreate?: Prisma.StudentCategoryCreateOrConnectWithoutStudentEnrollmentsInput
+  connect?: Prisma.StudentCategoryWhereUniqueInput
+}
+
+export type StudentCategoryUpdateOneWithoutStudentEnrollmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCategoryCreateWithoutStudentEnrollmentsInput, Prisma.StudentCategoryUncheckedCreateWithoutStudentEnrollmentsInput>
+  connectOrCreate?: Prisma.StudentCategoryCreateOrConnectWithoutStudentEnrollmentsInput
+  upsert?: Prisma.StudentCategoryUpsertWithoutStudentEnrollmentsInput
+  disconnect?: Prisma.StudentCategoryWhereInput | boolean
+  delete?: Prisma.StudentCategoryWhereInput | boolean
+  connect?: Prisma.StudentCategoryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentCategoryUpdateToOneWithWhereWithoutStudentEnrollmentsInput, Prisma.StudentCategoryUpdateWithoutStudentEnrollmentsInput>, Prisma.StudentCategoryUncheckedUpdateWithoutStudentEnrollmentsInput>
+}
+
 export type StudentCategoryCreateNestedOneWithoutFinanceStructuresInput = {
   create?: Prisma.XOR<Prisma.StudentCategoryCreateWithoutFinanceStructuresInput, Prisma.StudentCategoryUncheckedCreateWithoutFinanceStructuresInput>
   connectOrCreate?: Prisma.StudentCategoryCreateOrConnectWithoutFinanceStructuresInput
@@ -366,6 +389,7 @@ export type StudentCategoryCreateWithoutStudentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutStudentCategoryInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentCategoryInput
 }
 
 export type StudentCategoryUncheckedCreateWithoutStudentsInput = {
@@ -375,6 +399,7 @@ export type StudentCategoryUncheckedCreateWithoutStudentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutStudentCategoryInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentCategoryInput
 }
 
 export type StudentCategoryCreateOrConnectWithoutStudentsInput = {
@@ -400,6 +425,7 @@ export type StudentCategoryUpdateWithoutStudentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutStudentCategoryNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentCategoryNestedInput
 }
 
 export type StudentCategoryUncheckedUpdateWithoutStudentsInput = {
@@ -408,6 +434,63 @@ export type StudentCategoryUncheckedUpdateWithoutStudentsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutStudentCategoryNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentCategoryNestedInput
+}
+
+export type StudentCategoryCreateWithoutStudentEnrollmentsInput = {
+  id?: string
+  name: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentCreateNestedManyWithoutStudentCategoryInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutStudentCategoryInput
+}
+
+export type StudentCategoryUncheckedCreateWithoutStudentEnrollmentsInput = {
+  id?: string
+  name: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutStudentCategoryInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutStudentCategoryInput
+}
+
+export type StudentCategoryCreateOrConnectWithoutStudentEnrollmentsInput = {
+  where: Prisma.StudentCategoryWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCategoryCreateWithoutStudentEnrollmentsInput, Prisma.StudentCategoryUncheckedCreateWithoutStudentEnrollmentsInput>
+}
+
+export type StudentCategoryUpsertWithoutStudentEnrollmentsInput = {
+  update: Prisma.XOR<Prisma.StudentCategoryUpdateWithoutStudentEnrollmentsInput, Prisma.StudentCategoryUncheckedUpdateWithoutStudentEnrollmentsInput>
+  create: Prisma.XOR<Prisma.StudentCategoryCreateWithoutStudentEnrollmentsInput, Prisma.StudentCategoryUncheckedCreateWithoutStudentEnrollmentsInput>
+  where?: Prisma.StudentCategoryWhereInput
+}
+
+export type StudentCategoryUpdateToOneWithWhereWithoutStudentEnrollmentsInput = {
+  where?: Prisma.StudentCategoryWhereInput
+  data: Prisma.XOR<Prisma.StudentCategoryUpdateWithoutStudentEnrollmentsInput, Prisma.StudentCategoryUncheckedUpdateWithoutStudentEnrollmentsInput>
+}
+
+export type StudentCategoryUpdateWithoutStudentEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUpdateManyWithoutStudentCategoryNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutStudentCategoryNestedInput
+}
+
+export type StudentCategoryUncheckedUpdateWithoutStudentEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutStudentCategoryNestedInput
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutStudentCategoryNestedInput
 }
 
@@ -418,6 +501,7 @@ export type StudentCategoryCreateWithoutFinanceStructuresInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentCreateNestedManyWithoutStudentCategoryInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentCategoryInput
 }
 
 export type StudentCategoryUncheckedCreateWithoutFinanceStructuresInput = {
@@ -427,6 +511,7 @@ export type StudentCategoryUncheckedCreateWithoutFinanceStructuresInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutStudentCategoryInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentCategoryInput
 }
 
 export type StudentCategoryCreateOrConnectWithoutFinanceStructuresInput = {
@@ -452,6 +537,7 @@ export type StudentCategoryUpdateWithoutFinanceStructuresInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUpdateManyWithoutStudentCategoryNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentCategoryNestedInput
 }
 
 export type StudentCategoryUncheckedUpdateWithoutFinanceStructuresInput = {
@@ -461,6 +547,7 @@ export type StudentCategoryUncheckedUpdateWithoutFinanceStructuresInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutStudentCategoryNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentCategoryNestedInput
 }
 
 
@@ -471,11 +558,13 @@ export type StudentCategoryUncheckedUpdateWithoutFinanceStructuresInput = {
 export type StudentCategoryCountOutputType = {
   students: number
   financeStructures: number
+  studentEnrollments: number
 }
 
 export type StudentCategoryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   students?: boolean | StudentCategoryCountOutputTypeCountStudentsArgs
   financeStructures?: boolean | StudentCategoryCountOutputTypeCountFinanceStructuresArgs
+  studentEnrollments?: boolean | StudentCategoryCountOutputTypeCountStudentEnrollmentsArgs
 }
 
 /**
@@ -502,6 +591,13 @@ export type StudentCategoryCountOutputTypeCountFinanceStructuresArgs<ExtArgs ext
   where?: Prisma.FinanceStructureWhereInput
 }
 
+/**
+ * StudentCategoryCountOutputType without action
+ */
+export type StudentCategoryCountOutputTypeCountStudentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentEnrollmentWhereInput
+}
+
 
 export type StudentCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -511,6 +607,7 @@ export type StudentCategorySelect<ExtArgs extends runtime.Types.Extensions.Inter
   updatedAt?: boolean
   students?: boolean | Prisma.StudentCategory$studentsArgs<ExtArgs>
   financeStructures?: boolean | Prisma.StudentCategory$financeStructuresArgs<ExtArgs>
+  studentEnrollments?: boolean | Prisma.StudentCategory$studentEnrollmentsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentCategory"]>
 
@@ -542,6 +639,7 @@ export type StudentCategoryOmit<ExtArgs extends runtime.Types.Extensions.Interna
 export type StudentCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   students?: boolean | Prisma.StudentCategory$studentsArgs<ExtArgs>
   financeStructures?: boolean | Prisma.StudentCategory$financeStructuresArgs<ExtArgs>
+  studentEnrollments?: boolean | Prisma.StudentCategory$studentEnrollmentsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCategoryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudentCategoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -552,6 +650,7 @@ export type $StudentCategoryPayload<ExtArgs extends runtime.Types.Extensions.Int
   objects: {
     students: Prisma.$StudentPayload<ExtArgs>[]
     financeStructures: Prisma.$FinanceStructurePayload<ExtArgs>[]
+    studentEnrollments: Prisma.$StudentEnrollmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -955,6 +1054,7 @@ export interface Prisma__StudentCategoryClient<T, Null = never, ExtArgs extends 
   readonly [Symbol.toStringTag]: "PrismaPromise"
   students<T extends Prisma.StudentCategory$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentCategory$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   financeStructures<T extends Prisma.StudentCategory$financeStructuresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentCategory$financeStructuresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinanceStructurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studentEnrollments<T extends Prisma.StudentCategory$studentEnrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentCategory$studentEnrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1427,6 +1527,30 @@ export type StudentCategory$financeStructuresArgs<ExtArgs extends runtime.Types.
   take?: number
   skip?: number
   distinct?: Prisma.FinanceStructureScalarFieldEnum | Prisma.FinanceStructureScalarFieldEnum[]
+}
+
+/**
+ * StudentCategory.studentEnrollments
+ */
+export type StudentCategory$studentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentEnrollment
+   */
+  select?: Prisma.StudentEnrollmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentEnrollment
+   */
+  omit?: Prisma.StudentEnrollmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentEnrollmentInclude<ExtArgs> | null
+  where?: Prisma.StudentEnrollmentWhereInput
+  orderBy?: Prisma.StudentEnrollmentOrderByWithRelationInput | Prisma.StudentEnrollmentOrderByWithRelationInput[]
+  cursor?: Prisma.StudentEnrollmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentEnrollmentScalarFieldEnum | Prisma.StudentEnrollmentScalarFieldEnum[]
 }
 
 /**

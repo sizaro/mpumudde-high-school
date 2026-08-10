@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import StudentService from "../../../services/studentService";
@@ -9,6 +9,7 @@ export default function StudentList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const loadStudents = async () => {
@@ -25,6 +26,17 @@ export default function StudentList() {
     loadStudents();
   }, []);
 
+  const visibleStudents = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return students.filter((student) => {
+      if (!student.isActive) return false;
+      if (!query) return true;
+      return `${student.firstName} ${student.lastName} ${student.admissionNumber}`
+        .toLowerCase()
+        .includes(query);
+    });
+  }, [search, students]);
+
   const editStudent = async (student: Student) => {
     const firstName = window.prompt("First name", student.firstName);
     if (firstName === null) return;
@@ -36,11 +48,11 @@ export default function StudentList() {
     } catch { setError("Unable to update the student."); }
   };
 
-  const deleteStudent = async (student: Student) => {
-    if (!window.confirm(`Delete ${student.firstName} ${student.lastName}? This cannot be undone.`)) return;
+  const deactivateStudent = async (student: Student) => {
+    if (!window.confirm(`Move ${student.firstName} ${student.lastName} to inactive students? Their history will be preserved.`)) return;
     setDeletingId(student.id);
     try { await StudentService.deleteStudent(student.id); setStudents((current) => current.filter((item) => item.id !== student.id)); }
-    catch { setError("Unable to delete this student. They may have linked finance or attendance records."); }
+    catch { setError("Unable to move this student to the inactive list."); }
     finally { setDeletingId(null); }
   };
 
@@ -52,16 +64,15 @@ export default function StudentList() {
           <p className="mt-2 text-slate-500">Search or edit the current student roster.</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex w-full items-center gap-3 md:max-w-md">
           <input
             type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
             placeholder="Search students"
-            className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm"
-            disabled
+            className="min-w-0 flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm"
           />
-          <button className="rounded-2xl bg-slate-900 px-5 py-3 text-white hover:bg-slate-800" disabled>
-            Search
-          </button>
+          {search && <button type="button" onClick={() => setSearch("")} className="shrink-0 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700">Clear</button>}
         </div>
       </div>
 
@@ -88,14 +99,14 @@ export default function StudentList() {
                   {error}
                 </td>
               </tr>
-            ) : students.length === 0 ? (
+            ) : visibleStudents.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-8 text-center text-sm text-slate-500">
                   No students found.
                 </td>
               </tr>
             ) : (
-              students.map((student) => (
+              visibleStudents.map((student) => (
                 <tr key={student.id} className="hover:bg-slate-50">
                   <td className="px-6 py-4 text-sm text-slate-700">{student.admissionNumber}</td>
                   <td className="px-6 py-4 text-sm text-slate-700">{`${student.firstName} ${student.lastName}`}</td>
@@ -104,7 +115,7 @@ export default function StudentList() {
                     <div className="flex items-center gap-1">
                       <Link title="View student profile" aria-label={`View ${student.firstName} ${student.lastName}`} to={`/director/students/profile?id=${student.id}`} className="rounded-lg p-2 text-blue-700 hover:bg-blue-50"><Eye size={18} /></Link>
                       <button title="Edit student" aria-label={`Edit ${student.firstName} ${student.lastName}`} onClick={() => void editStudent(student)} className="rounded-lg p-2 text-amber-700 hover:bg-amber-50"><Pencil size={18} /></button>
-                      <button title="Delete student" aria-label={`Delete ${student.firstName} ${student.lastName}`} disabled={deletingId === student.id} onClick={() => void deleteStudent(student)} className="rounded-lg p-2 text-red-700 hover:bg-red-50 disabled:opacity-50"><Trash2 size={18} /></button>
+                      <button title="Move to inactive students" aria-label={`Deactivate ${student.firstName} ${student.lastName}`} disabled={deletingId === student.id} onClick={() => void deactivateStudent(student)} className="rounded-lg p-2 text-red-700 hover:bg-red-50 disabled:opacity-50"><Trash2 size={18} /></button>
                     </div>
                   </td>
                 </tr>

@@ -162,6 +162,16 @@ export type Term = Prisma.TermModel
  */
 export type SchoolClass = Prisma.SchoolClassModel
 /**
+ * Model AcademicYearClass
+ * 
+ */
+export type AcademicYearClass = Prisma.AcademicYearClassModel
+/**
+ * Model StudentEnrollment
+ * 
+ */
+export type StudentEnrollment = Prisma.StudentEnrollmentModel
+/**
  * Model StudentCategory
  * 
  */

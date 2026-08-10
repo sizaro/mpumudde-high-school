@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
@@ -38,6 +38,42 @@ export class SetupService {
       where: { id },
       data,
     });
+  }
+
+  async listAcademicYearClasses(academicYearId: string) {
+    return this.prisma.academicYearClass.findMany({
+      where: { academicYearId, isActive: true, schoolClass: { isActive: true } },
+      include: { schoolClass: true },
+      orderBy: { schoolClass: { name: 'asc' } },
+    });
+  }
+
+  async setAcademicYearClasses(academicYearId: string, classIds: string[]) {
+    const uniqueClassIds = [...new Set(classIds.filter(Boolean))];
+    const [academicYear, classCount] = await Promise.all([
+      this.prisma.academicYear.findUnique({ where: { id: academicYearId }, select: { id: true } }),
+      this.prisma.schoolClass.count({ where: { id: { in: uniqueClassIds }, isActive: true } }),
+    ]);
+    if (!academicYear) throw new NotFoundException('Academic year not found.');
+    if (classCount !== uniqueClassIds.length) throw new BadRequestException('One or more selected classes are unavailable.');
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.academicYearClass.updateMany({
+        where: {
+          academicYearId,
+          ...(uniqueClassIds.length ? { classId: { notIn: uniqueClassIds } } : {}),
+        },
+        data: { isActive: false },
+      });
+      for (const classId of uniqueClassIds) {
+        await tx.academicYearClass.upsert({
+          where: { academicYearId_classId: { academicYearId, classId } },
+          create: { academicYearId, classId, isActive: true },
+          update: { isActive: true },
+        });
+      }
+    });
+    return this.listAcademicYearClasses(academicYearId);
   }
 
   async createTerm(data: { academicYearId: string; name: string; feeAmount?: number; startDate?: string; endDate?: string; isActive?: boolean }) {
@@ -125,6 +161,11 @@ export class SetupService {
   }
 
   async createFinanceStructure(data: { academicYearId: string; termId: string; classId: string; studentCategoryId: string; feeTypeId: string; expectedAmount: number }) {
+    const [term, classOffering] = await Promise.all([
+      this.prisma.term.findFirst({ where: { id: data.termId, academicYearId: data.academicYearId, isActive: true }, select: { id: true } }),
+      this.prisma.academicYearClass.findFirst({ where: { academicYearId: data.academicYearId, classId: data.classId, isActive: true }, select: { id: true } }),
+    ]);
+    if (!term || !classOffering) throw new BadRequestException('Select a term and class offered in the academic year.');
     return this.prisma.financeStructure.create({
       data: {
         academicYearId: data.academicYearId,
@@ -172,18 +213,20 @@ export class SetupService {
   }
 
   async getRegistrationData() {
-    const [academicYears, terms, classes, studentCategories, feeTypes] = await Promise.all([
-      this.prisma.academicYear.findMany({ orderBy: { createdAt: 'desc' } }),
-      this.prisma.term.findMany({ include: { academicYear: true }, orderBy: { createdAt: 'desc' } }),
-      this.prisma.schoolClass.findMany({ orderBy: { createdAt: 'desc' } }),
-      this.prisma.studentCategory.findMany({ orderBy: { createdAt: 'desc' } }),
-      this.prisma.feeType.findMany({ orderBy: { createdAt: 'desc' } }),
+    const [academicYears, terms, classes, academicYearClasses, studentCategories, feeTypes] = await Promise.all([
+      this.prisma.academicYear.findMany({ where: { isActive: true }, orderBy: { createdAt: 'desc' } }),
+      this.prisma.term.findMany({ where: { isActive: true, academicYear: { isActive: true } }, include: { academicYear: true }, orderBy: { createdAt: 'desc' } }),
+      this.prisma.schoolClass.findMany({ where: { isActive: true }, orderBy: { createdAt: 'desc' } }),
+      this.prisma.academicYearClass.findMany({ where: { isActive: true, academicYear: { isActive: true }, schoolClass: { isActive: true } }, include: { schoolClass: true } }),
+      this.prisma.studentCategory.findMany({ where: { isActive: true }, orderBy: { createdAt: 'desc' } }),
+      this.prisma.feeType.findMany({ where: { isActive: true }, orderBy: { createdAt: 'desc' } }),
     ]);
 
     return {
       academicYears,
       terms,
       classes,
+      academicYearClasses,
       studentCategories,
       feeTypes,
     };

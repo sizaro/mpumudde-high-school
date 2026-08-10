@@ -30,6 +30,16 @@ export class SetupController {
     return this.setupService.updateAcademicYear(id, body);
   }
 
+  @Get('academic-years/:id/classes')
+  listAcademicYearClasses(@Param('id') id: string) {
+    return this.setupService.listAcademicYearClasses(id);
+  }
+
+  @Patch('academic-years/:id/classes')
+  setAcademicYearClasses(@Param('id') id: string, @Body() body: { classIds?: string[] }) {
+    return this.setupService.setAcademicYearClasses(id, Array.isArray(body.classIds) ? body.classIds : []);
+  }
+
   @Get('terms')
   listTerms() {
     return this.setupService.listTerms();

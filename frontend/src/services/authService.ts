@@ -7,32 +7,16 @@ import type {
   User,
 } from '../types/auth';
 
-const ACCESS_TOKEN_KEY = 'mpumudde_access_token';
-
-function setClientToken(token?: string) {
-  if (token) api.defaults.headers.common.Authorization = `Bearer ${token}`;
-  else delete api.defaults.headers.common.Authorization;
-}
-
+// Remove tokens created by older frontend releases. Authentication now uses
+// only the HTTP-only cookie issued by the backend.
 if (typeof window !== 'undefined') {
-  const storedToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-  if (storedToken) setClientToken(storedToken);
+  localStorage.removeItem('mpumudde_access_token');
+  delete api.defaults.headers.common.Authorization;
 }
 
 class AuthService {
-  hasStoredToken(): boolean {
-    return typeof window !== 'undefined' && Boolean(localStorage.getItem(ACCESS_TOKEN_KEY));
-  }
-
-  clearStoredToken(): void {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    setClientToken();
-  }
-
   async login(loginDto: LoginDto): Promise<LoginResponse> {
     const { data } = await api.post<LoginResponse>('/auth/login', loginDto);
-    localStorage.setItem(ACCESS_TOKEN_KEY, data.access_token);
-    setClientToken(data.access_token);
     return data;
   }
 
@@ -56,11 +40,7 @@ class AuthService {
   }
 
   async logout(): Promise<void> {
-    try {
-      await api.post('/auth/logout');
-    } finally {
-      this.clearStoredToken();
-    }
+    await api.post('/auth/logout');
   }
 }
 

@@ -123,17 +123,7 @@ export class AuthService {
 
 
 
-    const payload = {
-
-      sub: user.id,
-
-      email: user.email,
-
-      roles,
-
-      permissions,
-
-    };
+    const payload = { sub: user.id };
 
 
 

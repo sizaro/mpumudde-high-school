@@ -252,6 +252,7 @@ export type TermWhereInput = {
   studentTermFees?: Prisma.StudentTermFeeListRelationFilter
   financeStructures?: Prisma.FinanceStructureListRelationFilter
   students?: Prisma.StudentListRelationFilter
+  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
 }
 
 export type TermOrderByWithRelationInput = {
@@ -268,6 +269,7 @@ export type TermOrderByWithRelationInput = {
   studentTermFees?: Prisma.StudentTermFeeOrderByRelationAggregateInput
   financeStructures?: Prisma.FinanceStructureOrderByRelationAggregateInput
   students?: Prisma.StudentOrderByRelationAggregateInput
+  studentEnrollments?: Prisma.StudentEnrollmentOrderByRelationAggregateInput
 }
 
 export type TermWhereUniqueInput = Prisma.AtLeast<{
@@ -288,6 +290,7 @@ export type TermWhereUniqueInput = Prisma.AtLeast<{
   studentTermFees?: Prisma.StudentTermFeeListRelationFilter
   financeStructures?: Prisma.FinanceStructureListRelationFilter
   students?: Prisma.StudentListRelationFilter
+  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
 }, "id" | "academicYearId_name">
 
 export type TermOrderByWithAggregationInput = {
@@ -335,6 +338,7 @@ export type TermCreateInput = {
   studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
   students?: Prisma.StudentCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateInput = {
@@ -350,6 +354,7 @@ export type TermUncheckedCreateInput = {
   studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermUpdateInput = {
@@ -365,6 +370,7 @@ export type TermUpdateInput = {
   studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateInput = {
@@ -380,6 +386,7 @@ export type TermUncheckedUpdateInput = {
   studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermCreateManyInput = {
@@ -544,6 +551,20 @@ export type TermUncheckedUpdateManyWithoutAcademicYearNestedInput = {
   deleteMany?: Prisma.TermScalarWhereInput | Prisma.TermScalarWhereInput[]
 }
 
+export type TermCreateNestedOneWithoutStudentEnrollmentsInput = {
+  create?: Prisma.XOR<Prisma.TermCreateWithoutStudentEnrollmentsInput, Prisma.TermUncheckedCreateWithoutStudentEnrollmentsInput>
+  connectOrCreate?: Prisma.TermCreateOrConnectWithoutStudentEnrollmentsInput
+  connect?: Prisma.TermWhereUniqueInput
+}
+
+export type TermUpdateOneRequiredWithoutStudentEnrollmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.TermCreateWithoutStudentEnrollmentsInput, Prisma.TermUncheckedCreateWithoutStudentEnrollmentsInput>
+  connectOrCreate?: Prisma.TermCreateOrConnectWithoutStudentEnrollmentsInput
+  upsert?: Prisma.TermUpsertWithoutStudentEnrollmentsInput
+  connect?: Prisma.TermWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TermUpdateToOneWithWhereWithoutStudentEnrollmentsInput, Prisma.TermUpdateWithoutStudentEnrollmentsInput>, Prisma.TermUncheckedUpdateWithoutStudentEnrollmentsInput>
+}
+
 export type TermCreateNestedOneWithoutFinanceStructuresInput = {
   create?: Prisma.XOR<Prisma.TermCreateWithoutFinanceStructuresInput, Prisma.TermUncheckedCreateWithoutFinanceStructuresInput>
   connectOrCreate?: Prisma.TermCreateOrConnectWithoutFinanceStructuresInput
@@ -584,6 +605,7 @@ export type TermCreateWithoutStudentsInput = {
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
   studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateWithoutStudentsInput = {
@@ -598,6 +620,7 @@ export type TermUncheckedCreateWithoutStudentsInput = {
   updatedAt?: Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermCreateOrConnectWithoutStudentsInput = {
@@ -628,6 +651,7 @@ export type TermUpdateWithoutStudentsInput = {
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
   studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateWithoutStudentsInput = {
@@ -642,6 +666,7 @@ export type TermUncheckedUpdateWithoutStudentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermCreateWithoutAcademicYearInput = {
@@ -656,6 +681,7 @@ export type TermCreateWithoutAcademicYearInput = {
   studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
   students?: Prisma.StudentCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateWithoutAcademicYearInput = {
@@ -670,6 +696,7 @@ export type TermUncheckedCreateWithoutAcademicYearInput = {
   studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermCreateOrConnectWithoutAcademicYearInput = {
@@ -713,6 +740,82 @@ export type TermScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Term"> | Date | string
 }
 
+export type TermCreateWithoutStudentEnrollmentsInput = {
+  id?: string
+  name: string
+  feeAmount?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
+  studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
+  students?: Prisma.StudentCreateNestedManyWithoutTermInput
+}
+
+export type TermUncheckedCreateWithoutStudentEnrollmentsInput = {
+  id?: string
+  name: string
+  academicYearId: string
+  feeAmount?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
+}
+
+export type TermCreateOrConnectWithoutStudentEnrollmentsInput = {
+  where: Prisma.TermWhereUniqueInput
+  create: Prisma.XOR<Prisma.TermCreateWithoutStudentEnrollmentsInput, Prisma.TermUncheckedCreateWithoutStudentEnrollmentsInput>
+}
+
+export type TermUpsertWithoutStudentEnrollmentsInput = {
+  update: Prisma.XOR<Prisma.TermUpdateWithoutStudentEnrollmentsInput, Prisma.TermUncheckedUpdateWithoutStudentEnrollmentsInput>
+  create: Prisma.XOR<Prisma.TermCreateWithoutStudentEnrollmentsInput, Prisma.TermUncheckedCreateWithoutStudentEnrollmentsInput>
+  where?: Prisma.TermWhereInput
+}
+
+export type TermUpdateToOneWithWhereWithoutStudentEnrollmentsInput = {
+  where?: Prisma.TermWhereInput
+  data: Prisma.XOR<Prisma.TermUpdateWithoutStudentEnrollmentsInput, Prisma.TermUncheckedUpdateWithoutStudentEnrollmentsInput>
+}
+
+export type TermUpdateWithoutStudentEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
+  studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
+  students?: Prisma.StudentUpdateManyWithoutTermNestedInput
+}
+
+export type TermUncheckedUpdateWithoutStudentEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
+  students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
+}
+
 export type TermCreateWithoutFinanceStructuresInput = {
   id?: string
   name: string
@@ -725,6 +828,7 @@ export type TermCreateWithoutFinanceStructuresInput = {
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
   studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
   students?: Prisma.StudentCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateWithoutFinanceStructuresInput = {
@@ -739,6 +843,7 @@ export type TermUncheckedCreateWithoutFinanceStructuresInput = {
   updatedAt?: Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermCreateOrConnectWithoutFinanceStructuresInput = {
@@ -769,6 +874,7 @@ export type TermUpdateWithoutFinanceStructuresInput = {
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
   studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateWithoutFinanceStructuresInput = {
@@ -783,6 +889,7 @@ export type TermUncheckedUpdateWithoutFinanceStructuresInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermCreateWithoutStudentTermFeesInput = {
@@ -797,6 +904,7 @@ export type TermCreateWithoutStudentTermFeesInput = {
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
   students?: Prisma.StudentCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateWithoutStudentTermFeesInput = {
@@ -811,6 +919,7 @@ export type TermUncheckedCreateWithoutStudentTermFeesInput = {
   updatedAt?: Date | string
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermCreateOrConnectWithoutStudentTermFeesInput = {
@@ -841,6 +950,7 @@ export type TermUpdateWithoutStudentTermFeesInput = {
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateWithoutStudentTermFeesInput = {
@@ -855,6 +965,7 @@ export type TermUncheckedUpdateWithoutStudentTermFeesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermCreateManyAcademicYearInput = {
@@ -880,6 +991,7 @@ export type TermUpdateWithoutAcademicYearInput = {
   studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateWithoutAcademicYearInput = {
@@ -894,6 +1006,7 @@ export type TermUncheckedUpdateWithoutAcademicYearInput = {
   studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateManyWithoutAcademicYearInput = {
@@ -916,12 +1029,14 @@ export type TermCountOutputType = {
   studentTermFees: number
   financeStructures: number
   students: number
+  studentEnrollments: number
 }
 
 export type TermCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   studentTermFees?: boolean | TermCountOutputTypeCountStudentTermFeesArgs
   financeStructures?: boolean | TermCountOutputTypeCountFinanceStructuresArgs
   students?: boolean | TermCountOutputTypeCountStudentsArgs
+  studentEnrollments?: boolean | TermCountOutputTypeCountStudentEnrollmentsArgs
 }
 
 /**
@@ -955,6 +1070,13 @@ export type TermCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.StudentWhereInput
 }
 
+/**
+ * TermCountOutputType without action
+ */
+export type TermCountOutputTypeCountStudentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentEnrollmentWhereInput
+}
+
 
 export type TermSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -970,6 +1092,7 @@ export type TermSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   studentTermFees?: boolean | Prisma.Term$studentTermFeesArgs<ExtArgs>
   financeStructures?: boolean | Prisma.Term$financeStructuresArgs<ExtArgs>
   students?: boolean | Prisma.Term$studentsArgs<ExtArgs>
+  studentEnrollments?: boolean | Prisma.Term$studentEnrollmentsArgs<ExtArgs>
   _count?: boolean | Prisma.TermCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["term"]>
 
@@ -1017,6 +1140,7 @@ export type TermInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   studentTermFees?: boolean | Prisma.Term$studentTermFeesArgs<ExtArgs>
   financeStructures?: boolean | Prisma.Term$financeStructuresArgs<ExtArgs>
   students?: boolean | Prisma.Term$studentsArgs<ExtArgs>
+  studentEnrollments?: boolean | Prisma.Term$studentEnrollmentsArgs<ExtArgs>
   _count?: boolean | Prisma.TermCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TermIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1033,6 +1157,7 @@ export type $TermPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     studentTermFees: Prisma.$StudentTermFeePayload<ExtArgs>[]
     financeStructures: Prisma.$FinanceStructurePayload<ExtArgs>[]
     students: Prisma.$StudentPayload<ExtArgs>[]
+    studentEnrollments: Prisma.$StudentEnrollmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1442,6 +1567,7 @@ export interface Prisma__TermClient<T, Null = never, ExtArgs extends runtime.Typ
   studentTermFees<T extends Prisma.Term$studentTermFeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Term$studentTermFeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentTermFeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   financeStructures<T extends Prisma.Term$financeStructuresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Term$financeStructuresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinanceStructurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   students<T extends Prisma.Term$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Term$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studentEnrollments<T extends Prisma.Term$studentEnrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Term$studentEnrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1950,6 +2076,30 @@ export type Term$studentsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.StudentScalarFieldEnum | Prisma.StudentScalarFieldEnum[]
+}
+
+/**
+ * Term.studentEnrollments
+ */
+export type Term$studentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentEnrollment
+   */
+  select?: Prisma.StudentEnrollmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentEnrollment
+   */
+  omit?: Prisma.StudentEnrollmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentEnrollmentInclude<ExtArgs> | null
+  where?: Prisma.StudentEnrollmentWhereInput
+  orderBy?: Prisma.StudentEnrollmentOrderByWithRelationInput | Prisma.StudentEnrollmentOrderByWithRelationInput[]
+  cursor?: Prisma.StudentEnrollmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentEnrollmentScalarFieldEnum | Prisma.StudentEnrollmentScalarFieldEnum[]
 }
 
 /**

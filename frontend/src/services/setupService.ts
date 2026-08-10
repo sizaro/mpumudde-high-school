@@ -3,6 +3,7 @@ import api from "../api/axios";
 export type AcademicYear = { id: string; name: string; isActive: boolean; createdAt?: string; updatedAt?: string };
 export type Term = { id: string; name: string; academicYearId: string; academicYear?: AcademicYear; feeAmount: number; startDate?: string; endDate?: string; isActive: boolean };
 export type SchoolClass = { id: string; name: string; isActive: boolean };
+export type AcademicYearClass = { id: string; academicYearId: string; classId: string; isActive: boolean; schoolClass: SchoolClass };
 export type StudentCategory = { id: string; name: string; isActive: boolean };
 export type FeeType = { id: string; name: string; isActive: boolean };
 export type FinanceStructure = { id: string; academicYearId: string; termId: string; classId: string; studentCategoryId: string; feeTypeId: string; expectedAmount: number; academicYear?: AcademicYear; term?: Term; schoolClass?: SchoolClass; studentCategory?: StudentCategory; feeType?: FeeType };
@@ -21,6 +22,16 @@ class SetupService {
 
   async updateAcademicYear(id: string, payload: Partial<AcademicYear>): Promise<AcademicYear> {
     const { data } = await api.patch<AcademicYear>(`/setup/academic-years/${id}`, payload);
+    return data;
+  }
+
+  async getAcademicYearClasses(academicYearId: string): Promise<AcademicYearClass[]> {
+    const { data } = await api.get<AcademicYearClass[]>(`/setup/academic-years/${academicYearId}/classes`);
+    return data;
+  }
+
+  async setAcademicYearClasses(academicYearId: string, classIds: string[]): Promise<AcademicYearClass[]> {
+    const { data } = await api.patch<AcademicYearClass[]>(`/setup/academic-years/${academicYearId}/classes`, { classIds });
     return data;
   }
 

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import type {
   AcademicYear,
+  AcademicYearClass,
   FeeType,
-  SchoolClass,
   StudentCategory,
   Term,
 } from "../../../../services/setupService";
@@ -22,7 +22,7 @@ type Props = {
   value: FeeStructureFormValues;
   academicYears: AcademicYear[];
   terms: Term[];
-  classes: SchoolClass[];
+  academicYearClasses: AcademicYearClass[];
   studentCategories: StudentCategory[];
   feeTypes: FeeType[];
   loading: boolean;
@@ -40,7 +40,7 @@ export default function FeeStructureForm({
   value,
   academicYears,
   terms,
-  classes,
+  academicYearClasses,
   studentCategories,
   feeTypes,
   loading,
@@ -60,6 +60,12 @@ export default function FeeStructureForm({
       onChange({ ...value, termId: "" });
     }
   }, [terms, value, onChange]);
+
+  const classesForYear = value.academicYearId
+    ? academicYearClasses
+        .filter((offering) => offering.academicYearId === value.academicYearId && offering.isActive)
+        .map((offering) => offering.schoolClass)
+    : [];
 
   const submit = async () => {
     if (!canManage) return;
@@ -86,7 +92,7 @@ export default function FeeStructureForm({
           <select
             value={value.academicYearId}
             onChange={(event) =>
-              onChange({ ...value, academicYearId: event.target.value })
+              onChange({ ...value, academicYearId: event.target.value, termId: "", classId: "" })
             }
             className={selectClassName}
             disabled={!canManage}
@@ -133,10 +139,10 @@ export default function FeeStructureForm({
               onChange({ ...value, classId: event.target.value })
             }
             className={selectClassName}
-            disabled={!canManage}
+            disabled={!canManage || !value.academicYearId}
           >
-            <option value="">Select class</option>
-            {classes.map((schoolClass) => (
+            <option value="">{value.academicYearId ? "Select class" : "Select academic year first"}</option>
+            {classesForYear.map((schoolClass) => (
               <option key={schoolClass.id} value={schoolClass.id}>
                 {schoolClass.name}
               </option>
@@ -228,15 +234,13 @@ export default function FeeStructureForm({
               You can view fee structures, but this account cannot change them.
             </div>
           )}
-          {mode === "edit" ? (
-            <button
-              type="button"
-              onClick={onCancel}
-              className="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700"
-            >
-              Cancel
-            </button>
-          ) : null}
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>

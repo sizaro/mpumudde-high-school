@@ -75,6 +75,8 @@ export const ModelName = {
   AcademicYear: 'AcademicYear',
   Term: 'Term',
   SchoolClass: 'SchoolClass',
+  AcademicYearClass: 'AcademicYearClass',
+  StudentEnrollment: 'StudentEnrollment',
   StudentCategory: 'StudentCategory',
   FeeType: 'FeeType',
   FinanceStructure: 'FinanceStructure',
@@ -457,6 +459,37 @@ export const SchoolClassScalarFieldEnum = {
 } as const
 
 export type SchoolClassScalarFieldEnum = (typeof SchoolClassScalarFieldEnum)[keyof typeof SchoolClassScalarFieldEnum]
+
+
+export const AcademicYearClassScalarFieldEnum = {
+  id: 'id',
+  academicYearId: 'academicYearId',
+  classId: 'classId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AcademicYearClassScalarFieldEnum = (typeof AcademicYearClassScalarFieldEnum)[keyof typeof AcademicYearClassScalarFieldEnum]
+
+
+export const StudentEnrollmentScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  academicYearId: 'academicYearId',
+  termId: 'termId',
+  classId: 'classId',
+  studentCategoryId: 'studentCategoryId',
+  status: 'status',
+  isCurrent: 'isCurrent',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentEnrollmentScalarFieldEnum = (typeof StudentEnrollmentScalarFieldEnum)[keyof typeof StudentEnrollmentScalarFieldEnum]
 
 
 export const StudentCategoryScalarFieldEnum = {

@@ -11,7 +11,7 @@ export default function StudentStatus() {
   useEffect(() => {
     const loadStudents = async () => {
       try {
-        const data = await StudentService.getStudents();
+        const data = await StudentService.getStudents({ includeInactive: true });
         setStudents(data);
       } catch (err) {
         setError("Unable to load students.");
