@@ -29,8 +29,29 @@ function guardianLoginEmailBase(firstName: string, lastName: string): string {
 export class StudentsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private async ensurePlacementIsAvailable(
+    tx: any,
+    academicYearId: string,
+    termId: string,
+    classId: string,
+  ) {
+    const [term, classOffering] = await Promise.all([
+      tx.term.findFirst({ where: { id: termId, academicYearId, isActive: true }, select: { id: true } }),
+      tx.academicYearClass.findFirst({ where: { academicYearId, classId, isActive: true }, select: { id: true } }),
+    ]);
+    if (!term) throw new BadRequestException("The selected term does not belong to the selected academic year.");
+    if (!classOffering) throw new BadRequestException("The selected class is not offered in this academic year.");
+  }
+
   async create(createStudentDto: CreateStudentDto) {
     return this.prisma.$transaction(async (tx) => {
+      const placement = [createStudentDto.academicYearId, createStudentDto.termId, createStudentDto.classId];
+      if (placement.some(Boolean) && !placement.every(Boolean)) {
+        throw new BadRequestException("Academic year, term, and class must be selected together.");
+      }
+      if (createStudentDto.academicYearId && createStudentDto.termId && createStudentDto.classId) {
+        await this.ensurePlacementIsAvailable(tx, createStudentDto.academicYearId, createStudentDto.termId, createStudentDto.classId);
+      }
       const created = await tx.student.create({
         data: {
           admissionNumber: await this.generateStudentNumber(tx),
@@ -48,6 +69,18 @@ export class StudentsService {
           studentCategoryId: createStudentDto.studentCategoryId,
         },
       });
+
+      if (created.academicYearId && created.termId && created.classId) {
+        await tx.studentEnrollment.create({
+          data: {
+            studentId: created.id,
+            academicYearId: created.academicYearId,
+            termId: created.termId,
+            classId: created.classId,
+            studentCategoryId: created.studentCategoryId,
+          },
+        });
+      }
 
       for (const parentInput of createStudentDto.parents ?? []) {
         let parentId = parentInput.parentId;
@@ -107,6 +140,21 @@ export class StudentsService {
       additionalGuardians = [],
       payments = [],
     } = dto;
+    if (!student?.firstName?.trim() || !student?.lastName?.trim()) {
+      throw new BadRequestException("Student first name and last name are required.");
+    }
+    if (!student.dateOfBirth || !student.gender || !student.passportPhoto || !student.nationality || !student.address) {
+      throw new BadRequestException("Complete the student's personal information and photo.");
+    }
+    if (!student.academicYearId || !student.termId || !student.classId || !student.studentCategoryId) {
+      throw new BadRequestException("Academic year, term, class, and student category are required.");
+    }
+    if (!primaryGuardian?.fullName?.trim() || !primaryGuardian.relationship || !primaryGuardian.phone || !primaryGuardian.profilePhoto) {
+      throw new BadRequestException("Complete the primary guardian's name, relationship, phone number, and photo.");
+    }
+    if (!primaryGuardian.identityDocumentType || !primaryGuardian.identityDocumentUrl) {
+      throw new BadRequestException("The primary guardian's supporting identity document is required.");
+    }
     const parentRole = primaryGuardian?.fullName
       ? await this.prisma.role.findUnique({ where: { name: "PARENT" } })
       : null;
@@ -140,14 +188,15 @@ export class StudentsService {
     if (
       !normalizedPayments.some(
         (payment) =>
-          payment.feeTypeId === registrationFee.id && payment.amount > 0,
+          payment.feeTypeId === registrationFee.id && payment.amount > 0 && Boolean(payment.receiptUrl),
       )
     )
       throw new BadRequestException(
-        "Select Registration and enter its payment amount before continuing.",
+        "Select Registration, enter its payment amount, and attach receipt evidence before continuing.",
       );
     return this.prisma.$transaction(
       async (tx) => {
+        await this.ensurePlacementIsAvailable(tx, student.academicYearId!, student.termId!, student.classId!);
         const admissionNumber = await this.generateStudentNumber(tx);
         const created = await tx.student.create({
           data: {
@@ -171,6 +220,16 @@ export class StudentsService {
             academicYearId: student.academicYearId,
             termId: student.termId,
             classId: student.classId,
+            studentCategoryId: student.studentCategoryId,
+          },
+        });
+
+        await tx.studentEnrollment.create({
+          data: {
+            studentId: created.id,
+            academicYearId: student.academicYearId!,
+            termId: student.termId!,
+            classId: student.classId!,
             studentCategoryId: student.studentCategoryId,
           },
         });
@@ -461,8 +520,9 @@ export class StudentsService {
     );
   }
 
-  async findAll() {
+  async findAll(includeInactive = false) {
     return this.prisma.student.findMany({
+      where: includeInactive ? undefined : { isActive: true },
       orderBy: { createdAt: "desc" },
       include: {
         parents: {
@@ -491,6 +551,10 @@ export class StudentsService {
         term: true,
         schoolClass: true,
         studentCategory: true,
+        enrollments: {
+          include: { academicYear: true, term: true, schoolClass: true, studentCategory: true },
+          orderBy: { startedAt: "desc" },
+        },
       },
     });
   }
@@ -547,15 +611,64 @@ export class StudentsService {
       data.studentCategoryId = updateStudentDto.studentCategoryId;
     }
 
-    return this.prisma.student.update({
-      where: { id },
-      data,
-      include: {
-        academicYear: true,
-        term: true,
-        schoolClass: true,
-        studentCategory: true,
-      },
+    const existing = await this.prisma.student.findUnique({ where: { id } });
+    if (!existing) throw new BadRequestException("Student not found.");
+
+    const nextAcademicYearId = updateStudentDto.academicYearId ?? existing.academicYearId;
+    const nextTermId = updateStudentDto.termId ?? existing.termId;
+    const nextClassId = updateStudentDto.classId ?? existing.classId;
+    const nextCategoryId = updateStudentDto.studentCategoryId ?? existing.studentCategoryId;
+    const nextIsActive = updateStudentDto.isActive ?? existing.isActive;
+    const placementChanged =
+      nextAcademicYearId !== existing.academicYearId ||
+      nextTermId !== existing.termId ||
+      nextClassId !== existing.classId ||
+      nextCategoryId !== existing.studentCategoryId;
+
+    return this.prisma.$transaction(async (tx) => {
+      if (nextIsActive && (placementChanged || !existing.isActive)) {
+        if (!nextAcademicYearId || !nextTermId || !nextClassId) {
+          throw new BadRequestException("Academic year, term, and class are required for an active placement.");
+        }
+        await this.ensurePlacementIsAvailable(tx, nextAcademicYearId, nextTermId, nextClassId);
+        await tx.studentEnrollment.updateMany({
+          where: { studentId: id, isCurrent: true },
+          data: { isCurrent: false, status: "COMPLETED", endedAt: new Date() },
+        });
+        await tx.studentEnrollment.create({
+          data: {
+            studentId: id,
+            academicYearId: nextAcademicYearId,
+            termId: nextTermId,
+            classId: nextClassId,
+            studentCategoryId: nextCategoryId,
+            status: "ACTIVE",
+            isCurrent: true,
+          },
+        });
+      }
+
+      if (!nextIsActive) {
+        await tx.studentEnrollment.updateMany({
+          where: { studentId: id, isCurrent: true },
+          data: { isCurrent: false, status: "INACTIVE", endedAt: new Date() },
+        });
+      }
+
+      return tx.student.update({
+        where: { id },
+        data,
+        include: {
+          academicYear: true,
+          term: true,
+          schoolClass: true,
+          studentCategory: true,
+          enrollments: {
+            include: { academicYear: true, term: true, schoolClass: true, studentCategory: true },
+            orderBy: { startedAt: "desc" },
+          },
+        },
+      });
     });
   }
 
@@ -602,16 +715,7 @@ export class StudentsService {
   }
 
   async remove(id: string) {
-    return this.prisma.student.update({
-      where: { id },
-      data: { isActive: false },
-      include: {
-        academicYear: true,
-        term: true,
-        schoolClass: true,
-        studentCategory: true,
-      },
-    });
+    return this.update(id, { isActive: false });
   }
 
   async getFinanceSummary(id: string) {

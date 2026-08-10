@@ -5,6 +5,7 @@ import FeeStructureService, {
 } from "../../../../services/feeStructureService";
 import SetupService, {
   type AcademicYear,
+  type AcademicYearClass,
   type FeeType,
   type SchoolClass,
   type StudentCategory,
@@ -46,6 +47,7 @@ export default function FeeStructures() {
   const [academicYears, setAcademicYears] = useState<AcademicYear[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
   const [classes, setClasses] = useState<SchoolClass[]>([]);
+  const [academicYearClasses, setAcademicYearClasses] = useState<AcademicYearClass[]>([]);
   const [studentCategories, setStudentCategories] = useState<StudentCategory[]>(
     [],
   );
@@ -68,19 +70,21 @@ export default function FeeStructures() {
       setLoading(true);
       setError(null);
       try {
-        const [years, termList, classList, categories, types] =
+        const [years, termList, classList, categories, types, registration] =
           await Promise.all([
             SetupService.getAcademicYears(),
             SetupService.getTerms(),
             SetupService.getClasses(),
             SetupService.getStudentCategories(),
             SetupService.getFeeTypes(),
+            SetupService.getRegistrationData(),
           ]);
         setAcademicYears(years);
         setTerms(termList);
         setClasses(classList);
         setStudentCategories(categories);
         setFeeTypes(types);
+        setAcademicYearClasses(registration.academicYearClasses || []);
         await loadStructures();
       } catch {
         setError(
@@ -263,7 +267,7 @@ export default function FeeStructures() {
           value={filters}
           academicYears={academicYears}
           terms={terms}
-          classes={classes}
+          academicYearClasses={academicYearClasses}
           studentCategories={studentCategories}
           feeTypes={feeTypes}
           onChange={setFilters}

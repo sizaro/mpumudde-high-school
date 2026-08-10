@@ -21,6 +21,17 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 import { RolesGuard } from './guards/roles.guard.js';
 import { Roles } from '../common/decorators/roles.decorator.js';
 
+function authCookieOptions() {
+  const isProduction = process.env.NODE_ENV === 'production';
+  return {
+    httpOnly: true as const,
+    secure: isProduction,
+    sameSite: (isProduction ? 'none' : 'lax') as 'none' | 'lax',
+    maxAge: 24 * 60 * 60 * 1000,
+    path: '/',
+  };
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -34,19 +45,9 @@ export class AuthController {
     try {
       const result = await this.authService.login(loginDto);
 
-      const isProduction = process.env.NODE_ENV === 'production';
-      const cookieOptions: { httpOnly: true; secure: boolean; sameSite: 'none' | 'lax'; maxAge: number } = {
-        httpOnly: true,
-        secure: isProduction,
-        // SameSite=None requires Secure, so browsers reject it over plain http in dev
-        sameSite: isProduction ? 'none' : 'lax',
-        maxAge: 24 * 60 * 60 * 1000,
-      };
-
-      response.cookie('access_token', result.access_token, cookieOptions);
+      response.cookie('access_token', result.access_token, authCookieOptions());
 
       return {
-        access_token: result.access_token,
         user: result.user,
       };
     } catch (error) {
@@ -81,8 +82,16 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   async logout(@Req() req: any, @Res({ passthrough: true }) response: Response) {
-    const result = await this.authService.logout(req.user.id);
-    response.clearCookie('access_token');
-    return result;
+    const cookieOptions = authCookieOptions();
+    try {
+      return await this.authService.logout(req.user.id);
+    } finally {
+      response.clearCookie('access_token', {
+        httpOnly: cookieOptions.httpOnly,
+        secure: cookieOptions.secure,
+        sameSite: cookieOptions.sameSite,
+        path: cookieOptions.path,
+      });
+    }
   }
 }

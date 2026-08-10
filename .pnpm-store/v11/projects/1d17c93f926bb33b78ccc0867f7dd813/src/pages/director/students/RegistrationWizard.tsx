@@ -49,6 +49,7 @@ export default function RegistrationWizard() {
     medicalConditions: "",
     specialNeeds: "",
     medicalNotes: "",
+    noKnownMedicalIssues: false,
     parentName: "",
     parentRelationship: "",
     parentPhone: "",
@@ -68,6 +69,7 @@ export default function RegistrationWizard() {
   });
   const [registrationData, setRegistrationData] = useState<any>({ academicYears: [], terms: [], classes: [], studentCategories: [] });
   const [status, setStatus] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [payments, setPayments] = useState([{ feeTypeId: "", amount: "", method: "cash", receiptDataUrl: "", receiptName: "" }]);
   const [draftReady, setDraftReady] = useState(false);
   const [completed, setCompleted] = useState<{ studentId: string; studentName: string; guardianCredentials?: { email: string; temporaryPassword: string } } | null>(null);
@@ -107,8 +109,11 @@ export default function RegistrationWizard() {
   const progress = useMemo(() => `${step + 1}/${steps.length}`, [step]);
   const selectedAcademicYear = (registrationData.academicYears || []).find((year: any) => year.id === form.academicYearId);
   const termsForSelectedYear = (registrationData.terms || []).filter((term: any) => term.academicYearId === form.academicYearId || term.academicYear?.id === form.academicYearId || term.academicYear?.name === selectedAcademicYear?.name);
-  // Older setup records can have a legacy academic-year link; still show them instead of an empty dropdown.
-  const availableTerms = termsForSelectedYear.length ? termsForSelectedYear : (registrationData.terms || []);
+  const availableTerms = termsForSelectedYear;
+  const availableClasses = (registrationData.academicYearClasses || [])
+    .filter((offering: any) => offering.academicYearId === form.academicYearId && offering.isActive)
+    .map((offering: any) => offering.schoolClass)
+    .filter(Boolean);
 
   const updateField = (field: string, value: string) => setForm((current) => ({ ...current, [field]: value }));
 
@@ -133,10 +138,71 @@ export default function RegistrationWizard() {
     }));
   };
 
-  const handleNext = () => setStep((current) => Math.min(current + 1, steps.length - 1));
+  const validateStep = (index: number): string | null => {
+    if (index === 0) {
+      if (!form.passportPhoto) return "Add and review the student's photo before continuing.";
+      if (!form.firstName.trim() || !form.lastName.trim()) return "Enter the student's first and last name.";
+      if (!form.dateOfBirth || !form.gender || !form.nationality || !form.address.trim()) return "Complete the date of birth, gender, nationality, and address.";
+    }
+    if (index === 1) {
+      const hasMedicalInformation = Boolean(
+        form.bloodGroup || form.allergies.trim() || form.medicalConditions.trim() ||
+        form.specialNeeds.trim() || form.medicalNotes.trim(),
+      );
+      if (!hasMedicalInformation && !form.noKnownMedicalIssues) {
+        return "Record the available medical information or confirm that no medical concerns are known.";
+      }
+    }
+    if (index === 2) {
+      if (!form.parentPhoto) return "Add and review the primary guardian's photo.";
+      if (!form.parentName.trim() || !form.parentRelationship || !form.parentPhone.trim()) return "Complete the primary guardian's name, relationship, and phone number.";
+      if (!form.parentDocumentType || !form.parentDocumentDataUrl) return "Select and attach the primary guardian's supporting identity document.";
+      const incompleteAdditionalGuardian = form.guardians.some(
+        (guardian) => Boolean(guardian.name.trim() || guardian.phone.trim()) &&
+          (!guardian.name.trim() || !guardian.phone.trim()),
+      );
+      if (incompleteAdditionalGuardian) return "Every additional guardian entered must have both a name and phone number.";
+    }
+    if (index === 3 && (!form.academicYearId || !form.termId || !form.classId || !form.studentCategoryId)) {
+      return "Select the academic year, term, class, and student category.";
+    }
+    if (index === 4) {
+      const registrationFee = (registrationData.feeTypes || []).find(
+        (fee: any) => fee.name?.trim().toLowerCase() === "registration",
+      );
+      const registrationPayment = payments.find((payment) => payment.feeTypeId === registrationFee?.id);
+      if (!registrationPayment || Number(registrationPayment.amount) <= 0 || !registrationPayment.receiptDataUrl) {
+        return "Registration payment and its receipt evidence are required before continuing.";
+      }
+      const incompletePayment = payments.some(
+        (payment) => !payment.feeTypeId || Number(payment.amount) <= 0 || !payment.method || !payment.receiptDataUrl,
+      );
+      if (incompletePayment) return "Complete the fee type, amount, method, and receipt for every added payment.";
+    }
+    return null;
+  };
+
+  const handleNext = () => {
+    const error = validateStep(step);
+    if (error) {
+      setValidationError(error);
+      return;
+    }
+    setValidationError(null);
+    setStep((current) => Math.min(current + 1, steps.length - 1));
+  };
   const handleBack = () => setStep((current) => Math.max(current - 1, 0));
 
   const handleCreate = async () => {
+    for (let index = 0; index < steps.length - 1; index += 1) {
+      const error = validateStep(index);
+      if (error) {
+        setStep(index);
+        setValidationError(error);
+        return;
+      }
+    }
+    setValidationError(null);
     try {
       let studentPhoto: string | undefined;
       let parentPhoto: string | undefined;
@@ -180,7 +246,7 @@ export default function RegistrationWizard() {
         nationality: form.nationality || undefined, address: form.address || undefined, previousSchool: form.previousSchool || undefined,
         bloodGroup: form.bloodGroup || undefined, allergies: form.allergies || undefined, medicalConditions: form.medicalConditions || undefined, specialNeeds: form.specialNeeds || undefined, medicalNotes: form.medicalNotes || undefined,
       };
-      const result = await StudentService.createCompleteRegistration({ student, primaryGuardian: form.parentName ? { fullName: form.parentName, relationship: form.parentRelationship, phone: form.parentPhone, email: form.parentEmail, occupation: form.parentOccupation, address: form.parentAddress, profilePhoto: parentPhoto, identityDocumentType: form.parentDocumentType || undefined, identityDocumentUrl: parentDocumentUrl } : undefined, additionalGuardians: form.guardians, payments: paymentPayload });
+      const result = await StudentService.createCompleteRegistration({ student, primaryGuardian: form.parentName ? { fullName: form.parentName, relationship: form.parentRelationship, phone: form.parentPhone, email: form.parentEmail, occupation: form.parentOccupation, address: form.parentAddress, profilePhoto: parentPhoto, identityDocumentType: form.parentDocumentType || undefined, identityDocumentUrl: parentDocumentUrl } : undefined, additionalGuardians: form.guardians.filter((guardian) => guardian.name.trim() && guardian.phone.trim()), payments: paymentPayload });
       localStorage.removeItem(DRAFT_KEY);
       setCompleted({ studentId: result.student.id, studentName: `${result.student.firstName} ${result.student.lastName}`, guardianCredentials: result.guardianCredentials });
     } catch (error) {
@@ -214,6 +280,7 @@ export default function RegistrationWizard() {
       </div>
 
       {status ? <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{status}</div> : null}
+      {validationError ? <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{validationError}</div> : null}
 
       {step === 0 ? (
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -301,6 +368,7 @@ export default function RegistrationWizard() {
             <label className="text-sm font-medium text-slate-700">Medical Conditions<input value={form.medicalConditions} onChange={(event) => updateField("medicalConditions", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
             <label className="text-sm font-medium text-slate-700">Special Medical Needs<input value={form.specialNeeds} onChange={(event) => updateField("specialNeeds", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
             <label className="text-sm font-medium text-slate-700 md:col-span-2">Emergency Medical Notes<textarea value={form.medicalNotes} onChange={(event) => updateField("medicalNotes", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
+            <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-medium text-slate-700 md:col-span-2"><input type="checkbox" checked={form.noKnownMedicalIssues} onChange={(event) => setForm((current) => ({ ...current, noKnownMedicalIssues: event.target.checked }))} />No known allergies, medical conditions, special needs, or emergency medical concerns</label>
           </div>
         </div>
       ) : null}
@@ -369,9 +437,9 @@ export default function RegistrationWizard() {
       {step === 3 ? (
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="grid gap-4 md:grid-cols-2">
-            <label className="text-sm font-medium text-slate-700">Academic Year<select value={form.academicYearId} onChange={(event) => setForm((current) => ({ ...current, academicYearId: event.target.value, termId: "" }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select academic year</option>{(registrationData.academicYears || []).map((item: any) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+            <label className="text-sm font-medium text-slate-700">Academic Year<select value={form.academicYearId} onChange={(event) => setForm((current) => ({ ...current, academicYearId: event.target.value, termId: "", classId: "" }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select academic year</option>{(registrationData.academicYears || []).map((item: any) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
             <label className="text-sm font-medium text-slate-700">Term<select value={form.termId} disabled={!form.academicYearId} onChange={(event) => updateField("termId", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 disabled:bg-slate-100"><option value="">{form.academicYearId ? (availableTerms.length ? "Select term" : "No terms configured") : "Select academic year first"}</option>{availableTerms.map((item: any) => <option key={item.id} value={item.id}>{item.name}{item.academicYear?.name && item.academicYear?.name !== selectedAcademicYear?.name ? ` (${item.academicYear.name})` : ""}</option>)}</select></label>
-            <label className="text-sm font-medium text-slate-700">Class<select value={form.classId} onChange={(event) => updateField("classId", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select class</option>{(registrationData.classes || []).filter((c: any) => ["Senior 1", "Senior 2", "Senior 3", "Senior 4", "Senior 5", "Senior 6"].includes(c.name)).map((item: any) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+            <label className="text-sm font-medium text-slate-700">Class<select value={form.classId} disabled={!form.academicYearId} onChange={(event) => updateField("classId", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 disabled:bg-slate-100"><option value="">{form.academicYearId ? (availableClasses.length ? "Select class" : "No classes attached to this academic year") : "Select academic year first"}</option>{availableClasses.map((item: any) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
             <label className="text-sm font-medium text-slate-700">Student Category<select value={form.studentCategoryId} onChange={(event) => updateField("studentCategoryId", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select category</option>{(registrationData.studentCategories || []).map((item: any) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
           </div>
         </div>

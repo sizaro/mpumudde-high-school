@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import AuthService from '../services/authService';
 import type { LoginDto, User } from '../types/auth';
+import { AUTH_EXPIRED_EVENT } from '../api/axios';
 
 interface AuthContextType {
   user: User | null;
@@ -20,18 +21,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!AuthService.hasStoredToken()) {
-      setLoading(false);
-      return;
-    }
-
     AuthService.me()
       .then(setUser)
-      .catch(() => {
-        AuthService.clearStoredToken();
-        setUser(null);
-      })
+      .catch(() => setUser(null))
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const clearExpiredSession = () => setUser(null);
+    window.addEventListener(AUTH_EXPIRED_EVENT, clearExpiredSession);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, clearExpiredSession);
   }, []);
 
   async function login(loginDto: LoginDto): Promise<User> {
@@ -47,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function logout() {
     setUser(null);
-    void AuthService.logout();
+    void AuthService.logout().catch(() => undefined);
   }
 
   const value = useMemo<AuthContextType>(() => ({

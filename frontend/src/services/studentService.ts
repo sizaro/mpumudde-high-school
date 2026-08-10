@@ -2,8 +2,10 @@ import api from "../api/axios";
 import type { Student } from "../types/api.types";
 
 class StudentService {
-  async getStudents(): Promise<Student[]> {
-    const { data } = await api.get<Student[]>("/students");
+  async getStudents(options?: { includeInactive?: boolean }): Promise<Student[]> {
+    const { data } = await api.get<Student[]>("/students", {
+      params: options?.includeInactive ? { includeInactive: true } : undefined,
+    });
     return data;
   }
 

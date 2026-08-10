@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body, Patch, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Patch, Delete, UseGuards, Query } from '@nestjs/common';
 import { StudentsService } from './students.service.js';
 import { CreateStudentDto } from './dto/create-student.dto.js';
 import { LinkParentDto } from './dto/link-parent.dto.js';
@@ -25,8 +25,8 @@ export class StudentsController {
   }
 
   @Get()
-  async findAll() {
-    return this.studentsService.findAll();
+  async findAll(@Query('includeInactive') includeInactive?: string) {
+    return this.studentsService.findAll(includeInactive === 'true');
   }
 
   @Get(':id')

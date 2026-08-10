@@ -145,6 +145,12 @@ export class FinanceService {
     createFeeStructureDto: CreateFeeStructureDto,
     user?: RequestUser,
   ) {
+    const [term, classOffering] = await Promise.all([
+      this.prisma.term.findFirst({ where: { id: createFeeStructureDto.termId, academicYearId: createFeeStructureDto.academicYearId, isActive: true }, select: { id: true } }),
+      this.prisma.academicYearClass.findFirst({ where: { academicYearId: createFeeStructureDto.academicYearId, classId: createFeeStructureDto.classId, isActive: true }, select: { id: true } }),
+    ]);
+    if (!term) throw new BadRequestException('The selected term does not belong to this academic year.');
+    if (!classOffering) throw new BadRequestException('The selected class is not offered in this academic year.');
     return this.prisma.financeStructure.create({
       data: {
         academicYearId: createFeeStructureDto.academicYearId,
@@ -195,6 +201,15 @@ export class FinanceService {
     if (dimensionsChanged && (existing._count.studentCharges > 0 || existing._count.payments > 0)) {
       throw new BadRequestException('This fee structure is already used by student charges or payments. Create a new structure instead of changing its year, term, class, category, or fee type.');
     }
+    const nextAcademicYearId = updateFeeStructureDto.academicYearId ?? existing.academicYearId;
+    const nextTermId = updateFeeStructureDto.termId ?? existing.termId;
+    const nextClassId = updateFeeStructureDto.classId ?? existing.classId;
+    const [term, classOffering] = await Promise.all([
+      this.prisma.term.findFirst({ where: { id: nextTermId, academicYearId: nextAcademicYearId, isActive: true }, select: { id: true } }),
+      this.prisma.academicYearClass.findFirst({ where: { academicYearId: nextAcademicYearId, classId: nextClassId, isActive: true }, select: { id: true } }),
+    ]);
+    if (!term) throw new BadRequestException('The selected term does not belong to this academic year.');
+    if (!classOffering) throw new BadRequestException('The selected class is not offered in this academic year.');
     return this.prisma.financeStructure.update({
       where: { id },
       data: {
