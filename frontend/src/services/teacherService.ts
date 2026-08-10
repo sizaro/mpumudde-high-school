@@ -93,14 +93,6 @@ export interface MyTeacherFinance {
   payments: TeacherFinanceRecord[];
 }
 
-export interface TeacherPortalUser {
-  id: string;
-  email: string;
-  isActive: boolean;
-  isLoggedIn: boolean;
-  lastLogin: string | null;
-}
-
 class TeacherService {
   // ── Director ─────────────────────────────────────────────
   async createWithAccount(personal: TeacherPersonal) {
@@ -108,14 +100,7 @@ class TeacherService {
     return data;
   }
 
-  async createComplete(payload: {
-    personal: TeacherPersonal;
-    subjectIds: string[];
-    contacts: EmergencyContact[];
-    employment: Partial<EmploymentInfo>;
-    medical: MedicalInfo;
-    documents: TeacherDocument[];
-  }) {
+  async createComplete(payload: { personal: TeacherPersonal; subjectIds: string[]; contacts: EmergencyContact[]; employment: Partial<EmploymentInfo>; medical: MedicalInfo; documents: TeacherDocument[] }) {
     const { data } = await api.post("/teachers/complete-registration", payload);
     return data;
   }
@@ -150,22 +135,13 @@ class TeacherService {
     return data;
   }
 
-  async updateContact(
-    teacherId: string,
-    contactId: string,
-    dto: Partial<EmergencyContact>,
-  ) {
-    const { data } = await api.patch(
-      `/teachers/${teacherId}/contacts/${contactId}`,
-      dto,
-    );
+  async updateContact(teacherId: string, contactId: string, dto: Partial<EmergencyContact>) {
+    const { data } = await api.patch(`/teachers/${teacherId}/contacts/${contactId}`, dto);
     return data;
   }
 
   async removeContact(teacherId: string, contactId: string) {
-    const { data } = await api.delete(
-      `/teachers/${teacherId}/contacts/${contactId}`,
-    );
+    const { data } = await api.delete(`/teachers/${teacherId}/contacts/${contactId}`);
     return data;
   }
 
@@ -174,22 +150,13 @@ class TeacherService {
     return data;
   }
 
-  async updateQualification(
-    teacherId: string,
-    qualId: string,
-    dto: Partial<Qualification>,
-  ) {
-    const { data } = await api.patch(
-      `/teachers/${teacherId}/qualifications/${qualId}`,
-      dto,
-    );
+  async updateQualification(teacherId: string, qualId: string, dto: Partial<Qualification>) {
+    const { data } = await api.patch(`/teachers/${teacherId}/qualifications/${qualId}`, dto);
     return data;
   }
 
   async removeQualification(teacherId: string, qualId: string) {
-    const { data } = await api.delete(
-      `/teachers/${teacherId}/qualifications/${qualId}`,
-    );
+    const { data } = await api.delete(`/teachers/${teacherId}/qualifications/${qualId}`);
     return data;
   }
 
@@ -204,9 +171,7 @@ class TeacherService {
   }
 
   async removeDocument(teacherId: string, docId: string) {
-    const { data } = await api.delete(
-      `/teachers/${teacherId}/documents/${docId}`,
-    );
+    const { data } = await api.delete(`/teachers/${teacherId}/documents/${docId}`);
     return data;
   }
 
@@ -217,36 +182,6 @@ class TeacherService {
 
   async remove(id: string) {
     const { data } = await api.delete(`/teachers/${id}`);
-    return data;
-  }
-
-  async createPortalAccount(
-    id: string,
-    email?: string,
-  ): Promise<{ user: TeacherPortalUser; temporaryPassword: string }> {
-    const { data } = await api.post(`/teachers/${id}/portal-account`, {
-      email: email || undefined,
-    });
-    return data;
-  }
-
-  async resetPortalPassword(
-    id: string,
-    email?: string,
-  ): Promise<{ user: TeacherPortalUser; temporaryPassword: string }> {
-    const { data } = await api.post(`/teachers/${id}/reset-password`, {
-      email: email || undefined,
-    });
-    return data;
-  }
-
-  async updatePortalStatus(
-    id: string,
-    isActive: boolean,
-  ): Promise<TeacherPortalUser> {
-    const { data } = await api.patch(`/teachers/${id}/account-status`, {
-      isActive,
-    });
     return data;
   }
 

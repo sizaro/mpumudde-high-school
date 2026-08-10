@@ -13,11 +13,7 @@ export type ParentChildOverview = {
   termStartDate: string | null;
   termEndDate: string | null;
   profilePhoto: string | null;
-  finance: {
-    totalExpected: number;
-    totalPaid: number;
-    outstandingBalance: number;
-  };
+  finance: { totalExpected: number; totalPaid: number; outstandingBalance: number };
 };
 
 export type ParentProfile = {
@@ -83,11 +79,7 @@ export type Guardian = ParentProfile & {
   documents: GuardianDocument[];
 };
 
-export type GuardianDocumentCategory = {
-  id: string;
-  name: string;
-  description?: string | null;
-};
+export type GuardianDocumentCategory = { id: string; name: string; description?: string | null };
 export type GuardianDocumentInput = {
   documentCategoryId: string;
   originalFileName: string;
@@ -125,20 +117,12 @@ export type ParentStudentProfile = {
       amount: number;
       method: string | null;
       status: string | null;
-      accountStatus: string | null;
       date: string | null;
       description: string | null;
       receiptNumber: string | null;
       proofUrl: string | null;
       proofFileName: string | null;
       feeType: string | null;
-      chargeId: string | null;
-      chargeExpectedAmount: number | null;
-      chargePaidAmount: number | null;
-      chargeWaivedAmount: number | null;
-      chargeBalance: number | null;
-      academicYear: string | null;
-      term: string | null;
     }>;
     charges: Array<{
       id: string;
@@ -150,16 +134,6 @@ export type ParentStudentProfile = {
       waivedAmount: number;
       balance: number;
       status: string;
-      paymentProofs: Array<{
-        id: string;
-        amount: number;
-        method: string | null;
-        status: string | null;
-        date: string | null;
-        receiptNumber: string | null;
-        proofUrl: string | null;
-        proofFileName: string | null;
-      }>;
     }>;
     totalExpected: number;
     totalPaid: number;
@@ -191,7 +165,7 @@ export type ParentDashboardResponse = {
 
 class ParentService {
   async getGuardians(): Promise<Guardian[]> {
-    const { data } = await api.get<Guardian[]>("/parents");
+    const { data } = await api.get<Guardian[]>('/parents');
     return data;
   }
 
@@ -200,14 +174,8 @@ class ParentService {
     return data;
   }
 
-  async createGuardian(
-    payload: Record<string, unknown>,
-  ): Promise<{
-    parent: Guardian;
-    temporaryPassword?: string;
-    credentials?: { email: string };
-  }> {
-    const { data } = await api.post("/parents", payload);
+  async createGuardian(payload: Record<string, unknown>): Promise<{ parent: Guardian; temporaryPassword?: string; credentials?: { email: string } }> {
+    const { data } = await api.post('/parents', payload);
     return data;
   }
 
@@ -221,14 +189,8 @@ class ParentService {
     return data;
   }
 
-  async updateGuardianComplete(
-    id: string,
-    payload: Record<string, unknown>,
-  ): Promise<Guardian> {
-    const { data } = await api.put<Guardian>(
-      `/parents/${id}/complete`,
-      payload,
-    );
+  async updateGuardianComplete(id: string, payload: Record<string, unknown>): Promise<Guardian> {
+    const { data } = await api.put<Guardian>(`/parents/${id}/complete`, payload);
     return data;
   }
 
@@ -236,39 +198,22 @@ class ParentService {
     await api.delete(`/parents/${id}`);
   }
 
-  async linkStudent(
-    id: string,
-    payload: { studentId: string; relationship?: string; isPrimary?: boolean },
-  ) {
+  async linkStudent(id: string, payload: { studentId: string; relationship?: string; isPrimary?: boolean }) {
     const { data } = await api.post(`/parents/${id}/students`, payload);
     return data;
   }
 
-  async unlinkStudent(
-    id: string,
-    studentId: string,
-    reason?: string,
-  ): Promise<void> {
-    await api.delete(`/parents/${id}/students/${studentId}`, {
-      data: { reason },
-    });
+  async unlinkStudent(id: string, studentId: string, reason?: string): Promise<void> {
+    await api.delete(`/parents/${id}/students/${studentId}`, { data: { reason } });
   }
 
   async getGuardianDocumentCategories(): Promise<GuardianDocumentCategory[]> {
-    const { data } = await api.get<GuardianDocumentCategory[]>(
-      "/document-categories?entityType=PARENT",
-    );
+    const { data } = await api.get<GuardianDocumentCategory[]>('/document-categories?entityType=PARENT');
     return data;
   }
 
-  async addGuardianDocument(
-    id: string,
-    payload: GuardianDocumentInput,
-  ): Promise<GuardianDocument> {
-    const { data } = await api.post<GuardianDocument>(
-      `/parents/${id}/documents`,
-      payload,
-    );
+  async addGuardianDocument(id: string, payload: GuardianDocumentInput): Promise<GuardianDocument> {
+    const { data } = await api.post<GuardianDocument>(`/parents/${id}/documents`, payload);
     return data;
   }
 
@@ -276,30 +221,18 @@ class ParentService {
     await api.delete(`/parents/${id}/documents/${documentId}`);
   }
 
-  async createPortalAccount(
-    id: string,
-    loginEmail?: string,
-  ): Promise<{ user: Guardian["user"]; temporaryPassword: string }> {
-    const { data } = await api.post(`/parents/${id}/portal-account`, {
-      loginEmail: loginEmail || undefined,
-    });
+  async createPortalAccount(id: string, loginEmail?: string): Promise<{ user: Guardian['user']; temporaryPassword: string }> {
+    const { data } = await api.post(`/parents/${id}/portal-account`, { loginEmail: loginEmail || undefined });
     return data;
   }
 
-  async resetPortalPassword(
-    id: string,
-    loginEmail?: string,
-  ): Promise<{ user: Guardian["user"]; temporaryPassword: string }> {
-    const { data } = await api.post(`/parents/${id}/reset-password`, {
-      loginEmail: loginEmail || undefined,
-    });
+  async resetPortalPassword(id: string): Promise<{ user: Guardian['user']; temporaryPassword: string }> {
+    const { data } = await api.post(`/parents/${id}/reset-password`);
     return data;
   }
 
   async updatePortalStatus(id: string, isActive: boolean) {
-    const { data } = await api.patch(`/parents/${id}/account-status`, {
-      isActive,
-    });
+    const { data } = await api.patch(`/parents/${id}/account-status`, { isActive });
     return data;
   }
 
@@ -311,33 +244,16 @@ class ParentService {
     return data;
   }
 
-  async getChildAttendance(
-    studentId: string,
-    filters?: { startDate?: string; endDate?: string; subjectId?: string },
-  ) {
+  async getChildAttendance(studentId: string, filters?: { startDate?: string; endDate?: string; subjectId?: string }) {
     const params = new URLSearchParams();
-    if (filters?.startDate) params.set("startDate", filters.startDate);
-    if (filters?.endDate) params.set("endDate", filters.endDate);
-    if (filters?.subjectId) params.set("subjectId", filters.subjectId);
-    const suffix = params.toString() ? `?${params.toString()}` : "";
+    if (filters?.startDate) params.set('startDate', filters.startDate);
+    if (filters?.endDate) params.set('endDate', filters.endDate);
+    if (filters?.subjectId) params.set('subjectId', filters.subjectId);
+    const suffix = params.toString() ? `?${params.toString()}` : '';
     const { data } = await api.get<{
-      student: {
-        id: string;
-        firstName: string;
-        lastName: string;
-        admissionNumber: string;
-        passportPhoto: string | null;
-        schoolClass: { name: string } | null;
-      };
+      student: { id: string; firstName: string; lastName: string; admissionNumber: string; passportPhoto: string | null; schoolClass: { name: string } | null };
       subjects: Array<{ id: string; name: string }>;
-      records: Array<{
-        id: string;
-        status: string;
-        date: string;
-        subjectId: string;
-        subject: string;
-        teacher: string;
-      }>;
+      records: Array<{ id: string; status: string; date: string; subjectId: string; subject: string; teacher: string }>;
     }>(`/parents/me/children/${studentId}/attendance${suffix}`);
     return data;
   }

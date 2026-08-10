@@ -98,10 +98,6 @@ export default function DirectorLayout() {
                 Guardians
               </NavLink>
 
-              <NavLink to="attendance" className={navButton} end>
-                Attendance
-              </NavLink>
-
               <NavLink to="finance" className={navButton} end>
                 Finances
               </NavLink>
