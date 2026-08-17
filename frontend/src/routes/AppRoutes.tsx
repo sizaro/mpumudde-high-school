@@ -21,11 +21,13 @@ import DirectorOverview from "../pages/director/Overview";
 import StudentRegister from "../pages/director/students/RegistrationWizard";
 import StudentList from "../pages/director/students/List";
 import StudentStatus from "../pages/director/students/Status";
+import StudentPromotion from "../pages/director/students/Promotion";
 import StudentProfile from "../pages/director/students/Profile";
 import DirectorFinancePage from "../pages/director/finance";
 import PaymentHistory from "../pages/director/finance/History";
 import DirectorReports from "../pages/director/reports/Reports";
 import AcademicSetupPage from "../pages/director/setup/AcademicSetupPage";
+import DirectorAttendancePage from "../pages/director/attendance";
 import AccountManagement from "../pages/director/AccountManagement";
 import GuardiansPage from "../pages/director/guardians";
 import CreateGuardianPage from "../pages/director/guardians/Create";
@@ -98,6 +100,7 @@ export default function AppRoutes() {
         <Route path="students/register" element={<StudentRegister />} />
         <Route path="students" element={<StudentList />} />
         <Route path="students/status" element={<StudentStatus />} />
+        <Route path="students/promotion" element={<StudentPromotion />} />
         <Route path="students/profile" element={<StudentProfile />} />
         <Route path="guardians" element={<GuardiansPage />} />
         <Route path="guardians/create" element={<CreateGuardianPage />} />
@@ -106,6 +109,7 @@ export default function AppRoutes() {
         <Route path="finance" element={<DirectorFinancePage />} />
         <Route path="finance/history" element={<PaymentHistory />} />
         <Route path="academic-setup" element={<AcademicSetupPage />} />
+        <Route path="attendance" element={<DirectorAttendancePage />} />
         <Route path="account-management" element={<AccountManagement />} />
         <Route path="reports" element={<DirectorReports />} />
         {/* Teacher management */}

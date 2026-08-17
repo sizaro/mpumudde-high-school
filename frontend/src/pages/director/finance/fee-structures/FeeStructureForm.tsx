@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import type {
   AcademicYear,
   AcademicYearClass,
@@ -6,6 +5,7 @@ import type {
   StudentCategory,
   Term,
 } from "../../../../services/setupService";
+import { Link } from "react-router-dom";
 
 export type FeeStructureFormValues = {
   academicYearId: string;
@@ -49,23 +49,19 @@ export default function FeeStructureForm({
   onSubmit,
   onCancel,
 }: Props) {
-  useEffect(() => {
-    if (!value.academicYearId) return;
-    const termStillValid = terms.some(
-      (term) =>
-        term.id === value.termId &&
-        term.academicYearId === value.academicYearId,
-    );
-    if (!termStillValid) {
-      onChange({ ...value, termId: "" });
-    }
-  }, [terms, value, onChange]);
-
-  const classesForYear = value.academicYearId
+  const offeredClasses = value.academicYearId
     ? academicYearClasses
-        .filter((offering) => offering.academicYearId === value.academicYearId && offering.isActive)
+        .filter(
+          (offering) =>
+            offering.academicYearId === value.academicYearId &&
+            offering.isActive,
+        )
         .map((offering) => offering.schoolClass)
+        .filter(Boolean)
     : [];
+  const classesForYear = offeredClasses;
+  const hasNoClassesForYear =
+    Boolean(value.academicYearId) && classesForYear.length === 0;
 
   const submit = async () => {
     if (!canManage) return;
@@ -73,7 +69,7 @@ export default function FeeStructureForm({
   };
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="min-w-0 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold text-slate-900">
@@ -139,7 +135,7 @@ export default function FeeStructureForm({
               onChange({ ...value, classId: event.target.value })
             }
             className={selectClassName}
-            disabled={!canManage || !value.academicYearId}
+            disabled={!canManage || !value.academicYearId || hasNoClassesForYear}
           >
             <option value="">{value.academicYearId ? "Select class" : "Select academic year first"}</option>
             {classesForYear.map((schoolClass) => (
@@ -148,6 +144,18 @@ export default function FeeStructureForm({
               </option>
             ))}
           </select>
+          {hasNoClassesForYear ? (
+            <span className="mt-2 block text-xs font-normal text-amber-700">
+              No classes are attached to this academic year.{" "}
+              <Link
+                to="/director/academic-setup?tab=classes"
+                className="font-semibold underline underline-offset-2"
+              >
+                Open Academic Setup
+              </Link>{" "}
+              and attach its classes before creating a fee structure.
+            </span>
+          ) : null}
         </label>
 
         <label className="block text-sm font-medium text-slate-700">
@@ -215,13 +223,13 @@ export default function FeeStructureForm({
           Active structure
         </label>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
           {canManage ? (
             <button
               type="button"
               onClick={submit}
-              disabled={loading}
-              className="flex-1 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+              disabled={loading || hasNoClassesForYear}
+              className="w-full flex-1 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto"
             >
               {loading
                 ? "Saving..."
@@ -237,7 +245,7 @@ export default function FeeStructureForm({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700"
+            className="w-full rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 sm:w-auto"
           >
             Cancel
           </button>

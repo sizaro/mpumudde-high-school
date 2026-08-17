@@ -42,5 +42,6 @@ export class CompleteStudentRegistrationDto {
     amount: number;
     method: string;
     receiptUrl?: string;
+    receiptName?: string;
   }[];
 }

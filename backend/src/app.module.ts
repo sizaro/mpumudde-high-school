@@ -17,6 +17,7 @@ import { SetupModule } from './setup/setup.module.js';
 import { UploadModule } from './upload/upload.module.js';
 import { DocumentCategoriesModule } from './document-categories/document-categories.module.js';
 import { ConfigModule } from '@nestjs/config';
+import { NotificationsModule } from './notifications/notifications.module.js';
 
 import { PrismaModule } from './prisma/prisma.module.js';
 
@@ -39,6 +40,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
     SetupModule,
     UploadModule,
     DocumentCategoriesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

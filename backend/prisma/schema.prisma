@@ -55,6 +55,8 @@ model User {
 
   uploadedDocuments Document[]
 
+  notifications Notification[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -215,6 +217,8 @@ model Teacher {
 
   attendanceSessions AttendanceSession[]
 
+  expectedAttendanceSessions AttendanceSession[] @relation("ExpectedAttendanceTeacher")
+
   expenses Expense[]
 
 
@@ -290,6 +294,8 @@ model Subject {
 
   attendanceSessions AttendanceSession[]
 
+  classSubjects ClassSubject[]
+
 
   createdAt DateTime @default(now())
 
@@ -306,6 +312,18 @@ model TeacherAssignment {
 
   subjectId String
 
+  academicYearId String?
+
+  academicYearClassId String?
+
+  classSubjectId String?
+
+  startDate DateTime? @db.Date
+
+  endDate DateTime? @db.Date
+
+  isActive Boolean @default(true)
+
 
 
   teacher Teacher @relation(fields: [teacherId], references: [id])
@@ -313,13 +331,23 @@ model TeacherAssignment {
 
   subject Subject @relation(fields: [subjectId], references: [id])
 
+  academicYear AcademicYear? @relation(fields: [academicYearId], references: [id])
+
+  academicYearClass AcademicYearClass? @relation(fields: [academicYearClassId], references: [id])
+
+  classSubject ClassSubject? @relation(fields: [classSubjectId], references: [id])
+
+  attendanceSessions AttendanceSession[]
+
 
 
   createdAt DateTime @default(now())
 
 
 
-  @@unique([teacherId, subjectId])
+  @@index([teacherId, academicYearId, isActive])
+
+  @@index([classSubjectId, isActive])
 
 }
 
@@ -585,6 +613,26 @@ model AttendanceSession {
 
   subjectId String
 
+  academicYearId String?
+
+  termId String?
+
+  academicYearClassId String?
+
+  classSubjectId String?
+
+  teacherAssignmentId String?
+
+  normallyAssignedTeacherId String?
+
+  lessonDate DateTime? @db.Date
+
+  lessonTime String? @db.VarChar(8)
+
+  isAssignmentOverride Boolean @default(false)
+
+  overrideReason String?
+
 
   date DateTime @default(now())
 
@@ -597,11 +645,27 @@ model AttendanceSession {
 
   subject Subject @relation(fields: [subjectId], references: [id])
 
+  academicYear AcademicYear? @relation(fields: [academicYearId], references: [id])
+
+  term Term? @relation(fields: [termId], references: [id])
+
+  academicYearClass AcademicYearClass? @relation(fields: [academicYearClassId], references: [id])
+
+  classSubject ClassSubject? @relation(fields: [classSubjectId], references: [id])
+
+  teacherAssignment TeacherAssignment? @relation(fields: [teacherAssignmentId], references: [id])
+
+  normallyAssignedTeacher Teacher? @relation("ExpectedAttendanceTeacher", fields: [normallyAssignedTeacherId], references: [id])
+
 
   records AttendanceRecord[]
 
 
   createdAt DateTime @default(now())
+
+  @@index([academicYearId, termId, classId])
+
+  @@index([teacherId, lessonDate])
 
 
 }
@@ -842,6 +906,12 @@ model AcademicYear {
 
   isActive Boolean @default(true)
 
+  startDate DateTime? @db.Date
+
+  endDate DateTime? @db.Date
+
+  status String @default("UPCOMING")
+
   terms Term[]
 
   financeStructures FinanceStructure[]
@@ -851,6 +921,10 @@ model AcademicYear {
   classOfferings AcademicYearClass[]
 
   studentEnrollments StudentEnrollment[]
+
+  teacherAssignments TeacherAssignment[]
+
+  attendanceSessions AttendanceSession[]
 
   createdAt DateTime @default(now())
 
@@ -865,14 +939,16 @@ model Term {
 
   academicYearId String
 
+  // Legacy compatibility only. New fee amounts belong to FinanceStructure.
   feeAmount Int @default(0)
-  // e.g., 1000000 for 1 million shillings
 
   startDate DateTime?
 
   endDate DateTime?
 
   isActive Boolean @default(true)
+
+  status String @default("UPCOMING")
 
   academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
 
@@ -883,6 +959,8 @@ model Term {
   students Student[]
 
   studentEnrollments StudentEnrollment[]
+
+  attendanceSessions AttendanceSession[]
 
   createdAt DateTime @default(now())
 
@@ -926,12 +1004,47 @@ model AcademicYearClass {
 
   schoolClass SchoolClass @relation(fields: [classId], references: [id])
 
+  classSubjects ClassSubject[]
+
+  teacherAssignments TeacherAssignment[]
+
+  attendanceSessions AttendanceSession[]
+
+  studentEnrollments StudentEnrollment[]
+
+  financeStructures FinanceStructure[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
 
   @@unique([academicYearId, classId])
   @@index([academicYearId, isActive])
+}
+
+model ClassSubject {
+  id String @id @default(cuid())
+
+  academicYearClassId String
+
+  subjectId String
+
+  isActive Boolean @default(true)
+
+  academicYearClass AcademicYearClass @relation(fields: [academicYearClassId], references: [id])
+
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  teacherAssignments TeacherAssignment[]
+
+  attendanceSessions AttendanceSession[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicYearClassId, subjectId])
+  @@index([academicYearClassId, isActive])
 }
 
 model StudentEnrollment {
@@ -941,9 +1054,11 @@ model StudentEnrollment {
 
   academicYearId String
 
-  termId String
+  termId String?
 
   classId String
+
+  academicYearClassId String?
 
   studentCategoryId String?
 
@@ -961,9 +1076,11 @@ model StudentEnrollment {
 
   academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
 
-  term Term @relation(fields: [termId], references: [id])
+  term Term? @relation(fields: [termId], references: [id])
 
   schoolClass SchoolClass @relation(fields: [classId], references: [id])
+
+  academicYearClass AcademicYearClass? @relation(fields: [academicYearClassId], references: [id])
 
   studentCategory StudentCategory? @relation(fields: [studentCategoryId], references: [id])
 
@@ -973,6 +1090,8 @@ model StudentEnrollment {
 
   @@index([studentId, isCurrent])
   @@index([academicYearId, classId])
+
+  @@index([academicYearClassId, status])
 }
 
 model StudentCategory {
@@ -1022,6 +1141,8 @@ model FinanceStructure {
 
   feeTypeId String
 
+  academicYearClassId String?
+
   expectedAmount Int
 
   isActive Boolean @default(true)
@@ -1039,6 +1160,8 @@ model FinanceStructure {
   studentCategory StudentCategory @relation(fields: [studentCategoryId], references: [id])
 
   feeType FeeType @relation(fields: [feeTypeId], references: [id])
+
+  academicYearClass AcademicYearClass? @relation(fields: [academicYearClassId], references: [id])
 
   createdBy User? @relation("FinanceStructureCreatedBy", fields: [createdByUserId], references: [id])
 
@@ -1086,6 +1209,16 @@ model StudentCharge {
 
   financeStructureId String
 
+  academicYearId String?
+
+  termId String?
+
+  classId String?
+
+  studentCategoryId String?
+
+  feeTypeId String?
+
   expectedAmount Int
 
   paidAmount Int @default(0)
@@ -1107,6 +1240,34 @@ model StudentCharge {
   @@unique([studentId, financeStructureId])
 
   @@index([studentId, status])
+}
+
+model Notification {
+  id String @id @default(cuid())
+
+  userId String
+
+  type String
+
+  title String
+
+  message String
+
+  entityType String?
+
+  entityId String?
+
+  link String?
+
+  isRead Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  readAt DateTime?
+
+  @@index([userId, isRead, createdAt])
 }
 
 model Payment {

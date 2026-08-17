@@ -619,22 +619,64 @@ export class TeachersService {
   async getMyClasses(userId: string) {
     const teacher = await this.prisma.teacher.findUnique({ where: { userId } });
     if (!teacher) throw new NotFoundException("Teacher profile not found");
-    return this.prisma.schoolClass.findMany({
-      where: { isActive: true },
-      orderBy: { name: "asc" },
+    const activeYear = await this.prisma.academicYear.findFirst({ where: { status: "ACTIVE" } });
+    if (!activeYear) return [];
+    const offerings = await this.prisma.academicYearClass.findMany({
+      where: { academicYearId: activeYear.id, isActive: true },
+      include: {
+        schoolClass: true,
+        classSubjects: {
+          where: { isActive: true },
+          include: { subject: true },
+          orderBy: { subject: { name: "asc" } },
+        },
+      },
+      orderBy: { schoolClass: { name: "asc" } },
     });
+    return offerings.map((offering) => ({
+      ...offering.schoolClass,
+      academicYearClassId: offering.id,
+      academicYearId: activeYear.id,
+      subjects: offering.classSubjects.map((item) => ({
+        ...item.subject,
+        classSubjectId: item.id,
+        academicYearClassId: offering.id,
+        classId: offering.classId,
+      })),
+    }));
   }
 
   async getMySubjects(userId: string) {
     const teacher = await this.prisma.teacher.findUnique({ where: { userId } });
     if (!teacher) throw new NotFoundException("Teacher profile not found");
+    const activeYear = await this.prisma.academicYear.findFirst({ where: { status: "ACTIVE" } });
+    if (!activeYear) return [];
     const assignments = await this.prisma.teacherAssignment.findMany({
-      where: { teacherId: teacher.id },
-      include: { subject: true },
+      where: {
+        teacherId: teacher.id,
+        isActive: true,
+        OR: [{ academicYearId: activeYear.id }, { academicYearId: null }],
+      },
+      include: {
+        subject: true,
+        academicYearClass: { include: { schoolClass: true } },
+      },
+      orderBy: { subject: { name: "asc" } },
     });
-    const subjectMap = new Map<string, (typeof assignments)[0]["subject"]>();
-    for (const a of assignments) subjectMap.set(a.subjectId, a.subject);
-    return Array.from(subjectMap.values());
+    const subjects = new Map<string, any>();
+    for (const assignment of assignments) {
+      const current = subjects.get(assignment.subjectId) ?? {
+        ...assignment.subject,
+        classes: [] as Array<{ id: string; name: string }>,
+        appliesToAllClasses: false,
+      };
+      if (!assignment.academicYearClassId) current.appliesToAllClasses = true;
+      if (assignment.academicYearClass?.schoolClass && !current.classes.some((item: { id: string }) => item.id === assignment.academicYearClass!.schoolClass.id)) {
+        current.classes.push({ id: assignment.academicYearClass.schoolClass.id, name: assignment.academicYearClass.schoolClass.name });
+      }
+      subjects.set(assignment.subjectId, current);
+    }
+    return Array.from(subjects.values());
   }
 
   async getMyAssignments(userId: string) {
@@ -644,6 +686,9 @@ export class TeachersService {
       where: { teacherId: teacher.id },
       include: {
         subject: { select: { id: true, name: true, code: true } },
+        academicYear: true,
+        academicYearClass: { include: { schoolClass: true } },
+        classSubject: true,
       },
     });
   }

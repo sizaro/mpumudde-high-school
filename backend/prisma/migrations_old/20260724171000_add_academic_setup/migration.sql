@@ -1,5 +1,3 @@
--- DropIndex
-DROP INDEX IF EXISTS "Term_name_key";
 
 -- AlterTable
 ALTER TABLE "Payment" ADD COLUMN IF NOT EXISTS     "financeStructureId" TEXT;

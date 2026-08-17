@@ -1,5 +1,3 @@
--- DropIndex
-DROP INDEX "Term_name_key";
 
 -- AlterTable
 ALTER TABLE "Payment" ADD COLUMN     "financeStructureId" TEXT;

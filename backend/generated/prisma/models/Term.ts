@@ -42,6 +42,7 @@ export type TermMinAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   isActive: boolean | null
+  status: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +55,7 @@ export type TermMaxAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   isActive: boolean | null
+  status: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +68,7 @@ export type TermCountAggregateOutputType = {
   startDate: number
   endDate: number
   isActive: number
+  status: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -88,6 +91,7 @@ export type TermMinAggregateInputType = {
   startDate?: true
   endDate?: true
   isActive?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +104,7 @@ export type TermMaxAggregateInputType = {
   startDate?: true
   endDate?: true
   isActive?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +117,7 @@ export type TermCountAggregateInputType = {
   startDate?: true
   endDate?: true
   isActive?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -211,6 +217,7 @@ export type TermGroupByOutputType = {
   startDate: Date | null
   endDate: Date | null
   isActive: boolean
+  status: string
   createdAt: Date
   updatedAt: Date
   _count: TermCountAggregateOutputType | null
@@ -246,6 +253,7 @@ export type TermWhereInput = {
   startDate?: Prisma.DateTimeNullableFilter<"Term"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Term"> | Date | string | null
   isActive?: Prisma.BoolFilter<"Term"> | boolean
+  status?: Prisma.StringFilter<"Term"> | string
   createdAt?: Prisma.DateTimeFilter<"Term"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Term"> | Date | string
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
@@ -253,6 +261,7 @@ export type TermWhereInput = {
   financeStructures?: Prisma.FinanceStructureListRelationFilter
   students?: Prisma.StudentListRelationFilter
   studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
+  attendanceSessions?: Prisma.AttendanceSessionListRelationFilter
 }
 
 export type TermOrderByWithRelationInput = {
@@ -263,6 +272,7 @@ export type TermOrderByWithRelationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
@@ -270,6 +280,7 @@ export type TermOrderByWithRelationInput = {
   financeStructures?: Prisma.FinanceStructureOrderByRelationAggregateInput
   students?: Prisma.StudentOrderByRelationAggregateInput
   studentEnrollments?: Prisma.StudentEnrollmentOrderByRelationAggregateInput
+  attendanceSessions?: Prisma.AttendanceSessionOrderByRelationAggregateInput
 }
 
 export type TermWhereUniqueInput = Prisma.AtLeast<{
@@ -284,6 +295,7 @@ export type TermWhereUniqueInput = Prisma.AtLeast<{
   startDate?: Prisma.DateTimeNullableFilter<"Term"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Term"> | Date | string | null
   isActive?: Prisma.BoolFilter<"Term"> | boolean
+  status?: Prisma.StringFilter<"Term"> | string
   createdAt?: Prisma.DateTimeFilter<"Term"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Term"> | Date | string
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
@@ -291,6 +303,7 @@ export type TermWhereUniqueInput = Prisma.AtLeast<{
   financeStructures?: Prisma.FinanceStructureListRelationFilter
   students?: Prisma.StudentListRelationFilter
   studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
+  attendanceSessions?: Prisma.AttendanceSessionListRelationFilter
 }, "id" | "academicYearId_name">
 
 export type TermOrderByWithAggregationInput = {
@@ -301,6 +314,7 @@ export type TermOrderByWithAggregationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TermCountOrderByAggregateInput
@@ -321,6 +335,7 @@ export type TermScalarWhereWithAggregatesInput = {
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Term"> | Date | string | null
   endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Term"> | Date | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Term"> | boolean
+  status?: Prisma.StringWithAggregatesFilter<"Term"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Term"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Term"> | Date | string
 }
@@ -332,6 +347,7 @@ export type TermCreateInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
@@ -339,6 +355,7 @@ export type TermCreateInput = {
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
   students?: Prisma.StudentCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateInput = {
@@ -349,12 +366,14 @@ export type TermUncheckedCreateInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermUpdateInput = {
@@ -364,6 +383,7 @@ export type TermUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
@@ -371,6 +391,7 @@ export type TermUpdateInput = {
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateInput = {
@@ -381,12 +402,14 @@ export type TermUncheckedUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermCreateManyInput = {
@@ -397,6 +420,7 @@ export type TermCreateManyInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -408,6 +432,7 @@ export type TermUpdateManyMutationInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -420,6 +445,7 @@ export type TermUncheckedUpdateManyInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -452,6 +478,7 @@ export type TermCountOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -468,6 +495,7 @@ export type TermMaxOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -480,6 +508,7 @@ export type TermMinOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -491,6 +520,22 @@ export type TermSumOrderByAggregateInput = {
 export type TermScalarRelationFilter = {
   is?: Prisma.TermWhereInput
   isNot?: Prisma.TermWhereInput
+}
+
+export type TermCreateNestedOneWithoutAttendanceSessionsInput = {
+  create?: Prisma.XOR<Prisma.TermCreateWithoutAttendanceSessionsInput, Prisma.TermUncheckedCreateWithoutAttendanceSessionsInput>
+  connectOrCreate?: Prisma.TermCreateOrConnectWithoutAttendanceSessionsInput
+  connect?: Prisma.TermWhereUniqueInput
+}
+
+export type TermUpdateOneWithoutAttendanceSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TermCreateWithoutAttendanceSessionsInput, Prisma.TermUncheckedCreateWithoutAttendanceSessionsInput>
+  connectOrCreate?: Prisma.TermCreateOrConnectWithoutAttendanceSessionsInput
+  upsert?: Prisma.TermUpsertWithoutAttendanceSessionsInput
+  disconnect?: Prisma.TermWhereInput | boolean
+  delete?: Prisma.TermWhereInput | boolean
+  connect?: Prisma.TermWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TermUpdateToOneWithWhereWithoutAttendanceSessionsInput, Prisma.TermUpdateWithoutAttendanceSessionsInput>, Prisma.TermUncheckedUpdateWithoutAttendanceSessionsInput>
 }
 
 export type TermCreateNestedOneWithoutStudentsInput = {
@@ -557,10 +602,12 @@ export type TermCreateNestedOneWithoutStudentEnrollmentsInput = {
   connect?: Prisma.TermWhereUniqueInput
 }
 
-export type TermUpdateOneRequiredWithoutStudentEnrollmentsNestedInput = {
+export type TermUpdateOneWithoutStudentEnrollmentsNestedInput = {
   create?: Prisma.XOR<Prisma.TermCreateWithoutStudentEnrollmentsInput, Prisma.TermUncheckedCreateWithoutStudentEnrollmentsInput>
   connectOrCreate?: Prisma.TermCreateOrConnectWithoutStudentEnrollmentsInput
   upsert?: Prisma.TermUpsertWithoutStudentEnrollmentsInput
+  disconnect?: Prisma.TermWhereInput | boolean
+  delete?: Prisma.TermWhereInput | boolean
   connect?: Prisma.TermWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TermUpdateToOneWithWhereWithoutStudentEnrollmentsInput, Prisma.TermUpdateWithoutStudentEnrollmentsInput>, Prisma.TermUncheckedUpdateWithoutStudentEnrollmentsInput>
 }
@@ -593,6 +640,90 @@ export type TermUpdateOneRequiredWithoutStudentTermFeesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TermUpdateToOneWithWhereWithoutStudentTermFeesInput, Prisma.TermUpdateWithoutStudentTermFeesInput>, Prisma.TermUncheckedUpdateWithoutStudentTermFeesInput>
 }
 
+export type TermCreateWithoutAttendanceSessionsInput = {
+  id?: string
+  name: string
+  feeAmount?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  isActive?: boolean
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
+  studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
+  students?: Prisma.StudentCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
+}
+
+export type TermUncheckedCreateWithoutAttendanceSessionsInput = {
+  id?: string
+  name: string
+  academicYearId: string
+  feeAmount?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  isActive?: boolean
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
+}
+
+export type TermCreateOrConnectWithoutAttendanceSessionsInput = {
+  where: Prisma.TermWhereUniqueInput
+  create: Prisma.XOR<Prisma.TermCreateWithoutAttendanceSessionsInput, Prisma.TermUncheckedCreateWithoutAttendanceSessionsInput>
+}
+
+export type TermUpsertWithoutAttendanceSessionsInput = {
+  update: Prisma.XOR<Prisma.TermUpdateWithoutAttendanceSessionsInput, Prisma.TermUncheckedUpdateWithoutAttendanceSessionsInput>
+  create: Prisma.XOR<Prisma.TermCreateWithoutAttendanceSessionsInput, Prisma.TermUncheckedCreateWithoutAttendanceSessionsInput>
+  where?: Prisma.TermWhereInput
+}
+
+export type TermUpdateToOneWithWhereWithoutAttendanceSessionsInput = {
+  where?: Prisma.TermWhereInput
+  data: Prisma.XOR<Prisma.TermUpdateWithoutAttendanceSessionsInput, Prisma.TermUncheckedUpdateWithoutAttendanceSessionsInput>
+}
+
+export type TermUpdateWithoutAttendanceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
+  studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
+  students?: Prisma.StudentUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
+}
+
+export type TermUncheckedUpdateWithoutAttendanceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
+  students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
+}
+
 export type TermCreateWithoutStudentsInput = {
   id?: string
   name: string
@@ -600,12 +731,14 @@ export type TermCreateWithoutStudentsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
   studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateWithoutStudentsInput = {
@@ -616,11 +749,13 @@ export type TermUncheckedCreateWithoutStudentsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermCreateOrConnectWithoutStudentsInput = {
@@ -646,12 +781,14 @@ export type TermUpdateWithoutStudentsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
   studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateWithoutStudentsInput = {
@@ -662,11 +799,13 @@ export type TermUncheckedUpdateWithoutStudentsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermCreateWithoutAcademicYearInput = {
@@ -676,12 +815,14 @@ export type TermCreateWithoutAcademicYearInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
   students?: Prisma.StudentCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateWithoutAcademicYearInput = {
@@ -691,12 +832,14 @@ export type TermUncheckedCreateWithoutAcademicYearInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermCreateOrConnectWithoutAcademicYearInput = {
@@ -736,6 +879,7 @@ export type TermScalarWhereInput = {
   startDate?: Prisma.DateTimeNullableFilter<"Term"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Term"> | Date | string | null
   isActive?: Prisma.BoolFilter<"Term"> | boolean
+  status?: Prisma.StringFilter<"Term"> | string
   createdAt?: Prisma.DateTimeFilter<"Term"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Term"> | Date | string
 }
@@ -747,12 +891,14 @@ export type TermCreateWithoutStudentEnrollmentsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
   studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
   students?: Prisma.StudentCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateWithoutStudentEnrollmentsInput = {
@@ -763,11 +909,13 @@ export type TermUncheckedCreateWithoutStudentEnrollmentsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermCreateOrConnectWithoutStudentEnrollmentsInput = {
@@ -793,12 +941,14 @@ export type TermUpdateWithoutStudentEnrollmentsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
   studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateWithoutStudentEnrollmentsInput = {
@@ -809,11 +959,13 @@ export type TermUncheckedUpdateWithoutStudentEnrollmentsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermCreateWithoutFinanceStructuresInput = {
@@ -823,12 +975,14 @@ export type TermCreateWithoutFinanceStructuresInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
   studentTermFees?: Prisma.StudentTermFeeCreateNestedManyWithoutTermInput
   students?: Prisma.StudentCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateWithoutFinanceStructuresInput = {
@@ -839,11 +993,13 @@ export type TermUncheckedCreateWithoutFinanceStructuresInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedCreateNestedManyWithoutTermInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermCreateOrConnectWithoutFinanceStructuresInput = {
@@ -869,12 +1025,14 @@ export type TermUpdateWithoutFinanceStructuresInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
   studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateWithoutFinanceStructuresInput = {
@@ -885,11 +1043,13 @@ export type TermUncheckedUpdateWithoutFinanceStructuresInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermCreateWithoutStudentTermFeesInput = {
@@ -899,12 +1059,14 @@ export type TermCreateWithoutStudentTermFeesInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutTermsInput
   financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutTermInput
   students?: Prisma.StudentCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTermInput
 }
 
 export type TermUncheckedCreateWithoutStudentTermFeesInput = {
@@ -915,11 +1077,13 @@ export type TermUncheckedCreateWithoutStudentTermFeesInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutTermInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutTermInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutTermInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTermInput
 }
 
 export type TermCreateOrConnectWithoutStudentTermFeesInput = {
@@ -945,12 +1109,14 @@ export type TermUpdateWithoutStudentTermFeesInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutTermsNestedInput
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateWithoutStudentTermFeesInput = {
@@ -961,11 +1127,13 @@ export type TermUncheckedUpdateWithoutStudentTermFeesInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermCreateManyAcademicYearInput = {
@@ -975,6 +1143,7 @@ export type TermCreateManyAcademicYearInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
+  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -986,12 +1155,14 @@ export type TermUpdateWithoutAcademicYearInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentTermFees?: Prisma.StudentTermFeeUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateWithoutAcademicYearInput = {
@@ -1001,12 +1172,14 @@ export type TermUncheckedUpdateWithoutAcademicYearInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentTermFees?: Prisma.StudentTermFeeUncheckedUpdateManyWithoutTermNestedInput
   financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutTermNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutTermNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutTermNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTermNestedInput
 }
 
 export type TermUncheckedUpdateManyWithoutAcademicYearInput = {
@@ -1016,6 +1189,7 @@ export type TermUncheckedUpdateManyWithoutAcademicYearInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1030,6 +1204,7 @@ export type TermCountOutputType = {
   financeStructures: number
   students: number
   studentEnrollments: number
+  attendanceSessions: number
 }
 
 export type TermCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1037,6 +1212,7 @@ export type TermCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   financeStructures?: boolean | TermCountOutputTypeCountFinanceStructuresArgs
   students?: boolean | TermCountOutputTypeCountStudentsArgs
   studentEnrollments?: boolean | TermCountOutputTypeCountStudentEnrollmentsArgs
+  attendanceSessions?: boolean | TermCountOutputTypeCountAttendanceSessionsArgs
 }
 
 /**
@@ -1077,6 +1253,13 @@ export type TermCountOutputTypeCountStudentEnrollmentsArgs<ExtArgs extends runti
   where?: Prisma.StudentEnrollmentWhereInput
 }
 
+/**
+ * TermCountOutputType without action
+ */
+export type TermCountOutputTypeCountAttendanceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttendanceSessionWhereInput
+}
+
 
 export type TermSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1086,6 +1269,7 @@ export type TermSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   startDate?: boolean
   endDate?: boolean
   isActive?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -1093,6 +1277,7 @@ export type TermSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   financeStructures?: boolean | Prisma.Term$financeStructuresArgs<ExtArgs>
   students?: boolean | Prisma.Term$studentsArgs<ExtArgs>
   studentEnrollments?: boolean | Prisma.Term$studentEnrollmentsArgs<ExtArgs>
+  attendanceSessions?: boolean | Prisma.Term$attendanceSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.TermCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["term"]>
 
@@ -1104,6 +1289,7 @@ export type TermSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   startDate?: boolean
   endDate?: boolean
   isActive?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -1117,6 +1303,7 @@ export type TermSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   startDate?: boolean
   endDate?: boolean
   isActive?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -1130,17 +1317,19 @@ export type TermSelectScalar = {
   startDate?: boolean
   endDate?: boolean
   isActive?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TermOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "academicYearId" | "feeAmount" | "startDate" | "endDate" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["term"]>
+export type TermOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "academicYearId" | "feeAmount" | "startDate" | "endDate" | "isActive" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["term"]>
 export type TermInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   studentTermFees?: boolean | Prisma.Term$studentTermFeesArgs<ExtArgs>
   financeStructures?: boolean | Prisma.Term$financeStructuresArgs<ExtArgs>
   students?: boolean | Prisma.Term$studentsArgs<ExtArgs>
   studentEnrollments?: boolean | Prisma.Term$studentEnrollmentsArgs<ExtArgs>
+  attendanceSessions?: boolean | Prisma.Term$attendanceSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.TermCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TermIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1158,6 +1347,7 @@ export type $TermPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     financeStructures: Prisma.$FinanceStructurePayload<ExtArgs>[]
     students: Prisma.$StudentPayload<ExtArgs>[]
     studentEnrollments: Prisma.$StudentEnrollmentPayload<ExtArgs>[]
+    attendanceSessions: Prisma.$AttendanceSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1167,6 +1357,7 @@ export type $TermPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     startDate: Date | null
     endDate: Date | null
     isActive: boolean
+    status: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["term"]>
@@ -1568,6 +1759,7 @@ export interface Prisma__TermClient<T, Null = never, ExtArgs extends runtime.Typ
   financeStructures<T extends Prisma.Term$financeStructuresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Term$financeStructuresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinanceStructurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   students<T extends Prisma.Term$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Term$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   studentEnrollments<T extends Prisma.Term$studentEnrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Term$studentEnrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attendanceSessions<T extends Prisma.Term$attendanceSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Term$attendanceSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1604,6 +1796,7 @@ export interface TermFieldRefs {
   readonly startDate: Prisma.FieldRef<"Term", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Term", 'DateTime'>
   readonly isActive: Prisma.FieldRef<"Term", 'Boolean'>
+  readonly status: Prisma.FieldRef<"Term", 'String'>
   readonly createdAt: Prisma.FieldRef<"Term", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Term", 'DateTime'>
 }
@@ -2100,6 +2293,30 @@ export type Term$studentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.StudentEnrollmentScalarFieldEnum | Prisma.StudentEnrollmentScalarFieldEnum[]
+}
+
+/**
+ * Term.attendanceSessions
+ */
+export type Term$attendanceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttendanceSession
+   */
+  select?: Prisma.AttendanceSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttendanceSession
+   */
+  omit?: Prisma.AttendanceSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttendanceSessionInclude<ExtArgs> | null
+  where?: Prisma.AttendanceSessionWhereInput
+  orderBy?: Prisma.AttendanceSessionOrderByWithRelationInput | Prisma.AttendanceSessionOrderByWithRelationInput[]
+  cursor?: Prisma.AttendanceSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttendanceSessionScalarFieldEnum | Prisma.AttendanceSessionScalarFieldEnum[]
 }
 
 /**

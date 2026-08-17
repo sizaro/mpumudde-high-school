@@ -45,6 +45,16 @@ class StudentService {
   async deleteStudent(studentId: string): Promise<void> {
     await api.delete(`/students/${studentId}`);
   }
+
+  async getPromotionCandidates(academicYearId: string, classId: string) {
+    const { data } = await api.get("/students/promotion/candidates", { params: { academicYearId, classId } });
+    return data;
+  }
+
+  async processPromotion(payload: Record<string, unknown>) {
+    const { data } = await api.post("/students/promotion/process", payload);
+    return data;
+  }
 }
 
 export default new StudentService();

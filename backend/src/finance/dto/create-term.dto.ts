@@ -1,14 +1,8 @@
-import { IsString, IsNumber, IsDateString, IsOptional, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsDateString, IsOptional, IsIn } from 'class-validator';
 
 export class CreateTermDto {
   @IsString()
   name!: string;
-
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  feeAmount!: number;
 
   @IsDateString()
   startDate!: string;
@@ -17,8 +11,8 @@ export class CreateTermDto {
   endDate!: string;
 
   @IsOptional()
-  @IsOptional()
-  isActive?: boolean;
+  @IsIn(['UPCOMING', 'ACTIVE', 'COMPLETED'])
+  status?: string;
 
   @IsOptional()
   @IsString()

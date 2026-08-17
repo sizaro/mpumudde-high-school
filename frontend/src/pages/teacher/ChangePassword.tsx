@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import AuthService from "../../services/authService";
 
 function errorMessage(error: unknown) {
@@ -14,6 +15,7 @@ export default function ChangePassword() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [visible, setVisible] = useState({ current: false, next: false, confirm: false });
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -34,10 +36,14 @@ export default function ChangePassword() {
     <form onSubmit={submit} className="mt-6 space-y-4 rounded-xl border bg-white p-6">
       {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
       {message && <p className="rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700">{message}</p>}
-      <label className="block text-sm font-medium">Current password<input required type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} className="mt-1 w-full rounded-lg border px-3 py-2" /></label>
-      <label className="block text-sm font-medium">New password<input required minLength={8} type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} className="mt-1 w-full rounded-lg border px-3 py-2" /></label>
-      <label className="block text-sm font-medium">Confirm new password<input required minLength={8} type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} className="mt-1 w-full rounded-lg border px-3 py-2" /></label>
+      <PasswordInput label="Current password" value={currentPassword} onChange={setCurrentPassword} shown={visible.current} onToggle={() => setVisible((value) => ({ ...value, current: !value.current }))} />
+      <PasswordInput label="New password" value={newPassword} onChange={setNewPassword} shown={visible.next} onToggle={() => setVisible((value) => ({ ...value, next: !value.next }))} minimum />
+      <PasswordInput label="Confirm new password" value={confirmPassword} onChange={setConfirmPassword} shown={visible.confirm} onToggle={() => setVisible((value) => ({ ...value, confirm: !value.confirm }))} minimum />
       <button disabled={saving} className="rounded-lg bg-blue-600 px-5 py-2 font-semibold text-white disabled:opacity-50">{saving ? "Saving..." : "Update password"}</button>
     </form>
   </div>;
+}
+
+function PasswordInput({ label, value, onChange, shown, onToggle, minimum = false }: { label: string; value: string; onChange: (value: string) => void; shown: boolean; onToggle: () => void; minimum?: boolean }) {
+  return <label className="block text-sm font-medium">{label}<span className="relative mt-1 block"><input required minLength={minimum ? 8 : undefined} type={shown ? "text" : "password"} value={value} onChange={(event) => onChange(event.target.value)} className="w-full rounded-lg border px-3 py-2 pr-11" /><button type="button" onClick={onToggle} className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-slate-500" aria-label={shown ? `Hide ${label.toLowerCase()}` : `Show ${label.toLowerCase()}`}>{shown ? <EyeOff size={18} /> : <Eye size={18} />}</button></span></label>;
 }

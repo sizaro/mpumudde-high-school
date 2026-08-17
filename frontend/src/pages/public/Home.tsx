@@ -27,7 +27,14 @@ import {
 
 export default function Home() {
   useEffect(() => {
-    AOS.init({ duration: 650, easing: "ease-out-cubic", once: true, offset: 70, disable: () => window.matchMedia("(prefers-reduced-motion: reduce)").matches });
+    AOS.init({
+      duration: 650,
+      easing: "ease-out-cubic",
+      once: true,
+      offset: 70,
+      disable: () =>
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    });
     return () => AOS.refreshHard();
   }, []);
 

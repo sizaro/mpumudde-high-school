@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateTermDto } from './dto/create-term.dto.js';
 import { CreateStudentTermFeeDto } from './dto/create-student-term-fee.dto.js';
@@ -9,13 +9,15 @@ export class TermsService {
 
   // TERM MANAGEMENT
   async createTerm(createTermDto: CreateTermDto) {
+    if (!createTermDto.academicYearId) throw new BadRequestException('Academic year is required.');
+    const status = createTermDto.status ?? 'UPCOMING';
     return this.prisma.term.create({
       data: {
         name: createTermDto.name,
-        feeAmount: createTermDto.feeAmount,
         startDate: new Date(createTermDto.startDate),
         endDate: new Date(createTermDto.endDate),
-        isActive: createTermDto.isActive ?? true,
+        status,
+        isActive: status === 'ACTIVE',
         academicYear: {
           connect: {
             id: createTermDto.academicYearId ?? '',
@@ -38,7 +40,7 @@ export class TermsService {
 
   async getActiveTerm() {
     return this.prisma.term.findFirst({
-      where: { isActive: true },
+      where: { status: 'ACTIVE' },
       include: {
         studentTermFees: {
           include: { student: true },
@@ -100,7 +102,7 @@ export class TermsService {
     });
   }
 
-  // Assign fees to all active students for a specific term
+  // Materialize the configured finance structures as immutable student charges.
   async assignTermFeeToAllStudents(termId: string) {
     const term = await this.prisma.term.findUnique({
       where: { id: termId },
@@ -110,34 +112,34 @@ export class TermsService {
       throw new Error('Term not found');
     }
 
-    const students = await this.prisma.student.findMany({
-      where: { isActive: true },
-    });
-
-    const results: any[] = [];
-    for (const student of students) {
-      const result = await this.prisma.studentTermFee.upsert({
+    const structures = await this.prisma.financeStructure.findMany({ where: { termId, isActive: true } });
+    let eligible = 0;
+    let applied = 0;
+    for (const structure of structures) {
+      const students = await this.prisma.student.findMany({
         where: {
-          studentId_termId: {
-            studentId: student.id,
-            termId: termId,
-          },
+          isActive: true,
+          studentCategoryId: structure.studentCategoryId,
+          enrollments: { some: { academicYearId: structure.academicYearId, classId: structure.classId, status: 'ACTIVE' } },
         },
-        update: {},
-        create: {
-          studentId: student.id,
-          termId: termId,
-          amountOwed: term.feeAmount,
-          amountPaid: 0,
-        },
-        include: {
-          student: true,
-          term: true,
-        },
+        select: { id: true },
       });
-      results.push(result);
+      eligible += students.length;
+      const result = await this.prisma.studentCharge.createMany({
+        data: students.map(({ id: studentId }) => ({
+          studentId,
+          financeStructureId: structure.id,
+          expectedAmount: structure.expectedAmount,
+          academicYearId: structure.academicYearId,
+          termId: structure.termId,
+          classId: structure.classId,
+          studentCategoryId: structure.studentCategoryId,
+          feeTypeId: structure.feeTypeId,
+        })),
+        skipDuplicates: true,
+      });
+      applied += result.count;
     }
-
-    return results;
+    return { structures: structures.length, eligible, applied, skipped: eligible - applied };
   }
 }

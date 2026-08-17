@@ -6,6 +6,7 @@ import { LinkParentDto } from "./dto/link-parent.dto.js";
 import { UpdateStudentDto } from "./dto/update-student.dto.js";
 import { CompleteStudentRegistrationDto } from "./dto/complete-student-registration.dto.js";
 import * as bcrypt from "bcrypt";
+import crypto from "node:crypto";
 
 function generateGuardianTempPassword(length = 12) {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#";
@@ -41,6 +42,7 @@ export class StudentsService {
     ]);
     if (!term) throw new BadRequestException("The selected term does not belong to the selected academic year.");
     if (!classOffering) throw new BadRequestException("The selected class is not offered in this academic year.");
+    return classOffering;
   }
 
   async create(createStudentDto: CreateStudentDto) {
@@ -71,12 +73,16 @@ export class StudentsService {
       });
 
       if (created.academicYearId && created.termId && created.classId) {
+        const classOffering = await tx.academicYearClass.findUnique({
+          where: { academicYearId_classId: { academicYearId: created.academicYearId, classId: created.classId } },
+        });
         await tx.studentEnrollment.create({
           data: {
             studentId: created.id,
             academicYearId: created.academicYearId,
             termId: created.termId,
             classId: created.classId,
+            academicYearClassId: classOffering?.id,
             studentCategoryId: created.studentCategoryId,
           },
         });
@@ -133,7 +139,7 @@ export class StudentsService {
     });
   }
 
-  async createCompleteRegistration(dto: CompleteStudentRegistrationDto) {
+  async createCompleteRegistration(dto: CompleteStudentRegistrationDto, user?: { id?: string }) {
     const {
       student,
       primaryGuardian,
@@ -196,7 +202,7 @@ export class StudentsService {
       );
     return this.prisma.$transaction(
       async (tx) => {
-        await this.ensurePlacementIsAvailable(tx, student.academicYearId!, student.termId!, student.classId!);
+        const classOffering = await this.ensurePlacementIsAvailable(tx, student.academicYearId!, student.termId!, student.classId!);
         const admissionNumber = await this.generateStudentNumber(tx);
         const created = await tx.student.create({
           data: {
@@ -230,6 +236,7 @@ export class StudentsService {
             academicYearId: student.academicYearId!,
             termId: student.termId!,
             classId: student.classId!,
+            academicYearClassId: classOffering.id,
             studentCategoryId: student.studentCategoryId,
           },
         });
@@ -248,6 +255,11 @@ export class StudentsService {
             data: matchingStructures.map((structure) => ({
               studentId: created.id,
               financeStructureId: structure.id,
+              academicYearId: structure.academicYearId,
+              termId: structure.termId,
+              classId: structure.classId,
+              studentCategoryId: structure.studentCategoryId,
+              feeTypeId: structure.feeTypeId,
               expectedAmount: structure.expectedAmount,
             })),
             skipDuplicates: true,
@@ -467,7 +479,16 @@ export class StudentsService {
                 },
               })
             : null;
-          await tx.payment.create({
+          if (!structure || !charge) {
+            const feeName = feeTypes.find((item) => item.id === payment.feeTypeId)?.name ?? "selected fee";
+            throw new BadRequestException(`Create and apply a ${feeName} finance structure for this year, term, class, and student category before receiving its registration payment.`);
+          }
+          const remainingBalance = charge.expectedAmount - charge.paidAmount - charge.waivedAmount;
+          if (payment.amount > remainingBalance) {
+            throw new BadRequestException(`The ${feeTypes.find((item) => item.id === payment.feeTypeId)?.name ?? "fee"} payment exceeds its remaining balance of UGX ${remainingBalance.toLocaleString()}.`);
+          }
+          const paymentDate = toKampalaLocalDateTime();
+          const createdPayment = await tx.payment.create({
             data: {
               studentId: created.id,
               feeTypeId: payment.feeTypeId,
@@ -476,10 +497,15 @@ export class StudentsService {
               amount: payment.amount,
               method: payment.method,
               receiptUrl: payment.receiptUrl,
+              proofUrl: payment.receiptUrl,
+              proofFileName: payment.receiptName,
               status: "COMPLETED",
-              date: toKampalaLocalDateTime(),
+              date: paymentDate,
+              receiptNumber: `MHS-${paymentDate.slice(0, 10).replace(/-/g, "")}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
+              recordedByUserId: user?.id,
             },
           });
+          await tx.paymentAudit.create({ data: { paymentId: createdPayment.id, action: "CREATED_DURING_REGISTRATION", actorUserId: user?.id, changes: { amount: payment.amount, studentChargeId: charge.id } } });
           if (charge) {
             const paidAmount = charge.paidAmount + payment.amount;
             const balance =
@@ -630,7 +656,7 @@ export class StudentsService {
         if (!nextAcademicYearId || !nextTermId || !nextClassId) {
           throw new BadRequestException("Academic year, term, and class are required for an active placement.");
         }
-        await this.ensurePlacementIsAvailable(tx, nextAcademicYearId, nextTermId, nextClassId);
+        const classOffering = await this.ensurePlacementIsAvailable(tx, nextAcademicYearId, nextTermId, nextClassId);
         await tx.studentEnrollment.updateMany({
           where: { studentId: id, isCurrent: true },
           data: { isCurrent: false, status: "COMPLETED", endedAt: new Date() },
@@ -641,6 +667,7 @@ export class StudentsService {
             academicYearId: nextAcademicYearId,
             termId: nextTermId,
             classId: nextClassId,
+            academicYearClassId: classOffering.id,
             studentCategoryId: nextCategoryId,
             status: "ACTIVE",
             isCurrent: true,
@@ -669,6 +696,135 @@ export class StudentsService {
           },
         },
       });
+    });
+  }
+
+  async getPromotionCandidates(academicYearId: string, classId: string) {
+    return this.prisma.studentEnrollment.findMany({
+      where: {
+        academicYearId,
+        classId,
+        status: "ACTIVE",
+        student: { isActive: true },
+      },
+      include: {
+        student: true,
+        academicYear: true,
+        schoolClass: true,
+        studentCategory: true,
+      },
+      orderBy: { student: { firstName: "asc" } },
+    });
+  }
+
+  async processPromotion(data: {
+    sourceAcademicYearId: string;
+    sourceClassId: string;
+    targetAcademicYearId?: string;
+    targetClassId?: string;
+    targetTermId?: string;
+    decisions: Array<{
+      studentId: string;
+      status: string;
+      studentCategoryId?: string;
+      notes?: string;
+    }>;
+  }) {
+    if (!data.decisions?.length) throw new BadRequestException("Select at least one student.");
+    const allowedStatuses = new Set(["PROMOTED", "REPEATED", "TRANSFERRED", "WITHDRAWN", "COMPLETED"]);
+    return this.prisma.$transaction(async (tx) => {
+      let targetOffering: { id: string } | null = null;
+      if (data.targetAcademicYearId && data.targetClassId) {
+        targetOffering = await tx.academicYearClass.findFirst({
+          where: {
+            academicYearId: data.targetAcademicYearId,
+            classId: data.targetClassId,
+            isActive: true,
+          },
+          select: { id: true },
+        });
+        if (!targetOffering) throw new BadRequestException("The destination class is not offered in the destination academic year.");
+      }
+      const results: object[] = [];
+      for (const decision of data.decisions) {
+        const status = String(decision.status).toUpperCase();
+        if (!allowedStatuses.has(status)) throw new BadRequestException("Invalid student movement status.");
+        const current = await tx.studentEnrollment.findFirst({
+          where: {
+            studentId: decision.studentId,
+            academicYearId: data.sourceAcademicYearId,
+            classId: data.sourceClassId,
+            status: "ACTIVE",
+          },
+        });
+        if (!current) throw new BadRequestException("A selected student is not actively enrolled in the source class.");
+        await tx.studentEnrollment.update({
+          where: { id: current.id },
+          data: { status, isCurrent: false, endedAt: new Date(), notes: decision.notes },
+        });
+
+        if (status === "PROMOTED" || status === "REPEATED") {
+          if (!data.targetAcademicYearId || !data.targetClassId || !targetOffering) {
+            throw new BadRequestException("A destination academic year and class are required for promoted or repeated students.");
+          }
+          const categoryId = decision.studentCategoryId ?? current.studentCategoryId;
+          const enrollment = await tx.studentEnrollment.create({
+            data: {
+              studentId: decision.studentId,
+              academicYearId: data.targetAcademicYearId,
+              termId: data.targetTermId,
+              classId: data.targetClassId,
+              academicYearClassId: targetOffering.id,
+              studentCategoryId: categoryId,
+              status: "ACTIVE",
+              isCurrent: true,
+              notes: decision.notes,
+            },
+          });
+          await tx.student.update({
+            where: { id: decision.studentId },
+            data: {
+              academicYearId: data.targetAcademicYearId,
+              termId: data.targetTermId,
+              classId: data.targetClassId,
+              studentCategoryId: categoryId,
+              isActive: true,
+            },
+          });
+          if (data.targetTermId && categoryId) {
+            const structures = await tx.financeStructure.findMany({
+              where: {
+                academicYearId: data.targetAcademicYearId,
+                termId: data.targetTermId,
+                classId: data.targetClassId,
+                studentCategoryId: categoryId,
+                isActive: true,
+              },
+            });
+            await tx.studentCharge.createMany({
+              data: structures.map((structure) => ({
+                studentId: decision.studentId,
+                financeStructureId: structure.id,
+                academicYearId: structure.academicYearId,
+                termId: structure.termId,
+                classId: structure.classId,
+                studentCategoryId: structure.studentCategoryId,
+                feeTypeId: structure.feeTypeId,
+                expectedAmount: structure.expectedAmount,
+              })),
+              skipDuplicates: true,
+            });
+          }
+          results.push(enrollment);
+        } else {
+          await tx.student.update({
+            where: { id: decision.studentId },
+            data: { isActive: false },
+          });
+          results.push(current);
+        }
+      }
+      return { processed: results.length, results };
     });
   }
 

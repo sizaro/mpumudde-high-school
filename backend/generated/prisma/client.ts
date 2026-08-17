@@ -167,6 +167,11 @@ export type SchoolClass = Prisma.SchoolClassModel
  */
 export type AcademicYearClass = Prisma.AcademicYearClassModel
 /**
+ * Model ClassSubject
+ * 
+ */
+export type ClassSubject = Prisma.ClassSubjectModel
+/**
  * Model StudentEnrollment
  * 
  */
@@ -196,6 +201,11 @@ export type StudentTermFee = Prisma.StudentTermFeeModel
  * 
  */
 export type StudentCharge = Prisma.StudentChargeModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
 /**
  * Model Payment
  * 

@@ -20,6 +20,14 @@ export class AttendanceRecordDto {
 }
 
 export class CreateAttendanceSessionDto {
+  @IsOptional()
+  @IsString()
+  academicYearId?: string;
+
+  @IsOptional()
+  @IsString()
+  termId?: string;
+
   @IsString()
   @IsNotEmpty()
   classId!: string;
@@ -27,6 +35,14 @@ export class CreateAttendanceSessionDto {
   @IsString()
   @IsNotEmpty()
   subjectId!: string;
+
+  @IsOptional()
+  @IsString()
+  classSubjectId?: string;
+
+  @IsOptional()
+  @IsString()
+  overrideReason?: string;
 
   @IsOptional()
   @IsDateString()

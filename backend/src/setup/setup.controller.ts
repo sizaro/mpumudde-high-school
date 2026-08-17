@@ -15,6 +15,11 @@ export class SetupController {
     return this.setupService.listAcademicYears();
   }
 
+  @Get('active-context')
+  getActiveContext() {
+    return this.setupService.getActiveContext();
+  }
+
   @Post('academic-years')
   createAcademicYear(@Body() body: any) {
     return this.setupService.createAcademicYear(body);
@@ -38,6 +43,16 @@ export class SetupController {
   @Patch('academic-years/:id/classes')
   setAcademicYearClasses(@Param('id') id: string, @Body() body: { classIds?: string[] }) {
     return this.setupService.setAcademicYearClasses(id, Array.isArray(body.classIds) ? body.classIds : []);
+  }
+
+  @Get('academic-year-classes/:id/subjects')
+  listClassSubjects(@Param('id') id: string) {
+    return this.setupService.listClassSubjects(id);
+  }
+
+  @Patch('academic-year-classes/:id/subjects')
+  setClassSubjects(@Param('id') id: string, @Body() body: { subjectIds?: string[] }) {
+    return this.setupService.setClassSubjects(id, Array.isArray(body.subjectIds) ? body.subjectIds : []);
   }
 
   @Get('terms')

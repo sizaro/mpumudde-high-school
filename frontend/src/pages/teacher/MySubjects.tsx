@@ -17,11 +17,12 @@ export default function MySubjects() {
       {subjects.length === 0 ? (
         <p className="text-gray-500">No subjects assigned yet.</p>
       ) : (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {subjects.map((s) => (
             <div key={s.id} className="bg-white border rounded-lg p-5">
               <h2 className="font-semibold text-lg">{s.name}</h2>
               {s.code && <p className="text-sm text-gray-500">{s.code}</p>}
+              <p className="mt-3 text-sm text-slate-600">{s.appliesToAllClasses ? "Assigned for any active class" : s.classes?.length ? `Assigned to ${s.classes.map((item: any) => item.name).join(", ")}` : "No active class assignment"}</p>
             </div>
           ))}
         </div>

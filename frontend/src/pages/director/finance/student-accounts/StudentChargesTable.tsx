@@ -1,11 +1,14 @@
+import { useState } from "react";
 import type { StudentAccountDetails } from "../../../../services/studentAccountService";
+import ProofPreviewModal, { type ProofPreview } from "../payments/ProofPreviewModal";
 export default function StudentChargesTable({
   charges,
 }: {
   charges: StudentAccountDetails["charges"];
 }) {
+  const [proof, setProof] = useState<ProofPreview | null>(null);
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200">
+    <><div className="overflow-x-auto rounded-2xl border border-slate-200">
       <table className="min-w-full text-left text-sm">
         <thead className="bg-slate-50 text-slate-500">
           <tr>
@@ -48,17 +51,16 @@ export default function StudentChargesTable({
                 </td>
                 <td className="px-4 py-3">
                   {latestProof?.proofUrl ? (
-                    <a
-                      href={latestProof.proofUrl}
-                      target="_blank"
-                      rel="noreferrer"
+                    <button
+                      type="button"
+                      onClick={() => setProof({ url: latestProof.proofUrl!, fileName: latestProof.proofFileName })}
                       className="font-medium text-blue-600 hover:underline"
                     >
                       View proof
                       {(charge.payments?.length ?? 0) > 1
                         ? ` (${charge.payments?.length})`
                         : ""}
-                    </a>
+                    </button>
                   ) : (
                     "—"
                   )}
@@ -68,6 +70,6 @@ export default function StudentChargesTable({
           })}
         </tbody>
       </table>
-    </div>
+    </div><ProofPreviewModal proof={proof} onClose={() => setProof(null)} /></>
   );
 }

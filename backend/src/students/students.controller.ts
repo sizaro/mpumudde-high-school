@@ -7,6 +7,7 @@ import { CompleteStudentRegistrationDto } from './dto/complete-student-registrat
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
 import { Roles } from '../common/decorators/roles.decorator.js';
+import { CurrentUser } from '../common/decorators/current-user.decorator.js';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('SUPER_ADMIN')
@@ -20,13 +21,26 @@ export class StudentsController {
   }
 
   @Post('complete-registration')
-  async createComplete(@Body() dto: CompleteStudentRegistrationDto) {
-    return this.studentsService.createCompleteRegistration(dto);
+  async createComplete(@Body() dto: CompleteStudentRegistrationDto, @CurrentUser() user: { id?: string }) {
+    return this.studentsService.createCompleteRegistration(dto, user);
   }
 
   @Get()
   async findAll(@Query('includeInactive') includeInactive?: string) {
     return this.studentsService.findAll(includeInactive === 'true');
+  }
+
+  @Get('promotion/candidates')
+  getPromotionCandidates(
+    @Query('academicYearId') academicYearId: string,
+    @Query('classId') classId: string,
+  ) {
+    return this.studentsService.getPromotionCandidates(academicYearId, classId);
+  }
+
+  @Post('promotion/process')
+  processPromotion(@Body() body: any) {
+    return this.studentsService.processPromotion(body);
   }
 
   @Get(':id')

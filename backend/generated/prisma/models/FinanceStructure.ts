@@ -41,6 +41,7 @@ export type FinanceStructureMinAggregateOutputType = {
   classId: string | null
   studentCategoryId: string | null
   feeTypeId: string | null
+  academicYearClassId: string | null
   expectedAmount: number | null
   isActive: boolean | null
   createdByUserId: string | null
@@ -56,6 +57,7 @@ export type FinanceStructureMaxAggregateOutputType = {
   classId: string | null
   studentCategoryId: string | null
   feeTypeId: string | null
+  academicYearClassId: string | null
   expectedAmount: number | null
   isActive: boolean | null
   createdByUserId: string | null
@@ -71,6 +73,7 @@ export type FinanceStructureCountAggregateOutputType = {
   classId: number
   studentCategoryId: number
   feeTypeId: number
+  academicYearClassId: number
   expectedAmount: number
   isActive: number
   createdByUserId: number
@@ -96,6 +99,7 @@ export type FinanceStructureMinAggregateInputType = {
   classId?: true
   studentCategoryId?: true
   feeTypeId?: true
+  academicYearClassId?: true
   expectedAmount?: true
   isActive?: true
   createdByUserId?: true
@@ -111,6 +115,7 @@ export type FinanceStructureMaxAggregateInputType = {
   classId?: true
   studentCategoryId?: true
   feeTypeId?: true
+  academicYearClassId?: true
   expectedAmount?: true
   isActive?: true
   createdByUserId?: true
@@ -126,6 +131,7 @@ export type FinanceStructureCountAggregateInputType = {
   classId?: true
   studentCategoryId?: true
   feeTypeId?: true
+  academicYearClassId?: true
   expectedAmount?: true
   isActive?: true
   createdByUserId?: true
@@ -228,6 +234,7 @@ export type FinanceStructureGroupByOutputType = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId: string | null
   expectedAmount: number
   isActive: boolean
   createdByUserId: string | null
@@ -266,6 +273,7 @@ export type FinanceStructureWhereInput = {
   classId?: Prisma.StringFilter<"FinanceStructure"> | string
   studentCategoryId?: Prisma.StringFilter<"FinanceStructure"> | string
   feeTypeId?: Prisma.StringFilter<"FinanceStructure"> | string
+  academicYearClassId?: Prisma.StringNullableFilter<"FinanceStructure"> | string | null
   expectedAmount?: Prisma.IntFilter<"FinanceStructure"> | number
   isActive?: Prisma.BoolFilter<"FinanceStructure"> | boolean
   createdByUserId?: Prisma.StringNullableFilter<"FinanceStructure"> | string | null
@@ -277,6 +285,7 @@ export type FinanceStructureWhereInput = {
   schoolClass?: Prisma.XOR<Prisma.SchoolClassScalarRelationFilter, Prisma.SchoolClassWhereInput>
   studentCategory?: Prisma.XOR<Prisma.StudentCategoryScalarRelationFilter, Prisma.StudentCategoryWhereInput>
   feeType?: Prisma.XOR<Prisma.FeeTypeScalarRelationFilter, Prisma.FeeTypeWhereInput>
+  academicYearClass?: Prisma.XOR<Prisma.AcademicYearClassNullableScalarRelationFilter, Prisma.AcademicYearClassWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   payments?: Prisma.PaymentListRelationFilter
@@ -290,6 +299,7 @@ export type FinanceStructureOrderByWithRelationInput = {
   classId?: Prisma.SortOrder
   studentCategoryId?: Prisma.SortOrder
   feeTypeId?: Prisma.SortOrder
+  academicYearClassId?: Prisma.SortOrderInput | Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -301,6 +311,7 @@ export type FinanceStructureOrderByWithRelationInput = {
   schoolClass?: Prisma.SchoolClassOrderByWithRelationInput
   studentCategory?: Prisma.StudentCategoryOrderByWithRelationInput
   feeType?: Prisma.FeeTypeOrderByWithRelationInput
+  academicYearClass?: Prisma.AcademicYearClassOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
   updatedBy?: Prisma.UserOrderByWithRelationInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
@@ -318,6 +329,7 @@ export type FinanceStructureWhereUniqueInput = Prisma.AtLeast<{
   classId?: Prisma.StringFilter<"FinanceStructure"> | string
   studentCategoryId?: Prisma.StringFilter<"FinanceStructure"> | string
   feeTypeId?: Prisma.StringFilter<"FinanceStructure"> | string
+  academicYearClassId?: Prisma.StringNullableFilter<"FinanceStructure"> | string | null
   expectedAmount?: Prisma.IntFilter<"FinanceStructure"> | number
   isActive?: Prisma.BoolFilter<"FinanceStructure"> | boolean
   createdByUserId?: Prisma.StringNullableFilter<"FinanceStructure"> | string | null
@@ -329,6 +341,7 @@ export type FinanceStructureWhereUniqueInput = Prisma.AtLeast<{
   schoolClass?: Prisma.XOR<Prisma.SchoolClassScalarRelationFilter, Prisma.SchoolClassWhereInput>
   studentCategory?: Prisma.XOR<Prisma.StudentCategoryScalarRelationFilter, Prisma.StudentCategoryWhereInput>
   feeType?: Prisma.XOR<Prisma.FeeTypeScalarRelationFilter, Prisma.FeeTypeWhereInput>
+  academicYearClass?: Prisma.XOR<Prisma.AcademicYearClassNullableScalarRelationFilter, Prisma.AcademicYearClassWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   payments?: Prisma.PaymentListRelationFilter
@@ -342,6 +355,7 @@ export type FinanceStructureOrderByWithAggregationInput = {
   classId?: Prisma.SortOrder
   studentCategoryId?: Prisma.SortOrder
   feeTypeId?: Prisma.SortOrder
+  academicYearClassId?: Prisma.SortOrderInput | Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -365,6 +379,7 @@ export type FinanceStructureScalarWhereWithAggregatesInput = {
   classId?: Prisma.StringWithAggregatesFilter<"FinanceStructure"> | string
   studentCategoryId?: Prisma.StringWithAggregatesFilter<"FinanceStructure"> | string
   feeTypeId?: Prisma.StringWithAggregatesFilter<"FinanceStructure"> | string
+  academicYearClassId?: Prisma.StringNullableWithAggregatesFilter<"FinanceStructure"> | string | null
   expectedAmount?: Prisma.IntWithAggregatesFilter<"FinanceStructure"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"FinanceStructure"> | boolean
   createdByUserId?: Prisma.StringNullableWithAggregatesFilter<"FinanceStructure"> | string | null
@@ -384,6 +399,7 @@ export type FinanceStructureCreateInput = {
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
   studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
   feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
   payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
@@ -397,6 +413,7 @@ export type FinanceStructureUncheckedCreateInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -418,6 +435,7 @@ export type FinanceStructureUpdateInput = {
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
   studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
   feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
@@ -431,6 +449,7 @@ export type FinanceStructureUncheckedUpdateInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -448,6 +467,7 @@ export type FinanceStructureCreateManyInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -471,6 +491,7 @@ export type FinanceStructureUncheckedUpdateManyInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -504,6 +525,7 @@ export type FinanceStructureCountOrderByAggregateInput = {
   classId?: Prisma.SortOrder
   studentCategoryId?: Prisma.SortOrder
   feeTypeId?: Prisma.SortOrder
+  academicYearClassId?: Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
@@ -523,6 +545,7 @@ export type FinanceStructureMaxOrderByAggregateInput = {
   classId?: Prisma.SortOrder
   studentCategoryId?: Prisma.SortOrder
   feeTypeId?: Prisma.SortOrder
+  academicYearClassId?: Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
@@ -538,6 +561,7 @@ export type FinanceStructureMinOrderByAggregateInput = {
   classId?: Prisma.SortOrder
   studentCategoryId?: Prisma.SortOrder
   feeTypeId?: Prisma.SortOrder
+  academicYearClassId?: Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
@@ -770,6 +794,48 @@ export type FinanceStructureUncheckedUpdateManyWithoutSchoolClassNestedInput = {
   deleteMany?: Prisma.FinanceStructureScalarWhereInput | Prisma.FinanceStructureScalarWhereInput[]
 }
 
+export type FinanceStructureCreateNestedManyWithoutAcademicYearClassInput = {
+  create?: Prisma.XOR<Prisma.FinanceStructureCreateWithoutAcademicYearClassInput, Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput> | Prisma.FinanceStructureCreateWithoutAcademicYearClassInput[] | Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput[]
+  connectOrCreate?: Prisma.FinanceStructureCreateOrConnectWithoutAcademicYearClassInput | Prisma.FinanceStructureCreateOrConnectWithoutAcademicYearClassInput[]
+  createMany?: Prisma.FinanceStructureCreateManyAcademicYearClassInputEnvelope
+  connect?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+}
+
+export type FinanceStructureUncheckedCreateNestedManyWithoutAcademicYearClassInput = {
+  create?: Prisma.XOR<Prisma.FinanceStructureCreateWithoutAcademicYearClassInput, Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput> | Prisma.FinanceStructureCreateWithoutAcademicYearClassInput[] | Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput[]
+  connectOrCreate?: Prisma.FinanceStructureCreateOrConnectWithoutAcademicYearClassInput | Prisma.FinanceStructureCreateOrConnectWithoutAcademicYearClassInput[]
+  createMany?: Prisma.FinanceStructureCreateManyAcademicYearClassInputEnvelope
+  connect?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+}
+
+export type FinanceStructureUpdateManyWithoutAcademicYearClassNestedInput = {
+  create?: Prisma.XOR<Prisma.FinanceStructureCreateWithoutAcademicYearClassInput, Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput> | Prisma.FinanceStructureCreateWithoutAcademicYearClassInput[] | Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput[]
+  connectOrCreate?: Prisma.FinanceStructureCreateOrConnectWithoutAcademicYearClassInput | Prisma.FinanceStructureCreateOrConnectWithoutAcademicYearClassInput[]
+  upsert?: Prisma.FinanceStructureUpsertWithWhereUniqueWithoutAcademicYearClassInput | Prisma.FinanceStructureUpsertWithWhereUniqueWithoutAcademicYearClassInput[]
+  createMany?: Prisma.FinanceStructureCreateManyAcademicYearClassInputEnvelope
+  set?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+  disconnect?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+  delete?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+  connect?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+  update?: Prisma.FinanceStructureUpdateWithWhereUniqueWithoutAcademicYearClassInput | Prisma.FinanceStructureUpdateWithWhereUniqueWithoutAcademicYearClassInput[]
+  updateMany?: Prisma.FinanceStructureUpdateManyWithWhereWithoutAcademicYearClassInput | Prisma.FinanceStructureUpdateManyWithWhereWithoutAcademicYearClassInput[]
+  deleteMany?: Prisma.FinanceStructureScalarWhereInput | Prisma.FinanceStructureScalarWhereInput[]
+}
+
+export type FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassNestedInput = {
+  create?: Prisma.XOR<Prisma.FinanceStructureCreateWithoutAcademicYearClassInput, Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput> | Prisma.FinanceStructureCreateWithoutAcademicYearClassInput[] | Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput[]
+  connectOrCreate?: Prisma.FinanceStructureCreateOrConnectWithoutAcademicYearClassInput | Prisma.FinanceStructureCreateOrConnectWithoutAcademicYearClassInput[]
+  upsert?: Prisma.FinanceStructureUpsertWithWhereUniqueWithoutAcademicYearClassInput | Prisma.FinanceStructureUpsertWithWhereUniqueWithoutAcademicYearClassInput[]
+  createMany?: Prisma.FinanceStructureCreateManyAcademicYearClassInputEnvelope
+  set?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+  disconnect?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+  delete?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+  connect?: Prisma.FinanceStructureWhereUniqueInput | Prisma.FinanceStructureWhereUniqueInput[]
+  update?: Prisma.FinanceStructureUpdateWithWhereUniqueWithoutAcademicYearClassInput | Prisma.FinanceStructureUpdateWithWhereUniqueWithoutAcademicYearClassInput[]
+  updateMany?: Prisma.FinanceStructureUpdateManyWithWhereWithoutAcademicYearClassInput | Prisma.FinanceStructureUpdateManyWithWhereWithoutAcademicYearClassInput[]
+  deleteMany?: Prisma.FinanceStructureScalarWhereInput | Prisma.FinanceStructureScalarWhereInput[]
+}
+
 export type FinanceStructureCreateNestedManyWithoutStudentCategoryInput = {
   create?: Prisma.XOR<Prisma.FinanceStructureCreateWithoutStudentCategoryInput, Prisma.FinanceStructureUncheckedCreateWithoutStudentCategoryInput> | Prisma.FinanceStructureCreateWithoutStudentCategoryInput[] | Prisma.FinanceStructureUncheckedCreateWithoutStudentCategoryInput[]
   connectOrCreate?: Prisma.FinanceStructureCreateOrConnectWithoutStudentCategoryInput | Prisma.FinanceStructureCreateOrConnectWithoutStudentCategoryInput[]
@@ -895,6 +961,7 @@ export type FinanceStructureCreateWithoutCreatedByInput = {
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
   studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
   feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
   payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
   studentCharges?: Prisma.StudentChargeCreateNestedManyWithoutFinanceStructureInput
@@ -907,6 +974,7 @@ export type FinanceStructureUncheckedCreateWithoutCreatedByInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   updatedByUserId?: string | null
@@ -937,6 +1005,7 @@ export type FinanceStructureCreateWithoutUpdatedByInput = {
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
   studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
   feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
   payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
   studentCharges?: Prisma.StudentChargeCreateNestedManyWithoutFinanceStructureInput
@@ -949,6 +1018,7 @@ export type FinanceStructureUncheckedCreateWithoutUpdatedByInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -994,6 +1064,7 @@ export type FinanceStructureScalarWhereInput = {
   classId?: Prisma.StringFilter<"FinanceStructure"> | string
   studentCategoryId?: Prisma.StringFilter<"FinanceStructure"> | string
   feeTypeId?: Prisma.StringFilter<"FinanceStructure"> | string
+  academicYearClassId?: Prisma.StringNullableFilter<"FinanceStructure"> | string | null
   expectedAmount?: Prisma.IntFilter<"FinanceStructure"> | number
   isActive?: Prisma.BoolFilter<"FinanceStructure"> | boolean
   createdByUserId?: Prisma.StringNullableFilter<"FinanceStructure"> | string | null
@@ -1028,6 +1099,7 @@ export type FinanceStructureCreateWithoutAcademicYearInput = {
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
   studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
   feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
   payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
@@ -1040,6 +1112,7 @@ export type FinanceStructureUncheckedCreateWithoutAcademicYearInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1086,6 +1159,7 @@ export type FinanceStructureCreateWithoutTermInput = {
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
   studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
   feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
   payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
@@ -1098,6 +1172,7 @@ export type FinanceStructureUncheckedCreateWithoutTermInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1144,6 +1219,7 @@ export type FinanceStructureCreateWithoutSchoolClassInput = {
   term: Prisma.TermCreateNestedOneWithoutFinanceStructuresInput
   studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
   feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
   payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
@@ -1156,6 +1232,7 @@ export type FinanceStructureUncheckedCreateWithoutSchoolClassInput = {
   termId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1192,6 +1269,66 @@ export type FinanceStructureUpdateManyWithWhereWithoutSchoolClassInput = {
   data: Prisma.XOR<Prisma.FinanceStructureUpdateManyMutationInput, Prisma.FinanceStructureUncheckedUpdateManyWithoutSchoolClassInput>
 }
 
+export type FinanceStructureCreateWithoutAcademicYearClassInput = {
+  id?: string
+  expectedAmount: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutFinanceStructuresInput
+  term: Prisma.TermCreateNestedOneWithoutFinanceStructuresInput
+  schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
+  studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
+  feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
+  studentCharges?: Prisma.StudentChargeCreateNestedManyWithoutFinanceStructureInput
+}
+
+export type FinanceStructureUncheckedCreateWithoutAcademicYearClassInput = {
+  id?: string
+  academicYearId: string
+  termId: string
+  classId: string
+  studentCategoryId: string
+  feeTypeId: string
+  expectedAmount: number
+  isActive?: boolean
+  createdByUserId?: string | null
+  updatedByUserId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFinanceStructureInput
+  studentCharges?: Prisma.StudentChargeUncheckedCreateNestedManyWithoutFinanceStructureInput
+}
+
+export type FinanceStructureCreateOrConnectWithoutAcademicYearClassInput = {
+  where: Prisma.FinanceStructureWhereUniqueInput
+  create: Prisma.XOR<Prisma.FinanceStructureCreateWithoutAcademicYearClassInput, Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput>
+}
+
+export type FinanceStructureCreateManyAcademicYearClassInputEnvelope = {
+  data: Prisma.FinanceStructureCreateManyAcademicYearClassInput | Prisma.FinanceStructureCreateManyAcademicYearClassInput[]
+  skipDuplicates?: boolean
+}
+
+export type FinanceStructureUpsertWithWhereUniqueWithoutAcademicYearClassInput = {
+  where: Prisma.FinanceStructureWhereUniqueInput
+  update: Prisma.XOR<Prisma.FinanceStructureUpdateWithoutAcademicYearClassInput, Prisma.FinanceStructureUncheckedUpdateWithoutAcademicYearClassInput>
+  create: Prisma.XOR<Prisma.FinanceStructureCreateWithoutAcademicYearClassInput, Prisma.FinanceStructureUncheckedCreateWithoutAcademicYearClassInput>
+}
+
+export type FinanceStructureUpdateWithWhereUniqueWithoutAcademicYearClassInput = {
+  where: Prisma.FinanceStructureWhereUniqueInput
+  data: Prisma.XOR<Prisma.FinanceStructureUpdateWithoutAcademicYearClassInput, Prisma.FinanceStructureUncheckedUpdateWithoutAcademicYearClassInput>
+}
+
+export type FinanceStructureUpdateManyWithWhereWithoutAcademicYearClassInput = {
+  where: Prisma.FinanceStructureScalarWhereInput
+  data: Prisma.XOR<Prisma.FinanceStructureUpdateManyMutationInput, Prisma.FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassInput>
+}
+
 export type FinanceStructureCreateWithoutStudentCategoryInput = {
   id?: string
   expectedAmount: number
@@ -1202,6 +1339,7 @@ export type FinanceStructureCreateWithoutStudentCategoryInput = {
   term: Prisma.TermCreateNestedOneWithoutFinanceStructuresInput
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
   feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
   payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
@@ -1214,6 +1352,7 @@ export type FinanceStructureUncheckedCreateWithoutStudentCategoryInput = {
   termId: string
   classId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1260,6 +1399,7 @@ export type FinanceStructureCreateWithoutFeeTypeInput = {
   term: Prisma.TermCreateNestedOneWithoutFinanceStructuresInput
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
   studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
   payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
@@ -1272,6 +1412,7 @@ export type FinanceStructureUncheckedCreateWithoutFeeTypeInput = {
   termId: string
   classId: string
   studentCategoryId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1319,6 +1460,7 @@ export type FinanceStructureCreateWithoutStudentChargesInput = {
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
   studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
   feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
   payments?: Prisma.PaymentCreateNestedManyWithoutFinanceStructureInput
@@ -1331,6 +1473,7 @@ export type FinanceStructureUncheckedCreateWithoutStudentChargesInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1367,6 +1510,7 @@ export type FinanceStructureUpdateWithoutStudentChargesInput = {
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
   studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
   feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
@@ -1379,6 +1523,7 @@ export type FinanceStructureUncheckedUpdateWithoutStudentChargesInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1399,6 +1544,7 @@ export type FinanceStructureCreateWithoutPaymentsInput = {
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutFinanceStructuresInput
   studentCategory: Prisma.StudentCategoryCreateNestedOneWithoutFinanceStructuresInput
   feeType: Prisma.FeeTypeCreateNestedOneWithoutFinanceStructuresInput
+  academicYearClass?: Prisma.AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput
   createdBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutFinanceStructuresUpdatedInput
   studentCharges?: Prisma.StudentChargeCreateNestedManyWithoutFinanceStructureInput
@@ -1411,6 +1557,7 @@ export type FinanceStructureUncheckedCreateWithoutPaymentsInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1447,6 +1594,7 @@ export type FinanceStructureUpdateWithoutPaymentsInput = {
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
   studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
   feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
   studentCharges?: Prisma.StudentChargeUpdateManyWithoutFinanceStructureNestedInput
@@ -1459,6 +1607,7 @@ export type FinanceStructureUncheckedUpdateWithoutPaymentsInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1475,6 +1624,7 @@ export type FinanceStructureCreateManyCreatedByInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   updatedByUserId?: string | null
@@ -1489,6 +1639,7 @@ export type FinanceStructureCreateManyUpdatedByInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1507,6 +1658,7 @@ export type FinanceStructureUpdateWithoutCreatedByInput = {
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
   studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
   feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
   studentCharges?: Prisma.StudentChargeUpdateManyWithoutFinanceStructureNestedInput
@@ -1519,6 +1671,7 @@ export type FinanceStructureUncheckedUpdateWithoutCreatedByInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1535,6 +1688,7 @@ export type FinanceStructureUncheckedUpdateManyWithoutCreatedByInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1553,6 +1707,7 @@ export type FinanceStructureUpdateWithoutUpdatedByInput = {
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
   studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
   feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
   studentCharges?: Prisma.StudentChargeUpdateManyWithoutFinanceStructureNestedInput
@@ -1565,6 +1720,7 @@ export type FinanceStructureUncheckedUpdateWithoutUpdatedByInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1581,6 +1737,7 @@ export type FinanceStructureUncheckedUpdateManyWithoutUpdatedByInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1594,6 +1751,7 @@ export type FinanceStructureCreateManyAcademicYearInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1612,6 +1770,7 @@ export type FinanceStructureUpdateWithoutAcademicYearInput = {
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
   studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
   feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
@@ -1624,6 +1783,7 @@ export type FinanceStructureUncheckedUpdateWithoutAcademicYearInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1640,6 +1800,7 @@ export type FinanceStructureUncheckedUpdateManyWithoutAcademicYearInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1654,6 +1815,7 @@ export type FinanceStructureCreateManyTermInput = {
   classId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1672,6 +1834,7 @@ export type FinanceStructureUpdateWithoutTermInput = {
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
   studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
   feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
@@ -1684,6 +1847,7 @@ export type FinanceStructureUncheckedUpdateWithoutTermInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1700,6 +1864,7 @@ export type FinanceStructureUncheckedUpdateManyWithoutTermInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1714,6 +1879,7 @@ export type FinanceStructureCreateManySchoolClassInput = {
   termId: string
   studentCategoryId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1732,6 +1898,7 @@ export type FinanceStructureUpdateWithoutSchoolClassInput = {
   term?: Prisma.TermUpdateOneRequiredWithoutFinanceStructuresNestedInput
   studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
   feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
@@ -1744,6 +1911,7 @@ export type FinanceStructureUncheckedUpdateWithoutSchoolClassInput = {
   termId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1760,6 +1928,71 @@ export type FinanceStructureUncheckedUpdateManyWithoutSchoolClassInput = {
   termId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FinanceStructureCreateManyAcademicYearClassInput = {
+  id?: string
+  academicYearId: string
+  termId: string
+  classId: string
+  studentCategoryId: string
+  feeTypeId: string
+  expectedAmount: number
+  isActive?: boolean
+  createdByUserId?: string | null
+  updatedByUserId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type FinanceStructureUpdateWithoutAcademicYearClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  term?: Prisma.TermUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
+  studentCharges?: Prisma.StudentChargeUpdateManyWithoutFinanceStructureNestedInput
+}
+
+export type FinanceStructureUncheckedUpdateWithoutAcademicYearClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  termId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFinanceStructureNestedInput
+  studentCharges?: Prisma.StudentChargeUncheckedUpdateManyWithoutFinanceStructureNestedInput
+}
+
+export type FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  termId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1774,6 +2007,7 @@ export type FinanceStructureCreateManyStudentCategoryInput = {
   termId: string
   classId: string
   feeTypeId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1792,6 +2026,7 @@ export type FinanceStructureUpdateWithoutStudentCategoryInput = {
   term?: Prisma.TermUpdateOneRequiredWithoutFinanceStructuresNestedInput
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
   feeType?: Prisma.FeeTypeUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
@@ -1804,6 +2039,7 @@ export type FinanceStructureUncheckedUpdateWithoutStudentCategoryInput = {
   termId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1820,6 +2056,7 @@ export type FinanceStructureUncheckedUpdateManyWithoutStudentCategoryInput = {
   termId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   feeTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1834,6 +2071,7 @@ export type FinanceStructureCreateManyFeeTypeInput = {
   termId: string
   classId: string
   studentCategoryId: string
+  academicYearClassId?: string | null
   expectedAmount: number
   isActive?: boolean
   createdByUserId?: string | null
@@ -1852,6 +2090,7 @@ export type FinanceStructureUpdateWithoutFeeTypeInput = {
   term?: Prisma.TermUpdateOneRequiredWithoutFinanceStructuresNestedInput
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutFinanceStructuresNestedInput
   studentCategory?: Prisma.StudentCategoryUpdateOneRequiredWithoutFinanceStructuresNestedInput
+  academicYearClass?: Prisma.AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutFinanceStructuresCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutFinanceStructuresUpdatedNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutFinanceStructureNestedInput
@@ -1864,6 +2103,7 @@ export type FinanceStructureUncheckedUpdateWithoutFeeTypeInput = {
   termId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1880,6 +2120,7 @@ export type FinanceStructureUncheckedUpdateManyWithoutFeeTypeInput = {
   termId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   studentCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1935,6 +2176,7 @@ export type FinanceStructureSelect<ExtArgs extends runtime.Types.Extensions.Inte
   classId?: boolean
   studentCategoryId?: boolean
   feeTypeId?: boolean
+  academicYearClassId?: boolean
   expectedAmount?: boolean
   isActive?: boolean
   createdByUserId?: boolean
@@ -1946,6 +2188,7 @@ export type FinanceStructureSelect<ExtArgs extends runtime.Types.Extensions.Inte
   schoolClass?: boolean | Prisma.SchoolClassDefaultArgs<ExtArgs>
   studentCategory?: boolean | Prisma.StudentCategoryDefaultArgs<ExtArgs>
   feeType?: boolean | Prisma.FeeTypeDefaultArgs<ExtArgs>
+  academicYearClass?: boolean | Prisma.FinanceStructure$academicYearClassArgs<ExtArgs>
   createdBy?: boolean | Prisma.FinanceStructure$createdByArgs<ExtArgs>
   updatedBy?: boolean | Prisma.FinanceStructure$updatedByArgs<ExtArgs>
   payments?: boolean | Prisma.FinanceStructure$paymentsArgs<ExtArgs>
@@ -1960,6 +2203,7 @@ export type FinanceStructureSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   classId?: boolean
   studentCategoryId?: boolean
   feeTypeId?: boolean
+  academicYearClassId?: boolean
   expectedAmount?: boolean
   isActive?: boolean
   createdByUserId?: boolean
@@ -1971,6 +2215,7 @@ export type FinanceStructureSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   schoolClass?: boolean | Prisma.SchoolClassDefaultArgs<ExtArgs>
   studentCategory?: boolean | Prisma.StudentCategoryDefaultArgs<ExtArgs>
   feeType?: boolean | Prisma.FeeTypeDefaultArgs<ExtArgs>
+  academicYearClass?: boolean | Prisma.FinanceStructure$academicYearClassArgs<ExtArgs>
   createdBy?: boolean | Prisma.FinanceStructure$createdByArgs<ExtArgs>
   updatedBy?: boolean | Prisma.FinanceStructure$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["financeStructure"]>
@@ -1982,6 +2227,7 @@ export type FinanceStructureSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   classId?: boolean
   studentCategoryId?: boolean
   feeTypeId?: boolean
+  academicYearClassId?: boolean
   expectedAmount?: boolean
   isActive?: boolean
   createdByUserId?: boolean
@@ -1993,6 +2239,7 @@ export type FinanceStructureSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   schoolClass?: boolean | Prisma.SchoolClassDefaultArgs<ExtArgs>
   studentCategory?: boolean | Prisma.StudentCategoryDefaultArgs<ExtArgs>
   feeType?: boolean | Prisma.FeeTypeDefaultArgs<ExtArgs>
+  academicYearClass?: boolean | Prisma.FinanceStructure$academicYearClassArgs<ExtArgs>
   createdBy?: boolean | Prisma.FinanceStructure$createdByArgs<ExtArgs>
   updatedBy?: boolean | Prisma.FinanceStructure$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["financeStructure"]>
@@ -2004,6 +2251,7 @@ export type FinanceStructureSelectScalar = {
   classId?: boolean
   studentCategoryId?: boolean
   feeTypeId?: boolean
+  academicYearClassId?: boolean
   expectedAmount?: boolean
   isActive?: boolean
   createdByUserId?: boolean
@@ -2012,13 +2260,14 @@ export type FinanceStructureSelectScalar = {
   updatedAt?: boolean
 }
 
-export type FinanceStructureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "academicYearId" | "termId" | "classId" | "studentCategoryId" | "feeTypeId" | "expectedAmount" | "isActive" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["financeStructure"]>
+export type FinanceStructureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "academicYearId" | "termId" | "classId" | "studentCategoryId" | "feeTypeId" | "academicYearClassId" | "expectedAmount" | "isActive" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["financeStructure"]>
 export type FinanceStructureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   term?: boolean | Prisma.TermDefaultArgs<ExtArgs>
   schoolClass?: boolean | Prisma.SchoolClassDefaultArgs<ExtArgs>
   studentCategory?: boolean | Prisma.StudentCategoryDefaultArgs<ExtArgs>
   feeType?: boolean | Prisma.FeeTypeDefaultArgs<ExtArgs>
+  academicYearClass?: boolean | Prisma.FinanceStructure$academicYearClassArgs<ExtArgs>
   createdBy?: boolean | Prisma.FinanceStructure$createdByArgs<ExtArgs>
   updatedBy?: boolean | Prisma.FinanceStructure$updatedByArgs<ExtArgs>
   payments?: boolean | Prisma.FinanceStructure$paymentsArgs<ExtArgs>
@@ -2031,6 +2280,7 @@ export type FinanceStructureIncludeCreateManyAndReturn<ExtArgs extends runtime.T
   schoolClass?: boolean | Prisma.SchoolClassDefaultArgs<ExtArgs>
   studentCategory?: boolean | Prisma.StudentCategoryDefaultArgs<ExtArgs>
   feeType?: boolean | Prisma.FeeTypeDefaultArgs<ExtArgs>
+  academicYearClass?: boolean | Prisma.FinanceStructure$academicYearClassArgs<ExtArgs>
   createdBy?: boolean | Prisma.FinanceStructure$createdByArgs<ExtArgs>
   updatedBy?: boolean | Prisma.FinanceStructure$updatedByArgs<ExtArgs>
 }
@@ -2040,6 +2290,7 @@ export type FinanceStructureIncludeUpdateManyAndReturn<ExtArgs extends runtime.T
   schoolClass?: boolean | Prisma.SchoolClassDefaultArgs<ExtArgs>
   studentCategory?: boolean | Prisma.StudentCategoryDefaultArgs<ExtArgs>
   feeType?: boolean | Prisma.FeeTypeDefaultArgs<ExtArgs>
+  academicYearClass?: boolean | Prisma.FinanceStructure$academicYearClassArgs<ExtArgs>
   createdBy?: boolean | Prisma.FinanceStructure$createdByArgs<ExtArgs>
   updatedBy?: boolean | Prisma.FinanceStructure$updatedByArgs<ExtArgs>
 }
@@ -2052,6 +2303,7 @@ export type $FinanceStructurePayload<ExtArgs extends runtime.Types.Extensions.In
     schoolClass: Prisma.$SchoolClassPayload<ExtArgs>
     studentCategory: Prisma.$StudentCategoryPayload<ExtArgs>
     feeType: Prisma.$FeeTypePayload<ExtArgs>
+    academicYearClass: Prisma.$AcademicYearClassPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs> | null
     updatedBy: Prisma.$UserPayload<ExtArgs> | null
     payments: Prisma.$PaymentPayload<ExtArgs>[]
@@ -2064,6 +2316,7 @@ export type $FinanceStructurePayload<ExtArgs extends runtime.Types.Extensions.In
     classId: string
     studentCategoryId: string
     feeTypeId: string
+    academicYearClassId: string | null
     expectedAmount: number
     isActive: boolean
     createdByUserId: string | null
@@ -2469,6 +2722,7 @@ export interface Prisma__FinanceStructureClient<T, Null = never, ExtArgs extends
   schoolClass<T extends Prisma.SchoolClassDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SchoolClassDefaultArgs<ExtArgs>>): Prisma.Prisma__SchoolClassClient<runtime.Types.Result.GetResult<Prisma.$SchoolClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   studentCategory<T extends Prisma.StudentCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentCategoryClient<runtime.Types.Result.GetResult<Prisma.$StudentCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   feeType<T extends Prisma.FeeTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FeeTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__FeeTypeClient<runtime.Types.Result.GetResult<Prisma.$FeeTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  academicYearClass<T extends Prisma.FinanceStructure$academicYearClassArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinanceStructure$academicYearClassArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClassClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.FinanceStructure$createdByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinanceStructure$createdByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   updatedBy<T extends Prisma.FinanceStructure$updatedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinanceStructure$updatedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payments<T extends Prisma.FinanceStructure$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinanceStructure$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2508,6 +2762,7 @@ export interface FinanceStructureFieldRefs {
   readonly classId: Prisma.FieldRef<"FinanceStructure", 'String'>
   readonly studentCategoryId: Prisma.FieldRef<"FinanceStructure", 'String'>
   readonly feeTypeId: Prisma.FieldRef<"FinanceStructure", 'String'>
+  readonly academicYearClassId: Prisma.FieldRef<"FinanceStructure", 'String'>
   readonly expectedAmount: Prisma.FieldRef<"FinanceStructure", 'Int'>
   readonly isActive: Prisma.FieldRef<"FinanceStructure", 'Boolean'>
   readonly createdByUserId: Prisma.FieldRef<"FinanceStructure", 'String'>
@@ -2912,6 +3167,25 @@ export type FinanceStructureDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many FinanceStructures to delete.
    */
   limit?: number
+}
+
+/**
+ * FinanceStructure.academicYearClass
+ */
+export type FinanceStructure$academicYearClassArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AcademicYearClass
+   */
+  select?: Prisma.AcademicYearClassSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AcademicYearClass
+   */
+  omit?: Prisma.AcademicYearClassOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AcademicYearClassInclude<ExtArgs> | null
+  where?: Prisma.AcademicYearClassWhereInput
 }
 
 /**

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import ChildTabs from "./ChildTabs";
 import { useParentDashboard } from "./ParentDashboardContext";
-import PaymentProofViewer from "../director/finance/payments/PaymentProofViewer";
+import ProofPreviewModal from "../director/finance/payments/ProofPreviewModal";
 
 const money = (value: number) => `UGX ${value.toLocaleString()}`;
 
@@ -187,7 +187,7 @@ export default function ParentFinance() {
                                   fileName: latestProof.proofFileName,
                                 })
                               }
-                              className="font-semibold text-blue-700"
+                              className="portal-link rounded-lg px-2 py-1 hover:bg-sky-50"
                             >
                               View proof
                               {(charge.paymentProofs?.length ?? 0) > 1
@@ -217,21 +217,7 @@ export default function ParentFinance() {
               </tfoot>
             </table>
           </section>
-          {selectedProof && (
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setSelectedProof(null)}
-                className="absolute right-4 top-4 z-10 rounded-xl bg-slate-900 px-3 py-2 text-xs font-semibold text-white"
-              >
-                Close preview
-              </button>
-              <PaymentProofViewer
-                url={selectedProof.url}
-                fileName={selectedProof.fileName}
-              />
-            </div>
-          )}
+          <ProofPreviewModal proof={selectedProof} onClose={() => setSelectedProof(null)} />
           <section className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
             <div className="p-5">
               <h2 className="text-xl font-semibold">Payment history</h2>
@@ -305,7 +291,7 @@ export default function ParentFinance() {
                                 fileName: payment.proofFileName,
                               })
                             }
-                            className="font-semibold text-blue-700"
+                            className="portal-link rounded-lg px-2 py-1 hover:bg-sky-50"
                           >
                             View proof
                           </button>
@@ -342,7 +328,7 @@ function Card({
 }) {
   return (
     <div
-      className={`rounded-3xl border p-5 shadow-sm ${warning ? "border-amber-200 bg-amber-50" : positive ? "border-emerald-200 bg-emerald-50" : "border-slate-200 bg-white"}`}
+      className={`portal-metric-card p-5 ${warning ? "portal-tone-accent" : positive ? "portal-tone-secondary" : "portal-tone-highlight"}`}
     >
       <p className="text-sm text-slate-500">{label}</p>
       <p className="mt-2 text-2xl font-bold">{money(value)}</p>
@@ -355,7 +341,7 @@ function Badge({ value }: { value: string }) {
   const bad = ["REVERSED", "REJECTED", "NOT_PAID"].includes(status);
   return (
     <span
-      className={`rounded-full px-3 py-1 text-xs font-semibold ${good ? "bg-emerald-100 text-emerald-800" : bad ? "bg-red-100 text-red-800" : "bg-amber-100 text-amber-800"}`}
+      className={`portal-status ${good ? "portal-status--success" : bad ? "portal-status--danger" : "portal-status--warning"}`}
     >
       {value.replaceAll("_", " ")}
     </span>

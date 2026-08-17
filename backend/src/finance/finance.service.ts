@@ -146,7 +146,7 @@ export class FinanceService {
     user?: RequestUser,
   ) {
     const [term, classOffering] = await Promise.all([
-      this.prisma.term.findFirst({ where: { id: createFeeStructureDto.termId, academicYearId: createFeeStructureDto.academicYearId, isActive: true }, select: { id: true } }),
+      this.prisma.term.findFirst({ where: { id: createFeeStructureDto.termId, academicYearId: createFeeStructureDto.academicYearId }, select: { id: true } }),
       this.prisma.academicYearClass.findFirst({ where: { academicYearId: createFeeStructureDto.academicYearId, classId: createFeeStructureDto.classId, isActive: true }, select: { id: true } }),
     ]);
     if (!term) throw new BadRequestException('The selected term does not belong to this academic year.');
@@ -154,6 +154,7 @@ export class FinanceService {
     return this.prisma.financeStructure.create({
       data: {
         academicYearId: createFeeStructureDto.academicYearId,
+        academicYearClassId: classOffering.id,
         termId: createFeeStructureDto.termId,
         classId: createFeeStructureDto.classId,
         studentCategoryId: createFeeStructureDto.studentCategoryId,
@@ -205,7 +206,7 @@ export class FinanceService {
     const nextTermId = updateFeeStructureDto.termId ?? existing.termId;
     const nextClassId = updateFeeStructureDto.classId ?? existing.classId;
     const [term, classOffering] = await Promise.all([
-      this.prisma.term.findFirst({ where: { id: nextTermId, academicYearId: nextAcademicYearId, isActive: true }, select: { id: true } }),
+      this.prisma.term.findFirst({ where: { id: nextTermId, academicYearId: nextAcademicYearId }, select: { id: true } }),
       this.prisma.academicYearClass.findFirst({ where: { academicYearId: nextAcademicYearId, classId: nextClassId, isActive: true }, select: { id: true } }),
     ]);
     if (!term) throw new BadRequestException('The selected term does not belong to this academic year.');
@@ -214,6 +215,7 @@ export class FinanceService {
       where: { id },
       data: {
         academicYearId: updateFeeStructureDto.academicYearId,
+        academicYearClassId: classOffering.id,
         termId: updateFeeStructureDto.termId,
         classId: updateFeeStructureDto.classId,
         studentCategoryId: updateFeeStructureDto.studentCategoryId,
@@ -244,11 +246,15 @@ export class FinanceService {
 
     const students = await this.prisma.student.findMany({
       where: {
-        academicYearId: structure.academicYearId,
-        termId: structure.termId,
-        classId: structure.classId,
         studentCategoryId: structure.studentCategoryId,
         isActive: true,
+        enrollments: {
+          some: {
+            academicYearId: structure.academicYearId,
+            classId: structure.classId,
+            status: 'ACTIVE',
+          },
+        },
       },
       select: { id: true },
     });
@@ -259,6 +265,11 @@ export class FinanceService {
         studentId: student.id,
         financeStructureId: structure.id,
         expectedAmount: structure.expectedAmount,
+        academicYearId: structure.academicYearId,
+        termId: structure.termId,
+        classId: structure.classId,
+        studentCategoryId: structure.studentCategoryId,
+        feeTypeId: structure.feeTypeId,
       })),
       skipDuplicates: true,
     });
@@ -314,45 +325,30 @@ export class FinanceService {
             studentId: createFinanceDto.studentId,
             financeStructureId,
             expectedAmount: structure.expectedAmount,
+            academicYearId: structure.academicYearId,
+            termId: structure.termId,
+            classId: structure.classId,
+            studentCategoryId: structure.studentCategoryId,
+            feeTypeId: structure.feeTypeId,
           },
         });
         studentChargeId = charge.id;
         feeTypeId = structure.feeTypeId;
       }
-      if (feeTypeId && !studentChargeId) {
-        const feeType = await tx.feeType.findUnique({ where: { id: feeTypeId } });
-        if (!feeType || !feeType.isActive) {
-          throw new BadRequestException('The selected fee type is not available');
-        }
-        const student = await tx.student.findUnique({ where: { id: createFinanceDto.studentId } });
-        if (!student?.academicYearId || !student.termId || !student.classId || !student.studentCategoryId) {
-          throw new BadRequestException('Complete the student academic placement before recording a payment');
-        }
-        const structure = await tx.financeStructure.findFirst({
-          where: {
-            academicYearId: student.academicYearId,
-            termId: student.termId,
-            classId: student.classId,
-            studentCategoryId: student.studentCategoryId,
-            feeTypeId,
-            isActive: true,
-          },
-        });
-        if (!structure) {
-          throw new BadRequestException(`No active ${feeType.name} structure matches this student's year, term, class, and category`);
-        }
-        const charge = await tx.studentCharge.upsert({
-          where: { studentId_financeStructureId: { studentId: student.id, financeStructureId: structure.id } },
-          update: {},
-          create: { studentId: student.id, financeStructureId: structure.id, expectedAmount: structure.expectedAmount },
-        });
-        studentChargeId = charge.id;
-        financeStructureId = structure.id;
-      }
+      // A bare fee type is deliberately insufficient. The selected charge is the
+      // source of truth for the debt's year, term, class, category and amount.
       if (!studentChargeId) {
         throw new BadRequestException(
           'Select the exact student charge, including its academic year, term, class, category, and fee type',
         );
+      }
+      const selectedCharge = await tx.studentCharge.findUnique({ where: { id: studentChargeId } });
+      if (!selectedCharge || selectedCharge.studentId !== createFinanceDto.studentId) {
+        throw new BadRequestException('The selected student charge is invalid');
+      }
+      const remainingBalance = selectedCharge.expectedAmount - selectedCharge.paidAmount - selectedCharge.waivedAmount;
+      if (createFinanceDto.amount > remainingBalance) {
+        throw new BadRequestException(`Payment exceeds the selected charge balance of UGX ${remainingBalance.toLocaleString()}`);
       }
       if (studentTermFeeId) {
         const termFee = await tx.studentTermFee.findUnique({
@@ -504,11 +500,32 @@ export class FinanceService {
     const search = filters.search?.trim();
     const students = await this.prisma.student.findMany({
       where: {
-        academicYearId: filters.academicYearId || undefined, termId: filters.termId || undefined,
-        classId: filters.classId || undefined, studentCategoryId: filters.studentCategoryId || undefined,
+        isActive: true,
+        studentCategoryId: filters.studentCategoryId || undefined,
+        enrollments: filters.academicYearId || filters.classId ? {
+          some: {
+            academicYearId: filters.academicYearId || undefined,
+            classId: filters.classId || undefined,
+          },
+        } : undefined,
+        financeCharges: filters.termId ? { some: { termId: filters.termId } } : undefined,
         OR: search ? [{ firstName: { contains: search, mode: 'insensitive' } }, { lastName: { contains: search, mode: 'insensitive' } }, { admissionNumber: { contains: search, mode: 'insensitive' } }] : undefined,
       },
-      include: { schoolClass: true, studentCategory: true, academicYear: true, term: true, financeCharges: true },
+      include: {
+        schoolClass: true,
+        studentCategory: true,
+        academicYear: true,
+        term: true,
+        enrollments: { include: { academicYear: true, schoolClass: true, term: true }, orderBy: { createdAt: 'desc' } },
+        financeCharges: {
+          where: {
+            academicYearId: filters.academicYearId || undefined,
+            termId: filters.termId || undefined,
+            classId: filters.classId || undefined,
+            studentCategoryId: filters.studentCategoryId || undefined,
+          },
+        },
+      },
       orderBy: [{ firstName: 'asc' }, { lastName: 'asc' }],
     });
     return students.map((student) => {
@@ -523,24 +540,43 @@ export class FinanceService {
   async syncStudentCharges(studentId: string) {
     const student = await this.prisma.student.findUnique({
       where: { id: studentId },
-      select: { id: true, academicYearId: true, termId: true, classId: true, studentCategoryId: true },
+      select: {
+        id: true,
+        studentCategoryId: true,
+        enrollments: {
+          where: { status: 'ACTIVE' },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: { academicYearId: true, termId: true, classId: true },
+        },
+      },
     });
     if (!student) throw new NotFoundException('Student not found');
-    if (!student.academicYearId || !student.termId || !student.classId || !student.studentCategoryId) {
+    const enrollment = student.enrollments[0];
+    if (!enrollment?.academicYearId || !enrollment.termId || !enrollment.classId || !student.studentCategoryId) {
       throw new BadRequestException('Complete the student academic year, term, class, and category before assigning fees');
     }
     const structures = await this.prisma.financeStructure.findMany({
       where: {
-        academicYearId: student.academicYearId,
-        termId: student.termId,
-        classId: student.classId,
+        academicYearId: enrollment.academicYearId,
+        termId: enrollment.termId,
+        classId: enrollment.classId,
         studentCategoryId: student.studentCategoryId,
         isActive: true,
       },
     });
     if (structures.length) {
       await this.prisma.studentCharge.createMany({
-        data: structures.map((structure) => ({ studentId, financeStructureId: structure.id, expectedAmount: structure.expectedAmount })),
+        data: structures.map((structure) => ({
+          studentId,
+          financeStructureId: structure.id,
+          expectedAmount: structure.expectedAmount,
+          academicYearId: structure.academicYearId,
+          termId: structure.termId,
+          classId: structure.classId,
+          studentCategoryId: structure.studentCategoryId,
+          feeTypeId: structure.feeTypeId,
+        })),
         skipDuplicates: true,
       });
     }
@@ -552,6 +588,7 @@ export class FinanceService {
       where: { id: studentId },
       include: {
         schoolClass: true, studentCategory: true, academicYear: true, term: true,
+        enrollments: { include: { academicYear: true, term: true, schoolClass: true }, orderBy: { createdAt: 'desc' } },
         financeCharges: { include: { financeStructure: { include: { feeType: true, term: true, academicYear: true, schoolClass: true, studentCategory: true } }, payments: { include: paymentInclude } } },
         payments: { include: paymentInclude, orderBy: { date: 'desc' } },
       },
@@ -560,7 +597,13 @@ export class FinanceService {
     const expectedAmount = student.financeCharges.reduce((sum, charge) => sum + charge.expectedAmount, 0);
     const paidAmount = student.financeCharges.reduce((sum, charge) => sum + charge.paidAmount, 0);
     const waivedAmount = student.financeCharges.reduce((sum, charge) => sum + charge.waivedAmount, 0);
-    const previousBalances = student.financeCharges.filter((charge) => charge.financeStructure.termId !== student.termId && charge.expectedAmount - charge.paidAmount - charge.waivedAmount > 0).map((charge) => ({ id: charge.id, academicYear: charge.financeStructure.academicYear.name, term: charge.financeStructure.term.name, feeType: charge.financeStructure.feeType.name, expectedAmount: charge.expectedAmount, paidAmount: charge.paidAmount, waivedAmount: charge.waivedAmount, balance: charge.expectedAmount - charge.paidAmount - charge.waivedAmount }));
+    const currentEnrollment = student.enrollments.find((enrollment) => enrollment.status === 'ACTIVE') ?? student.enrollments[0];
+    const previousBalances = student.financeCharges
+      .filter((charge) => (
+        charge.financeStructure.academicYearId !== currentEnrollment?.academicYearId ||
+        charge.financeStructure.termId !== currentEnrollment?.termId
+      ) && charge.expectedAmount - charge.paidAmount - charge.waivedAmount > 0)
+      .map((charge) => ({ id: charge.id, academicYear: charge.financeStructure.academicYear.name, term: charge.financeStructure.term.name, feeType: charge.financeStructure.feeType.name, expectedAmount: charge.expectedAmount, paidAmount: charge.paidAmount, waivedAmount: charge.waivedAmount, balance: charge.expectedAmount - charge.paidAmount - charge.waivedAmount }));
     return { student, summary: { expectedAmount, paidAmount, waivedAmount, outstandingBalance: expectedAmount - paidAmount - waivedAmount, status: this.chargeStatus(expectedAmount, paidAmount, waivedAmount), previousBalance: previousBalances.reduce((sum, item) => sum + item.balance, 0) }, charges: student.financeCharges, payments: student.payments, previousBalances };
   }
 

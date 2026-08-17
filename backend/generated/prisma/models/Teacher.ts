@@ -261,6 +261,7 @@ export type TeacherWhereInput = {
   qualifications?: Prisma.QualificationListRelationFilter
   teachingAssignments?: Prisma.TeacherAssignmentListRelationFilter
   attendanceSessions?: Prisma.AttendanceSessionListRelationFilter
+  expectedAttendanceSessions?: Prisma.AttendanceSessionListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
 }
 
@@ -286,6 +287,7 @@ export type TeacherOrderByWithRelationInput = {
   qualifications?: Prisma.QualificationOrderByRelationAggregateInput
   teachingAssignments?: Prisma.TeacherAssignmentOrderByRelationAggregateInput
   attendanceSessions?: Prisma.AttendanceSessionOrderByRelationAggregateInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
 }
 
@@ -314,6 +316,7 @@ export type TeacherWhereUniqueInput = Prisma.AtLeast<{
   qualifications?: Prisma.QualificationListRelationFilter
   teachingAssignments?: Prisma.TeacherAssignmentListRelationFilter
   attendanceSessions?: Prisma.AttendanceSessionListRelationFilter
+  expectedAttendanceSessions?: Prisma.AttendanceSessionListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
 }, "id" | "userId">
 
@@ -378,6 +381,7 @@ export type TeacherCreateInput = {
   qualifications?: Prisma.QualificationCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTeacherInput
 }
 
@@ -402,6 +406,7 @@ export type TeacherUncheckedCreateInput = {
   qualifications?: Prisma.QualificationUncheckedCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -426,6 +431,7 @@ export type TeacherUpdateInput = {
   qualifications?: Prisma.QualificationUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTeacherNestedInput
 }
 
@@ -450,6 +456,7 @@ export type TeacherUncheckedUpdateInput = {
   qualifications?: Prisma.QualificationUncheckedUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -672,12 +679,28 @@ export type TeacherCreateNestedOneWithoutAttendanceSessionsInput = {
   connect?: Prisma.TeacherWhereUniqueInput
 }
 
+export type TeacherCreateNestedOneWithoutExpectedAttendanceSessionsInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutExpectedAttendanceSessionsInput, Prisma.TeacherUncheckedCreateWithoutExpectedAttendanceSessionsInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutExpectedAttendanceSessionsInput
+  connect?: Prisma.TeacherWhereUniqueInput
+}
+
 export type TeacherUpdateOneRequiredWithoutAttendanceSessionsNestedInput = {
   create?: Prisma.XOR<Prisma.TeacherCreateWithoutAttendanceSessionsInput, Prisma.TeacherUncheckedCreateWithoutAttendanceSessionsInput>
   connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutAttendanceSessionsInput
   upsert?: Prisma.TeacherUpsertWithoutAttendanceSessionsInput
   connect?: Prisma.TeacherWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutAttendanceSessionsInput, Prisma.TeacherUpdateWithoutAttendanceSessionsInput>, Prisma.TeacherUncheckedUpdateWithoutAttendanceSessionsInput>
+}
+
+export type TeacherUpdateOneWithoutExpectedAttendanceSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutExpectedAttendanceSessionsInput, Prisma.TeacherUncheckedCreateWithoutExpectedAttendanceSessionsInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutExpectedAttendanceSessionsInput
+  upsert?: Prisma.TeacherUpsertWithoutExpectedAttendanceSessionsInput
+  disconnect?: Prisma.TeacherWhereInput | boolean
+  delete?: Prisma.TeacherWhereInput | boolean
+  connect?: Prisma.TeacherWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutExpectedAttendanceSessionsInput, Prisma.TeacherUpdateWithoutExpectedAttendanceSessionsInput>, Prisma.TeacherUncheckedUpdateWithoutExpectedAttendanceSessionsInput>
 }
 
 export type TeacherCreateNestedOneWithoutExpensesInput = {
@@ -716,6 +739,7 @@ export type TeacherCreateWithoutUserInput = {
   qualifications?: Prisma.QualificationCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTeacherInput
 }
 
@@ -739,6 +763,7 @@ export type TeacherUncheckedCreateWithoutUserInput = {
   qualifications?: Prisma.QualificationUncheckedCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -778,6 +803,7 @@ export type TeacherUpdateWithoutUserInput = {
   qualifications?: Prisma.QualificationUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTeacherNestedInput
 }
 
@@ -801,6 +827,7 @@ export type TeacherUncheckedUpdateWithoutUserInput = {
   qualifications?: Prisma.QualificationUncheckedUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -824,6 +851,7 @@ export type TeacherCreateWithoutEmploymentInput = {
   qualifications?: Prisma.QualificationCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTeacherInput
 }
 
@@ -847,6 +875,7 @@ export type TeacherUncheckedCreateWithoutEmploymentInput = {
   qualifications?: Prisma.QualificationUncheckedCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -886,6 +915,7 @@ export type TeacherUpdateWithoutEmploymentInput = {
   qualifications?: Prisma.QualificationUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTeacherNestedInput
 }
 
@@ -909,6 +939,7 @@ export type TeacherUncheckedUpdateWithoutEmploymentInput = {
   qualifications?: Prisma.QualificationUncheckedUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -932,6 +963,7 @@ export type TeacherCreateWithoutTeachingAssignmentsInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutTeacherInput
   qualifications?: Prisma.QualificationCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTeacherInput
 }
 
@@ -955,6 +987,7 @@ export type TeacherUncheckedCreateWithoutTeachingAssignmentsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutTeacherInput
   qualifications?: Prisma.QualificationUncheckedCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -994,6 +1027,7 @@ export type TeacherUpdateWithoutTeachingAssignmentsInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutTeacherNestedInput
   qualifications?: Prisma.QualificationUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1017,6 +1051,7 @@ export type TeacherUncheckedUpdateWithoutTeachingAssignmentsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutTeacherNestedInput
   qualifications?: Prisma.QualificationUncheckedUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1040,6 +1075,7 @@ export type TeacherCreateWithoutMedicalInformationInput = {
   qualifications?: Prisma.QualificationCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTeacherInput
 }
 
@@ -1063,6 +1099,7 @@ export type TeacherUncheckedCreateWithoutMedicalInformationInput = {
   qualifications?: Prisma.QualificationUncheckedCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -1102,6 +1139,7 @@ export type TeacherUpdateWithoutMedicalInformationInput = {
   qualifications?: Prisma.QualificationUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1125,6 +1163,7 @@ export type TeacherUncheckedUpdateWithoutMedicalInformationInput = {
   qualifications?: Prisma.QualificationUncheckedUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1148,6 +1187,7 @@ export type TeacherCreateWithoutEmergencyContactsInput = {
   qualifications?: Prisma.QualificationCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTeacherInput
 }
 
@@ -1171,6 +1211,7 @@ export type TeacherUncheckedCreateWithoutEmergencyContactsInput = {
   qualifications?: Prisma.QualificationUncheckedCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -1210,6 +1251,7 @@ export type TeacherUpdateWithoutEmergencyContactsInput = {
   qualifications?: Prisma.QualificationUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1233,6 +1275,7 @@ export type TeacherUncheckedUpdateWithoutEmergencyContactsInput = {
   qualifications?: Prisma.QualificationUncheckedUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1256,6 +1299,7 @@ export type TeacherCreateWithoutQualificationsInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTeacherInput
 }
 
@@ -1279,6 +1323,7 @@ export type TeacherUncheckedCreateWithoutQualificationsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -1318,6 +1363,7 @@ export type TeacherUpdateWithoutQualificationsInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1341,6 +1387,7 @@ export type TeacherUncheckedUpdateWithoutQualificationsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1364,6 +1411,7 @@ export type TeacherCreateWithoutAttendanceSessionsInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutTeacherInput
   qualifications?: Prisma.QualificationCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTeacherInput
 }
 
@@ -1387,12 +1435,66 @@ export type TeacherUncheckedCreateWithoutAttendanceSessionsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutTeacherInput
   qualifications?: Prisma.QualificationUncheckedCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutNormallyAssignedTeacherInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherCreateOrConnectWithoutAttendanceSessionsInput = {
   where: Prisma.TeacherWhereUniqueInput
   create: Prisma.XOR<Prisma.TeacherCreateWithoutAttendanceSessionsInput, Prisma.TeacherUncheckedCreateWithoutAttendanceSessionsInput>
+}
+
+export type TeacherCreateWithoutExpectedAttendanceSessionsInput = {
+  id?: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  gender?: string | null
+  dateOfBirth?: Date | string | null
+  phone?: string | null
+  email?: string | null
+  nationality?: string | null
+  address?: string | null
+  profilePhoto?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  employment?: Prisma.TeacherEmploymentCreateNestedOneWithoutTeacherInput
+  medicalInformation?: Prisma.MedicalInformationCreateNestedOneWithoutTeacherInput
+  emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutTeacherInput
+  qualifications?: Prisma.QualificationCreateNestedManyWithoutTeacherInput
+  teachingAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTeacherInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherUncheckedCreateWithoutExpectedAttendanceSessionsInput = {
+  id?: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  gender?: string | null
+  dateOfBirth?: Date | string | null
+  phone?: string | null
+  email?: string | null
+  nationality?: string | null
+  address?: string | null
+  profilePhoto?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employment?: Prisma.TeacherEmploymentUncheckedCreateNestedOneWithoutTeacherInput
+  medicalInformation?: Prisma.MedicalInformationUncheckedCreateNestedOneWithoutTeacherInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutTeacherInput
+  qualifications?: Prisma.QualificationUncheckedCreateNestedManyWithoutTeacherInput
+  teachingAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTeacherInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherCreateOrConnectWithoutExpectedAttendanceSessionsInput = {
+  where: Prisma.TeacherWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutExpectedAttendanceSessionsInput, Prisma.TeacherUncheckedCreateWithoutExpectedAttendanceSessionsInput>
 }
 
 export type TeacherUpsertWithoutAttendanceSessionsInput = {
@@ -1426,6 +1528,7 @@ export type TeacherUpdateWithoutAttendanceSessionsInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutTeacherNestedInput
   qualifications?: Prisma.QualificationUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutNormallyAssignedTeacherNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1449,6 +1552,66 @@ export type TeacherUncheckedUpdateWithoutAttendanceSessionsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutTeacherNestedInput
   qualifications?: Prisma.QualificationUncheckedUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutNormallyAssignedTeacherNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTeacherNestedInput
+}
+
+export type TeacherUpsertWithoutExpectedAttendanceSessionsInput = {
+  update: Prisma.XOR<Prisma.TeacherUpdateWithoutExpectedAttendanceSessionsInput, Prisma.TeacherUncheckedUpdateWithoutExpectedAttendanceSessionsInput>
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutExpectedAttendanceSessionsInput, Prisma.TeacherUncheckedCreateWithoutExpectedAttendanceSessionsInput>
+  where?: Prisma.TeacherWhereInput
+}
+
+export type TeacherUpdateToOneWithWhereWithoutExpectedAttendanceSessionsInput = {
+  where?: Prisma.TeacherWhereInput
+  data: Prisma.XOR<Prisma.TeacherUpdateWithoutExpectedAttendanceSessionsInput, Prisma.TeacherUncheckedUpdateWithoutExpectedAttendanceSessionsInput>
+}
+
+export type TeacherUpdateWithoutExpectedAttendanceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  employment?: Prisma.TeacherEmploymentUpdateOneWithoutTeacherNestedInput
+  medicalInformation?: Prisma.MedicalInformationUpdateOneWithoutTeacherNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutTeacherNestedInput
+  qualifications?: Prisma.QualificationUpdateManyWithoutTeacherNestedInput
+  teachingAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTeacherNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTeacherNestedInput
+}
+
+export type TeacherUncheckedUpdateWithoutExpectedAttendanceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePhoto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employment?: Prisma.TeacherEmploymentUncheckedUpdateOneWithoutTeacherNestedInput
+  medicalInformation?: Prisma.MedicalInformationUncheckedUpdateOneWithoutTeacherNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutTeacherNestedInput
+  qualifications?: Prisma.QualificationUncheckedUpdateManyWithoutTeacherNestedInput
+  teachingAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTeacherNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1473,6 +1636,7 @@ export type TeacherCreateWithoutExpensesInput = {
   qualifications?: Prisma.QualificationCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutNormallyAssignedTeacherInput
 }
 
 export type TeacherUncheckedCreateWithoutExpensesInput = {
@@ -1496,6 +1660,7 @@ export type TeacherUncheckedCreateWithoutExpensesInput = {
   qualifications?: Prisma.QualificationUncheckedCreateNestedManyWithoutTeacherInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutTeacherInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutNormallyAssignedTeacherInput
 }
 
 export type TeacherCreateOrConnectWithoutExpensesInput = {
@@ -1535,6 +1700,7 @@ export type TeacherUpdateWithoutExpensesInput = {
   qualifications?: Prisma.QualificationUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutNormallyAssignedTeacherNestedInput
 }
 
 export type TeacherUncheckedUpdateWithoutExpensesInput = {
@@ -1558,6 +1724,7 @@ export type TeacherUncheckedUpdateWithoutExpensesInput = {
   qualifications?: Prisma.QualificationUncheckedUpdateManyWithoutTeacherNestedInput
   teachingAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
   attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutTeacherNestedInput
+  expectedAttendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutNormallyAssignedTeacherNestedInput
 }
 
 
@@ -1570,6 +1737,7 @@ export type TeacherCountOutputType = {
   qualifications: number
   teachingAssignments: number
   attendanceSessions: number
+  expectedAttendanceSessions: number
   expenses: number
 }
 
@@ -1578,6 +1746,7 @@ export type TeacherCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   qualifications?: boolean | TeacherCountOutputTypeCountQualificationsArgs
   teachingAssignments?: boolean | TeacherCountOutputTypeCountTeachingAssignmentsArgs
   attendanceSessions?: boolean | TeacherCountOutputTypeCountAttendanceSessionsArgs
+  expectedAttendanceSessions?: boolean | TeacherCountOutputTypeCountExpectedAttendanceSessionsArgs
   expenses?: boolean | TeacherCountOutputTypeCountExpensesArgs
 }
 
@@ -1622,6 +1791,13 @@ export type TeacherCountOutputTypeCountAttendanceSessionsArgs<ExtArgs extends ru
 /**
  * TeacherCountOutputType without action
  */
+export type TeacherCountOutputTypeCountExpectedAttendanceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttendanceSessionWhereInput
+}
+
+/**
+ * TeacherCountOutputType without action
+ */
 export type TeacherCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ExpenseWhereInput
 }
@@ -1649,6 +1825,7 @@ export type TeacherSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   qualifications?: boolean | Prisma.Teacher$qualificationsArgs<ExtArgs>
   teachingAssignments?: boolean | Prisma.Teacher$teachingAssignmentsArgs<ExtArgs>
   attendanceSessions?: boolean | Prisma.Teacher$attendanceSessionsArgs<ExtArgs>
+  expectedAttendanceSessions?: boolean | Prisma.Teacher$expectedAttendanceSessionsArgs<ExtArgs>
   expenses?: boolean | Prisma.Teacher$expensesArgs<ExtArgs>
   _count?: boolean | Prisma.TeacherCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["teacher"]>
@@ -1715,6 +1892,7 @@ export type TeacherInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   qualifications?: boolean | Prisma.Teacher$qualificationsArgs<ExtArgs>
   teachingAssignments?: boolean | Prisma.Teacher$teachingAssignmentsArgs<ExtArgs>
   attendanceSessions?: boolean | Prisma.Teacher$attendanceSessionsArgs<ExtArgs>
+  expectedAttendanceSessions?: boolean | Prisma.Teacher$expectedAttendanceSessionsArgs<ExtArgs>
   expenses?: boolean | Prisma.Teacher$expensesArgs<ExtArgs>
   _count?: boolean | Prisma.TeacherCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1735,6 +1913,7 @@ export type $TeacherPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     qualifications: Prisma.$QualificationPayload<ExtArgs>[]
     teachingAssignments: Prisma.$TeacherAssignmentPayload<ExtArgs>[]
     attendanceSessions: Prisma.$AttendanceSessionPayload<ExtArgs>[]
+    expectedAttendanceSessions: Prisma.$AttendanceSessionPayload<ExtArgs>[]
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2153,6 +2332,7 @@ export interface Prisma__TeacherClient<T, Null = never, ExtArgs extends runtime.
   qualifications<T extends Prisma.Teacher$qualificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$qualificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QualificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   teachingAssignments<T extends Prisma.Teacher$teachingAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$teachingAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attendanceSessions<T extends Prisma.Teacher$attendanceSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$attendanceSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  expectedAttendanceSessions<T extends Prisma.Teacher$expectedAttendanceSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$expectedAttendanceSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenses<T extends Prisma.Teacher$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2711,6 +2891,30 @@ export type Teacher$teachingAssignmentsArgs<ExtArgs extends runtime.Types.Extens
  * Teacher.attendanceSessions
  */
 export type Teacher$attendanceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttendanceSession
+   */
+  select?: Prisma.AttendanceSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttendanceSession
+   */
+  omit?: Prisma.AttendanceSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttendanceSessionInclude<ExtArgs> | null
+  where?: Prisma.AttendanceSessionWhereInput
+  orderBy?: Prisma.AttendanceSessionOrderByWithRelationInput | Prisma.AttendanceSessionOrderByWithRelationInput[]
+  cursor?: Prisma.AttendanceSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttendanceSessionScalarFieldEnum | Prisma.AttendanceSessionScalarFieldEnum[]
+}
+
+/**
+ * Teacher.expectedAttendanceSessions
+ */
+export type Teacher$expectedAttendanceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the AttendanceSession
    */

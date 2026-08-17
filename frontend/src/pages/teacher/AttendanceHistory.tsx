@@ -13,24 +13,26 @@ export default function AttendanceHistory() {
   if (loading) return <div className="p-8">Loading...</div>;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="mx-auto max-w-5xl space-y-6">
       <h1 className="text-2xl font-bold mb-6">Attendance History</h1>
       {sessions.length === 0 ? (
         <p className="text-gray-500">No attendance sessions recorded yet.</p>
       ) : (
         <div className="space-y-3">
           {sessions.map((s) => (
-            <div key={s.id} className="bg-white border rounded-lg overflow-hidden">
-              <button className="w-full px-5 py-4 flex justify-between items-center hover:bg-gray-50 text-left" onClick={() => setExpanded(expanded === s.id ? null : s.id)}>
+            <div key={s.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <button className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-sky-50/60" onClick={() => setExpanded(expanded === s.id ? null : s.id)}>
                 <div>
                   <span className="font-medium">{s.schoolClass?.name}</span>
                   <span className="mx-2 text-gray-400">·</span>
                   <span className="text-gray-600">{s.subject?.name}</span>
+                  {s.isAssignmentOverride && <span className="ml-2 rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800">Cover lesson</span>}
                 </div>
                 <div className="text-sm text-gray-500">{new Date(s.date).toLocaleDateString()}</div>
               </button>
               {expanded === s.id && (
                 <div className="border-t px-5 py-3">
+                  {s.isAssignmentOverride && <div className="mb-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-900"><strong>Assignment override:</strong> {s.overrideReason}</div>}
                   <table className="min-w-full text-sm">
                     <thead><tr className="border-b"><th className="text-left py-2">Student</th><th className="text-left py-2">Admission #</th><th className="text-left py-2">Status</th></tr></thead>
                     <tbody>

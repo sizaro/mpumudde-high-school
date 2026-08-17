@@ -25,16 +25,16 @@ const selectClassName =
 
 export default function FeeStructureFilters({
   value,
-  academicYears,
-  terms,
-  classes,
-  studentCategories,
-  feeTypes,
+  academicYears = [],
+  terms = [],
+  classes = [],
+  studentCategories = [],
+  feeTypes = [],
   onChange,
 }: Props) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div className="min-w-0 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+      <div className="grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <label className="block text-sm font-medium text-slate-700">
           Search
           <input
