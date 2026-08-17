@@ -498,6 +498,7 @@ export class StudentsService {
               method: payment.method,
               receiptUrl: payment.receiptUrl,
               proofUrl: payment.receiptUrl,
+              proofFileName: payment.receiptName,
               status: "COMPLETED",
               date: paymentDate,
               receiptNumber: `MHS-${paymentDate.slice(0, 10).replace(/-/g, "")}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,

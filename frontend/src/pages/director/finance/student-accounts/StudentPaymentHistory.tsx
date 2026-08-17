@@ -1,12 +1,15 @@
+import { useState } from "react";
 import type { StudentAccountDetails } from "../../../../services/studentAccountService";
 import { formatKampalaDateTime } from "../../../../utils/kampalaDateTime";
+import ProofPreviewModal, { type ProofPreview } from "../payments/ProofPreviewModal";
 export default function StudentPaymentHistory({
   payments,
 }: {
   payments: StudentAccountDetails["payments"];
 }) {
+  const [proof, setProof] = useState<ProofPreview | null>(null);
   return (
-    <div className="overflow-x-auto rounded-2xl border border-slate-200">
+    <><div className="overflow-x-auto rounded-2xl border border-slate-200">
       <table className="min-w-full text-left text-sm">
         <thead className="bg-slate-50 text-slate-500">
           <tr>
@@ -40,7 +43,7 @@ export default function StudentPaymentHistory({
               return (
                 <tr
                   key={payment.id}
-                  className={payment.status === "REVERSED" ? "bg-rose-50" : ""}
+                  className={payment.status === "REVERSED" ? "!bg-rose-50" : ""}
                 >
                   <td className="px-4 py-3">
                     {formatKampalaDateTime(payment.date)}
@@ -60,14 +63,13 @@ export default function StudentPaymentHistory({
                   </td>
                   <td className="px-4 py-3">
                     {payment.proofUrl ? (
-                      <a
-                        href={payment.proofUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="font-medium text-blue-600 hover:underline"
+                      <button
+                        type="button"
+                        onClick={() => setProof({ url: payment.proofUrl!, fileName: payment.proofFileName })}
+                        className="portal-link rounded-lg px-2 py-1 hover:bg-sky-50"
                       >
                         View proof
-                      </a>
+                      </button>
                     ) : (
                       "—"
                     )}
@@ -76,12 +78,12 @@ export default function StudentPaymentHistory({
                     UGX {payment.amount.toLocaleString()}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold">
+                    <span className={`portal-status ${payment.status === "REVERSED" ? "portal-status--danger" : payment.status === "COMPLETED" ? "portal-status--success" : "portal-status--warning"}`}>
                       {payment.status}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-800">
+                    <span className={`portal-status ${chargeStatus.toUpperCase().includes("PAID") ? "portal-status--success" : "portal-status--info"}`}>
                       {chargeStatus}
                     </span>
                     {chargeBalance !== null && (
@@ -96,6 +98,6 @@ export default function StudentPaymentHistory({
           )}
         </tbody>
       </table>
-    </div>
+    </div><ProofPreviewModal proof={proof} onClose={() => setProof(null)} /></>
   );
 }

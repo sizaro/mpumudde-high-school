@@ -8,6 +8,8 @@ const steps = ["Student Information", "Medical Information", "Parent Information
 const DRAFT_KEY = "mhs.student-registration-draft.v1";
 const NATIONALITIES = ["Ugandan", "Kenyan", "Tanzanian", "Rwandan", "South Sudanese", "Congolese", "Burundian", "Other"];
 const OCCUPATIONS = ["Self-employed", "Teacher", "Civil servant", "Business owner", "Farmer", "Healthcare worker", "Driver", "Engineer", "Lawyer", "Accountant", "Security personnel", "Unemployed", "Other"];
+const STANDARD_NATIONALITIES = NATIONALITIES.filter((item) => item !== "Other");
+const STANDARD_OCCUPATIONS = OCCUPATIONS.filter((item) => item !== "Other");
 
 function PhotoCapture({ value, onChange, label }: { value: string; onChange: (value: string) => void; label: string }) {
   const inputRef = useRef<HTMLInputElement>(null); const videoRef = useRef<HTMLVideoElement>(null);
@@ -70,6 +72,8 @@ export default function RegistrationWizard() {
   const [registrationData, setRegistrationData] = useState<any>({ academicYears: [], terms: [], classes: [], studentCategories: [] });
   const [status, setStatus] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionStage, setSubmissionStage] = useState("");
   const [payments, setPayments] = useState([{ feeTypeId: "", amount: "", method: "cash", receiptDataUrl: "", receiptName: "" }]);
   const [draftReady, setDraftReady] = useState(false);
   const [completed, setCompleted] = useState<{ studentId: string; studentName: string; guardianCredentials?: { email: string; temporaryPassword: string } } | null>(null);
@@ -196,6 +200,7 @@ export default function RegistrationWizard() {
   const handleBack = () => setStep((current) => Math.max(current - 1, 0));
 
   const handleCreate = async () => {
+    if (isSubmitting) return;
     for (let index = 0; index < steps.length - 1; index += 1) {
       const error = validateStep(index);
       if (error) {
@@ -205,22 +210,28 @@ export default function RegistrationWizard() {
       }
     }
     setValidationError(null);
+    setStatus(null);
+    setIsSubmitting(true);
+    setSubmissionStage("Preparing student and guardian documents…");
     try {
       let studentPhoto: string | undefined;
       let parentPhoto: string | undefined;
       let parentDocumentUrl: string | undefined;
       if (form.passportPhoto) {
+        setSubmissionStage("Uploading the student photo…");
         const blob = await (await fetch(form.passportPhoto)).blob();
         const upload = new FormData();
         upload.append("file", new File([blob], "student-profile.jpg", { type: "image/jpeg" }));
         studentPhoto = (await StudentService.uploadPhoto(upload)).url;
       }
       if (form.parentPhoto) {
+        setSubmissionStage("Uploading the guardian photo…");
         const blob = await (await fetch(form.parentPhoto)).blob(); const upload = new FormData();
         upload.append("file", new File([blob], "guardian-profile.jpg", { type: "image/jpeg" }));
         parentPhoto = (await StudentService.uploadPhoto(upload)).url;
       }
       if (form.parentDocumentDataUrl) {
+        setSubmissionStage("Uploading the guardian identity document…");
         const blob = await (await fetch(form.parentDocumentDataUrl)).blob(); const upload = new FormData();
         upload.append("file", new File([blob], form.parentDocumentName, { type: blob.type || "application/pdf" }));
         parentDocumentUrl = (await StudentService.uploadPhoto(upload)).url;
@@ -229,8 +240,8 @@ export default function RegistrationWizard() {
       for (const payment of payments) {
         if (!payment.feeTypeId || !payment.amount) continue;
         let receiptUrl: string | undefined;
-        if (payment.receiptDataUrl) { const blob = await (await fetch(payment.receiptDataUrl)).blob(); const upload = new FormData(); upload.append("file", new File([blob], payment.receiptName || "payment-receipt.jpg", { type: blob.type || "image/jpeg" })); receiptUrl = (await StudentService.uploadPhoto(upload)).url; }
-        paymentPayload.push({ feeTypeId: payment.feeTypeId, feeTypeName: (registrationData.feeTypes || []).find((fee: any) => fee.id === payment.feeTypeId)?.name, academicYearId: form.academicYearId, termId: form.termId, amount: Number(payment.amount), method: payment.method, receiptUrl });
+        if (payment.receiptDataUrl) { setSubmissionStage(`Uploading receipt ${paymentPayload.length + 1} of ${payments.length}…`); const blob = await (await fetch(payment.receiptDataUrl)).blob(); const upload = new FormData(); upload.append("file", new File([blob], payment.receiptName || "payment-receipt.jpg", { type: blob.type || "image/jpeg" })); receiptUrl = (await StudentService.uploadPhoto(upload)).url; }
+        paymentPayload.push({ feeTypeId: payment.feeTypeId, feeTypeName: (registrationData.feeTypes || []).find((fee: any) => fee.id === payment.feeTypeId)?.name, academicYearId: form.academicYearId, termId: form.termId, amount: Number(payment.amount), method: payment.method, receiptUrl, receiptName: payment.receiptName });
       }
       if (!paymentPayload.length) { setStatus("Add the required registration payment before confirming registration."); return; }
       const student = {
@@ -248,6 +259,7 @@ export default function RegistrationWizard() {
         nationality: form.nationality || undefined, address: form.address || undefined, previousSchool: form.previousSchool || undefined,
         bloodGroup: form.bloodGroup || undefined, allergies: form.allergies || undefined, medicalConditions: form.medicalConditions || undefined, specialNeeds: form.specialNeeds || undefined, medicalNotes: form.medicalNotes || undefined,
       };
+      setSubmissionStage("Creating the student account, guardian account, enrollment, charges, and payments…");
       const result = await StudentService.createCompleteRegistration({ student, primaryGuardian: form.parentName ? { fullName: form.parentName, relationship: form.parentRelationship, phone: form.parentPhone, email: form.parentEmail, occupation: form.parentOccupation, address: form.parentAddress, profilePhoto: parentPhoto, identityDocumentType: form.parentDocumentType || undefined, identityDocumentUrl: parentDocumentUrl } : undefined, additionalGuardians: form.guardians.filter((guardian) => guardian.name.trim() && guardian.phone.trim()), payments: paymentPayload });
       localStorage.removeItem(DRAFT_KEY);
       setCompleted({ studentId: result.student.id, studentName: `${result.student.firstName} ${result.student.lastName}`, guardianCredentials: result.guardianCredentials });
@@ -255,6 +267,9 @@ export default function RegistrationWizard() {
       const response = error as { response?: { data?: { message?: string | string[] } } };
       const message = response.response?.data?.message;
       setStatus(Array.isArray(message) ? message.join(", ") : message ?? "Unable to register the student. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+      setSubmissionStage("");
     }
   };
 
@@ -270,7 +285,7 @@ export default function RegistrationWizard() {
         <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
           Step {progress} • {steps[step]}
         </div>
-        <button type="button" onClick={() => { if (window.confirm("Cancel student registration? The saved draft will be deleted.")) { localStorage.removeItem(DRAFT_KEY); navigate("/director"); } }} className="rounded-2xl border border-red-200 px-4 py-3 text-sm text-red-700">Cancel registration</button>
+        <button type="button" disabled={isSubmitting} onClick={() => { if (window.confirm("Cancel student registration? The saved draft will be deleted.")) { localStorage.removeItem(DRAFT_KEY); navigate("/director"); } }} className="rounded-2xl border border-red-200 px-4 py-3 text-sm text-red-700 disabled:cursor-not-allowed disabled:opacity-50">Cancel registration</button>
       </div>
 
       <div className="mb-6 flex flex-wrap gap-2">
@@ -281,8 +296,9 @@ export default function RegistrationWizard() {
         ))}
       </div>
 
-      {status ? <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{status}</div> : null}
+      {status ? <div role="alert" className="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{status}</div> : null}
       {validationError ? <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{validationError}</div> : null}
+      {isSubmitting ? <div aria-live="polite" className="mb-4 flex items-center gap-3 rounded-2xl border border-blue-200 bg-blue-50 px-4 py-4 text-sm font-medium text-blue-800"><span className="h-5 w-5 animate-spin rounded-full border-2 border-blue-200 border-t-blue-700" /> <div><p>Registration is in progress. Please do not close this page or click again.</p><p className="mt-1 text-xs font-normal text-blue-700">{submissionStage}</p></div></div> : null}
 
       {step === 0 ? (
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -292,7 +308,7 @@ export default function RegistrationWizard() {
             <label className="text-sm font-medium text-slate-700">Last Name<input value={form.lastName} onChange={(event) => updateField("lastName", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="Last name" /></label>
             <label className="text-sm font-medium text-slate-700">Date of Birth<input type="date" value={form.dateOfBirth} onChange={(event) => updateField("dateOfBirth", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
             <label className="text-sm font-medium text-slate-700">Gender<select value={form.gender} onChange={(event) => updateField("gender", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select gender</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></label>
-            <label className="text-sm font-medium text-slate-700">Nationality<select value={NATIONALITIES.includes(form.nationality) ? form.nationality : form.nationality ? "Other" : ""} onChange={(event) => updateField("nationality", event.target.value === "Other" ? "Other" : event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select nationality</option>{NATIONALITIES.map((item) => <option key={item}>{item}</option>)}</select>{form.nationality === "Other" && <input onChange={(event) => updateField("nationality", event.target.value)} placeholder="Type country" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />}</label>
+            <label className="text-sm font-medium text-slate-700">Nationality<select value={STANDARD_NATIONALITIES.includes(form.nationality) ? form.nationality : form.nationality ? "Other" : ""} onChange={(event) => updateField("nationality", event.target.value === "Other" ? "Other" : event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select nationality</option>{NATIONALITIES.map((item) => <option key={item}>{item}</option>)}</select>{form.nationality && !STANDARD_NATIONALITIES.includes(form.nationality) && <input value={form.nationality === "Other" ? "" : form.nationality} onChange={(event) => updateField("nationality", event.target.value || "Other")} placeholder="Type country" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />}</label>
             <label className="text-sm font-medium text-slate-700 md:col-span-2">Address<textarea value={form.address} onChange={(event) => updateField("address", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
             <label className="text-sm font-medium text-slate-700">Previous School<input value={form.previousSchool} onChange={(event) => updateField("previousSchool", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
             <div className="order-first md:col-span-2">
@@ -384,7 +400,7 @@ export default function RegistrationWizard() {
               <label className="text-sm font-medium text-slate-700">Relationship<select value={form.parentRelationship} onChange={(event) => updateField("parentRelationship", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select relationship</option><option value="Father">Father</option><option value="Mother">Mother</option><option value="Guardian">Guardian</option><option value="Uncle">Uncle</option><option value="Aunt">Aunt</option><option value="Grandfather">Grandfather</option><option value="Grandmother">Grandmother</option><option value="Other">Other</option></select></label>
               <label className="text-sm font-medium text-slate-700">Phone<input value={form.parentPhone} onChange={(event) => updateField("parentPhone", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
               <label className="text-sm font-medium text-slate-700">Email<input value={form.parentEmail} onChange={(event) => updateField("parentEmail", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
-              <label className="text-sm font-medium text-slate-700">Occupation<select value={OCCUPATIONS.includes(form.parentOccupation) ? form.parentOccupation : form.parentOccupation ? "Other" : ""} onChange={(event) => updateField("parentOccupation", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select occupation</option>{OCCUPATIONS.map((item) => <option key={item}>{item}</option>)}</select>{form.parentOccupation === "Other" && <input onChange={(event) => updateField("parentOccupation", event.target.value)} placeholder="Type occupation" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />}</label>
+              <label className="text-sm font-medium text-slate-700">Occupation<select value={STANDARD_OCCUPATIONS.includes(form.parentOccupation) ? form.parentOccupation : form.parentOccupation ? "Other" : ""} onChange={(event) => updateField("parentOccupation", event.target.value === "Other" ? "Other" : event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select occupation</option>{OCCUPATIONS.map((item) => <option key={item}>{item}</option>)}</select>{form.parentOccupation && !STANDARD_OCCUPATIONS.includes(form.parentOccupation) && <input value={form.parentOccupation === "Other" ? "" : form.parentOccupation} onChange={(event) => updateField("parentOccupation", event.target.value || "Other")} placeholder="Type occupation" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />}</label>
               <label className="text-sm font-medium text-slate-700">Address<input value={form.parentAddress} onChange={(event) => updateField("parentAddress", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
               <label className="text-sm font-medium text-slate-700 md:col-span-2">Identification Information<textarea value={form.parentIdInfo} onChange={(event) => updateField("parentIdInfo", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
               <div className="order-first md:col-span-2"><PhotoCapture label="Primary guardian photo" value={form.parentPhoto} onChange={(value) => updateField("parentPhoto", value)} /></div>
@@ -464,8 +480,8 @@ export default function RegistrationWizard() {
       ) : null}
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-between">
-        <button type="button" onClick={handleBack} disabled={step === 0} className="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700 disabled:opacity-50">Back</button>
-        {step < steps.length - 1 ? <button type="button" onClick={handleNext} className="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Next</button> : <button type="button" onClick={handleCreate} className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-medium text-white">Confirm Registration</button>}
+        <button type="button" onClick={handleBack} disabled={step === 0 || isSubmitting} className="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700 disabled:opacity-50">Back</button>
+        {step < steps.length - 1 ? <button type="button" disabled={isSubmitting} onClick={handleNext} className="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white disabled:opacity-50">Next</button> : <button type="button" disabled={isSubmitting} onClick={() => void handleCreate()} className="inline-flex min-w-48 items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-medium text-white disabled:cursor-wait disabled:opacity-70">{isSubmitting ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" /> Registering student…</> : "Confirm Registration"}</button>}
       </div>
     </div>
   );

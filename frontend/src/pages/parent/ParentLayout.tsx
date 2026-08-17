@@ -26,12 +26,12 @@ function ParentPortalShell() {
   const { logout } = useAuth();
   const parent = data?.parent;
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900">
+    <div className="portal-shell parent-portal text-slate-900">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        <aside className="w-full bg-[#0B1437] p-5 text-white lg:w-72 lg:shrink-0 lg:p-6">
+        <aside className="portal-sidebar w-full p-5 text-white lg:w-72 lg:shrink-0 lg:p-6">
           <div className="lg:sticky lg:top-6">
             <div className="flex items-center gap-3 px-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-lg font-bold">
+              <div className="portal-brand-mark text-lg font-bold">
                 M
               </div>
               <div>
@@ -46,7 +46,7 @@ function ParentPortalShell() {
                   to={link.to}
                   end={link.end}
                   className={({ isActive }) =>
-                    `flex min-w-max items-center gap-3 rounded-2xl px-4 py-3 transition ${isActive ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40" : "text-slate-300 hover:bg-white/5 hover:text-white"}`
+                    `portal-nav-item min-w-max ${isActive ? "portal-nav-item--active" : ""}`
                   }
                 >
                   <link.icon size={18} />
@@ -56,8 +56,8 @@ function ParentPortalShell() {
             </nav>
           </div>
         </aside>
-        <main className="min-w-0 w-full flex-1 p-1.5 md:p-6 lg:p-10">
-          <header className="mb-6 flex items-center justify-between rounded-3xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <main className="portal-main min-w-0 w-full flex-1 p-2.5 md:p-6 lg:p-8">
+          <header className="portal-topbar mb-6 flex items-center justify-between rounded-3xl px-4 py-3 shadow-sm">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 overflow-hidden rounded-full bg-slate-200">
                 {parent?.profilePhoto ? (
@@ -84,13 +84,13 @@ function ParentPortalShell() {
             <button
               type="button"
               onClick={logout}
-              className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white"
+              className="portal-action-button"
             >
               <LogOut size={16} />
               <span className="hidden sm:inline">Log out</span>
             </button>
           </header>
-          <Outlet />
+          <div className="portal-content"><Outlet /></div>
         </main>
       </div>
     </div>

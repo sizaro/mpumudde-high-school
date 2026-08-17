@@ -12,6 +12,14 @@ type Props = {
   onReverse: (payment: FinancePayment) => void;
   onDelete: (payment: FinancePayment) => void;
 };
+
+const statusTone = (status: string) => {
+  if (["COMPLETED", "PAID", "APPROVED"].includes(status)) return "portal-status--success";
+  if (["PENDING", "PENDING_APPROVAL", "DRAFT"].includes(status)) return "portal-status--warning";
+  if (["REVERSED", "REJECTED", "CANCELLED"].includes(status)) return "portal-status--danger";
+  return "portal-status--neutral";
+};
+
 export default function PaymentsTable({
   payments,
   loading,
@@ -114,7 +122,7 @@ export default function PaymentsTable({
                       {payment.method.replaceAll("_", " ")}
                     </td>
                     <td className="px-4 py-4">
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold">
+                      <span className={`portal-status ${statusTone(status)}`}>
                         {status}
                       </span>
                     </td>
@@ -124,7 +132,7 @@ export default function PaymentsTable({
                           type="button"
                           title="View payment"
                           onClick={() => onView(payment)}
-                          className="rounded-lg p-2 text-blue-700 hover:bg-blue-50"
+                          className="portal-table-action text-sky-700"
                         >
                           <Eye size={17} />
                         </button>
@@ -133,7 +141,7 @@ export default function PaymentsTable({
                             type="button"
                             title="Edit safe payment details"
                             onClick={() => onEdit(payment)}
-                            className="rounded-lg p-2 text-amber-700 hover:bg-amber-50"
+                            className="portal-table-action text-amber-700"
                           >
                             <Pencil size={17} />
                           </button>
@@ -143,7 +151,7 @@ export default function PaymentsTable({
                             type="button"
                             title="Reverse payment"
                             onClick={() => onReverse(payment)}
-                            className="rounded-lg p-2 text-rose-700 hover:bg-rose-50"
+                            className="portal-table-action text-rose-700"
                           >
                             <RotateCcw size={17} />
                           </button>
@@ -153,7 +161,7 @@ export default function PaymentsTable({
                             type="button"
                             title="Remove draft payment"
                             onClick={() => onDelete(payment)}
-                            className="rounded-lg p-2 text-rose-700 hover:bg-rose-50"
+                            className="portal-table-action text-rose-700"
                           >
                             <Trash2 size={17} />
                           </button>

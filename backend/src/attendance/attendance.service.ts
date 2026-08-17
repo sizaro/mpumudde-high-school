@@ -56,17 +56,32 @@ export class AttendanceService {
 
     const lessonLocal = toKampalaLocalDateTime(dto.date);
     const lessonDate = new Date(lessonLocal.slice(0, 10) + "T00:00:00");
-    const assignmentWindow = {
-      classSubjectId: classSubject.id,
+    const assignmentDateWindow = {
       isActive: true,
-      OR: [{ startDate: null }, { startDate: { lte: lessonDate } }],
-      AND: [{ OR: [{ endDate: null }, { endDate: { gte: lessonDate } }] }],
+      AND: [
+        { OR: [{ startDate: null }, { startDate: { lte: lessonDate } }] },
+        { OR: [{ endDate: null }, { endDate: { gte: lessonDate } }] },
+      ],
     };
     const [assignment, normalAssignment] = await Promise.all([
       this.prisma.teacherAssignment.findFirst({
-        where: { teacherId: teacher.id, ...assignmentWindow },
+        where: {
+          teacherId: teacher.id,
+          ...assignmentDateWindow,
+          OR: [
+            { classSubjectId: classSubject.id },
+            {
+              classSubjectId: null,
+              academicYearClassId: null,
+              subjectId: dto.subjectId,
+              OR: [{ academicYearId: null }, { academicYearId: academicYear.id }],
+            },
+          ],
+        },
       }),
-      this.prisma.teacherAssignment.findFirst({ where: assignmentWindow }),
+      this.prisma.teacherAssignment.findFirst({
+        where: { classSubjectId: classSubject.id, ...assignmentDateWindow },
+      }),
     ]);
     const isOverride = !assignment;
     const overrideReason = dto.overrideReason?.trim();
@@ -139,7 +154,7 @@ export class AttendanceService {
         message: teacher.firstName + " " + teacher.lastName + " taught an unassigned class/subject. Reason: " + overrideReason,
         entityType: "AttendanceSession",
         entityId: session.id,
-        link: `/director/reports?section=attendance&sessionId=${session.id}`,
+        link: `/director/attendance?sessionId=${session.id}`,
       });
     }
     return session;
@@ -150,6 +165,7 @@ export class AttendanceService {
       orderBy: { date: "desc" },
       include: {
         teacher: { select: { id: true, firstName: true, lastName: true } },
+        normallyAssignedTeacher: { select: { id: true, firstName: true, lastName: true } },
         schoolClass: { select: { id: true, name: true } },
         subject: { select: { id: true, name: true } },
         _count: { select: { records: true } },
@@ -210,6 +226,7 @@ export class AttendanceService {
       where: { id },
       include: {
         teacher: { select: { id: true, firstName: true, lastName: true } },
+        normallyAssignedTeacher: { select: { id: true, firstName: true, lastName: true } },
         schoolClass: { select: { id: true, name: true } },
         subject: { select: { id: true, name: true } },
         records: {

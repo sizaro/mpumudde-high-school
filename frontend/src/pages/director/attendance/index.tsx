@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import AttendanceService from "../../../services/attendanceService";
 
 const STATUSES = ["Present", "Absent", "Late", "Excused"] as const;
@@ -15,6 +16,9 @@ type SessionListItem = {
   schoolClass?: { id: string; name: string } | null;
   subject?: { id: string; name: string } | null;
   teacher?: { id: string; firstName?: string; lastName?: string } | null;
+  normallyAssignedTeacher?: { id: string; firstName?: string; lastName?: string } | null;
+  isAssignmentOverride?: boolean;
+  overrideReason?: string | null;
   _count?: { records?: number };
 };
 
@@ -35,6 +39,9 @@ type SessionDetails = {
   schoolClass?: { id: string; name: string } | null;
   subject?: { id: string; name: string } | null;
   teacher?: { id: string; firstName?: string; lastName?: string } | null;
+  normallyAssignedTeacher?: { id: string; firstName?: string; lastName?: string } | null;
+  isAssignmentOverride?: boolean;
+  overrideReason?: string | null;
   records?: SessionRecord[];
 };
 
@@ -63,6 +70,7 @@ function pageBounds(totalItems: number, page: number, pageSize: number) {
 }
 
 export default function DirectorAttendancePage() {
+  const [searchParams] = useSearchParams();
   const [sessions, setSessions] = useState<SessionListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingSession, setLoadingSession] = useState(false);
@@ -108,6 +116,11 @@ export default function DirectorAttendancePage() {
   useEffect(() => {
     void load();
   }, []);
+
+  useEffect(() => {
+    const requestedSessionId = searchParams.get("sessionId");
+    if (requestedSessionId) void openSession(requestedSessionId);
+  }, [searchParams]);
 
   useEffect(() => {
     setSessionPage(1);
@@ -158,6 +171,7 @@ export default function DirectorAttendancePage() {
         session.schoolClass?.name ?? "",
         session.subject?.name ?? "",
         teacherName(session),
+        session.overrideReason ?? "",
         session.date ? new Date(session.date).toLocaleString() : "",
       ]
         .join(" ")
@@ -292,42 +306,19 @@ export default function DirectorAttendancePage() {
     setError("");
     setInfo("");
 
-    const updates = changedRecordIds.map((recordId) => {
-      const status = drafts[recordId];
-      return AttendanceService.updateRecordStatus(
+    try {
+      const refreshed = (await AttendanceService.updateRecords(
         selectedSession.id,
-        recordId,
-        status,
-      );
-    });
-
-    const settled = await Promise.allSettled(updates);
-    const failed = settled.filter(
-      (result) => result.status === "rejected",
-    ).length;
-    const succeeded = settled.length - failed;
-
-    if (succeeded > 0) {
-      try {
-        const refreshed = (await AttendanceService.findOne(
-          selectedSession.id,
-        )) as SessionDetails;
-        setSelectedSession(refreshed);
-        setDrafts({});
-      } catch {
-        // Keep last known details if refresh fails; error message below handles visibility.
-      }
+        changedRecordIds.map((recordId) => ({ recordId, status: drafts[recordId] })),
+      )) as SessionDetails;
+      setSelectedSession(refreshed);
+      setDrafts({});
+      setInfo(`${changedRecordIds.length} record(s) updated successfully.`);
+    } catch (e: any) {
+      setError(e?.response?.data?.message ?? "Unable to save the attendance corrections.");
+    } finally {
+      setSavingBulk(false);
     }
-
-    if (failed > 0) {
-      setError(
-        `${succeeded} record(s) updated, ${failed} failed. Please retry failed edits.`,
-      );
-    } else {
-      setInfo(`${succeeded} record(s) updated successfully.`);
-    }
-
-    setSavingBulk(false);
   }
 
   function applyBulkToVisible() {
@@ -409,6 +400,7 @@ export default function DirectorAttendancePage() {
               Total students in session:{" "}
               {(selectedSession?.records ?? []).length}
             </p>
+            {selectedSession?.isAssignmentOverride ? <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900"><p className="font-semibold">Assignment override / cover lesson</p><p className="mt-1"><strong>Reason:</strong> {selectedSession.overrideReason || "No reason recorded"}</p><p className="mt-1"><strong>Normally assigned teacher:</strong> {selectedSession.normallyAssignedTeacher ? teacherName({ teacher: selectedSession.normallyAssignedTeacher }) : "No class-specific teacher was assigned"}</p></div> : <p className="mt-2 inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Official assignment</p>}
           </div>
           <div className="flex flex-wrap gap-2">
             <button
@@ -714,7 +706,7 @@ export default function DirectorAttendancePage() {
           visibleSessions.map((session) => (
             <article
               key={session.id}
-              className="rounded-2xl border border-slate-200 bg-white p-4"
+              className={`rounded-2xl border bg-white p-4 ${session.isAssignmentOverride ? "border-amber-300" : "border-slate-200"}`}
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -728,6 +720,7 @@ export default function DirectorAttendancePage() {
                   <p className="text-xs text-slate-500">
                     Students recorded: {session._count?.records ?? 0}
                   </p>
+                  {session.isAssignmentOverride ? <div className="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900"><span className="font-bold">Cover lesson:</span> {session.overrideReason || "No reason recorded"}{session.normallyAssignedTeacher ? <span className="mt-1 block">Expected teacher: {teacherName({ teacher: session.normallyAssignedTeacher })}</span> : null}</div> : <span className="mt-2 inline-flex rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700">Official assignment</span>}
                 </div>
                 <div className="text-left sm:text-right">
                   <p className="text-sm text-slate-500">

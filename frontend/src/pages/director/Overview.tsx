@@ -35,15 +35,15 @@ export default function DirectorOverview() {
 
   return (
     <div className="min-w-0 space-y-7">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <header className="portal-hero flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div>
-          <p className="text-sm font-semibold text-blue-700">{today}</p>
-          <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-950">School overview</h1>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="text-sm font-semibold text-amber-300">{today}</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">School overview</h1>
+          <p className="mt-2 text-sm text-white/65">
             {data?.period.academicYear ? `${data.period.academicYear}${data.period.term ? ` · ${data.period.term}` : ""}` : "No active academic period selected"}
           </p>
         </div>
-        <button type="button" onClick={() => void loadOverview()} disabled={loading} className="inline-flex items-center justify-center gap-2 self-start rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60">
+        <button type="button" onClick={() => void loadOverview()} disabled={loading} className="inline-flex items-center justify-center gap-2 self-start rounded-2xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white shadow-sm backdrop-blur transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-60">
           <RefreshCw size={17} className={loading ? "animate-spin" : ""} /> Refresh overview
         </button>
       </header>

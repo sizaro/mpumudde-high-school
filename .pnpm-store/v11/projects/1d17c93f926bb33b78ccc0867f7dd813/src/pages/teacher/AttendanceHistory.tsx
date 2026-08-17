@@ -13,15 +13,15 @@ export default function AttendanceHistory() {
   if (loading) return <div className="p-8">Loading...</div>;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="mx-auto max-w-5xl space-y-6">
       <h1 className="text-2xl font-bold mb-6">Attendance History</h1>
       {sessions.length === 0 ? (
         <p className="text-gray-500">No attendance sessions recorded yet.</p>
       ) : (
         <div className="space-y-3">
           {sessions.map((s) => (
-            <div key={s.id} className="bg-white border rounded-lg overflow-hidden">
-              <button className="w-full px-5 py-4 flex justify-between items-center hover:bg-gray-50 text-left" onClick={() => setExpanded(expanded === s.id ? null : s.id)}>
+            <div key={s.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <button className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-sky-50/60" onClick={() => setExpanded(expanded === s.id ? null : s.id)}>
                 <div>
                   <span className="font-medium">{s.schoolClass?.name}</span>
                   <span className="mx-2 text-gray-400">·</span>
