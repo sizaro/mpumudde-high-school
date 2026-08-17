@@ -42,6 +42,11 @@ export type StudentChargeMinAggregateOutputType = {
   id: string | null
   studentId: string | null
   financeStructureId: string | null
+  academicYearId: string | null
+  termId: string | null
+  classId: string | null
+  studentCategoryId: string | null
+  feeTypeId: string | null
   expectedAmount: number | null
   paidAmount: number | null
   waivedAmount: number | null
@@ -54,6 +59,11 @@ export type StudentChargeMaxAggregateOutputType = {
   id: string | null
   studentId: string | null
   financeStructureId: string | null
+  academicYearId: string | null
+  termId: string | null
+  classId: string | null
+  studentCategoryId: string | null
+  feeTypeId: string | null
   expectedAmount: number | null
   paidAmount: number | null
   waivedAmount: number | null
@@ -66,6 +76,11 @@ export type StudentChargeCountAggregateOutputType = {
   id: number
   studentId: number
   financeStructureId: number
+  academicYearId: number
+  termId: number
+  classId: number
+  studentCategoryId: number
+  feeTypeId: number
   expectedAmount: number
   paidAmount: number
   waivedAmount: number
@@ -92,6 +107,11 @@ export type StudentChargeMinAggregateInputType = {
   id?: true
   studentId?: true
   financeStructureId?: true
+  academicYearId?: true
+  termId?: true
+  classId?: true
+  studentCategoryId?: true
+  feeTypeId?: true
   expectedAmount?: true
   paidAmount?: true
   waivedAmount?: true
@@ -104,6 +124,11 @@ export type StudentChargeMaxAggregateInputType = {
   id?: true
   studentId?: true
   financeStructureId?: true
+  academicYearId?: true
+  termId?: true
+  classId?: true
+  studentCategoryId?: true
+  feeTypeId?: true
   expectedAmount?: true
   paidAmount?: true
   waivedAmount?: true
@@ -116,6 +141,11 @@ export type StudentChargeCountAggregateInputType = {
   id?: true
   studentId?: true
   financeStructureId?: true
+  academicYearId?: true
+  termId?: true
+  classId?: true
+  studentCategoryId?: true
+  feeTypeId?: true
   expectedAmount?: true
   paidAmount?: true
   waivedAmount?: true
@@ -215,6 +245,11 @@ export type StudentChargeGroupByOutputType = {
   id: string
   studentId: string
   financeStructureId: string
+  academicYearId: string | null
+  termId: string | null
+  classId: string | null
+  studentCategoryId: string | null
+  feeTypeId: string | null
   expectedAmount: number
   paidAmount: number
   waivedAmount: number
@@ -250,6 +285,11 @@ export type StudentChargeWhereInput = {
   id?: Prisma.StringFilter<"StudentCharge"> | string
   studentId?: Prisma.StringFilter<"StudentCharge"> | string
   financeStructureId?: Prisma.StringFilter<"StudentCharge"> | string
+  academicYearId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  termId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  classId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  studentCategoryId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  feeTypeId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
   expectedAmount?: Prisma.IntFilter<"StudentCharge"> | number
   paidAmount?: Prisma.IntFilter<"StudentCharge"> | number
   waivedAmount?: Prisma.IntFilter<"StudentCharge"> | number
@@ -265,6 +305,11 @@ export type StudentChargeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   financeStructureId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
+  termId?: Prisma.SortOrderInput | Prisma.SortOrder
+  classId?: Prisma.SortOrderInput | Prisma.SortOrder
+  studentCategoryId?: Prisma.SortOrderInput | Prisma.SortOrder
+  feeTypeId?: Prisma.SortOrderInput | Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   waivedAmount?: Prisma.SortOrder
@@ -284,6 +329,11 @@ export type StudentChargeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.StudentChargeWhereInput | Prisma.StudentChargeWhereInput[]
   studentId?: Prisma.StringFilter<"StudentCharge"> | string
   financeStructureId?: Prisma.StringFilter<"StudentCharge"> | string
+  academicYearId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  termId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  classId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  studentCategoryId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  feeTypeId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
   expectedAmount?: Prisma.IntFilter<"StudentCharge"> | number
   paidAmount?: Prisma.IntFilter<"StudentCharge"> | number
   waivedAmount?: Prisma.IntFilter<"StudentCharge"> | number
@@ -299,6 +349,11 @@ export type StudentChargeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   financeStructureId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
+  termId?: Prisma.SortOrderInput | Prisma.SortOrder
+  classId?: Prisma.SortOrderInput | Prisma.SortOrder
+  studentCategoryId?: Prisma.SortOrderInput | Prisma.SortOrder
+  feeTypeId?: Prisma.SortOrderInput | Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   waivedAmount?: Prisma.SortOrder
@@ -319,6 +374,11 @@ export type StudentChargeScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"StudentCharge"> | string
   studentId?: Prisma.StringWithAggregatesFilter<"StudentCharge"> | string
   financeStructureId?: Prisma.StringWithAggregatesFilter<"StudentCharge"> | string
+  academicYearId?: Prisma.StringNullableWithAggregatesFilter<"StudentCharge"> | string | null
+  termId?: Prisma.StringNullableWithAggregatesFilter<"StudentCharge"> | string | null
+  classId?: Prisma.StringNullableWithAggregatesFilter<"StudentCharge"> | string | null
+  studentCategoryId?: Prisma.StringNullableWithAggregatesFilter<"StudentCharge"> | string | null
+  feeTypeId?: Prisma.StringNullableWithAggregatesFilter<"StudentCharge"> | string | null
   expectedAmount?: Prisma.IntWithAggregatesFilter<"StudentCharge"> | number
   paidAmount?: Prisma.IntWithAggregatesFilter<"StudentCharge"> | number
   waivedAmount?: Prisma.IntWithAggregatesFilter<"StudentCharge"> | number
@@ -329,6 +389,11 @@ export type StudentChargeScalarWhereWithAggregatesInput = {
 
 export type StudentChargeCreateInput = {
   id?: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -344,6 +409,11 @@ export type StudentChargeUncheckedCreateInput = {
   id?: string
   studentId: string
   financeStructureId: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -355,6 +425,11 @@ export type StudentChargeUncheckedCreateInput = {
 
 export type StudentChargeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -370,6 +445,11 @@ export type StudentChargeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   financeStructureId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -383,6 +463,11 @@ export type StudentChargeCreateManyInput = {
   id?: string
   studentId: string
   financeStructureId: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -393,6 +478,11 @@ export type StudentChargeCreateManyInput = {
 
 export type StudentChargeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -405,6 +495,11 @@ export type StudentChargeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   financeStructureId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -432,6 +527,11 @@ export type StudentChargeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   financeStructureId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
+  termId?: Prisma.SortOrder
+  classId?: Prisma.SortOrder
+  studentCategoryId?: Prisma.SortOrder
+  feeTypeId?: Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   waivedAmount?: Prisma.SortOrder
@@ -450,6 +550,11 @@ export type StudentChargeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   financeStructureId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
+  termId?: Prisma.SortOrder
+  classId?: Prisma.SortOrder
+  studentCategoryId?: Prisma.SortOrder
+  feeTypeId?: Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   waivedAmount?: Prisma.SortOrder
@@ -462,6 +567,11 @@ export type StudentChargeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   financeStructureId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
+  termId?: Prisma.SortOrder
+  classId?: Prisma.SortOrder
+  studentCategoryId?: Prisma.SortOrder
+  feeTypeId?: Prisma.SortOrder
   expectedAmount?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
   waivedAmount?: Prisma.SortOrder
@@ -583,6 +693,11 @@ export type StudentChargeUpdateOneWithoutPaymentsNestedInput = {
 
 export type StudentChargeCreateWithoutStudentInput = {
   id?: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -596,6 +711,11 @@ export type StudentChargeCreateWithoutStudentInput = {
 export type StudentChargeUncheckedCreateWithoutStudentInput = {
   id?: string
   financeStructureId: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -638,6 +758,11 @@ export type StudentChargeScalarWhereInput = {
   id?: Prisma.StringFilter<"StudentCharge"> | string
   studentId?: Prisma.StringFilter<"StudentCharge"> | string
   financeStructureId?: Prisma.StringFilter<"StudentCharge"> | string
+  academicYearId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  termId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  classId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  studentCategoryId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
+  feeTypeId?: Prisma.StringNullableFilter<"StudentCharge"> | string | null
   expectedAmount?: Prisma.IntFilter<"StudentCharge"> | number
   paidAmount?: Prisma.IntFilter<"StudentCharge"> | number
   waivedAmount?: Prisma.IntFilter<"StudentCharge"> | number
@@ -648,6 +773,11 @@ export type StudentChargeScalarWhereInput = {
 
 export type StudentChargeCreateWithoutFinanceStructureInput = {
   id?: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -661,6 +791,11 @@ export type StudentChargeCreateWithoutFinanceStructureInput = {
 export type StudentChargeUncheckedCreateWithoutFinanceStructureInput = {
   id?: string
   studentId: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -698,6 +833,11 @@ export type StudentChargeUpdateManyWithWhereWithoutFinanceStructureInput = {
 
 export type StudentChargeCreateWithoutPaymentsInput = {
   id?: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -712,6 +852,11 @@ export type StudentChargeUncheckedCreateWithoutPaymentsInput = {
   id?: string
   studentId: string
   financeStructureId: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -738,6 +883,11 @@ export type StudentChargeUpdateToOneWithWhereWithoutPaymentsInput = {
 
 export type StudentChargeUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -752,6 +902,11 @@ export type StudentChargeUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   financeStructureId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -763,6 +918,11 @@ export type StudentChargeUncheckedUpdateWithoutPaymentsInput = {
 export type StudentChargeCreateManyStudentInput = {
   id?: string
   financeStructureId: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -773,6 +933,11 @@ export type StudentChargeCreateManyStudentInput = {
 
 export type StudentChargeUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -786,6 +951,11 @@ export type StudentChargeUpdateWithoutStudentInput = {
 export type StudentChargeUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   financeStructureId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -798,6 +968,11 @@ export type StudentChargeUncheckedUpdateWithoutStudentInput = {
 export type StudentChargeUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   financeStructureId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -809,6 +984,11 @@ export type StudentChargeUncheckedUpdateManyWithoutStudentInput = {
 export type StudentChargeCreateManyFinanceStructureInput = {
   id?: string
   studentId: string
+  academicYearId?: string | null
+  termId?: string | null
+  classId?: string | null
+  studentCategoryId?: string | null
+  feeTypeId?: string | null
   expectedAmount: number
   paidAmount?: number
   waivedAmount?: number
@@ -819,6 +999,11 @@ export type StudentChargeCreateManyFinanceStructureInput = {
 
 export type StudentChargeUpdateWithoutFinanceStructureInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -832,6 +1017,11 @@ export type StudentChargeUpdateWithoutFinanceStructureInput = {
 export type StudentChargeUncheckedUpdateWithoutFinanceStructureInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -844,6 +1034,11 @@ export type StudentChargeUncheckedUpdateWithoutFinanceStructureInput = {
 export type StudentChargeUncheckedUpdateManyWithoutFinanceStructureInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feeTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expectedAmount?: Prisma.IntFieldUpdateOperationsInput | number
   paidAmount?: Prisma.IntFieldUpdateOperationsInput | number
   waivedAmount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -887,6 +1082,11 @@ export type StudentChargeSelect<ExtArgs extends runtime.Types.Extensions.Interna
   id?: boolean
   studentId?: boolean
   financeStructureId?: boolean
+  academicYearId?: boolean
+  termId?: boolean
+  classId?: boolean
+  studentCategoryId?: boolean
+  feeTypeId?: boolean
   expectedAmount?: boolean
   paidAmount?: boolean
   waivedAmount?: boolean
@@ -903,6 +1103,11 @@ export type StudentChargeSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   studentId?: boolean
   financeStructureId?: boolean
+  academicYearId?: boolean
+  termId?: boolean
+  classId?: boolean
+  studentCategoryId?: boolean
+  feeTypeId?: boolean
   expectedAmount?: boolean
   paidAmount?: boolean
   waivedAmount?: boolean
@@ -917,6 +1122,11 @@ export type StudentChargeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   studentId?: boolean
   financeStructureId?: boolean
+  academicYearId?: boolean
+  termId?: boolean
+  classId?: boolean
+  studentCategoryId?: boolean
+  feeTypeId?: boolean
   expectedAmount?: boolean
   paidAmount?: boolean
   waivedAmount?: boolean
@@ -931,6 +1141,11 @@ export type StudentChargeSelectScalar = {
   id?: boolean
   studentId?: boolean
   financeStructureId?: boolean
+  academicYearId?: boolean
+  termId?: boolean
+  classId?: boolean
+  studentCategoryId?: boolean
+  feeTypeId?: boolean
   expectedAmount?: boolean
   paidAmount?: boolean
   waivedAmount?: boolean
@@ -939,7 +1154,7 @@ export type StudentChargeSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StudentChargeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "financeStructureId" | "expectedAmount" | "paidAmount" | "waivedAmount" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["studentCharge"]>
+export type StudentChargeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "financeStructureId" | "academicYearId" | "termId" | "classId" | "studentCategoryId" | "feeTypeId" | "expectedAmount" | "paidAmount" | "waivedAmount" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["studentCharge"]>
 export type StudentChargeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   financeStructure?: boolean | Prisma.FinanceStructureDefaultArgs<ExtArgs>
@@ -966,6 +1181,11 @@ export type $StudentChargePayload<ExtArgs extends runtime.Types.Extensions.Inter
     id: string
     studentId: string
     financeStructureId: string
+    academicYearId: string | null
+    termId: string | null
+    classId: string | null
+    studentCategoryId: string | null
+    feeTypeId: string | null
     expectedAmount: number
     paidAmount: number
     waivedAmount: number
@@ -1401,6 +1621,11 @@ export interface StudentChargeFieldRefs {
   readonly id: Prisma.FieldRef<"StudentCharge", 'String'>
   readonly studentId: Prisma.FieldRef<"StudentCharge", 'String'>
   readonly financeStructureId: Prisma.FieldRef<"StudentCharge", 'String'>
+  readonly academicYearId: Prisma.FieldRef<"StudentCharge", 'String'>
+  readonly termId: Prisma.FieldRef<"StudentCharge", 'String'>
+  readonly classId: Prisma.FieldRef<"StudentCharge", 'String'>
+  readonly studentCategoryId: Prisma.FieldRef<"StudentCharge", 'String'>
+  readonly feeTypeId: Prisma.FieldRef<"StudentCharge", 'String'>
   readonly expectedAmount: Prisma.FieldRef<"StudentCharge", 'Int'>
   readonly paidAmount: Prisma.FieldRef<"StudentCharge", 'Int'>
   readonly waivedAmount: Prisma.FieldRef<"StudentCharge", 'Int'>

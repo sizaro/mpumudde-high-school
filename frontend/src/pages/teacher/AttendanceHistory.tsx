@@ -26,11 +26,13 @@ export default function AttendanceHistory() {
                   <span className="font-medium">{s.schoolClass?.name}</span>
                   <span className="mx-2 text-gray-400">·</span>
                   <span className="text-gray-600">{s.subject?.name}</span>
+                  {s.isAssignmentOverride && <span className="ml-2 rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800">Cover lesson</span>}
                 </div>
                 <div className="text-sm text-gray-500">{new Date(s.date).toLocaleDateString()}</div>
               </button>
               {expanded === s.id && (
                 <div className="border-t px-5 py-3">
+                  {s.isAssignmentOverride && <div className="mb-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-900"><strong>Assignment override:</strong> {s.overrideReason}</div>}
                   <table className="min-w-full text-sm">
                     <thead><tr className="border-b"><th className="text-left py-2">Student</th><th className="text-left py-2">Admission #</th><th className="text-left py-2">Status</th></tr></thead>
                     <tbody>

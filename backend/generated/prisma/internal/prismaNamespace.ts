@@ -409,12 +409,14 @@ export const ModelName = {
   Term: 'Term',
   SchoolClass: 'SchoolClass',
   AcademicYearClass: 'AcademicYearClass',
+  ClassSubject: 'ClassSubject',
   StudentEnrollment: 'StudentEnrollment',
   StudentCategory: 'StudentCategory',
   FeeType: 'FeeType',
   FinanceStructure: 'FinanceStructure',
   StudentTermFee: 'StudentTermFee',
   StudentCharge: 'StudentCharge',
+  Notification: 'Notification',
   Payment: 'Payment',
   PaymentAudit: 'PaymentAudit',
   Expense: 'Expense',
@@ -434,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "teacherEmployment" | "subject" | "teacherAssignment" | "medicalInformation" | "emergencyContact" | "document" | "documentCategory" | "qualification" | "attendanceSession" | "attendanceRecord" | "parent" | "student" | "studentNumberSequence" | "studentParent" | "academicYear" | "term" | "schoolClass" | "academicYearClass" | "studentEnrollment" | "studentCategory" | "feeType" | "financeStructure" | "studentTermFee" | "studentCharge" | "payment" | "paymentAudit" | "expense" | "otherIncome"
+    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "teacherEmployment" | "subject" | "teacherAssignment" | "medicalInformation" | "emergencyContact" | "document" | "documentCategory" | "qualification" | "attendanceSession" | "attendanceRecord" | "parent" | "student" | "studentNumberSequence" | "studentParent" | "academicYear" | "term" | "schoolClass" | "academicYearClass" | "classSubject" | "studentEnrollment" | "studentCategory" | "feeType" | "financeStructure" | "studentTermFee" | "studentCharge" | "notification" | "payment" | "paymentAudit" | "expense" | "otherIncome"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2288,6 +2290,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ClassSubject: {
+      payload: Prisma.$ClassSubjectPayload<ExtArgs>
+      fields: Prisma.ClassSubjectFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ClassSubjectFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ClassSubjectFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload>
+        }
+        findFirst: {
+          args: Prisma.ClassSubjectFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ClassSubjectFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload>
+        }
+        findMany: {
+          args: Prisma.ClassSubjectFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload>[]
+        }
+        create: {
+          args: Prisma.ClassSubjectCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload>
+        }
+        createMany: {
+          args: Prisma.ClassSubjectCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ClassSubjectCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload>[]
+        }
+        delete: {
+          args: Prisma.ClassSubjectDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload>
+        }
+        update: {
+          args: Prisma.ClassSubjectUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload>
+        }
+        deleteMany: {
+          args: Prisma.ClassSubjectDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ClassSubjectUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ClassSubjectUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload>[]
+        }
+        upsert: {
+          args: Prisma.ClassSubjectUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassSubjectPayload>
+        }
+        aggregate: {
+          args: Prisma.ClassSubjectAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateClassSubject>
+        }
+        groupBy: {
+          args: Prisma.ClassSubjectGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClassSubjectGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ClassSubjectCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClassSubjectCountAggregateOutputType> | number
+        }
+      }
+    }
     StudentEnrollment: {
       payload: Prisma.$StudentEnrollmentPayload<ExtArgs>
       fields: Prisma.StudentEnrollmentFieldRefs
@@ -2729,6 +2805,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.StudentChargeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.StudentChargeCountAggregateOutputType> | number
+        }
+      }
+    }
+    Notification: {
+      payload: Prisma.$NotificationPayload<ExtArgs>
+      fields: Prisma.NotificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NotificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NotificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        findFirst: {
+          args: Prisma.NotificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NotificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        findMany: {
+          args: Prisma.NotificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+        }
+        create: {
+          args: Prisma.NotificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        createMany: {
+          args: Prisma.NotificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NotificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+        }
+        delete: {
+          args: Prisma.NotificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        update: {
+          args: Prisma.NotificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.NotificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NotificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NotificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.NotificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        aggregate: {
+          args: Prisma.NotificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNotification>
+        }
+        groupBy: {
+          args: Prisma.NotificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NotificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationCountAggregateOutputType> | number
         }
       }
     }
@@ -3192,6 +3342,12 @@ export const TeacherAssignmentScalarFieldEnum = {
   id: 'id',
   teacherId: 'teacherId',
   subjectId: 'subjectId',
+  academicYearId: 'academicYearId',
+  academicYearClassId: 'academicYearClassId',
+  classSubjectId: 'classSubjectId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isActive: 'isActive',
   createdAt: 'createdAt'
 } as const
 
@@ -3291,6 +3447,16 @@ export const AttendanceSessionScalarFieldEnum = {
   teacherId: 'teacherId',
   classId: 'classId',
   subjectId: 'subjectId',
+  academicYearId: 'academicYearId',
+  termId: 'termId',
+  academicYearClassId: 'academicYearClassId',
+  classSubjectId: 'classSubjectId',
+  teacherAssignmentId: 'teacherAssignmentId',
+  normallyAssignedTeacherId: 'normallyAssignedTeacherId',
+  lessonDate: 'lessonDate',
+  lessonTime: 'lessonTime',
+  isAssignmentOverride: 'isAssignmentOverride',
+  overrideReason: 'overrideReason',
   date: 'date',
   createdAt: 'createdAt'
 } as const
@@ -3391,6 +3557,9 @@ export const AcademicYearScalarFieldEnum = {
   id: 'id',
   name: 'name',
   isActive: 'isActive',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3406,6 +3575,7 @@ export const TermScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   isActive: 'isActive',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3436,12 +3606,25 @@ export const AcademicYearClassScalarFieldEnum = {
 export type AcademicYearClassScalarFieldEnum = (typeof AcademicYearClassScalarFieldEnum)[keyof typeof AcademicYearClassScalarFieldEnum]
 
 
+export const ClassSubjectScalarFieldEnum = {
+  id: 'id',
+  academicYearClassId: 'academicYearClassId',
+  subjectId: 'subjectId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ClassSubjectScalarFieldEnum = (typeof ClassSubjectScalarFieldEnum)[keyof typeof ClassSubjectScalarFieldEnum]
+
+
 export const StudentEnrollmentScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   academicYearId: 'academicYearId',
   termId: 'termId',
   classId: 'classId',
+  academicYearClassId: 'academicYearClassId',
   studentCategoryId: 'studentCategoryId',
   status: 'status',
   isCurrent: 'isCurrent',
@@ -3484,6 +3667,7 @@ export const FinanceStructureScalarFieldEnum = {
   classId: 'classId',
   studentCategoryId: 'studentCategoryId',
   feeTypeId: 'feeTypeId',
+  academicYearClassId: 'academicYearClassId',
   expectedAmount: 'expectedAmount',
   isActive: 'isActive',
   createdByUserId: 'createdByUserId',
@@ -3512,6 +3696,11 @@ export const StudentChargeScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   financeStructureId: 'financeStructureId',
+  academicYearId: 'academicYearId',
+  termId: 'termId',
+  classId: 'classId',
+  studentCategoryId: 'studentCategoryId',
+  feeTypeId: 'feeTypeId',
   expectedAmount: 'expectedAmount',
   paidAmount: 'paidAmount',
   waivedAmount: 'waivedAmount',
@@ -3521,6 +3710,23 @@ export const StudentChargeScalarFieldEnum = {
 } as const
 
 export type StudentChargeScalarFieldEnum = (typeof StudentChargeScalarFieldEnum)[keyof typeof StudentChargeScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  link: 'link',
+  isRead: 'isRead',
+  createdAt: 'createdAt',
+  readAt: 'readAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const PaymentScalarFieldEnum = {
@@ -3874,12 +4080,14 @@ export type GlobalOmitConfig = {
   term?: Prisma.TermOmit
   schoolClass?: Prisma.SchoolClassOmit
   academicYearClass?: Prisma.AcademicYearClassOmit
+  classSubject?: Prisma.ClassSubjectOmit
   studentEnrollment?: Prisma.StudentEnrollmentOmit
   studentCategory?: Prisma.StudentCategoryOmit
   feeType?: Prisma.FeeTypeOmit
   financeStructure?: Prisma.FinanceStructureOmit
   studentTermFee?: Prisma.StudentTermFeeOmit
   studentCharge?: Prisma.StudentChargeOmit
+  notification?: Prisma.NotificationOmit
   payment?: Prisma.PaymentOmit
   paymentAudit?: Prisma.PaymentAuditOmit
   expense?: Prisma.ExpenseOmit

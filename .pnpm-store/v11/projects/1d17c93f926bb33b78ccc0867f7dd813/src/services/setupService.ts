@@ -1,9 +1,11 @@
 import api from "../api/axios";
 
-export type AcademicYear = { id: string; name: string; isActive: boolean; createdAt?: string; updatedAt?: string };
-export type Term = { id: string; name: string; academicYearId: string; academicYear?: AcademicYear; feeAmount: number; startDate?: string; endDate?: string; isActive: boolean };
+export type AcademicPeriodStatus = "UPCOMING" | "ACTIVE" | "COMPLETED" | "ARCHIVED";
+export type AcademicYear = { id: string; name: string; startDate?: string; endDate?: string; status: AcademicPeriodStatus; isActive: boolean; createdAt?: string; updatedAt?: string };
+export type Term = { id: string; name: string; academicYearId: string; academicYear?: AcademicYear; startDate?: string; endDate?: string; status: Exclude<AcademicPeriodStatus, "ARCHIVED">; isActive: boolean };
 export type SchoolClass = { id: string; name: string; isActive: boolean };
-export type AcademicYearClass = { id: string; academicYearId: string; classId: string; isActive: boolean; schoolClass: SchoolClass };
+export type ClassSubject = { id: string; academicYearClassId: string; subjectId: string; isActive: boolean; subject: Subject };
+export type AcademicYearClass = { id: string; academicYearId: string; classId: string; isActive: boolean; schoolClass: SchoolClass; academicYear?: AcademicYear; classSubjects?: ClassSubject[] };
 export type StudentCategory = { id: string; name: string; isActive: boolean };
 export type FeeType = { id: string; name: string; isActive: boolean };
 export type FinanceStructure = { id: string; academicYearId: string; termId: string; classId: string; studentCategoryId: string; feeTypeId: string; expectedAmount: number; academicYear?: AcademicYear; term?: Term; schoolClass?: SchoolClass; studentCategory?: StudentCategory; feeType?: FeeType };
@@ -15,7 +17,7 @@ class SetupService {
     return data;
   }
 
-  async createAcademicYear(payload: { name: string; isActive?: boolean }): Promise<AcademicYear> {
+  async createAcademicYear(payload: { name: string; startDate?: string; endDate?: string; status?: AcademicPeriodStatus }): Promise<AcademicYear> {
     const { data } = await api.post<AcademicYear>("/setup/academic-years", payload);
     return data;
   }
@@ -35,12 +37,27 @@ class SetupService {
     return data;
   }
 
+  async getActiveContext(): Promise<{ academicYear: AcademicYear; term: Term | null; offerings: AcademicYearClass[] } | null> {
+    const { data } = await api.get("/setup/active-context");
+    return data;
+  }
+
+  async getClassSubjects(academicYearClassId: string): Promise<ClassSubject[]> {
+    const { data } = await api.get<ClassSubject[]>(`/setup/academic-year-classes/${academicYearClassId}/subjects`);
+    return data;
+  }
+
+  async setClassSubjects(academicYearClassId: string, subjectIds: string[]): Promise<ClassSubject[]> {
+    const { data } = await api.patch<ClassSubject[]>(`/setup/academic-year-classes/${academicYearClassId}/subjects`, { subjectIds });
+    return data;
+  }
+
   async getTerms(): Promise<Term[]> {
     const { data } = await api.get<Term[]>("/setup/terms");
     return data;
   }
 
-  async createTerm(payload: { academicYearId: string; name: string; feeAmount?: number; startDate?: string; endDate?: string; isActive?: boolean }): Promise<Term> {
+  async createTerm(payload: { academicYearId: string; name: string; startDate?: string; endDate?: string; status?: Term["status"] }): Promise<Term> {
     const { data } = await api.post<Term>("/setup/terms", payload);
     return data;
   }
@@ -55,7 +72,7 @@ class SetupService {
     return data;
   }
 
-  async createClass(payload: { name: string; isActive?: boolean }): Promise<SchoolClass> {
+  async createClass(payload: { name: string; academicYearId: string; isActive?: boolean }): Promise<SchoolClass> {
     const { data } = await api.post<SchoolClass>("/setup/classes", payload);
     return data;
   }

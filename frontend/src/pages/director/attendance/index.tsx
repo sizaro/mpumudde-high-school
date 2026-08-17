@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import AttendanceService, {
-  type AttendanceBulkRecordUpdateInput,
-} from "../../../services/attendanceService";
+import AttendanceService from "../../../services/attendanceService";
 
 const STATUSES = ["Present", "Absent", "Late", "Excused"] as const;
 type AttendanceStatus = (typeof STATUSES)[number];

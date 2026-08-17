@@ -81,7 +81,6 @@ export default function GuardianDetailsPage() {
     try {
       const result = await ParentService.resetPortalPassword(
         id,
-        loginEmail || undefined,
       );
       setCredentials({
         email: result.user?.email ?? "",

@@ -192,6 +192,11 @@ export type AcademicYearClassWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"AcademicYearClass"> | Date | string
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   schoolClass?: Prisma.XOR<Prisma.SchoolClassScalarRelationFilter, Prisma.SchoolClassWhereInput>
+  classSubjects?: Prisma.ClassSubjectListRelationFilter
+  teacherAssignments?: Prisma.TeacherAssignmentListRelationFilter
+  attendanceSessions?: Prisma.AttendanceSessionListRelationFilter
+  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
+  financeStructures?: Prisma.FinanceStructureListRelationFilter
 }
 
 export type AcademicYearClassOrderByWithRelationInput = {
@@ -203,6 +208,11 @@ export type AcademicYearClassOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
   schoolClass?: Prisma.SchoolClassOrderByWithRelationInput
+  classSubjects?: Prisma.ClassSubjectOrderByRelationAggregateInput
+  teacherAssignments?: Prisma.TeacherAssignmentOrderByRelationAggregateInput
+  attendanceSessions?: Prisma.AttendanceSessionOrderByRelationAggregateInput
+  studentEnrollments?: Prisma.StudentEnrollmentOrderByRelationAggregateInput
+  financeStructures?: Prisma.FinanceStructureOrderByRelationAggregateInput
 }
 
 export type AcademicYearClassWhereUniqueInput = Prisma.AtLeast<{
@@ -218,6 +228,11 @@ export type AcademicYearClassWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"AcademicYearClass"> | Date | string
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   schoolClass?: Prisma.XOR<Prisma.SchoolClassScalarRelationFilter, Prisma.SchoolClassWhereInput>
+  classSubjects?: Prisma.ClassSubjectListRelationFilter
+  teacherAssignments?: Prisma.TeacherAssignmentListRelationFilter
+  attendanceSessions?: Prisma.AttendanceSessionListRelationFilter
+  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
+  financeStructures?: Prisma.FinanceStructureListRelationFilter
 }, "id" | "academicYearId_classId">
 
 export type AcademicYearClassOrderByWithAggregationInput = {
@@ -251,6 +266,11 @@ export type AcademicYearClassCreateInput = {
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassOfferingsInput
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutAcademicYearsInput
+  classSubjects?: Prisma.ClassSubjectCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutAcademicYearClassInput
 }
 
 export type AcademicYearClassUncheckedCreateInput = {
@@ -260,6 +280,11 @@ export type AcademicYearClassUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutAcademicYearClassInput
 }
 
 export type AcademicYearClassUpdateInput = {
@@ -269,6 +294,11 @@ export type AcademicYearClassUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassOfferingsNestedInput
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutAcademicYearsNestedInput
+  classSubjects?: Prisma.ClassSubjectUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutAcademicYearClassNestedInput
 }
 
 export type AcademicYearClassUncheckedUpdateInput = {
@@ -278,6 +308,11 @@ export type AcademicYearClassUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassNestedInput
 }
 
 export type AcademicYearClassCreateManyInput = {
@@ -303,6 +338,11 @@ export type AcademicYearClassUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AcademicYearClassNullableScalarRelationFilter = {
+  is?: Prisma.AcademicYearClassWhereInput | null
+  isNot?: Prisma.AcademicYearClassWhereInput | null
 }
 
 export type AcademicYearClassListRelationFilter = {
@@ -345,6 +385,43 @@ export type AcademicYearClassMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type AcademicYearClassScalarRelationFilter = {
+  is?: Prisma.AcademicYearClassWhereInput
+  isNot?: Prisma.AcademicYearClassWhereInput
+}
+
+export type AcademicYearClassCreateNestedOneWithoutTeacherAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutTeacherAssignmentsInput, Prisma.AcademicYearClassUncheckedCreateWithoutTeacherAssignmentsInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutTeacherAssignmentsInput
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+}
+
+export type AcademicYearClassUpdateOneWithoutTeacherAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutTeacherAssignmentsInput, Prisma.AcademicYearClassUncheckedCreateWithoutTeacherAssignmentsInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutTeacherAssignmentsInput
+  upsert?: Prisma.AcademicYearClassUpsertWithoutTeacherAssignmentsInput
+  disconnect?: Prisma.AcademicYearClassWhereInput | boolean
+  delete?: Prisma.AcademicYearClassWhereInput | boolean
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicYearClassUpdateToOneWithWhereWithoutTeacherAssignmentsInput, Prisma.AcademicYearClassUpdateWithoutTeacherAssignmentsInput>, Prisma.AcademicYearClassUncheckedUpdateWithoutTeacherAssignmentsInput>
+}
+
+export type AcademicYearClassCreateNestedOneWithoutAttendanceSessionsInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutAttendanceSessionsInput, Prisma.AcademicYearClassUncheckedCreateWithoutAttendanceSessionsInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutAttendanceSessionsInput
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+}
+
+export type AcademicYearClassUpdateOneWithoutAttendanceSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutAttendanceSessionsInput, Prisma.AcademicYearClassUncheckedCreateWithoutAttendanceSessionsInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutAttendanceSessionsInput
+  upsert?: Prisma.AcademicYearClassUpsertWithoutAttendanceSessionsInput
+  disconnect?: Prisma.AcademicYearClassWhereInput | boolean
+  delete?: Prisma.AcademicYearClassWhereInput | boolean
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicYearClassUpdateToOneWithWhereWithoutAttendanceSessionsInput, Prisma.AcademicYearClassUpdateWithoutAttendanceSessionsInput>, Prisma.AcademicYearClassUncheckedUpdateWithoutAttendanceSessionsInput>
 }
 
 export type AcademicYearClassCreateNestedManyWithoutAcademicYearInput = {
@@ -431,12 +508,199 @@ export type AcademicYearClassUncheckedUpdateManyWithoutSchoolClassNestedInput = 
   deleteMany?: Prisma.AcademicYearClassScalarWhereInput | Prisma.AcademicYearClassScalarWhereInput[]
 }
 
+export type AcademicYearClassCreateNestedOneWithoutClassSubjectsInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutClassSubjectsInput, Prisma.AcademicYearClassUncheckedCreateWithoutClassSubjectsInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutClassSubjectsInput
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+}
+
+export type AcademicYearClassUpdateOneRequiredWithoutClassSubjectsNestedInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutClassSubjectsInput, Prisma.AcademicYearClassUncheckedCreateWithoutClassSubjectsInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutClassSubjectsInput
+  upsert?: Prisma.AcademicYearClassUpsertWithoutClassSubjectsInput
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicYearClassUpdateToOneWithWhereWithoutClassSubjectsInput, Prisma.AcademicYearClassUpdateWithoutClassSubjectsInput>, Prisma.AcademicYearClassUncheckedUpdateWithoutClassSubjectsInput>
+}
+
+export type AcademicYearClassCreateNestedOneWithoutStudentEnrollmentsInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutStudentEnrollmentsInput, Prisma.AcademicYearClassUncheckedCreateWithoutStudentEnrollmentsInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutStudentEnrollmentsInput
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+}
+
+export type AcademicYearClassUpdateOneWithoutStudentEnrollmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutStudentEnrollmentsInput, Prisma.AcademicYearClassUncheckedCreateWithoutStudentEnrollmentsInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutStudentEnrollmentsInput
+  upsert?: Prisma.AcademicYearClassUpsertWithoutStudentEnrollmentsInput
+  disconnect?: Prisma.AcademicYearClassWhereInput | boolean
+  delete?: Prisma.AcademicYearClassWhereInput | boolean
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicYearClassUpdateToOneWithWhereWithoutStudentEnrollmentsInput, Prisma.AcademicYearClassUpdateWithoutStudentEnrollmentsInput>, Prisma.AcademicYearClassUncheckedUpdateWithoutStudentEnrollmentsInput>
+}
+
+export type AcademicYearClassCreateNestedOneWithoutFinanceStructuresInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutFinanceStructuresInput, Prisma.AcademicYearClassUncheckedCreateWithoutFinanceStructuresInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutFinanceStructuresInput
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+}
+
+export type AcademicYearClassUpdateOneWithoutFinanceStructuresNestedInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutFinanceStructuresInput, Prisma.AcademicYearClassUncheckedCreateWithoutFinanceStructuresInput>
+  connectOrCreate?: Prisma.AcademicYearClassCreateOrConnectWithoutFinanceStructuresInput
+  upsert?: Prisma.AcademicYearClassUpsertWithoutFinanceStructuresInput
+  disconnect?: Prisma.AcademicYearClassWhereInput | boolean
+  delete?: Prisma.AcademicYearClassWhereInput | boolean
+  connect?: Prisma.AcademicYearClassWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicYearClassUpdateToOneWithWhereWithoutFinanceStructuresInput, Prisma.AcademicYearClassUpdateWithoutFinanceStructuresInput>, Prisma.AcademicYearClassUncheckedUpdateWithoutFinanceStructuresInput>
+}
+
+export type AcademicYearClassCreateWithoutTeacherAssignmentsInput = {
+  id?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassOfferingsInput
+  schoolClass: Prisma.SchoolClassCreateNestedOneWithoutAcademicYearsInput
+  classSubjects?: Prisma.ClassSubjectCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassUncheckedCreateWithoutTeacherAssignmentsInput = {
+  id?: string
+  academicYearId: string
+  classId: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassCreateOrConnectWithoutTeacherAssignmentsInput = {
+  where: Prisma.AcademicYearClassWhereUniqueInput
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutTeacherAssignmentsInput, Prisma.AcademicYearClassUncheckedCreateWithoutTeacherAssignmentsInput>
+}
+
+export type AcademicYearClassUpsertWithoutTeacherAssignmentsInput = {
+  update: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutTeacherAssignmentsInput, Prisma.AcademicYearClassUncheckedUpdateWithoutTeacherAssignmentsInput>
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutTeacherAssignmentsInput, Prisma.AcademicYearClassUncheckedCreateWithoutTeacherAssignmentsInput>
+  where?: Prisma.AcademicYearClassWhereInput
+}
+
+export type AcademicYearClassUpdateToOneWithWhereWithoutTeacherAssignmentsInput = {
+  where?: Prisma.AcademicYearClassWhereInput
+  data: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutTeacherAssignmentsInput, Prisma.AcademicYearClassUncheckedUpdateWithoutTeacherAssignmentsInput>
+}
+
+export type AcademicYearClassUpdateWithoutTeacherAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassOfferingsNestedInput
+  schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutAcademicYearsNestedInput
+  classSubjects?: Prisma.ClassSubjectUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutAcademicYearClassNestedInput
+}
+
+export type AcademicYearClassUncheckedUpdateWithoutTeacherAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+}
+
+export type AcademicYearClassCreateWithoutAttendanceSessionsInput = {
+  id?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassOfferingsInput
+  schoolClass: Prisma.SchoolClassCreateNestedOneWithoutAcademicYearsInput
+  classSubjects?: Prisma.ClassSubjectCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassUncheckedCreateWithoutAttendanceSessionsInput = {
+  id?: string
+  academicYearId: string
+  classId: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassCreateOrConnectWithoutAttendanceSessionsInput = {
+  where: Prisma.AcademicYearClassWhereUniqueInput
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutAttendanceSessionsInput, Prisma.AcademicYearClassUncheckedCreateWithoutAttendanceSessionsInput>
+}
+
+export type AcademicYearClassUpsertWithoutAttendanceSessionsInput = {
+  update: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutAttendanceSessionsInput, Prisma.AcademicYearClassUncheckedUpdateWithoutAttendanceSessionsInput>
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutAttendanceSessionsInput, Prisma.AcademicYearClassUncheckedCreateWithoutAttendanceSessionsInput>
+  where?: Prisma.AcademicYearClassWhereInput
+}
+
+export type AcademicYearClassUpdateToOneWithWhereWithoutAttendanceSessionsInput = {
+  where?: Prisma.AcademicYearClassWhereInput
+  data: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutAttendanceSessionsInput, Prisma.AcademicYearClassUncheckedUpdateWithoutAttendanceSessionsInput>
+}
+
+export type AcademicYearClassUpdateWithoutAttendanceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassOfferingsNestedInput
+  schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutAcademicYearsNestedInput
+  classSubjects?: Prisma.ClassSubjectUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutAcademicYearClassNestedInput
+}
+
+export type AcademicYearClassUncheckedUpdateWithoutAttendanceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+}
+
 export type AcademicYearClassCreateWithoutAcademicYearInput = {
   id?: string
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   schoolClass: Prisma.SchoolClassCreateNestedOneWithoutAcademicYearsInput
+  classSubjects?: Prisma.ClassSubjectCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutAcademicYearClassInput
 }
 
 export type AcademicYearClassUncheckedCreateWithoutAcademicYearInput = {
@@ -445,6 +709,11 @@ export type AcademicYearClassUncheckedCreateWithoutAcademicYearInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutAcademicYearClassInput
 }
 
 export type AcademicYearClassCreateOrConnectWithoutAcademicYearInput = {
@@ -491,6 +760,11 @@ export type AcademicYearClassCreateWithoutSchoolClassInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassOfferingsInput
+  classSubjects?: Prisma.ClassSubjectCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutAcademicYearClassInput
 }
 
 export type AcademicYearClassUncheckedCreateWithoutSchoolClassInput = {
@@ -499,6 +773,11 @@ export type AcademicYearClassUncheckedCreateWithoutSchoolClassInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutAcademicYearClassInput
 }
 
 export type AcademicYearClassCreateOrConnectWithoutSchoolClassInput = {
@@ -527,6 +806,210 @@ export type AcademicYearClassUpdateManyWithWhereWithoutSchoolClassInput = {
   data: Prisma.XOR<Prisma.AcademicYearClassUpdateManyMutationInput, Prisma.AcademicYearClassUncheckedUpdateManyWithoutSchoolClassInput>
 }
 
+export type AcademicYearClassCreateWithoutClassSubjectsInput = {
+  id?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassOfferingsInput
+  schoolClass: Prisma.SchoolClassCreateNestedOneWithoutAcademicYearsInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassUncheckedCreateWithoutClassSubjectsInput = {
+  id?: string
+  academicYearId: string
+  classId: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassCreateOrConnectWithoutClassSubjectsInput = {
+  where: Prisma.AcademicYearClassWhereUniqueInput
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutClassSubjectsInput, Prisma.AcademicYearClassUncheckedCreateWithoutClassSubjectsInput>
+}
+
+export type AcademicYearClassUpsertWithoutClassSubjectsInput = {
+  update: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutClassSubjectsInput, Prisma.AcademicYearClassUncheckedUpdateWithoutClassSubjectsInput>
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutClassSubjectsInput, Prisma.AcademicYearClassUncheckedCreateWithoutClassSubjectsInput>
+  where?: Prisma.AcademicYearClassWhereInput
+}
+
+export type AcademicYearClassUpdateToOneWithWhereWithoutClassSubjectsInput = {
+  where?: Prisma.AcademicYearClassWhereInput
+  data: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutClassSubjectsInput, Prisma.AcademicYearClassUncheckedUpdateWithoutClassSubjectsInput>
+}
+
+export type AcademicYearClassUpdateWithoutClassSubjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassOfferingsNestedInput
+  schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutAcademicYearsNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutAcademicYearClassNestedInput
+}
+
+export type AcademicYearClassUncheckedUpdateWithoutClassSubjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+}
+
+export type AcademicYearClassCreateWithoutStudentEnrollmentsInput = {
+  id?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassOfferingsInput
+  schoolClass: Prisma.SchoolClassCreateNestedOneWithoutAcademicYearsInput
+  classSubjects?: Prisma.ClassSubjectCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassUncheckedCreateWithoutStudentEnrollmentsInput = {
+  id?: string
+  academicYearId: string
+  classId: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  financeStructures?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassCreateOrConnectWithoutStudentEnrollmentsInput = {
+  where: Prisma.AcademicYearClassWhereUniqueInput
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutStudentEnrollmentsInput, Prisma.AcademicYearClassUncheckedCreateWithoutStudentEnrollmentsInput>
+}
+
+export type AcademicYearClassUpsertWithoutStudentEnrollmentsInput = {
+  update: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutStudentEnrollmentsInput, Prisma.AcademicYearClassUncheckedUpdateWithoutStudentEnrollmentsInput>
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutStudentEnrollmentsInput, Prisma.AcademicYearClassUncheckedCreateWithoutStudentEnrollmentsInput>
+  where?: Prisma.AcademicYearClassWhereInput
+}
+
+export type AcademicYearClassUpdateToOneWithWhereWithoutStudentEnrollmentsInput = {
+  where?: Prisma.AcademicYearClassWhereInput
+  data: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutStudentEnrollmentsInput, Prisma.AcademicYearClassUncheckedUpdateWithoutStudentEnrollmentsInput>
+}
+
+export type AcademicYearClassUpdateWithoutStudentEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassOfferingsNestedInput
+  schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutAcademicYearsNestedInput
+  classSubjects?: Prisma.ClassSubjectUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutAcademicYearClassNestedInput
+}
+
+export type AcademicYearClassUncheckedUpdateWithoutStudentEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+}
+
+export type AcademicYearClassCreateWithoutFinanceStructuresInput = {
+  id?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassOfferingsInput
+  schoolClass: Prisma.SchoolClassCreateNestedOneWithoutAcademicYearsInput
+  classSubjects?: Prisma.ClassSubjectCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassUncheckedCreateWithoutFinanceStructuresInput = {
+  id?: string
+  academicYearId: string
+  classId: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutAcademicYearClassInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutAcademicYearClassInput
+}
+
+export type AcademicYearClassCreateOrConnectWithoutFinanceStructuresInput = {
+  where: Prisma.AcademicYearClassWhereUniqueInput
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutFinanceStructuresInput, Prisma.AcademicYearClassUncheckedCreateWithoutFinanceStructuresInput>
+}
+
+export type AcademicYearClassUpsertWithoutFinanceStructuresInput = {
+  update: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutFinanceStructuresInput, Prisma.AcademicYearClassUncheckedUpdateWithoutFinanceStructuresInput>
+  create: Prisma.XOR<Prisma.AcademicYearClassCreateWithoutFinanceStructuresInput, Prisma.AcademicYearClassUncheckedCreateWithoutFinanceStructuresInput>
+  where?: Prisma.AcademicYearClassWhereInput
+}
+
+export type AcademicYearClassUpdateToOneWithWhereWithoutFinanceStructuresInput = {
+  where?: Prisma.AcademicYearClassWhereInput
+  data: Prisma.XOR<Prisma.AcademicYearClassUpdateWithoutFinanceStructuresInput, Prisma.AcademicYearClassUncheckedUpdateWithoutFinanceStructuresInput>
+}
+
+export type AcademicYearClassUpdateWithoutFinanceStructuresInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassOfferingsNestedInput
+  schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutAcademicYearsNestedInput
+  classSubjects?: Prisma.ClassSubjectUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutAcademicYearClassNestedInput
+}
+
+export type AcademicYearClassUncheckedUpdateWithoutFinanceStructuresInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+}
+
 export type AcademicYearClassCreateManyAcademicYearInput = {
   id?: string
   classId: string
@@ -541,6 +1024,11 @@ export type AcademicYearClassUpdateWithoutAcademicYearInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   schoolClass?: Prisma.SchoolClassUpdateOneRequiredWithoutAcademicYearsNestedInput
+  classSubjects?: Prisma.ClassSubjectUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutAcademicYearClassNestedInput
 }
 
 export type AcademicYearClassUncheckedUpdateWithoutAcademicYearInput = {
@@ -549,6 +1037,11 @@ export type AcademicYearClassUncheckedUpdateWithoutAcademicYearInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassNestedInput
 }
 
 export type AcademicYearClassUncheckedUpdateManyWithoutAcademicYearInput = {
@@ -573,6 +1066,11 @@ export type AcademicYearClassUpdateWithoutSchoolClassInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassOfferingsNestedInput
+  classSubjects?: Prisma.ClassSubjectUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUpdateManyWithoutAcademicYearClassNestedInput
 }
 
 export type AcademicYearClassUncheckedUpdateWithoutSchoolClassInput = {
@@ -581,6 +1079,11 @@ export type AcademicYearClassUncheckedUpdateWithoutSchoolClassInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  classSubjects?: Prisma.ClassSubjectUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  attendanceSessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutAcademicYearClassNestedInput
+  financeStructures?: Prisma.FinanceStructureUncheckedUpdateManyWithoutAcademicYearClassNestedInput
 }
 
 export type AcademicYearClassUncheckedUpdateManyWithoutSchoolClassInput = {
@@ -592,6 +1095,71 @@ export type AcademicYearClassUncheckedUpdateManyWithoutSchoolClassInput = {
 }
 
 
+/**
+ * Count Type AcademicYearClassCountOutputType
+ */
+
+export type AcademicYearClassCountOutputType = {
+  classSubjects: number
+  teacherAssignments: number
+  attendanceSessions: number
+  studentEnrollments: number
+  financeStructures: number
+}
+
+export type AcademicYearClassCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  classSubjects?: boolean | AcademicYearClassCountOutputTypeCountClassSubjectsArgs
+  teacherAssignments?: boolean | AcademicYearClassCountOutputTypeCountTeacherAssignmentsArgs
+  attendanceSessions?: boolean | AcademicYearClassCountOutputTypeCountAttendanceSessionsArgs
+  studentEnrollments?: boolean | AcademicYearClassCountOutputTypeCountStudentEnrollmentsArgs
+  financeStructures?: boolean | AcademicYearClassCountOutputTypeCountFinanceStructuresArgs
+}
+
+/**
+ * AcademicYearClassCountOutputType without action
+ */
+export type AcademicYearClassCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AcademicYearClassCountOutputType
+   */
+  select?: Prisma.AcademicYearClassCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AcademicYearClassCountOutputType without action
+ */
+export type AcademicYearClassCountOutputTypeCountClassSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ClassSubjectWhereInput
+}
+
+/**
+ * AcademicYearClassCountOutputType without action
+ */
+export type AcademicYearClassCountOutputTypeCountTeacherAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TeacherAssignmentWhereInput
+}
+
+/**
+ * AcademicYearClassCountOutputType without action
+ */
+export type AcademicYearClassCountOutputTypeCountAttendanceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttendanceSessionWhereInput
+}
+
+/**
+ * AcademicYearClassCountOutputType without action
+ */
+export type AcademicYearClassCountOutputTypeCountStudentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentEnrollmentWhereInput
+}
+
+/**
+ * AcademicYearClassCountOutputType without action
+ */
+export type AcademicYearClassCountOutputTypeCountFinanceStructuresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FinanceStructureWhereInput
+}
+
 
 export type AcademicYearClassSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -602,6 +1170,12 @@ export type AcademicYearClassSelect<ExtArgs extends runtime.Types.Extensions.Int
   updatedAt?: boolean
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   schoolClass?: boolean | Prisma.SchoolClassDefaultArgs<ExtArgs>
+  classSubjects?: boolean | Prisma.AcademicYearClass$classSubjectsArgs<ExtArgs>
+  teacherAssignments?: boolean | Prisma.AcademicYearClass$teacherAssignmentsArgs<ExtArgs>
+  attendanceSessions?: boolean | Prisma.AcademicYearClass$attendanceSessionsArgs<ExtArgs>
+  studentEnrollments?: boolean | Prisma.AcademicYearClass$studentEnrollmentsArgs<ExtArgs>
+  financeStructures?: boolean | Prisma.AcademicYearClass$financeStructuresArgs<ExtArgs>
+  _count?: boolean | Prisma.AcademicYearClassCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["academicYearClass"]>
 
 export type AcademicYearClassSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -639,6 +1213,12 @@ export type AcademicYearClassOmit<ExtArgs extends runtime.Types.Extensions.Inter
 export type AcademicYearClassInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   schoolClass?: boolean | Prisma.SchoolClassDefaultArgs<ExtArgs>
+  classSubjects?: boolean | Prisma.AcademicYearClass$classSubjectsArgs<ExtArgs>
+  teacherAssignments?: boolean | Prisma.AcademicYearClass$teacherAssignmentsArgs<ExtArgs>
+  attendanceSessions?: boolean | Prisma.AcademicYearClass$attendanceSessionsArgs<ExtArgs>
+  studentEnrollments?: boolean | Prisma.AcademicYearClass$studentEnrollmentsArgs<ExtArgs>
+  financeStructures?: boolean | Prisma.AcademicYearClass$financeStructuresArgs<ExtArgs>
+  _count?: boolean | Prisma.AcademicYearClassCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AcademicYearClassIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -654,6 +1234,11 @@ export type $AcademicYearClassPayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     academicYear: Prisma.$AcademicYearPayload<ExtArgs>
     schoolClass: Prisma.$SchoolClassPayload<ExtArgs>
+    classSubjects: Prisma.$ClassSubjectPayload<ExtArgs>[]
+    teacherAssignments: Prisma.$TeacherAssignmentPayload<ExtArgs>[]
+    attendanceSessions: Prisma.$AttendanceSessionPayload<ExtArgs>[]
+    studentEnrollments: Prisma.$StudentEnrollmentPayload<ExtArgs>[]
+    financeStructures: Prisma.$FinanceStructurePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1058,6 +1643,11 @@ export interface Prisma__AcademicYearClassClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   academicYear<T extends Prisma.AcademicYearDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   schoolClass<T extends Prisma.SchoolClassDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SchoolClassDefaultArgs<ExtArgs>>): Prisma.Prisma__SchoolClassClient<runtime.Types.Result.GetResult<Prisma.$SchoolClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  classSubjects<T extends Prisma.AcademicYearClass$classSubjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearClass$classSubjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClassSubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  teacherAssignments<T extends Prisma.AcademicYearClass$teacherAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearClass$teacherAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attendanceSessions<T extends Prisma.AcademicYearClass$attendanceSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearClass$attendanceSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studentEnrollments<T extends Prisma.AcademicYearClass$studentEnrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearClass$studentEnrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  financeStructures<T extends Prisma.AcademicYearClass$financeStructuresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearClass$financeStructuresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinanceStructurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1491,6 +2081,126 @@ export type AcademicYearClassDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many AcademicYearClasses to delete.
    */
   limit?: number
+}
+
+/**
+ * AcademicYearClass.classSubjects
+ */
+export type AcademicYearClass$classSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ClassSubject
+   */
+  select?: Prisma.ClassSubjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ClassSubject
+   */
+  omit?: Prisma.ClassSubjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClassSubjectInclude<ExtArgs> | null
+  where?: Prisma.ClassSubjectWhereInput
+  orderBy?: Prisma.ClassSubjectOrderByWithRelationInput | Prisma.ClassSubjectOrderByWithRelationInput[]
+  cursor?: Prisma.ClassSubjectWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ClassSubjectScalarFieldEnum | Prisma.ClassSubjectScalarFieldEnum[]
+}
+
+/**
+ * AcademicYearClass.teacherAssignments
+ */
+export type AcademicYearClass$teacherAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TeacherAssignment
+   */
+  select?: Prisma.TeacherAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TeacherAssignment
+   */
+  omit?: Prisma.TeacherAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeacherAssignmentInclude<ExtArgs> | null
+  where?: Prisma.TeacherAssignmentWhereInput
+  orderBy?: Prisma.TeacherAssignmentOrderByWithRelationInput | Prisma.TeacherAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.TeacherAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TeacherAssignmentScalarFieldEnum | Prisma.TeacherAssignmentScalarFieldEnum[]
+}
+
+/**
+ * AcademicYearClass.attendanceSessions
+ */
+export type AcademicYearClass$attendanceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttendanceSession
+   */
+  select?: Prisma.AttendanceSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttendanceSession
+   */
+  omit?: Prisma.AttendanceSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttendanceSessionInclude<ExtArgs> | null
+  where?: Prisma.AttendanceSessionWhereInput
+  orderBy?: Prisma.AttendanceSessionOrderByWithRelationInput | Prisma.AttendanceSessionOrderByWithRelationInput[]
+  cursor?: Prisma.AttendanceSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttendanceSessionScalarFieldEnum | Prisma.AttendanceSessionScalarFieldEnum[]
+}
+
+/**
+ * AcademicYearClass.studentEnrollments
+ */
+export type AcademicYearClass$studentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentEnrollment
+   */
+  select?: Prisma.StudentEnrollmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentEnrollment
+   */
+  omit?: Prisma.StudentEnrollmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentEnrollmentInclude<ExtArgs> | null
+  where?: Prisma.StudentEnrollmentWhereInput
+  orderBy?: Prisma.StudentEnrollmentOrderByWithRelationInput | Prisma.StudentEnrollmentOrderByWithRelationInput[]
+  cursor?: Prisma.StudentEnrollmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentEnrollmentScalarFieldEnum | Prisma.StudentEnrollmentScalarFieldEnum[]
+}
+
+/**
+ * AcademicYearClass.financeStructures
+ */
+export type AcademicYearClass$financeStructuresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinanceStructure
+   */
+  select?: Prisma.FinanceStructureSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinanceStructure
+   */
+  omit?: Prisma.FinanceStructureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinanceStructureInclude<ExtArgs> | null
+  where?: Prisma.FinanceStructureWhereInput
+  orderBy?: Prisma.FinanceStructureOrderByWithRelationInput | Prisma.FinanceStructureOrderByWithRelationInput[]
+  cursor?: Prisma.FinanceStructureWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FinanceStructureScalarFieldEnum | Prisma.FinanceStructureScalarFieldEnum[]
 }
 
 /**

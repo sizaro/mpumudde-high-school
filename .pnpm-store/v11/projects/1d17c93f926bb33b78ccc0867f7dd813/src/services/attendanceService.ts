@@ -5,9 +5,18 @@ export interface AttendanceRecordInput {
   status: "Present" | "Absent" | "Late" | "Excused";
 }
 
+export interface AttendanceBulkRecordUpdateInput {
+  recordId: string;
+  status: AttendanceRecordInput["status"];
+}
+
 export interface CreateAttendanceSessionInput {
   classId: string;
   subjectId: string;
+  academicYearId?: string;
+  termId?: string;
+  classSubjectId?: string;
+  overrideReason?: string;
   date?: string;
   records: AttendanceRecordInput[];
 }
@@ -38,8 +47,18 @@ class AttendanceService {
     return data;
   }
 
-  async getStudentsForClass(classId: string) {
-    const { data } = await api.get(`/attendance/students/class/${classId}`);
+  async getStudentsForClass(classId: string, academicYearId?: string) {
+    const { data } = await api.get(`/attendance/students/class/${classId}`, { params: { academicYearId } });
+    return data;
+  }
+
+  async updateRecordStatus(sessionId: string, recordId: string, status: AttendanceRecordInput["status"]) {
+    const { data } = await api.patch(`/attendance/sessions/${sessionId}/records/${recordId}`, { status });
+    return data;
+  }
+
+  async updateRecords(sessionId: string, records: AttendanceBulkRecordUpdateInput[]) {
+    const { data } = await api.patch(`/attendance/sessions/${sessionId}/records`, { records });
     return data;
   }
 }

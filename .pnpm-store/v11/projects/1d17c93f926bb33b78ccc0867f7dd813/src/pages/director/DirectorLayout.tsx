@@ -1,7 +1,8 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Bell, LogOut, ChevronDown, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import NotificationService, { type DirectorNotification } from "../../services/notificationService";
 
 const navButton = ({ isActive }: { isActive: boolean }) =>
   `block rounded-3xl px-4 py-3 text-left text-sm transition duration-200 ease-out ${
@@ -19,9 +20,28 @@ const subNavButton = ({ isActive }: { isActive: boolean }) =>
 
 export default function DirectorLayout() {
   const { logout } = useAuth();
+  const navigate = useNavigate();
   const [studentsMenuOpen, setStudentsMenuOpen] = useState(false);
   const [teachersMenuOpen, setTeachersMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState<DirectorNotification[]>([]);
+
+  useEffect(() => {
+    const load = () => NotificationService.list().then(setNotifications).catch(() => undefined);
+    void load();
+    const interval = window.setInterval(load, 60_000);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const openNotification = async (item: DirectorNotification) => {
+    if (!item.isRead) {
+      await NotificationService.markRead(item.id);
+      setNotifications((current) => current.map((entry) => entry.id === item.id ? { ...entry, isRead: true } : entry));
+    }
+    setNotificationsOpen(false);
+    if (item.link) navigate(item.link);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -57,7 +77,14 @@ export default function DirectorLayout() {
               </button>
             </div>
 
-            <nav className="mt-6 space-y-2 text-sm">
+            <nav
+              className="mt-6 space-y-2 text-sm"
+              onClick={(event) => {
+                if ((event.target as HTMLElement).closest("a")) {
+                  setMobileNavOpen(false);
+                }
+              }}
+            >
               <NavLink to="." className={navButton} end>
                 Overview
               </NavLink>
@@ -89,6 +116,9 @@ export default function DirectorLayout() {
                     </NavLink>
                     <NavLink to="students/status" className={subNavButton} end>
                       Student Status
+                    </NavLink>
+                    <NavLink to="students/promotion" className={subNavButton} end>
+                      Promotion & Movement
                     </NavLink>
                   </div>
                 )}
@@ -151,14 +181,13 @@ export default function DirectorLayout() {
               <Menu size={21} />
             </button>
             <div className="flex items-center gap-3">
-              <button
-                type="button"
-                className="inline-flex h-12 w-12 items-center justify-center rounded-3xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
-                aria-label="View notifications"
-              >
-                <Bell size={20} />
-                <span className="sr-only">Notifications</span>
-              </button>
+              <div className="relative">
+                <button type="button" onClick={() => setNotificationsOpen((value) => !value)} className="relative inline-flex h-12 w-12 items-center justify-center rounded-3xl border border-slate-200 bg-white text-slate-700 shadow-sm" aria-label="View notifications">
+                  <Bell size={20} />
+                  {notifications.some((item) => !item.isRead) && <span className="absolute right-1 top-1 min-w-5 rounded-full bg-red-600 px-1 text-center text-[10px] font-bold leading-5 text-white">{notifications.filter((item) => !item.isRead).length}</span>}
+                </button>
+                {notificationsOpen && <div className="absolute right-0 z-30 mt-2 max-h-96 w-[min(88vw,24rem)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl"><div className="px-3 py-2 text-sm font-semibold">Director notifications</div>{notifications.length ? notifications.map((item) => <button key={item.id} type="button" onClick={() => void openNotification(item)} className={`w-full rounded-xl p-3 text-left hover:bg-slate-50 ${item.isRead ? "text-slate-500" : "bg-blue-50 text-slate-900"}`}><p className="text-sm font-semibold">{item.title}</p><p className="mt-1 text-xs">{item.message}</p><p className="mt-2 text-[11px] text-slate-400">{new Date(item.createdAt).toLocaleString()}</p></button>) : <p className="p-4 text-sm text-slate-500">No notifications yet.</p>}</div>}
+              </div>
               <button
                 type="button"
                 onClick={logout}

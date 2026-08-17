@@ -123,6 +123,14 @@ export type ParentStudentProfile = {
       proofUrl: string | null;
       proofFileName: string | null;
       feeType: string | null;
+      academicYear: string | null;
+      term: string | null;
+      accountStatus: string | null;
+      chargeId: string | null;
+      chargeExpectedAmount: number | null;
+      chargePaidAmount: number | null;
+      chargeWaivedAmount: number | null;
+      chargeBalance: number | null;
     }>;
     charges: Array<{
       id: string;
@@ -134,6 +142,16 @@ export type ParentStudentProfile = {
       waivedAmount: number;
       balance: number;
       status: string;
+      paymentProofs: Array<{
+        id: string;
+        amount: number;
+        method: string | null;
+        status: string | null;
+        date: string | null;
+        receiptNumber: string | null;
+        proofUrl: string | null;
+        proofFileName: string | null;
+      }>;
     }>;
     totalExpected: number;
     totalPaid: number;

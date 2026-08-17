@@ -5,6 +5,7 @@
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from "@nestjs/common";
@@ -48,8 +49,11 @@ export class AttendanceController {
   }
 
   @Get("students/class/:classId")
-  getStudentsForClass(@Param("classId") classId: string) {
-    return this.attendanceService.getStudentsForClass(classId);
+  getStudentsForClass(
+    @Param("classId") classId: string,
+    @Query("academicYearId") academicYearId?: string,
+  ) {
+    return this.attendanceService.getStudentsForClass(classId, academicYearId);
   }
 
   @Patch("sessions/:sessionId/records/:recordId")

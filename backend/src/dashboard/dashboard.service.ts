@@ -11,12 +11,12 @@ export class DashboardService {
 
   async getDirectorOverview() {
     const activeAcademicYear = await this.prisma.academicYear.findFirst({
-      where: { isActive: true },
+      where: { status: 'ACTIVE' },
       orderBy: { name: 'desc' },
     });
     const activeTerm = await this.prisma.term.findFirst({
       where: {
-        isActive: true,
+        status: 'ACTIVE',
         academicYearId: activeAcademicYear?.id,
       },
       include: { academicYear: true },
@@ -47,21 +47,19 @@ export class DashboardService {
       this.prisma.teacher.count({
         where: { user: { isActive: true }, employment: { status: 'active' } },
       }),
-      this.prisma.schoolClass.count({ where: { isActive: true } }),
+      this.prisma.academicYearClass.count({ where: { academicYearId: activeAcademicYear?.id, isActive: true } }),
       this.prisma.subject.count({ where: { isActive: true } }),
       this.prisma.student.count({
         where: {
           isActive: true,
           OR: [
-            { academicYearId: null },
-            { termId: null },
-            { classId: null },
             { studentCategoryId: null },
+            { enrollments: { none: { academicYearId: activeAcademicYear?.id, status: 'ACTIVE' } } },
           ],
         },
       }),
       this.prisma.teacher.count({
-        where: { user: { isActive: true }, teachingAssignments: { none: {} } },
+        where: { user: { isActive: true }, teachingAssignments: { none: { academicYearId: activeAcademicYear?.id, isActive: true } } },
       }),
       this.prisma.expense.count({ where: { status: 'PENDING_APPROVAL' } }),
       this.prisma.student.findMany({

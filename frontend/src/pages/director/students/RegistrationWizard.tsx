@@ -89,6 +89,8 @@ export default function RegistrationWizard() {
           if (Array.isArray(draft.payments) && draft.payments.length) setPayments(draft.payments);
           if (typeof draft.step === "number") setStep(Math.max(0, Math.min(draft.step, steps.length - 1)));
         } catch { localStorage.removeItem(DRAFT_KEY); }
+      } else if (data.activeContext?.academicYear) {
+        setForm((current) => ({ ...current, academicYearId: data.activeContext.academicYear.id, termId: data.activeContext.term?.id ?? "" }));
       }
       setDraftReady(true);
     };
@@ -109,7 +111,7 @@ export default function RegistrationWizard() {
   const progress = useMemo(() => `${step + 1}/${steps.length}`, [step]);
   const selectedAcademicYear = (registrationData.academicYears || []).find((year: any) => year.id === form.academicYearId);
   const termsForSelectedYear = (registrationData.terms || []).filter((term: any) => term.academicYearId === form.academicYearId || term.academicYear?.id === form.academicYearId || term.academicYear?.name === selectedAcademicYear?.name);
-  const availableTerms = termsForSelectedYear;
+  const availableTerms = termsForSelectedYear.filter((term: any) => term.status !== "COMPLETED");
   const availableClasses = (registrationData.academicYearClasses || [])
     .filter((offering: any) => offering.academicYearId === form.academicYearId && offering.isActive)
     .map((offering: any) => offering.schoolClass)
@@ -437,7 +439,7 @@ export default function RegistrationWizard() {
       {step === 3 ? (
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="grid gap-4 md:grid-cols-2">
-            <label className="text-sm font-medium text-slate-700">Academic Year<select value={form.academicYearId} onChange={(event) => setForm((current) => ({ ...current, academicYearId: event.target.value, termId: "", classId: "" }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select academic year</option>{(registrationData.academicYears || []).map((item: any) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+            <label className="text-sm font-medium text-slate-700">Academic Year<select value={form.academicYearId} onChange={(event) => setForm((current) => ({ ...current, academicYearId: event.target.value, termId: "", classId: "" }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select academic year</option>{(registrationData.academicYears || []).filter((item: any) => item.status === "ACTIVE").map((item: any) => <option key={item.id} value={item.id}>{item.name} · Active</option>)}</select></label>
             <label className="text-sm font-medium text-slate-700">Term<select value={form.termId} disabled={!form.academicYearId} onChange={(event) => updateField("termId", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 disabled:bg-slate-100"><option value="">{form.academicYearId ? (availableTerms.length ? "Select term" : "No terms configured") : "Select academic year first"}</option>{availableTerms.map((item: any) => <option key={item.id} value={item.id}>{item.name}{item.academicYear?.name && item.academicYear?.name !== selectedAcademicYear?.name ? ` (${item.academicYear.name})` : ""}</option>)}</select></label>
             <label className="text-sm font-medium text-slate-700">Class<select value={form.classId} disabled={!form.academicYearId} onChange={(event) => updateField("classId", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 disabled:bg-slate-100"><option value="">{form.academicYearId ? (availableClasses.length ? "Select class" : "No classes attached to this academic year") : "Select academic year first"}</option>{availableClasses.map((item: any) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
             <label className="text-sm font-medium text-slate-700">Student Category<select value={form.studentCategoryId} onChange={(event) => updateField("studentCategoryId", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select category</option>{(registrationData.studentCategories || []).map((item: any) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>

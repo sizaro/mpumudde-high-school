@@ -619,22 +619,26 @@ export class TeachersService {
   async getMyClasses(userId: string) {
     const teacher = await this.prisma.teacher.findUnique({ where: { userId } });
     if (!teacher) throw new NotFoundException("Teacher profile not found");
-    return this.prisma.schoolClass.findMany({
-      where: { isActive: true },
-      orderBy: { name: "asc" },
+    const activeYear = await this.prisma.academicYear.findFirst({ where: { status: "ACTIVE" } });
+    if (!activeYear) return [];
+    const offerings = await this.prisma.academicYearClass.findMany({
+      where: { academicYearId: activeYear.id, isActive: true },
+      include: { schoolClass: true },
+      orderBy: { schoolClass: { name: "asc" } },
     });
+    return offerings.map((offering) => ({ ...offering.schoolClass, academicYearClassId: offering.id, academicYearId: activeYear.id }));
   }
 
   async getMySubjects(userId: string) {
     const teacher = await this.prisma.teacher.findUnique({ where: { userId } });
     if (!teacher) throw new NotFoundException("Teacher profile not found");
-    const assignments = await this.prisma.teacherAssignment.findMany({
-      where: { teacherId: teacher.id },
-      include: { subject: true },
+    const activeYear = await this.prisma.academicYear.findFirst({ where: { status: "ACTIVE" } });
+    if (!activeYear) return [];
+    const offered = await this.prisma.classSubject.findMany({
+      where: { academicYearClass: { academicYearId: activeYear.id, isActive: true }, isActive: true },
+      include: { subject: true, academicYearClass: { include: { schoolClass: true } } },
     });
-    const subjectMap = new Map<string, (typeof assignments)[0]["subject"]>();
-    for (const a of assignments) subjectMap.set(a.subjectId, a.subject);
-    return Array.from(subjectMap.values());
+    return offered.map((item) => ({ ...item.subject, classSubjectId: item.id, academicYearClassId: item.academicYearClassId, classId: item.academicYearClass.classId, className: item.academicYearClass.schoolClass.name }));
   }
 
   async getMyAssignments(userId: string) {
@@ -644,6 +648,9 @@ export class TeachersService {
       where: { teacherId: teacher.id },
       include: {
         subject: { select: { id: true, name: true, code: true } },
+        academicYear: true,
+        academicYearClass: { include: { schoolClass: true } },
+        classSubject: true,
       },
     });
   }

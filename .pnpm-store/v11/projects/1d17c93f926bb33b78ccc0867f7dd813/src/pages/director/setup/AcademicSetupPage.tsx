@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import SetupService, { type AcademicYear, type FeeType, type FinanceStructure, type SchoolClass, type StudentCategory, type Subject, type Term } from "../../../services/setupService";
+import { useSearchParams } from "react-router-dom";
+import SetupService, { type AcademicYear, type AcademicYearClass, type ClassSubject, type FeeType, type FinanceStructure, type SchoolClass, type StudentCategory, type Subject, type Term } from "../../../services/setupService";
 
 const tabItems = [
   { key: "academicYears", label: "Academic Year" },
@@ -10,7 +11,18 @@ const tabItems = [
 ] as const;
 
 export default function AcademicSetupPage() {
-  const [activeTab, setActiveTab] = useState<string>("academicYears");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedTab = searchParams.get("tab");
+  const activeTab = tabItems.some((tab) => tab.key === requestedTab)
+    ? requestedTab
+    : "academicYears";
+  const selectTab = (tab: (typeof tabItems)[number]["key"]) => {
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current);
+      next.set("tab", tab);
+      return next;
+    }, { replace: true });
+  };
   const [academicYears, setAcademicYears] = useState<AcademicYear[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
   const [classes, setClasses] = useState<SchoolClass[]>([]);
@@ -20,13 +32,18 @@ export default function AcademicSetupPage() {
   const [financeStructures, setFinanceStructures] = useState<FinanceStructure[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
+  const [editingAcademicYearId, setEditingAcademicYearId] = useState<string | null>(null);
+  const [savingAcademicYear, setSavingAcademicYear] = useState(false);
+  const [activatingAcademicYearId, setActivatingAcademicYearId] = useState<string | null>(null);
   const [form, setForm] = useState({
     academicYearName: "",
+    academicYearStartDate: "",
+    academicYearEndDate: "",
+    academicYearStatus: "UPCOMING" as AcademicYear["status"],
     termAcademicYearId: "",
     termStartDate: "",
     termEndDate: "",
-    termFeeAmount: "",
-    termIsActive: true,
+    termStatus: "UPCOMING" as Term["status"],
     termEditId: "",
     className: "",
     subjectName: "",
@@ -44,6 +61,11 @@ export default function AcademicSetupPage() {
   const [classAcademicYearId, setClassAcademicYearId] = useState("");
   const [offeredClassIds, setOfferedClassIds] = useState<string[]>([]);
   const [savingClassOfferings, setSavingClassOfferings] = useState(false);
+  const [subjectAcademicYearId, setSubjectAcademicYearId] = useState("");
+  const [subjectOfferingId, setSubjectOfferingId] = useState("");
+  const [subjectOfferings, setSubjectOfferings] = useState<AcademicYearClass[]>([]);
+  const [selectedClassSubjects, setSelectedClassSubjects] = useState<ClassSubject[]>([]);
+  const [offeredSubjectIds, setOfferedSubjectIds] = useState<string[]>([]);
 
   const loadData = async () => {
     try {
@@ -57,7 +79,10 @@ export default function AcademicSetupPage() {
         SetupService.getFeeTypes(),
         SetupService.getFinanceStructures(),
       ]);
-      setAcademicYears(years);
+      setAcademicYears(years.map((year) => ({
+        ...year,
+        status: year.status || (year.isActive ? "ACTIVE" : "COMPLETED"),
+      })));
       setTerms(termsData);
       setClasses(classesData);
       setSubjects(subjectsData);
@@ -82,12 +107,74 @@ export default function AcademicSetupPage() {
 
   const selectedYearNames = useMemo(() => academicYears.map((item) => item.name), [academicYears]);
 
-  const handleCreateAcademicYear = async () => {
-    if (!form.academicYearName.trim()) return;
-    await SetupService.createAcademicYear({ name: form.academicYearName.trim() });
-    setForm((current) => ({ ...current, academicYearName: "" }));
-    setMessage("Academic year saved.");
-    await loadData();
+  const academicYearError = (reason: unknown, fallback: string) => {
+    const response = reason as { response?: { data?: { message?: string | string[] } } };
+    const backendMessage = response.response?.data?.message;
+    return Array.isArray(backendMessage) ? backendMessage.join(" ") : backendMessage || fallback;
+  };
+
+  const resetAcademicYearForm = () => {
+    setEditingAcademicYearId(null);
+    setForm((current) => ({ ...current, academicYearName: "", academicYearStartDate: "", academicYearEndDate: "", academicYearStatus: "UPCOMING" }));
+  };
+
+  const editAcademicYear = (year: AcademicYear) => {
+    setEditingAcademicYearId(year.id);
+    setForm((current) => ({
+      ...current,
+      academicYearName: year.name,
+      academicYearStartDate: year.startDate?.slice(0, 10) || "",
+      academicYearEndDate: year.endDate?.slice(0, 10) || "",
+      academicYearStatus: year.status || (year.isActive ? "ACTIVE" : "COMPLETED"),
+    }));
+  };
+
+  const handleSaveAcademicYear = async () => {
+    if (!form.academicYearName.trim()) {
+      setMessage("Enter the academic year name before saving.");
+      return;
+    }
+    if (form.academicYearStartDate && form.academicYearEndDate && form.academicYearEndDate < form.academicYearStartDate) {
+      setMessage("The academic year end date cannot be before its start date.");
+      return;
+    }
+    setSavingAcademicYear(true);
+    setMessage(null);
+    try {
+      const payload = {
+        name: form.academicYearName.trim(),
+        startDate: form.academicYearStartDate,
+        endDate: form.academicYearEndDate,
+        status: form.academicYearStatus,
+      };
+      if (editingAcademicYearId) {
+        await SetupService.updateAcademicYear(editingAcademicYearId, payload);
+      } else {
+        await SetupService.createAcademicYear({ ...payload, startDate: payload.startDate || undefined, endDate: payload.endDate || undefined });
+      }
+      const action = editingAcademicYearId ? "updated" : "created";
+      resetAcademicYearForm();
+      await loadData();
+      setMessage(`Academic year ${action} successfully.`);
+    } catch (reason) {
+      setMessage(academicYearError(reason, "Unable to save the academic year."));
+    } finally {
+      setSavingAcademicYear(false);
+    }
+  };
+
+  const activateAcademicYear = async (year: AcademicYear) => {
+    setActivatingAcademicYearId(year.id);
+    setMessage(null);
+    try {
+      await SetupService.updateAcademicYear(year.id, { status: "ACTIVE" });
+      await loadData();
+      setMessage(`${year.name} is now the active academic year.`);
+    } catch (reason) {
+      setMessage(academicYearError(reason, `Unable to activate ${year.name}.`));
+    } finally {
+      setActivatingAcademicYearId(null);
+    }
   };
 
   const handleCreateTerm = async () => {
@@ -100,25 +187,37 @@ export default function AcademicSetupPage() {
         await SetupService.updateTerm(editingTermId, {
           academicYearId: termToUpdate.academicYearId,
           name: termToUpdate.name,
-          feeAmount: form.termFeeAmount ? Number(form.termFeeAmount) : termToUpdate.feeAmount,
           startDate: form.termStartDate,
           endDate: form.termEndDate,
-          isActive: form.termIsActive,
+          status: form.termStatus,
         });
         setMessage("Term updated successfully.");
         setEditingTermId(null);
-        setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termFeeAmount: "", termIsActive: true, termEditId: "" }));
+        setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termStatus: "UPCOMING", termEditId: "" }));
         await loadData();
       }
     }
   };
 
   const handleCreateClass = async () => {
-    if (!form.className.trim()) return;
-    await SetupService.createClass({ name: form.className.trim() });
-    setForm((current) => ({ ...current, className: "" }));
-    setMessage("Class saved.");
-    await loadData();
+    if (!form.className.trim() || !classAcademicYearId) {
+      setMessage("Select an academic year and class before saving.");
+      return;
+    }
+    try {
+      await SetupService.createClass({
+        name: form.className.trim(),
+        academicYearId: classAcademicYearId,
+      });
+      setForm((current) => ({ ...current, className: "" }));
+      setMessage("Class saved and attached to the selected academic year.");
+      await loadData();
+      await selectClassAcademicYear(classAcademicYearId);
+    } catch (reason) {
+      const response = reason as { response?: { data?: { message?: string | string[] } } };
+      const backendMessage = response.response?.data?.message;
+      setMessage(Array.isArray(backendMessage) ? backendMessage.join(" ") : backendMessage || "Unable to save the class.");
+    }
   };
 
   const selectClassAcademicYear = async (academicYearId: string) => {
@@ -143,6 +242,23 @@ export default function AcademicSetupPage() {
     } finally {
       setSavingClassOfferings(false);
     }
+  };
+
+  const selectSubjectYear = async (academicYearId: string) => {
+    setSubjectAcademicYearId(academicYearId); setSubjectOfferingId(""); setSelectedClassSubjects([]); setOfferedSubjectIds([]);
+    setSubjectOfferings(academicYearId ? await SetupService.getAcademicYearClasses(academicYearId) : []);
+  };
+
+  const selectSubjectClass = async (offeringId: string) => {
+    setSubjectOfferingId(offeringId);
+    const configured = offeringId ? await SetupService.getClassSubjects(offeringId) : [];
+    setSelectedClassSubjects(configured); setOfferedSubjectIds(configured.filter((item) => item.isActive).map((item) => item.subjectId));
+  };
+
+  const saveClassSubjects = async () => {
+    if (!subjectOfferingId) return;
+    const configured = await SetupService.setClassSubjects(subjectOfferingId, offeredSubjectIds);
+    setSelectedClassSubjects(configured); setMessage("Subjects offered to this class were updated for the selected academic year.");
   };
 
   const handleCreateSubject = async () => {
@@ -201,7 +317,7 @@ export default function AcademicSetupPage() {
           <button
             key={tab.key}
             type="button"
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => selectTab(tab.key)}
             className={`rounded-full px-4 py-2 text-sm font-medium transition ${activeTab === tab.key ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
           >
             {tab.label}
@@ -220,23 +336,32 @@ export default function AcademicSetupPage() {
             <p className="mt-2 text-sm text-slate-500">Add and activate academic years such as 2026.</p>
             <div className="mt-4 space-y-3">
               {academicYears.map((year) => (
-                <div key={year.id} className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <div key={year.id} className={`flex flex-col gap-3 rounded-2xl border px-4 py-3 sm:flex-row sm:items-center sm:justify-between ${year.status === "ACTIVE" ? "border-emerald-300 bg-emerald-50" : "border-slate-200 bg-slate-50"}`}>
                   <div>
                     <p className="font-medium text-slate-900">{year.name}</p>
-                    <p className="text-sm text-slate-500">{year.isActive ? "Active" : "Inactive"}</p>
+                    <p className="text-sm text-slate-500">{year.startDate?.slice(0, 10) || "No start date"} – {year.endDate?.slice(0, 10) || "No end date"}</p>
                   </div>
-                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${year.isActive ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"}`}>{year.isActive ? "Active" : "Inactive"}</span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${year.status === "ACTIVE" ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"}`}>{year.status || (year.isActive ? "ACTIVE" : "COMPLETED")}</span>
+                    <button type="button" onClick={() => editAcademicYear(year)} className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100">Edit</button>
+                    {year.status !== "ACTIVE" && year.status !== "ARCHIVED" ? <button type="button" disabled={activatingAcademicYearId !== null} onClick={() => void activateAcademicYear(year)} className="rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white disabled:cursor-wait disabled:opacity-60">{activatingAcademicYearId === year.id ? "Activating…" : "Activate"}</button> : null}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold text-slate-900">Add Academic Year</h2>
+            <h2 className="text-xl font-semibold text-slate-900">{editingAcademicYearId ? "Edit Academic Year" : "Add Academic Year"}</h2>
             <label className="mt-4 block text-sm font-medium text-slate-700">
               Academic Year
               <input value={form.academicYearName} onChange={(event) => setForm((current) => ({ ...current, academicYearName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. 2026" />
             </label>
-            <button type="button" onClick={handleCreateAcademicYear} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Academic Year</button>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium text-slate-700">Start date<input type="date" value={form.academicYearStartDate} onChange={(event) => setForm((current) => ({ ...current, academicYearStartDate: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label><label className="text-sm font-medium text-slate-700">End date<input type="date" value={form.academicYearEndDate} onChange={(event) => setForm((current) => ({ ...current, academicYearEndDate: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label></div>
+            <label className="mt-4 block text-sm font-medium text-slate-700">Status<select value={form.academicYearStatus} onChange={(event) => setForm((current) => ({ ...current, academicYearStatus: event.target.value as AcademicYear["status"] }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="UPCOMING">Upcoming</option><option value="ACTIVE">Active</option><option value="COMPLETED">Completed</option><option value="ARCHIVED">Archived</option></select></label>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button type="button" disabled={savingAcademicYear} onClick={() => void handleSaveAcademicYear()} className="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white disabled:cursor-wait disabled:opacity-60">{savingAcademicYear ? "Saving…" : editingAcademicYearId ? "Save Changes" : "Save Academic Year"}</button>
+              {editingAcademicYearId ? <button type="button" disabled={savingAcademicYear} onClick={resetAcademicYearForm} className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-medium text-slate-700">Cancel</button> : null}
+            </div>
           </div>
         </div>
       ) : null}
@@ -247,34 +372,28 @@ export default function AcademicSetupPage() {
             <h2 className="text-xl font-semibold text-slate-900">Terms</h2>
             <p className="mt-2 text-sm text-slate-500">Each academic year always has Term 1, Term 2, and Term 3. Turn a term on or off when needed.</p>
             <div className="mt-4 space-y-3">
-              {["Term 1", "Term 2", "Term 3"].map((termName) => (
-                <div key={termName} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+              {terms.map((term) => (
+                <div key={term.id} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-slate-900">{termName}</p>
-                      {terms.find(t => t.name === termName)?.startDate && (
+                      <p className="font-medium text-slate-900">{term.academicYear?.name} · {term.name}</p>
+                      {term.startDate && (
                         <p className="mt-1 text-xs text-slate-500">
-                          {new Date(terms.find(t => t.name === termName)?.startDate || "").toLocaleDateString()} - {new Date(terms.find(t => t.name === termName)?.endDate || "").toLocaleDateString()}
+                          {term.startDate.slice(0, 10)} – {term.endDate?.slice(0, 10) || "No end date"}
                         </p>
                       )}
-                      {terms.find(t => t.name === termName)?.feeAmount && (
-                        <p className="text-xs text-slate-500">Fee: UGX {terms.find(t => t.name === termName)?.feeAmount.toLocaleString()}</p>
-                      )}
+                      <span className={`mt-2 inline-flex rounded-full px-2 py-1 text-[11px] font-semibold ${term.status === "ACTIVE" ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"}`}>{term.status}</span>
                     </div>
                     <button 
                       type="button" 
                       onClick={() => {
-                        const term = terms.find(t => t.name === termName);
-                        if (term) {
                           setEditingTermId(term.id);
                           setForm((current) => ({ 
                             ...current, 
                             termStartDate: term.startDate || "", 
                             termEndDate: term.endDate || "",
-                            termFeeAmount: term.feeAmount ? String(term.feeAmount) : "",
-                            termIsActive: term.isActive,
+                            termStatus: term.status,
                           }));
-                        }
                       }}
                       className="rounded-2xl bg-slate-900 px-3 py-1 text-xs font-medium text-white"
                     >
@@ -297,16 +416,12 @@ export default function AcademicSetupPage() {
                   End Date
                   <input type="date" value={form.termEndDate} onChange={(event) => setForm((current) => ({ ...current, termEndDate: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />
                 </label>
-                <label className="mt-4 block text-sm font-medium text-slate-700">
-                  Fee Amount (UGX) (Optional)
-                  <input type="number" value={form.termFeeAmount} onChange={(event) => setForm((current) => ({ ...current, termFeeAmount: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="0" />
-                </label>
-                <label className="mt-4 flex items-center gap-2 text-sm font-medium text-slate-700"><input type="checkbox" checked={form.termIsActive} onChange={(event) => setForm((current) => ({ ...current, termIsActive: event.target.checked }))} />Active term</label>
+                <label className="mt-4 block text-sm font-medium text-slate-700">Term status<select value={form.termStatus} onChange={(event) => setForm((current) => ({ ...current, termStatus: event.target.value as Term["status"] }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="UPCOMING">Upcoming</option><option value="ACTIVE">Active</option><option value="COMPLETED">Completed</option></select></label>
                 <div className="mt-4 flex gap-2">
                   <button type="button" onClick={handleCreateTerm} className="flex-1 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Changes</button>
                   <button type="button" onClick={() => {
                     setEditingTermId(null);
-                    setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termFeeAmount: "", termIsActive: true }));
+                    setForm((current) => ({ ...current, termStartDate: "", termEndDate: "", termStatus: "UPCOMING" }));
                   }} className="flex-1 rounded-2xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700">Cancel</button>
                 </div>
               </>
@@ -335,13 +450,21 @@ export default function AcademicSetupPage() {
             <p className="mt-2 text-sm text-slate-500">Only selected classes will be available when registering or promoting students in that year.</p>
             <select value={classAcademicYearId} onChange={(event) => void selectClassAcademicYear(event.target.value)} className="mt-4 w-full rounded-2xl border border-slate-200 px-4 py-3">
               <option value="">Select academic year</option>
-              {academicYears.filter((year) => year.isActive).map((year) => <option key={year.id} value={year.id}>{year.name}</option>)}
+              {academicYears.filter((year) => year.status !== "ARCHIVED").map((year) => <option key={year.id} value={year.id}>{year.name} · {year.status}</option>)}
             </select>
             {classAcademicYearId && <div className="mt-4 grid gap-2 sm:grid-cols-2">{classes.filter((item) => item.isActive).map((item) => <label key={item.id} className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 text-sm font-medium"><input type="checkbox" checked={offeredClassIds.includes(item.id)} onChange={(event) => setOfferedClassIds((current) => event.target.checked ? [...current, item.id] : current.filter((id) => id !== item.id))} />{item.name}</label>)}</div>}
             <button type="button" disabled={!classAcademicYearId || savingClassOfferings} onClick={() => void saveClassOfferings()} className="mt-4 w-full rounded-2xl bg-blue-700 px-5 py-3 text-sm font-medium text-white disabled:opacity-50">{savingClassOfferings ? "Saving..." : "Save classes for this year"}</button>
 
             <div className="my-6 border-t border-slate-200" />
             <h2 className="text-xl font-semibold text-slate-900">Add to class catalogue</h2>
+            <p className="mt-2 text-sm text-slate-500">A class must belong to at least one academic year. Selecting an existing class also attaches it to this year.</p>
+            <label className="mt-4 block text-sm font-medium text-slate-700">
+              Academic Year
+              <select value={classAcademicYearId} onChange={(event) => void selectClassAcademicYear(event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
+                <option value="">Select academic year</option>
+                {academicYears.filter((year) => year.status !== "ARCHIVED").map((year) => <option key={year.id} value={year.id}>{year.name} · {year.status}</option>)}
+              </select>
+            </label>
             <label className="mt-4 block text-sm font-medium text-slate-700">
               Class Name
               <select value={form.className} onChange={(event) => setForm((current) => ({ ...current, className: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
@@ -354,7 +477,7 @@ export default function AcademicSetupPage() {
                 <option value="Senior 6">Senior 6</option>
               </select>
             </label>
-            <button type="button" onClick={handleCreateClass} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Class</button>
+            <button type="button" disabled={!classAcademicYearId || !form.className} onClick={handleCreateClass} className="mt-4 w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">Save and attach class</button>
           </div>
         </div>
       ) : null}
@@ -363,7 +486,7 @@ export default function AcademicSetupPage() {
         <div className="grid gap-4 lg:grid-cols-[1.1fr_0.85fr]">
           <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-xl font-semibold text-slate-900">Subjects</h2>
-            <p className="mt-2 text-sm text-slate-500">Create the school subject catalogue once. Teachers are assigned subjects, then may choose any active class when taking attendance.</p>
+            <p className="mt-2 text-sm text-slate-500">Create each subject once. Its class availability is configured separately for every academic year.</p>
             <div className="mt-4 space-y-3">
               {subjects.length ? subjects.map((item) => <div key={item.id} className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"><div><p className="font-medium text-slate-900">{item.name}</p>{item.code && <p className="text-sm text-slate-500">{item.code}</p>}</div><span className={`rounded-full px-3 py-1 text-xs font-semibold ${item.isActive ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"}`}>{item.isActive ? "Active" : "Inactive"}</span></div>) : <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-500">No subjects created yet.</div>}
             </div>
@@ -373,6 +496,14 @@ export default function AcademicSetupPage() {
             <label className="mt-4 block text-sm font-medium text-slate-700">Subject Name<input value={form.subjectName} onChange={(event) => setForm((current) => ({ ...current, subjectName: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. Mathematics" /></label>
             <label className="mt-4 block text-sm font-medium text-slate-700">Code (optional)<input value={form.subjectCode} onChange={(event) => setForm((current) => ({ ...current, subjectCode: event.target.value }))} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="e.g. MTC" /></label>
             <button type="button" onClick={handleCreateSubject} className="mt-4 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-medium text-white">Save Subject</button>
+            <div className="my-6 border-t border-slate-200" />
+            <h2 className="text-xl font-semibold text-slate-900">Subjects offered to a class</h2>
+            <p className="mt-2 text-sm text-slate-500">This controls the subjects teachers can select for actual lessons in that class and year.</p>
+            <select value={subjectAcademicYearId} onChange={(event) => void selectSubjectYear(event.target.value)} className="mt-4 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select academic year</option>{academicYears.map((year) => <option key={year.id} value={year.id}>{year.name}</option>)}</select>
+            <select value={subjectOfferingId} onChange={(event) => void selectSubjectClass(event.target.value)} disabled={!subjectAcademicYearId} className="mt-3 w-full rounded-2xl border border-slate-200 px-4 py-3 disabled:bg-slate-100"><option value="">Select offered class</option>{subjectOfferings.filter((item) => item.isActive).map((item) => <option key={item.id} value={item.id}>{item.schoolClass.name}</option>)}</select>
+            {subjectOfferingId && <div className="mt-4 grid gap-2 sm:grid-cols-2">{subjects.filter((item) => item.isActive).map((item) => <label key={item.id} className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 text-sm"><input type="checkbox" checked={offeredSubjectIds.includes(item.id)} onChange={(event) => setOfferedSubjectIds((current) => event.target.checked ? [...current, item.id] : current.filter((id) => id !== item.id))} />{item.name}</label>)}</div>}
+            {selectedClassSubjects.length > 0 && <p className="mt-3 text-xs text-slate-500">{selectedClassSubjects.filter((item) => item.isActive).length} subject(s) currently offered.</p>}
+            <button type="button" disabled={!subjectOfferingId} onClick={() => void saveClassSubjects()} className="mt-4 w-full rounded-2xl bg-blue-700 px-5 py-3 text-sm font-medium text-white disabled:opacity-50">Save class subjects</button>
           </div>
         </div>
       ) : null}

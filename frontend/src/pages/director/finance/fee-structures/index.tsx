@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { useAuth } from "../../../../context/AuthContext";
 import FeeStructureService, {
   type FinanceStructure,
@@ -63,7 +64,8 @@ export default function FeeStructures() {
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const loadStructures = async () => {
-    setStructures(await FeeStructureService.list());
+    const result = await FeeStructureService.list();
+    setStructures(Array.isArray(result) ? result : []);
   };
   useEffect(() => {
     const load = async () => {
@@ -79,12 +81,16 @@ export default function FeeStructures() {
             SetupService.getFeeTypes(),
             SetupService.getRegistrationData(),
           ]);
-        setAcademicYears(years);
-        setTerms(termList);
-        setClasses(classList);
-        setStudentCategories(categories);
-        setFeeTypes(types);
-        setAcademicYearClasses(registration.academicYearClasses || []);
+        setAcademicYears(Array.isArray(years) ? years : []);
+        setTerms(Array.isArray(termList) ? termList : []);
+        setClasses(Array.isArray(classList) ? classList : []);
+        setStudentCategories(Array.isArray(categories) ? categories : []);
+        setFeeTypes(Array.isArray(types) ? types : []);
+        setAcademicYearClasses(
+          Array.isArray(registration?.academicYearClasses)
+            ? registration.academicYearClasses
+            : [],
+        );
         await loadStructures();
       } catch {
         setError(
@@ -179,9 +185,15 @@ export default function FeeStructures() {
       setNotice(
         editingId ? "Fee structure updated." : "Fee structure created.",
       );
-    } catch {
+    } catch (reason) {
+      const backendMessage = axios.isAxiosError(reason)
+        ? reason.response?.data?.message
+        : undefined;
       setError(
-        "Unable to save the fee structure. The combination may already exist or your account may not have permission.",
+        Array.isArray(backendMessage)
+          ? backendMessage.join(" ")
+          : backendMessage ||
+              "Unable to save the fee structure. Check the selected academic setup and your permissions.",
       );
     } finally {
       setSaving(false);
@@ -225,9 +237,9 @@ export default function FeeStructures() {
     }
   };
   return (
-    <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-      <div className="space-y-6">
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="grid min-w-0 max-w-full gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+      <div className="min-w-0 space-y-6">
+        <div className="min-w-0 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <h2 className="text-xl font-semibold text-slate-900">
@@ -267,7 +279,7 @@ export default function FeeStructures() {
           value={filters}
           academicYears={academicYears}
           terms={terms}
-          academicYearClasses={academicYearClasses}
+          classes={classes}
           studentCategories={studentCategories}
           feeTypes={feeTypes}
           onChange={setFilters}
@@ -283,13 +295,13 @@ export default function FeeStructures() {
           onApply={applyStructure}
         />
       </div>
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         {showForm && <FeeStructureForm
           mode={editingId ? "edit" : "create"}
           value={form}
           academicYears={academicYears}
           terms={terms}
-          classes={classes}
+          academicYearClasses={academicYearClasses}
           studentCategories={studentCategories}
           feeTypes={feeTypes}
           loading={saving}
