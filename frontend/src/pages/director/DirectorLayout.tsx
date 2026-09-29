@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  MessageSquareText,
   School,
   ShieldCheck,
   UserRoundCog,
@@ -172,6 +173,9 @@ export default function DirectorLayout() {
               </NavLink>
               <NavLink to="attendance" className={navButton} end>
                 <ClipboardCheck size={18} /> Attendance
+              </NavLink>
+              <NavLink to="communications" className={navButton} end>
+                <MessageSquareText size={18} /> Communication
               </NavLink>
               <NavLink to="reports" className={navButton} end>
                 <BarChart3 size={18} /> Reports

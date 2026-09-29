@@ -12,6 +12,7 @@ import {
   ParentDashboardProvider,
   useParentDashboard,
 } from "./ParentDashboardContext";
+import PortalNotifications from '../../components/portal/PortalNotifications';
 
 const links = [
   { to: ".", label: "Overview", icon: Home, end: true },
@@ -81,14 +82,14 @@ function ParentPortalShell() {
                 </p>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={logout}
-              className="portal-action-button"
-            >
-              <LogOut size={16} />
-              <span className="hidden sm:inline">Log out</span>
-            </button>
+            <div className="flex items-center gap-2"><PortalNotifications label="School messages" /><button
+                type="button"
+                onClick={logout}
+                className="portal-action-button"
+              >
+                <LogOut size={16} />
+                <span className="hidden sm:inline">Log out</span>
+              </button></div>
           </header>
           <div className="portal-content"><Outlet /></div>
         </main>

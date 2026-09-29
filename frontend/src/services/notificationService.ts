@@ -1,6 +1,6 @@
 import api from "../api/axios";
 
-export type DirectorNotification = {
+export type PortalNotification = {
   id: string;
   type: string;
   title: string;
@@ -10,14 +10,18 @@ export type DirectorNotification = {
   createdAt: string;
 };
 
+// Kept as an alias while the Director layout is gradually shared with the
+// teacher and parent portals.
+export type DirectorNotification = PortalNotification;
+
 class NotificationService {
-  async list(): Promise<DirectorNotification[]> {
-    const { data } = await api.get<DirectorNotification[]>("/notifications");
+  async list(): Promise<PortalNotification[]> {
+    const { data } = await api.get<PortalNotification[]>("/notifications");
     return data;
   }
 
-  async markRead(id: string): Promise<DirectorNotification> {
-    const { data } = await api.patch<DirectorNotification>(`/notifications/${id}/read`);
+  async markRead(id: string): Promise<PortalNotification[]> {
+    const { data } = await api.patch<PortalNotification[]>(`/notifications/${id}/read`);
     return data;
   }
 }

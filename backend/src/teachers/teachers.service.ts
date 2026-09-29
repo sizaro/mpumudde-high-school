@@ -14,6 +14,7 @@ import { CreateMedicalInfoDto } from "./dto/create-medical-info.dto.js";
 import { CreateQualificationDto } from "./dto/create-qualification.dto.js";
 import { UpdateQualificationDto } from "./dto/update-qualification.dto.js";
 import { CreateDocumentDto } from "./dto/create-document.dto.js";
+import { CommunicationsService } from "../communications/communications.service.js";
 
 type CompleteTeacherRegistration = {
   personal: CreateTeacherDto;
@@ -58,7 +59,10 @@ const TEACHER_INCLUDE = {
 
 @Injectable()
 export class TeachersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly communications: CommunicationsService,
+  ) {}
 
   async getMyFinance(userId: string) {
     const teacher = await this.prisma.teacher.findUnique({
@@ -140,6 +144,7 @@ export class TeachersService {
       include: TEACHER_INCLUDE,
     });
 
+    await this.communications.syncProfileEmail("TEACHER", teacher.id, teacher.email);
     return { teacher, temporaryPassword: tempPassword };
   }
 
@@ -242,6 +247,7 @@ export class TeachersService {
       { maxWait: 10_000, timeout: 20_000 },
     );
 
+    await this.communications.syncProfileEmail("TEACHER", teacher.id, teacher.email, uploadedByUserId);
     return { teacher, temporaryPassword: tempPassword };
   }
 
@@ -414,11 +420,13 @@ export class TeachersService {
     if (dto.nationality !== undefined) data.nationality = dto.nationality;
     if (dto.address !== undefined) data.address = dto.address;
     if (dto.profilePhoto !== undefined) data.profilePhoto = dto.profilePhoto;
-    return this.prisma.teacher.update({
+    const updated = await this.prisma.teacher.update({
       where: { id },
       data,
       include: TEACHER_INCLUDE,
     });
+    await this.communications.syncProfileEmail("TEACHER", updated.id, updated.email);
+    return updated;
   }
 
   async upsertEmployment(teacherId: string, dto: CreateEmploymentDto) {

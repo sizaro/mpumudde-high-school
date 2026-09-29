@@ -10,6 +10,7 @@ export const publicNavigation: PublicNavigationItem[] = [
   { label: "About", to: "/about" },
   { label: "Academics", to: "/academics" },
   { label: "Admissions", to: "/admissions" },
+  { label: "Alumni", to: "/alumni" },
   { label: "Newsroom", to: "/newsroom" },
   { label: "Gallery", to: "/gallery" },
   { label: "Contact", to: "/contact" },

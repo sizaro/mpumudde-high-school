@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from "react";
 import TeacherService from "../../services/teacherService";
+import CommunicationContactVerification from '../../components/portal/CommunicationContactVerification';
 
 export default function TeacherProfilePage() {
   const [profile, setProfile] = useState<any>(null);
@@ -36,6 +37,8 @@ export default function TeacherProfilePage() {
           </dl>
         </section>
       )}
+
+      <CommunicationContactVerification />
 
       {(profile.qualifications ?? []).length > 0 && (
         <section className="bg-white border rounded-lg p-6">

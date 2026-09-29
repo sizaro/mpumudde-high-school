@@ -7,6 +7,7 @@ import * as bcrypt from "bcrypt";
 import { CreateParentDto } from "./dto/create-parent.dto.js";
 import { UpdateParentDto } from "./dto/update-parent.dto.js";
 import { PrismaService } from "../prisma/prisma.service.js";
+import { CommunicationsService } from "../communications/communications.service.js";
 
 function generateTempPassword(length = 12): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#";
@@ -18,7 +19,10 @@ function generateTempPassword(length = 12): string {
 
 @Injectable()
 export class ParentsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly communications: CommunicationsService,
+  ) {}
 
   async create(createParentDto: CreateParentDto, uploadedByUserId?: string) {
     const studentLinks = createParentDto.students?.length
@@ -184,8 +188,19 @@ export class ParentsService {
       };
     });
 
+    const registeredParent = await this.findOne(createdId.id);
+    // Contact capture is intentionally best-effort. A guardian registration is
+    // never blocked because the supplied communication email is unavailable or
+    // needs verification later.
+    await this.communications.syncProfileEmail(
+      "PARENT",
+      createdId.id,
+      registeredParent.email,
+      uploadedByUserId,
+    );
+
     return {
-      parent: await this.findOne(createdId.id),
+      parent: registeredParent,
       temporaryPassword,
       credentials: temporaryPassword
         ? {
@@ -856,7 +871,9 @@ export class ParentsService {
         },
       });
     });
-    return this.findOne(id);
+    const updated = await this.findOne(id);
+    await this.communications.syncProfileEmail("PARENT", id, updated.email, changedByUserId);
+    return updated;
   }
 
   private async updateParentRecord(
@@ -891,7 +908,7 @@ export class ParentsService {
       data.email = updateParentDto.email;
     }
 
-    return this.prisma.parent.update({
+    const updated = await this.prisma.parent.update({
       where: { id: parent.id },
       data,
       include: {
@@ -900,6 +917,8 @@ export class ParentsService {
         },
       },
     });
+    await this.communications.syncProfileEmail("PARENT", updated.id, updated.email);
+    return updated;
   }
 
   async getMyFinance(userId: string) {

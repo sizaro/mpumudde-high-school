@@ -228,6 +228,7 @@ export type UserWhereInput = {
   parent?: Prisma.XOR<Prisma.ParentNullableScalarRelationFilter, Prisma.ParentWhereInput> | null
   uploadedDocuments?: Prisma.DocumentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  communicationsSent?: Prisma.SchoolCommunicationListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -254,6 +255,7 @@ export type UserOrderByWithRelationInput = {
   parent?: Prisma.ParentOrderByWithRelationInput
   uploadedDocuments?: Prisma.DocumentOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  communicationsSent?: Prisma.SchoolCommunicationOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -283,6 +285,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   parent?: Prisma.XOR<Prisma.ParentNullableScalarRelationFilter, Prisma.ParentWhereInput> | null
   uploadedDocuments?: Prisma.DocumentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  communicationsSent?: Prisma.SchoolCommunicationListRelationFilter
 }, "id" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -339,6 +342,7 @@ export type UserCreateInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -365,6 +369,7 @@ export type UserUncheckedCreateInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserUpdateInput = {
@@ -391,6 +396,7 @@ export type UserUpdateInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -417,6 +423,7 @@ export type UserUncheckedUpdateInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -641,6 +648,20 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutCommunicationsSentInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCommunicationsSentInput, Prisma.UserUncheckedCreateWithoutCommunicationsSentInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCommunicationsSentInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCommunicationsSentNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCommunicationsSentInput, Prisma.UserUncheckedCreateWithoutCommunicationsSentInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCommunicationsSentInput
+  upsert?: Prisma.UserUpsertWithoutCommunicationsSentInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCommunicationsSentInput, Prisma.UserUpdateWithoutCommunicationsSentInput>, Prisma.UserUncheckedUpdateWithoutCommunicationsSentInput>
+}
+
 export type UserCreateNestedOneWithoutRecordedPaymentsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutRecordedPaymentsInput, Prisma.UserUncheckedCreateWithoutRecordedPaymentsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutRecordedPaymentsInput
@@ -760,6 +781,7 @@ export type UserCreateWithoutRolesInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutRolesInput = {
@@ -785,6 +807,7 @@ export type UserUncheckedCreateWithoutRolesInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutRolesInput = {
@@ -826,6 +849,7 @@ export type UserUpdateWithoutRolesInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRolesInput = {
@@ -851,6 +875,7 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutDirectorInput = {
@@ -876,6 +901,7 @@ export type UserCreateWithoutDirectorInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutDirectorInput = {
@@ -901,6 +927,7 @@ export type UserUncheckedCreateWithoutDirectorInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutDirectorInput = {
@@ -942,6 +969,7 @@ export type UserUpdateWithoutDirectorInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDirectorInput = {
@@ -967,6 +995,7 @@ export type UserUncheckedUpdateWithoutDirectorInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutTeacherInput = {
@@ -992,6 +1021,7 @@ export type UserCreateWithoutTeacherInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutTeacherInput = {
@@ -1017,6 +1047,7 @@ export type UserUncheckedCreateWithoutTeacherInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutTeacherInput = {
@@ -1058,6 +1089,7 @@ export type UserUpdateWithoutTeacherInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTeacherInput = {
@@ -1083,6 +1115,7 @@ export type UserUncheckedUpdateWithoutTeacherInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutUploadedDocumentsInput = {
@@ -1108,6 +1141,7 @@ export type UserCreateWithoutUploadedDocumentsInput = {
   teacher?: Prisma.TeacherCreateNestedOneWithoutUserInput
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutUploadedDocumentsInput = {
@@ -1133,6 +1167,7 @@ export type UserUncheckedCreateWithoutUploadedDocumentsInput = {
   teacher?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutUploadedDocumentsInput = {
@@ -1174,6 +1209,7 @@ export type UserUpdateWithoutUploadedDocumentsInput = {
   teacher?: Prisma.TeacherUpdateOneWithoutUserNestedInput
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadedDocumentsInput = {
@@ -1199,6 +1235,7 @@ export type UserUncheckedUpdateWithoutUploadedDocumentsInput = {
   teacher?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutParentInput = {
@@ -1224,6 +1261,7 @@ export type UserCreateWithoutParentInput = {
   teacher?: Prisma.TeacherCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutParentInput = {
@@ -1249,6 +1287,7 @@ export type UserUncheckedCreateWithoutParentInput = {
   teacher?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutParentInput = {
@@ -1290,6 +1329,7 @@ export type UserUpdateWithoutParentInput = {
   teacher?: Prisma.TeacherUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutParentInput = {
@@ -1315,6 +1355,7 @@ export type UserUncheckedUpdateWithoutParentInput = {
   teacher?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutFinanceStructuresCreatedInput = {
@@ -1340,6 +1381,7 @@ export type UserCreateWithoutFinanceStructuresCreatedInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutFinanceStructuresCreatedInput = {
@@ -1365,6 +1407,7 @@ export type UserUncheckedCreateWithoutFinanceStructuresCreatedInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutFinanceStructuresCreatedInput = {
@@ -1395,6 +1438,7 @@ export type UserCreateWithoutFinanceStructuresUpdatedInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutFinanceStructuresUpdatedInput = {
@@ -1420,6 +1464,7 @@ export type UserUncheckedCreateWithoutFinanceStructuresUpdatedInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutFinanceStructuresUpdatedInput = {
@@ -1461,6 +1506,7 @@ export type UserUpdateWithoutFinanceStructuresCreatedInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFinanceStructuresCreatedInput = {
@@ -1486,6 +1532,7 @@ export type UserUncheckedUpdateWithoutFinanceStructuresCreatedInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUpsertWithoutFinanceStructuresUpdatedInput = {
@@ -1522,6 +1569,7 @@ export type UserUpdateWithoutFinanceStructuresUpdatedInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFinanceStructuresUpdatedInput = {
@@ -1547,6 +1595,7 @@ export type UserUncheckedUpdateWithoutFinanceStructuresUpdatedInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1572,6 +1621,7 @@ export type UserCreateWithoutNotificationsInput = {
   teacher?: Prisma.TeacherCreateNestedOneWithoutUserInput
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1597,6 +1647,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   teacher?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1638,6 +1689,7 @@ export type UserUpdateWithoutNotificationsInput = {
   teacher?: Prisma.TeacherUpdateOneWithoutUserNestedInput
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1663,6 +1715,127 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   teacher?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
+}
+
+export type UserCreateWithoutCommunicationsSentInput = {
+  id?: string
+  email: string
+  username?: string | null
+  password: string
+  isActive?: boolean
+  isLoggedIn?: boolean
+  lastLogin?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  director?: Prisma.DirectorCreateNestedOneWithoutUserInput
+  financeStructuresCreated?: Prisma.FinanceStructureCreateNestedManyWithoutCreatedByInput
+  financeStructuresUpdated?: Prisma.FinanceStructureCreateNestedManyWithoutUpdatedByInput
+  recordedPayments?: Prisma.PaymentCreateNestedManyWithoutRecordedByInput
+  reversedPayments?: Prisma.PaymentCreateNestedManyWithoutReversedByInput
+  paymentAudits?: Prisma.PaymentAuditCreateNestedManyWithoutActorInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  expensesApproved?: Prisma.ExpenseCreateNestedManyWithoutApprovedByInput
+  otherIncomeRecorded?: Prisma.OtherIncomeCreateNestedManyWithoutRecordedByInput
+  teacher?: Prisma.TeacherCreateNestedOneWithoutUserInput
+  parent?: Prisma.ParentCreateNestedOneWithoutUserInput
+  uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCommunicationsSentInput = {
+  id?: string
+  email: string
+  username?: string | null
+  password: string
+  isActive?: boolean
+  isLoggedIn?: boolean
+  lastLogin?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  director?: Prisma.DirectorUncheckedCreateNestedOneWithoutUserInput
+  financeStructuresCreated?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutCreatedByInput
+  financeStructuresUpdated?: Prisma.FinanceStructureUncheckedCreateNestedManyWithoutUpdatedByInput
+  recordedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutRecordedByInput
+  reversedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutReversedByInput
+  paymentAudits?: Prisma.PaymentAuditUncheckedCreateNestedManyWithoutActorInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  expensesApproved?: Prisma.ExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+  otherIncomeRecorded?: Prisma.OtherIncomeUncheckedCreateNestedManyWithoutRecordedByInput
+  teacher?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
+  parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
+  uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCommunicationsSentInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCommunicationsSentInput, Prisma.UserUncheckedCreateWithoutCommunicationsSentInput>
+}
+
+export type UserUpsertWithoutCommunicationsSentInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCommunicationsSentInput, Prisma.UserUncheckedUpdateWithoutCommunicationsSentInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCommunicationsSentInput, Prisma.UserUncheckedCreateWithoutCommunicationsSentInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCommunicationsSentInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCommunicationsSentInput, Prisma.UserUncheckedUpdateWithoutCommunicationsSentInput>
+}
+
+export type UserUpdateWithoutCommunicationsSentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  director?: Prisma.DirectorUpdateOneWithoutUserNestedInput
+  financeStructuresCreated?: Prisma.FinanceStructureUpdateManyWithoutCreatedByNestedInput
+  financeStructuresUpdated?: Prisma.FinanceStructureUpdateManyWithoutUpdatedByNestedInput
+  recordedPayments?: Prisma.PaymentUpdateManyWithoutRecordedByNestedInput
+  reversedPayments?: Prisma.PaymentUpdateManyWithoutReversedByNestedInput
+  paymentAudits?: Prisma.PaymentAuditUpdateManyWithoutActorNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  expensesApproved?: Prisma.ExpenseUpdateManyWithoutApprovedByNestedInput
+  otherIncomeRecorded?: Prisma.OtherIncomeUpdateManyWithoutRecordedByNestedInput
+  teacher?: Prisma.TeacherUpdateOneWithoutUserNestedInput
+  parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
+  uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCommunicationsSentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLoggedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  director?: Prisma.DirectorUncheckedUpdateOneWithoutUserNestedInput
+  financeStructuresCreated?: Prisma.FinanceStructureUncheckedUpdateManyWithoutCreatedByNestedInput
+  financeStructuresUpdated?: Prisma.FinanceStructureUncheckedUpdateManyWithoutUpdatedByNestedInput
+  recordedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutRecordedByNestedInput
+  reversedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutReversedByNestedInput
+  paymentAudits?: Prisma.PaymentAuditUncheckedUpdateManyWithoutActorNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  expensesApproved?: Prisma.ExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+  otherIncomeRecorded?: Prisma.OtherIncomeUncheckedUpdateManyWithoutRecordedByNestedInput
+  teacher?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
+  parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
+  uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRecordedPaymentsInput = {
@@ -1688,6 +1861,7 @@ export type UserCreateWithoutRecordedPaymentsInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutRecordedPaymentsInput = {
@@ -1713,6 +1887,7 @@ export type UserUncheckedCreateWithoutRecordedPaymentsInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutRecordedPaymentsInput = {
@@ -1743,6 +1918,7 @@ export type UserCreateWithoutReversedPaymentsInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutReversedPaymentsInput = {
@@ -1768,6 +1944,7 @@ export type UserUncheckedCreateWithoutReversedPaymentsInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutReversedPaymentsInput = {
@@ -1809,6 +1986,7 @@ export type UserUpdateWithoutRecordedPaymentsInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecordedPaymentsInput = {
@@ -1834,6 +2012,7 @@ export type UserUncheckedUpdateWithoutRecordedPaymentsInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUpsertWithoutReversedPaymentsInput = {
@@ -1870,6 +2049,7 @@ export type UserUpdateWithoutReversedPaymentsInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReversedPaymentsInput = {
@@ -1895,6 +2075,7 @@ export type UserUncheckedUpdateWithoutReversedPaymentsInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutPaymentAuditsInput = {
@@ -1920,6 +2101,7 @@ export type UserCreateWithoutPaymentAuditsInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutPaymentAuditsInput = {
@@ -1945,6 +2127,7 @@ export type UserUncheckedCreateWithoutPaymentAuditsInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutPaymentAuditsInput = {
@@ -1986,6 +2169,7 @@ export type UserUpdateWithoutPaymentAuditsInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentAuditsInput = {
@@ -2011,6 +2195,7 @@ export type UserUncheckedUpdateWithoutPaymentAuditsInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutExpensesCreatedInput = {
@@ -2036,6 +2221,7 @@ export type UserCreateWithoutExpensesCreatedInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutExpensesCreatedInput = {
@@ -2061,6 +2247,7 @@ export type UserUncheckedCreateWithoutExpensesCreatedInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutExpensesCreatedInput = {
@@ -2091,6 +2278,7 @@ export type UserCreateWithoutExpensesApprovedInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutExpensesApprovedInput = {
@@ -2116,6 +2304,7 @@ export type UserUncheckedCreateWithoutExpensesApprovedInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutExpensesApprovedInput = {
@@ -2157,6 +2346,7 @@ export type UserUpdateWithoutExpensesCreatedInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpensesCreatedInput = {
@@ -2182,6 +2372,7 @@ export type UserUncheckedUpdateWithoutExpensesCreatedInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUpsertWithoutExpensesApprovedInput = {
@@ -2218,6 +2409,7 @@ export type UserUpdateWithoutExpensesApprovedInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpensesApprovedInput = {
@@ -2243,6 +2435,7 @@ export type UserUncheckedUpdateWithoutExpensesApprovedInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutOtherIncomeRecordedInput = {
@@ -2268,6 +2461,7 @@ export type UserCreateWithoutOtherIncomeRecordedInput = {
   parent?: Prisma.ParentCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationCreateNestedManyWithoutSenderInput
 }
 
 export type UserUncheckedCreateWithoutOtherIncomeRecordedInput = {
@@ -2293,6 +2487,7 @@ export type UserUncheckedCreateWithoutOtherIncomeRecordedInput = {
   parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
   uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedCreateNestedManyWithoutSenderInput
 }
 
 export type UserCreateOrConnectWithoutOtherIncomeRecordedInput = {
@@ -2334,6 +2529,7 @@ export type UserUpdateWithoutOtherIncomeRecordedInput = {
   parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUpdateManyWithoutSenderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOtherIncomeRecordedInput = {
@@ -2359,6 +2555,7 @@ export type UserUncheckedUpdateWithoutOtherIncomeRecordedInput = {
   parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
   uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  communicationsSent?: Prisma.SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 
@@ -2378,6 +2575,7 @@ export type UserCountOutputType = {
   otherIncomeRecorded: number
   uploadedDocuments: number
   notifications: number
+  communicationsSent: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2392,6 +2590,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   otherIncomeRecorded?: boolean | UserCountOutputTypeCountOtherIncomeRecordedArgs
   uploadedDocuments?: boolean | UserCountOutputTypeCountUploadedDocumentsArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  communicationsSent?: boolean | UserCountOutputTypeCountCommunicationsSentArgs
 }
 
 /**
@@ -2481,6 +2680,13 @@ export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.NotificationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCommunicationsSentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SchoolCommunicationWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2506,6 +2712,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   parent?: boolean | Prisma.User$parentArgs<ExtArgs>
   uploadedDocuments?: boolean | Prisma.User$uploadedDocumentsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  communicationsSent?: boolean | Prisma.User$communicationsSentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2561,6 +2768,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   parent?: boolean | Prisma.User$parentArgs<ExtArgs>
   uploadedDocuments?: boolean | Prisma.User$uploadedDocumentsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  communicationsSent?: boolean | Prisma.User$communicationsSentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2583,6 +2791,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     parent: Prisma.$ParentPayload<ExtArgs> | null
     uploadedDocuments: Prisma.$DocumentPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    communicationsSent: Prisma.$SchoolCommunicationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3002,6 +3211,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   parent<T extends Prisma.User$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$parentArgs<ExtArgs>>): Prisma.Prisma__ParentClient<runtime.Types.Result.GetResult<Prisma.$ParentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   uploadedDocuments<T extends Prisma.User$uploadedDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  communicationsSent<T extends Prisma.User$communicationsSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$communicationsSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolCommunicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3751,6 +3961,30 @@ export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * User.communicationsSent
+ */
+export type User$communicationsSentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SchoolCommunication
+   */
+  select?: Prisma.SchoolCommunicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SchoolCommunication
+   */
+  omit?: Prisma.SchoolCommunicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SchoolCommunicationInclude<ExtArgs> | null
+  where?: Prisma.SchoolCommunicationWhereInput
+  orderBy?: Prisma.SchoolCommunicationOrderByWithRelationInput | Prisma.SchoolCommunicationOrderByWithRelationInput[]
+  cursor?: Prisma.SchoolCommunicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SchoolCommunicationScalarFieldEnum | Prisma.SchoolCommunicationScalarFieldEnum[]
 }
 
 /**

@@ -57,6 +57,8 @@ model User {
 
   notifications Notification[]
 
+  communicationsSent SchoolCommunication[] @relation("SchoolCommunicationSender")
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -163,9 +165,7 @@ model Director {
 // ==========================
 
 model Teacher {
-
   id String @id @default(cuid())
-
 
   firstName String
 
@@ -173,47 +173,33 @@ model Teacher {
 
   lastName String
 
-
   gender String?
 
   dateOfBirth DateTime?
-
 
   phone String?
 
   email String?
 
-
   nationality String?
-
 
   address String?
 
-
   profilePhoto String?
-
-
 
   userId String @unique
 
   user User @relation(fields: [userId], references: [id])
 
-
-
   employment TeacherEmployment?
-
 
   medicalInformation MedicalInformation?
 
-
   emergencyContacts EmergencyContact[]
-
 
   qualifications Qualification[]
 
-
   teachingAssignments TeacherAssignment[]
-
 
   attendanceSessions AttendanceSession[]
 
@@ -221,92 +207,63 @@ model Teacher {
 
   expenses Expense[]
 
-
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
-
 }
 
-
-
 model TeacherEmployment {
-
   id String @id @default(cuid())
-
 
   teacherId String @unique
 
-
   employeeNumber String @unique
-
 
   position String?
 
-
   department String?
-
 
   employmentType String?
 
-
   employmentDate DateTime?
 
-
   probationEndDate DateTime?
-
 
   salary Int?
 
   payFrequency String?
 
-
   status String @default("active")
 
-
   teacher Teacher @relation(fields: [teacherId], references: [id])
-
 
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
-
 }
 
-
-
 model Subject {
-
   id String @id @default(cuid())
-
 
   name String @unique
 
-
   code String?
-
 
   isActive Boolean @default(true)
 
-
   teachers TeacherAssignment[]
-
 
   attendanceSessions AttendanceSession[]
 
   classSubjects ClassSubject[]
 
-
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
-
 }
 
 model TeacherAssignment {
-
   id String @id @default(cuid())
-
 
   teacherId String
 
@@ -324,10 +281,7 @@ model TeacherAssignment {
 
   isActive Boolean @default(true)
 
-
-
   teacher Teacher @relation(fields: [teacherId], references: [id])
-
 
   subject Subject @relation(fields: [subjectId], references: [id])
 
@@ -339,88 +293,55 @@ model TeacherAssignment {
 
   attendanceSessions AttendanceSession[]
 
-
-
   createdAt DateTime @default(now())
 
-
-
   @@index([teacherId, academicYearId, isActive])
-
   @@index([classSubjectId, isActive])
-
 }
 
 model MedicalInformation {
+  id String @id @default(cuid())
 
- id String @id @default(cuid())
+  teacherId String @unique
 
+  bloodGroup String?
 
- teacherId String @unique
+  allergies String?
 
+  medicalConditions String?
 
- bloodGroup String?
+  medication String?
 
+  disability String?
 
- allergies String?
+  notes String?
 
-
- medicalConditions String?
-
-
- medication String?
-
-
- disability String?
-
-
- notes String?
-
-
-
- teacher Teacher @relation(fields: [teacherId], references: [id])
-
-
+  teacher Teacher @relation(fields: [teacherId], references: [id])
 }
 
 model EmergencyContact {
+  id String @id @default(cuid())
 
- id String @id @default(cuid())
+  teacherId String
 
+  fullName String
 
- teacherId String
+  relationship String
 
+  phone String
 
- fullName String
+  alternativePhone String?
 
+  address String?
 
- relationship String
+  isNextOfKin Boolean @default(false)
 
+  teacher Teacher @relation(fields: [teacherId], references: [id])
 
- phone String
-
-
- alternativePhone String?
-
-
- address String?
-
-
-
- isNextOfKin Boolean @default(false)
-
-
-
- teacher Teacher @relation(fields: [teacherId], references: [id])
-
-
- createdAt DateTime @default(now())
-
-
+  createdAt DateTime @default(now())
 }
 
 model Document {
-
   id String @id @default(cuid())
 
   // ==========================
@@ -434,6 +355,7 @@ model Document {
   // DIRECTOR
   // SCHOOL
   // FINANCE
+  // ALUMNI
 
   entityId String
 
@@ -498,14 +420,10 @@ model Document {
   updatedAt DateTime @updatedAt
 
   @@index([entityType, entityId])
-
   @@index([documentCategoryId])
-
 }
 
-
 model DocumentCategory {
-
   id String @id @default(cuid())
 
   name String
@@ -551,11 +469,9 @@ model DocumentCategory {
   updatedAt DateTime @updatedAt
 
   @@unique([name, entityType])
-
 }
 
 model Qualification {
-
   id String @id @default(cuid())
 
   teacherId String
@@ -598,14 +514,10 @@ model Qualification {
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
-
 }
 
-
 model AttendanceSession {
-
   id String @id @default(cuid())
-
 
   teacherId String
 
@@ -633,15 +545,11 @@ model AttendanceSession {
 
   overrideReason String?
 
-
   date DateTime @default(now())
-
 
   teacher Teacher @relation(fields: [teacherId], references: [id])
 
-
   schoolClass SchoolClass @relation(fields: [classId], references: [id])
-
 
   subject Subject @relation(fields: [subjectId], references: [id])
 
@@ -657,30 +565,20 @@ model AttendanceSession {
 
   normallyAssignedTeacher Teacher? @relation("ExpectedAttendanceTeacher", fields: [normallyAssignedTeacherId], references: [id])
 
-
   records AttendanceRecord[]
-
 
   createdAt DateTime @default(now())
 
   @@index([academicYearId, termId, classId])
-
   @@index([teacherId, lessonDate])
-
-
 }
 
-
 model AttendanceRecord {
-
   id String @id @default(cuid())
-
 
   attendanceSessionId String
 
-
   studentId String
-
 
   status String
   // Present
@@ -688,20 +586,12 @@ model AttendanceRecord {
   // Late
   // Excused
 
-
-
   attendanceSession AttendanceSession @relation(fields: [attendanceSessionId], references: [id])
-
 
   student Student @relation(fields: [studentId], references: [id])
 
-
   createdAt DateTime @default(now())
-
-
 }
-
-
 
 // ==========================
 // PARENTS
@@ -737,7 +627,7 @@ model Parent {
   // Guardian
 
   userId String? @unique
-  user User? @relation(fields: [userId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id])
 
   students StudentParent[]
 
@@ -759,24 +649,17 @@ model Parent {
 // ==========================
 
 model Student {
-
   id String @id @default(cuid())
-
 
   admissionNumber String @unique
 
-
   firstName String
-
 
   lastName String
 
-
   dateOfBirth DateTime?
 
-
   gender String?
-
 
   passportPhoto String?
 
@@ -796,64 +679,45 @@ model Student {
 
   medicalNotes String?
 
-
   isActive Boolean @default(true)
-
 
   academicYearId String?
 
-
   termId String?
-
 
   classId String?
 
-
   studentCategoryId String?
-
-
 
   academicYear AcademicYear? @relation(fields: [academicYearId], references: [id])
 
-
   term Term? @relation(fields: [termId], references: [id])
-
 
   schoolClass SchoolClass? @relation(fields: [classId], references: [id])
 
-
   studentCategory StudentCategory? @relation(fields: [studentCategoryId], references: [id])
 
-
-
   parents StudentParent[]
-
 
   payments Payment[]
 
   financeCharges StudentCharge[]
 
-
   termFees StudentTermFee[]
-
 
   attendanceRecords AttendanceRecord[]
 
   enrollments StudentEnrollment[]
 
-
-
   createdAt DateTime @default(now())
 
-
   updatedAt DateTime @updatedAt
-
 }
 
 model StudentNumberSequence {
-  year Int @id
-  nextNumber Int @default(1)
-  updatedAt DateTime @updatedAt
+  year       Int      @id
+  nextNumber Int      @default(1)
+  updatedAt  DateTime @updatedAt
 }
 
 // ==========================
@@ -893,6 +757,87 @@ model StudentParent {
   @@unique([studentId, parentId])
   @@index([parentId, isActive])
   @@index([studentId, isActive])
+}
+
+// ==========================
+// ALUMNI
+// ==========================
+
+model Alumni {
+  id String @id @default(cuid())
+
+  // ==========================
+  // Verified identity
+  // ==========================
+
+  email String @unique
+
+  fullName String
+
+  // ==========================
+  // School history
+  // ==========================
+
+  graduationYear Int?
+
+  studentPeriod String?
+
+  // ==========================
+  // Contact
+  // ==========================
+
+  whatsappNumber String?
+
+  // ==========================
+  // Optional profile
+  // ==========================
+
+  profileImageUrl String?
+
+  profileImagePublicId String?
+
+  rememberedPerson String?
+
+  // ==========================
+  // Registration / audit state
+  // ==========================
+
+  isActive Boolean @default(true)
+
+  lockedAt DateTime?
+
+  lockedReason String?
+
+  possibleStudentMatch Boolean @default(false)
+
+  possibleStudentMatchDetails String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([fullName])
+  @@index([isActive])
+  @@index([graduationYear])
+}
+
+model AlumniRegistrationSession {
+  id String @id @default(cuid())
+
+  email String
+
+  tokenHash String @unique
+
+  expiresAt DateTime
+
+  usedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([expiresAt])
 }
 
 // ==========================
@@ -1090,7 +1035,6 @@ model StudentEnrollment {
 
   @@index([studentId, isCurrent])
   @@index([academicYearId, classId])
-
   @@index([academicYearClassId, status])
 }
 
@@ -1238,7 +1182,6 @@ model StudentCharge {
   updatedAt DateTime @updatedAt
 
   @@unique([studentId, financeStructureId])
-
   @@index([studentId, status])
 }
 
@@ -1263,11 +1206,107 @@ model Notification {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  communicationRecipient CommunicationRecipient?
+
   createdAt DateTime @default(now())
 
   readAt DateTime?
 
   @@index([userId, isRead, createdAt])
+}
+
+// ==========================
+// COMMUNICATION CONTACTS
+// ==========================
+//
+// A portal User is an authentication identity. This table deliberately stores
+// a separate contact method for a school-person profile (currently PARENT or
+// TEACHER). `ownerType`/`ownerId` keeps the model ready for future student,
+// alumni, phone, SMS and WhatsApp contacts without coupling those contacts to
+// a generated portal login email.
+model CommunicationContact {
+  id String @id @default(cuid())
+
+  ownerType String
+  ownerId   String
+
+  kind            String  @default("EMAIL")
+  value           String
+  normalizedValue String
+  label           String?
+
+  isPrimary  Boolean   @default(false)
+  isActive   Boolean   @default(true)
+  isVerified Boolean   @default(false)
+  verifiedAt DateTime?
+
+  verificationCodeHash       String?
+  verificationExpiresAt      DateTime?
+  verificationAttempts       Int       @default(0)
+  verificationRequestedAt    DateTime?
+  verificationDeliveryStatus String?
+  verificationDeliveryError  String?
+
+  createdByUserId         String?
+  communicationRecipients CommunicationRecipient[]
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+
+  @@unique([ownerType, ownerId, kind, normalizedValue])
+  @@index([ownerType, ownerId, isActive])
+  @@index([kind, normalizedValue, isVerified])
+}
+
+// School-authored communications are separate from automatic notifications.
+// Notification is one delivery channel; this domain preserves the authored
+// message, target logic and per-recipient delivery history for audit.
+model SchoolCommunication {
+  id String @id @default(cuid())
+
+  senderUserId String
+  subject      String
+  message      String
+  audience     String
+  targeting    Json?
+  status       String    @default("SENT")
+  sentAt       DateTime?
+
+  sender     User                     @relation("SchoolCommunicationSender", fields: [senderUserId], references: [id])
+  recipients CommunicationRecipient[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([audience, sentAt])
+  @@index([senderUserId, createdAt])
+}
+
+model CommunicationRecipient {
+  id String @id @default(cuid())
+
+  communicationId        String
+  recipientType          String
+  recipientId            String
+  portalUserId           String?
+  communicationContactId String?
+  emailAddress           String?
+
+  portalNotificationId String?   @unique
+  portalStatus         String    @default("NOT_APPLICABLE")
+  emailStatus          String    @default("NOT_APPLICABLE")
+  emailError           String?
+  deliveredAt          DateTime?
+
+  communication        SchoolCommunication   @relation(fields: [communicationId], references: [id], onDelete: Cascade)
+  communicationContact CommunicationContact? @relation(fields: [communicationContactId], references: [id])
+  portalNotification   Notification?         @relation(fields: [portalNotificationId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([communicationId, recipientType, recipientId])
+  @@index([recipientType, recipientId])
+  @@index([communicationId, emailStatus])
 }
 
 model Payment {
@@ -1332,7 +1371,6 @@ model Payment {
   updatedAt DateTime @updatedAt
 
   @@index([studentId, date])
-
   @@index([studentChargeId])
 }
 
@@ -1359,59 +1397,59 @@ model PaymentAudit {
 }
 
 model Expense {
-  id String @id @default(cuid())
-  category String
-  amount Int
-  payeeType String
-  payeeName String
-  teacherId String?
-  method String
-  expenseDate DateTime @default(now())
-  description String?
-  referenceNumber String?
-  proofUrl String?
-  proofFileName String?
-  status String @default("DRAFT")
-  approvalReason String?
-  createdByUserId String?
+  id               String    @id @default(cuid())
+  category         String
+  amount           Int
+  payeeType        String
+  payeeName        String
+  teacherId        String?
+  method           String
+  expenseDate      DateTime  @default(now())
+  description      String?
+  referenceNumber  String?
+  proofUrl         String?
+  proofFileName    String?
+  status           String    @default("DRAFT")
+  approvalReason   String?
+  createdByUserId  String?
   approvedByUserId String?
-  approvedAt DateTime?
-  payrollPeriod String?
-  basicSalary Int?
-  allowances Int @default(0)
-  deductions Int @default(0)
-  advances Int @default(0)
-  grossPay Int?
-  netPay Int?
+  approvedAt       DateTime?
+  payrollPeriod    String?
+  basicSalary      Int?
+  allowances       Int       @default(0)
+  deductions       Int       @default(0)
+  advances         Int       @default(0)
+  grossPay         Int?
+  netPay           Int?
 
-  teacher Teacher? @relation(fields: [teacherId], references: [id])
-  createdBy User? @relation("ExpenseCreatedBy", fields: [createdByUserId], references: [id])
-  approvedBy User? @relation("ExpenseApprovedBy", fields: [approvedByUserId], references: [id])
+  teacher    Teacher? @relation(fields: [teacherId], references: [id])
+  createdBy  User?    @relation("ExpenseCreatedBy", fields: [createdByUserId], references: [id])
+  approvedBy User?    @relation("ExpenseApprovedBy", fields: [approvedByUserId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([teacherId, payrollPeriod, category])
   @@index([expenseDate, status])
   @@index([teacherId])
-  @@unique([teacherId, payrollPeriod, category])
 }
 
 model OtherIncome {
-  id String @id @default(cuid())
-  category String
-  amount Int
-  source String
-  method String
-  incomeDate DateTime @default(now())
-  description String?
-  referenceNumber String?
-  proofUrl String?
-  proofFileName String?
-  status String @default("RECEIVED")
+  id               String   @id @default(cuid())
+  category         String
+  amount           Int
+  source           String
+  method           String
+  incomeDate       DateTime @default(now())
+  description      String?
+  referenceNumber  String?
+  proofUrl         String?
+  proofFileName    String?
+  status           String   @default("RECEIVED")
   recordedByUserId String?
-  recordedBy User? @relation("OtherIncomeRecordedBy", fields: [recordedByUserId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  recordedBy       User?    @relation("OtherIncomeRecordedBy", fields: [recordedByUserId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   @@index([incomeDate, status])
   @@index([recordedByUserId])

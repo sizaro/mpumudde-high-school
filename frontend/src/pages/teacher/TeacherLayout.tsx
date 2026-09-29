@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import PortalNotifications from '../../components/portal/PortalNotifications';
 
 const links = [
   { to: "/teacher/overview", label: "Overview", icon: LayoutDashboard },
@@ -81,7 +82,7 @@ export default function TeacherLayout() {
             <Menu size={22} />
           </button>
           <div className="hidden lg:block"><p className="text-sm font-bold text-slate-800">Teaching workspace</p><p className="text-xs text-slate-500">Classes, subjects and attendance</p></div>
-          <button type="button" onClick={logout} className="portal-action-button ml-auto"><LogOut size={17} /><span className="hidden sm:inline">Log out</span></button>
+          <div className="ml-auto flex items-center gap-2"><PortalNotifications label="School messages" /><button type="button" onClick={logout} className="portal-action-button"><LogOut size={17} /><span className="hidden sm:inline">Log out</span></button></div>
         </header>
         <div className="portal-page portal-content"><Outlet /></div>
       </main>

@@ -72,6 +72,8 @@ export const ModelName = {
   Student: 'Student',
   StudentNumberSequence: 'StudentNumberSequence',
   StudentParent: 'StudentParent',
+  Alumni: 'Alumni',
+  AlumniRegistrationSession: 'AlumniRegistrationSession',
   AcademicYear: 'AcademicYear',
   Term: 'Term',
   SchoolClass: 'SchoolClass',
@@ -84,6 +86,9 @@ export const ModelName = {
   StudentTermFee: 'StudentTermFee',
   StudentCharge: 'StudentCharge',
   Notification: 'Notification',
+  CommunicationContact: 'CommunicationContact',
+  SchoolCommunication: 'SchoolCommunication',
+  CommunicationRecipient: 'CommunicationRecipient',
   Payment: 'Payment',
   PaymentAudit: 'PaymentAudit',
   Expense: 'Expense',
@@ -442,6 +447,41 @@ export const StudentParentScalarFieldEnum = {
 export type StudentParentScalarFieldEnum = (typeof StudentParentScalarFieldEnum)[keyof typeof StudentParentScalarFieldEnum]
 
 
+export const AlumniScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  fullName: 'fullName',
+  graduationYear: 'graduationYear',
+  studentPeriod: 'studentPeriod',
+  whatsappNumber: 'whatsappNumber',
+  profileImageUrl: 'profileImageUrl',
+  profileImagePublicId: 'profileImagePublicId',
+  rememberedPerson: 'rememberedPerson',
+  isActive: 'isActive',
+  lockedAt: 'lockedAt',
+  lockedReason: 'lockedReason',
+  possibleStudentMatch: 'possibleStudentMatch',
+  possibleStudentMatchDetails: 'possibleStudentMatchDetails',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AlumniScalarFieldEnum = (typeof AlumniScalarFieldEnum)[keyof typeof AlumniScalarFieldEnum]
+
+
+export const AlumniRegistrationSessionScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AlumniRegistrationSessionScalarFieldEnum = (typeof AlumniRegistrationSessionScalarFieldEnum)[keyof typeof AlumniRegistrationSessionScalarFieldEnum]
+
+
 export const AcademicYearScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -616,6 +656,68 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const CommunicationContactScalarFieldEnum = {
+  id: 'id',
+  ownerType: 'ownerType',
+  ownerId: 'ownerId',
+  kind: 'kind',
+  value: 'value',
+  normalizedValue: 'normalizedValue',
+  label: 'label',
+  isPrimary: 'isPrimary',
+  isActive: 'isActive',
+  isVerified: 'isVerified',
+  verifiedAt: 'verifiedAt',
+  verificationCodeHash: 'verificationCodeHash',
+  verificationExpiresAt: 'verificationExpiresAt',
+  verificationAttempts: 'verificationAttempts',
+  verificationRequestedAt: 'verificationRequestedAt',
+  verificationDeliveryStatus: 'verificationDeliveryStatus',
+  verificationDeliveryError: 'verificationDeliveryError',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommunicationContactScalarFieldEnum = (typeof CommunicationContactScalarFieldEnum)[keyof typeof CommunicationContactScalarFieldEnum]
+
+
+export const SchoolCommunicationScalarFieldEnum = {
+  id: 'id',
+  senderUserId: 'senderUserId',
+  subject: 'subject',
+  message: 'message',
+  audience: 'audience',
+  targeting: 'targeting',
+  status: 'status',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolCommunicationScalarFieldEnum = (typeof SchoolCommunicationScalarFieldEnum)[keyof typeof SchoolCommunicationScalarFieldEnum]
+
+
+export const CommunicationRecipientScalarFieldEnum = {
+  id: 'id',
+  communicationId: 'communicationId',
+  recipientType: 'recipientType',
+  recipientId: 'recipientId',
+  portalUserId: 'portalUserId',
+  communicationContactId: 'communicationContactId',
+  emailAddress: 'emailAddress',
+  portalNotificationId: 'portalNotificationId',
+  portalStatus: 'portalStatus',
+  emailStatus: 'emailStatus',
+  emailError: 'emailError',
+  deliveredAt: 'deliveredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommunicationRecipientScalarFieldEnum = (typeof CommunicationRecipientScalarFieldEnum)[keyof typeof CommunicationRecipientScalarFieldEnum]
 
 
 export const PaymentScalarFieldEnum = {

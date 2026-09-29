@@ -123,6 +123,16 @@ export type StudentNumberSequence = Prisma.StudentNumberSequenceModel
  */
 export type StudentParent = Prisma.StudentParentModel
 /**
+ * Model Alumni
+ * 
+ */
+export type Alumni = Prisma.AlumniModel
+/**
+ * Model AlumniRegistrationSession
+ * 
+ */
+export type AlumniRegistrationSession = Prisma.AlumniRegistrationSessionModel
+/**
  * Model AcademicYear
  * 
  */
@@ -182,6 +192,21 @@ export type StudentCharge = Prisma.StudentChargeModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model CommunicationContact
+ * 
+ */
+export type CommunicationContact = Prisma.CommunicationContactModel
+/**
+ * Model SchoolCommunication
+ * 
+ */
+export type SchoolCommunication = Prisma.SchoolCommunicationModel
+/**
+ * Model CommunicationRecipient
+ * 
+ */
+export type CommunicationRecipient = Prisma.CommunicationRecipientModel
 /**
  * Model Payment
  * 

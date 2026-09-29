@@ -7,6 +7,7 @@ import Home from "../pages/public/Home";
 import About from "../pages/public/About";
 import Academics from "../pages/public/Academics";
 import Admissions from "../pages/public/Admissions";
+import Alumni from "../pages/public/Alumni";
 import Gallery from "../pages/public/Gallery";
 import Contact from "../pages/public/Contact";
 import Calendar from "../pages/public/Calendar";
@@ -33,6 +34,7 @@ import GuardiansPage from "../pages/director/guardians";
 import CreateGuardianPage from "../pages/director/guardians/Create";
 import GuardianDetailsPage from "../pages/director/guardians/Details";
 import EditGuardianPage from "../pages/director/guardians/Edit";
+import DirectorCommunicationsPage from "../pages/director/communications";
 
 // Director — Teacher management
 import TeacherListPage from "../pages/director/teachers/List";
@@ -58,8 +60,8 @@ import ChangePassword from "../pages/teacher/ChangePassword";
 import MyFinance from "../pages/teacher/MyFinance";
 import FinancePortal from "../pages/finance/FinancePortal";
 
-  import ParentLayout from "../pages/parent/ParentLayout";
-  import ParentDashboard from "../pages/parent/Dashboard";
+import ParentLayout from "../pages/parent/ParentLayout";
+import ParentDashboard from "../pages/parent/Dashboard";
 import ParentChildren from "../pages/parent/Children";
 import ParentAttendance from "../pages/parent/Attendance";
 import ParentFinance from "../pages/parent/Finance";
@@ -75,9 +77,17 @@ export default function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/academics" element={<Academics />} />
         <Route path="/admissions" element={<Admissions />} />
-        <Route path="/news" element={<Navigate to="/newsroom/news" replace />} />
+        <Route path="/alumni" element={<Alumni />} />
+        <Route path="/alumni/register" element={<Alumni />} />
+        <Route
+          path="/news"
+          element={<Navigate to="/newsroom/news" replace />}
+        />
         <Route path="/calendar" element={<Calendar />} />
-        <Route path="/events" element={<Navigate to="/newsroom/events" replace />} />
+        <Route
+          path="/events"
+          element={<Navigate to="/newsroom/events" replace />}
+        />
         <Route path="/newsroom" element={<Newsroom />} />
         <Route path="/newsroom/search" element={<NewsroomSearch />} />
         <Route path="/newsroom/articles/:slug" element={<NewsroomArticle />} />
@@ -112,6 +122,8 @@ export default function AppRoutes() {
         <Route path="attendance" element={<DirectorAttendancePage />} />
         <Route path="account-management" element={<AccountManagement />} />
         <Route path="reports" element={<DirectorReports />} />
+        <Route path="communications" element={<DirectorCommunicationsPage />} />
+
         {/* Teacher management */}
         <Route path="teachers" element={<TeacherListPage />} />
         <Route path="teachers/create" element={<CreateTeacherWizard />} />
@@ -174,6 +186,7 @@ export default function AppRoutes() {
         <Route path="finance" element={<ParentFinance />} />
         <Route path="settings" element={<ParentSettings />} />
       </Route>
+
       <Route
         path="/student"
         element={

@@ -18,6 +18,13 @@ export class NotificationsService {
       where: { id, userId },
       data: { isRead: true, readAt: new Date() },
     });
+    // A school-authored communication can use Notification as its portal
+    // delivery channel. Mirror the read state without collapsing the two
+    // domains into one table.
+    await this.prisma.communicationRecipient.updateMany({
+      where: { portalNotificationId: id },
+      data: { portalStatus: 'READ' },
+    });
     return this.listForUser(userId);
   }
 
