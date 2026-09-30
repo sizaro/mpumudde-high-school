@@ -1,15 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import nodemailer from "nodemailer";
 
 export type EmailDeliveryResult = {
-  status: 'SENT' | 'FAILED' | 'NOT_CONFIGURED';
+  status: "SENT" | "FAILED" | "NOT_CONFIGURED";
   error?: string;
 };
 
 /**
- * Deliberate, small email boundary. The school can use Resend by configuring
- * RESEND_API_KEY and EMAIL_FROM, while contact/verification records remain
- * useful even when an email provider has not been configured yet.
+ * Deliberate, small email boundary.
+ *
+ * Gmail is used as the school's current email provider through
+ * a Google App Password. The rest of the application does not
+ * need to know which provider is being used.
  */
 @Injectable()
 export class SchoolEmailService {
@@ -22,34 +25,45 @@ export class SchoolEmailService {
     subject: string;
     text: string;
   }): Promise<EmailDeliveryResult> {
-    const apiKey = this.config.get<string>('RESEND_API_KEY')?.trim();
-    const from = this.config.get<string>('EMAIL_FROM')?.trim();
-    if (!apiKey || !from) {
+    const user = this.config.get<string>("GMAIL_USER")?.trim();
+    const appPassword = this.config.get<string>("GMAIL_APP_PASSWORD")?.trim();
+
+    if (!user || !appPassword) {
       return {
-        status: 'NOT_CONFIGURED',
-        error: 'Email delivery is not configured for this school.',
+        status: "NOT_CONFIGURED",
+        error: "Email delivery is not configured for this school.",
       };
     }
 
     try {
-      const response = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user,
+          pass: appPassword,
         },
-        body: JSON.stringify({ from, to: input.to, subject: input.subject, text: input.text }),
       });
-      if (response.ok) return { status: 'SENT' };
 
-      const body = await response.text();
-      const error = `Email provider rejected the request (${response.status}). ${body}`.slice(0, 500);
-      this.logger.warn(error);
-      return { status: 'FAILED', error };
+      await transporter.sendMail({
+        from: user,
+        to: input.to,
+        subject: input.subject,
+        text: input.text,
+      });
+
+      return { status: "SENT" };
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown email delivery error.';
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unknown email delivery error.";
+
       this.logger.error(`Unable to send email: ${message}`);
-      return { status: 'FAILED', error: message.slice(0, 500) };
+
+      return {
+        status: "FAILED",
+        error: message.slice(0, 500),
+      };
     }
   }
 }

@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import {
   IsInt,
   IsOptional,
@@ -17,6 +18,13 @@ export class CompleteAlumniRegistrationDto {
   fullName!: string;
 
   @IsOptional()
+  @Transform(({ value }) => {
+    if (value === undefined || value === null || value === "") {
+      return undefined;
+    }
+
+    return Number(value);
+  })
   @IsInt()
   @Min(1900)
   @Max(2100)

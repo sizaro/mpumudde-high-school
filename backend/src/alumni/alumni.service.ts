@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { createHash, randomBytes } from "crypto";
 import { PrismaService } from "../prisma/prisma.service.js";
 import { NotificationsService } from "../notifications/notifications.service.js";
@@ -20,6 +21,7 @@ export class AlumniService {
     private readonly notifications: NotificationsService,
     private readonly schoolEmail: SchoolEmailService,
     private readonly uploadService: UploadService,
+    private readonly config: ConfigService,
   ) {}
 
   async startRegistration(email: string) {
@@ -87,7 +89,6 @@ export class AlumniService {
       });
 
     const frontendUrl = this.getFrontendUrl();
-
     const verificationUrl = `${frontendUrl}/alumni/register?token=${encodeURIComponent(rawToken)}`;
 
     const delivery = await this.schoolEmail.sendTextEmail({
@@ -419,15 +420,14 @@ export class AlumniService {
   }
 
   private getFrontendUrl() {
-    const configured =
-      process.env.FRONTEND_URLS?.split(",")
-        .map((url) => url.trim().replace(/\/$/, ""))
-        .filter(Boolean) ?? [];
+    const frontendUrl = this.config.get<string>("FRONTEND_URL")?.trim();
 
-    return (
-      configured[0] ??
-      process.env.FRONTEND_URL?.trim().replace(/\/$/, "") ??
-      "https://mpumudde-high-school.vercel.app"
-    );
+    if (!frontendUrl) {
+      throw new Error(
+        "FRONTEND_URL must be configured for the current environment.",
+      );
+    }
+
+    return frontendUrl.replace(/\/+$/, "");
   }
 }

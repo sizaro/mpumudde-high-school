@@ -8,6 +8,7 @@ import {
   LoaderCircle,
   Mail,
   UserRound,
+  X,
 } from "lucide-react";
 import alumniService from "../../services/alumniService";
 
@@ -26,6 +27,10 @@ const initialState: RegistrationState = {
   message: "",
   error: "",
 };
+
+const MAX_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024;
+
+const ALLOWED_PROFILE_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 async function submitAlumniRegistration(
   _previousState: RegistrationState,
@@ -77,7 +82,7 @@ async function submitAlumniRegistration(
       return {
         success: false,
         message: "",
-        error: "Please enter a valid graduation year.",
+        error: "Please enter a valid graduation year between 1900 and 2100.",
       };
     }
 
@@ -149,6 +154,13 @@ export default function AlumniRegistrationForm({
   const [isVerifying, setIsVerifying] = useState(true);
   const [verificationError, setVerificationError] = useState("");
 
+  const [profilePreviewUrl, setProfilePreviewUrl] = useState<string | null>(
+    null,
+  );
+  const [profileFileName, setProfileFileName] = useState("");
+  const [profileFileSize, setProfileFileSize] = useState<number | null>(null);
+  const [profileImageError, setProfileImageError] = useState("");
+
   const [state, formAction, isPending] = useActionState(
     submitAlumniRegistration,
     initialState,
@@ -206,6 +218,60 @@ export default function AlumniRegistrationForm({
       isMounted = false;
     };
   }, [token]);
+
+  useEffect(() => {
+    return () => {
+      if (profilePreviewUrl) {
+        URL.revokeObjectURL(profilePreviewUrl);
+      }
+    };
+  }, [profilePreviewUrl]);
+
+  function handleProfileImageChange(file: File | null) {
+    setProfileImageError("");
+
+    if (!file) {
+      setProfilePreviewUrl(null);
+      setProfileFileName("");
+      setProfileFileSize(null);
+      return;
+    }
+
+    if (!ALLOWED_PROFILE_IMAGE_TYPES.includes(file.type)) {
+      setProfileImageError("Please choose a JPEG, PNG, or WEBP image.");
+      return;
+    }
+
+    if (file.size > MAX_PROFILE_IMAGE_SIZE) {
+      setProfileImageError("The profile photo must be 5 MB or smaller.");
+      return;
+    }
+
+    setProfileFileName(file.name);
+    setProfileFileSize(file.size);
+
+    const previewUrl = URL.createObjectURL(file);
+    setProfilePreviewUrl(previewUrl);
+  }
+
+  function clearProfileImage() {
+    setProfileImageError("");
+    setProfilePreviewUrl(null);
+    setProfileFileName("");
+    setProfileFileSize(null);
+  }
+
+  function formatFileSize(size: number | null) {
+    if (size === null) {
+      return "";
+    }
+
+    if (size < 1024 * 1024) {
+      return `${Math.round(size / 1024)} KB`;
+    }
+
+    return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+  }
 
   if (isVerifying) {
     return (
@@ -388,6 +454,7 @@ export default function AlumniRegistrationForm({
                     type="number"
                     min={1900}
                     max={2100}
+                    step={1}
                     placeholder="e.g. 2018"
                     disabled={isPending}
                     className="w-full rounded-2xl border border-slate-300 bg-white/80 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-white"
@@ -473,21 +540,71 @@ export default function AlumniRegistrationForm({
                   </span>
                 </label>
 
-                <label
-                  htmlFor="alumni-profile-image"
-                  className="flex cursor-pointer flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-white/40 px-6 py-10 text-center transition hover:border-emerald-400 hover:bg-emerald-400/5 dark:border-white/15 dark:bg-white/5 dark:hover:border-emerald-400"
-                >
-                  <div className="rounded-2xl bg-emerald-400/15 p-4">
-                    <ImagePlus size={26} className="text-emerald-400" />
-                  </div>
+                <div className="rounded-3xl border border-dashed border-slate-300 bg-white/40 p-6 dark:border-white/15 dark:bg-white/5">
+                  {profilePreviewUrl ? (
+                    <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
+                      <div className="relative shrink-0">
+                        <img
+                          src={profilePreviewUrl}
+                          alt="Selected profile photo preview"
+                          className="h-32 w-32 rounded-3xl object-cover ring-2 ring-emerald-400/30"
+                        />
+                      </div>
 
-                  <span className="mt-4 text-sm font-semibold text-slate-900 dark:text-white">
-                    Choose a profile photo
-                  </span>
+                      <div className="min-w-0 flex-1 text-center sm:text-left">
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                          Photo selected
+                        </p>
 
-                  <span className="mt-2 text-xs leading-5 text-slate-500 dark:text-white/50">
-                    JPEG, PNG, or WEBP. Maximum 5 MB.
-                  </span>
+                        <p className="mt-1 break-all text-xs leading-5 text-slate-500 dark:text-white/50">
+                          {profileFileName}
+                        </p>
+
+                        {profileFileSize !== null && (
+                          <p className="mt-1 text-xs text-slate-500 dark:text-white/45">
+                            {formatFileSize(profileFileSize)}
+                          </p>
+                        )}
+
+                        <div className="mt-4 flex flex-wrap justify-center gap-3 sm:justify-start">
+                          <label
+                            htmlFor="alumni-profile-image"
+                            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:border-emerald-400 hover:bg-emerald-400/5 dark:border-white/15 dark:text-white"
+                          >
+                            <ImagePlus size={15} />
+                            Change photo
+                          </label>
+
+                          <button
+                            type="button"
+                            onClick={clearProfileImage}
+                            disabled={isPending}
+                            className="inline-flex items-center gap-2 rounded-full border border-red-400/20 px-4 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-400/10 disabled:cursor-not-allowed disabled:opacity-60 dark:text-red-300"
+                          >
+                            <X size={15} />
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <label
+                      htmlFor="alumni-profile-image"
+                      className="flex cursor-pointer flex-col items-center justify-center px-2 py-8 text-center transition"
+                    >
+                      <div className="rounded-2xl bg-emerald-400/15 p-4">
+                        <ImagePlus size={26} className="text-emerald-400" />
+                      </div>
+
+                      <span className="mt-4 text-sm font-semibold text-slate-900 dark:text-white">
+                        Choose a profile photo
+                      </span>
+
+                      <span className="mt-2 text-xs leading-5 text-slate-500 dark:text-white/50">
+                        JPEG, PNG, or WEBP. Maximum 5 MB.
+                      </span>
+                    </label>
+                  )}
 
                   <input
                     id="alumni-profile-image"
@@ -496,14 +613,28 @@ export default function AlumniRegistrationForm({
                     accept="image/jpeg,image/png,image/webp"
                     disabled={isPending}
                     className="sr-only"
+                    onChange={(event) => {
+                      handleProfileImageChange(event.target.files?.[0] ?? null);
+                    }}
                   />
-                </label>
+                </div>
+
+                {profileImageError && (
+                  <div
+                    role="alert"
+                    className="mt-3 flex items-start gap-3 rounded-2xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-xs leading-5 text-red-700 dark:text-red-300"
+                  >
+                    <AlertCircle size={17} className="mt-0.5 shrink-0" />
+
+                    <span>{profileImageError}</span>
+                  </div>
+                )}
               </div>
 
               {state.error && (
                 <div
                   role="alert"
-                  className="lg:col-span-2 flex items-start gap-3 rounded-2xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm leading-6 text-red-700 dark:text-red-300"
+                  className="flex items-start gap-3 rounded-2xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm leading-6 text-red-700 dark:text-red-300 lg:col-span-2"
                 >
                   <AlertCircle size={19} className="mt-0.5 shrink-0" />
 
