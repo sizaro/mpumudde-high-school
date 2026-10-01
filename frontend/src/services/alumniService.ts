@@ -37,7 +37,80 @@ export type CompleteAlumniRegistrationResponse = {
   welcomeEmailStatus: "SENT" | "FAILED" | "NOT_CONFIGURED";
 };
 
+// ============================================================
+// DIRECTOR ALUMNI TYPES
+// ============================================================
+
+export type AlumniCommunicationContact = {
+  id: string;
+  ownerType?: string;
+  ownerId?: string;
+  kind?: string;
+  value: string;
+  normalizedValue?: string;
+  label?: string | null;
+  isPrimary: boolean;
+  isActive: boolean;
+  isVerified: boolean;
+  verifiedAt?: string | null;
+  verificationDeliveryStatus?: string | null;
+  verificationDeliveryError?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type DirectorAlumni = {
+  id: string;
+  email: string;
+  fullName: string;
+  graduationYear: number | null;
+  studentPeriod: string | null;
+  whatsappNumber: string | null;
+  profileImageUrl: string | null;
+  profileImagePublicId?: string | null;
+  rememberedPerson: string | null;
+
+  isActive: boolean;
+  lockedAt: string | null;
+  lockedReason: string | null;
+
+  possibleStudentMatch: boolean;
+  possibleStudentMatchDetails: string | null;
+
+  createdAt: string;
+  updatedAt: string;
+
+  contacts: AlumniCommunicationContact[];
+  primaryEmailVerified: boolean;
+};
+
+export type UpdateAlumniInput = {
+  fullName?: string;
+  graduationYear?: number | null;
+  studentPeriod?: string | null;
+  whatsappNumber?: string | null;
+  rememberedPerson?: string | null;
+};
+
+export type UpdateAlumniStatusInput = {
+  locked: boolean;
+  reason?: string;
+};
+
+export type ArchiveAlumniResponse = {
+  success: boolean;
+  message: string;
+};
+
+// ============================================================
+// SERVICE
+// ============================================================
+
 class AlumniService {
+  // ============================================================
+  // PUBLIC REGISTRATION
+  // ============================================================
+
   async startRegistration(
     email: string,
   ): Promise<StartAlumniRegistrationResponse> {
@@ -90,11 +163,53 @@ class AlumniService {
       formData.append("profileImage", input.profileImage);
     }
 
-    const { data } =
-      await api.post<CompleteAlumniRegistrationResponse>(
-        "/alumni/registration/complete",
-        formData,
-      );
+    const { data } = await api.post<CompleteAlumniRegistrationResponse>(
+      "/alumni/registration/complete",
+      formData,
+    );
+
+    return data;
+  }
+
+  // ============================================================
+  // DIRECTOR ALUMNI MANAGEMENT
+  // ============================================================
+
+  async getAlumni(): Promise<DirectorAlumni[]> {
+    const { data } = await api.get<DirectorAlumni[]>("/alumni");
+
+    return data;
+  }
+
+  async getAlumniById(id: string): Promise<DirectorAlumni> {
+    const { data } = await api.get<DirectorAlumni>(`/alumni/${id}`);
+
+    return data;
+  }
+
+  async updateAlumni(
+    id: string,
+    input: UpdateAlumniInput,
+  ): Promise<DirectorAlumni> {
+    const { data } = await api.patch<DirectorAlumni>(`/alumni/${id}`, input);
+
+    return data;
+  }
+
+  async updateAlumniStatus(
+    id: string,
+    input: UpdateAlumniStatusInput,
+  ): Promise<DirectorAlumni> {
+    const { data } = await api.patch<DirectorAlumni>(
+      `/alumni/${id}/status`,
+      input,
+    );
+
+    return data;
+  }
+
+  async archiveAlumni(id: string): Promise<ArchiveAlumniResponse> {
+    const { data } = await api.delete<ArchiveAlumniResponse>(`/alumni/${id}`);
 
     return data;
   }

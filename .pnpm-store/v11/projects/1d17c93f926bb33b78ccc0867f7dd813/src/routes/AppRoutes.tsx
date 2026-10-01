@@ -34,6 +34,9 @@ import GuardiansPage from "../pages/director/guardians";
 import CreateGuardianPage from "../pages/director/guardians/Create";
 import GuardianDetailsPage from "../pages/director/guardians/Details";
 import EditGuardianPage from "../pages/director/guardians/Edit";
+import AlumniPage from "../pages/director/alumni";
+import AlumniDetailsPage from "../pages/director/alumni/Details";
+import AlumniEditPage from "../pages/director/alumni/Edit";
 import DirectorCommunicationsPage from "../pages/director/communications";
 
 // Director — Teacher management
@@ -107,15 +110,22 @@ export default function AppRoutes() {
         }
       >
         <Route index element={<DirectorOverview />} />
+
         <Route path="students/register" element={<StudentRegister />} />
         <Route path="students" element={<StudentList />} />
         <Route path="students/status" element={<StudentStatus />} />
         <Route path="students/promotion" element={<StudentPromotion />} />
         <Route path="students/profile" element={<StudentProfile />} />
+
         <Route path="guardians" element={<GuardiansPage />} />
         <Route path="guardians/create" element={<CreateGuardianPage />} />
         <Route path="guardians/:id" element={<GuardianDetailsPage />} />
         <Route path="guardians/:id/edit" element={<EditGuardianPage />} />
+
+        <Route path="alumni" element={<AlumniPage />} />
+        <Route path="alumni/:id" element={<AlumniDetailsPage />} />
+        <Route path="alumni/:id/edit" element={<AlumniEditPage />} />
+
         <Route path="finance" element={<DirectorFinancePage />} />
         <Route path="finance/history" element={<PaymentHistory />} />
         <Route path="academic-setup" element={<AcademicSetupPage />} />

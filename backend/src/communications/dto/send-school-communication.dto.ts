@@ -1,9 +1,16 @@
-import { ArrayMaxSize, IsArray, IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsIn,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from "class-validator";
 
 export class SendSchoolCommunicationDto {
   @IsString()
-  @IsIn(['EVERYONE', 'PARENTS', 'TEACHERS'])
-  audience!: 'EVERYONE' | 'PARENTS' | 'TEACHERS';
+  @IsIn(["EVERYONE", "PARENTS", "STUDENTS", "TEACHERS", "ALUMNI"])
+  audience!: "EVERYONE" | "PARENTS" | "STUDENTS" | "TEACHERS" | "ALUMNI";
 
   @IsString()
   @MaxLength(180)

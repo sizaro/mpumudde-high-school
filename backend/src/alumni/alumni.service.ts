@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { createHash, randomBytes } from "crypto";
@@ -10,6 +11,19 @@ import { NotificationsService } from "../notifications/notifications.service.js"
 import { SchoolEmailService } from "../communications/school-email.service.js";
 import { UploadService } from "../upload/upload.service.js";
 import { CompleteAlumniRegistrationDto } from "./dto/complete-alumni-registration.dto.js";
+
+export type UpdateAlumniData = {
+  fullName?: string;
+  graduationYear?: number | null;
+  studentPeriod?: string | null;
+  whatsappNumber?: string | null;
+  rememberedPerson?: string | null;
+};
+
+export type UpdateAlumniStatusData = {
+  locked: boolean;
+  reason?: string;
+};
 
 @Injectable()
 export class AlumniService {
@@ -23,6 +37,10 @@ export class AlumniService {
     private readonly uploadService: UploadService,
     private readonly config: ConfigService,
   ) {}
+
+  // ============================================================
+  // PUBLIC ALUMNI REGISTRATION
+  // ============================================================
 
   async startRegistration(email: string) {
     const normalizedEmail = this.normalizeEmail(email);
@@ -89,7 +107,10 @@ export class AlumniService {
       });
 
     const frontendUrl = this.getFrontendUrl();
-    const verificationUrl = `${frontendUrl}/alumni/register?token=${encodeURIComponent(rawToken)}`;
+
+    const verificationUrl = `${frontendUrl}/alumni/register?token=${encodeURIComponent(
+      rawToken,
+    )}`;
 
     const delivery = await this.schoolEmail.sendTextEmail({
       to: normalizedEmail,
@@ -285,6 +306,45 @@ export class AlumniService {
         },
       });
 
+      /*
+       * The registration link has already verified this email.
+       * Store that verification in the generic communication-contact
+       * system so verified Alumni can later receive school communications.
+       */
+      await tx.communicationContact.upsert({
+        where: {
+          ownerType_ownerId_kind_normalizedValue: {
+            ownerType: "ALUMNI",
+            ownerId: created.id,
+            kind: "EMAIL",
+            normalizedValue: normalizedEmail,
+          },
+        },
+        create: {
+          ownerType: "ALUMNI",
+          ownerId: created.id,
+          kind: "EMAIL",
+          value: normalizedEmail,
+          normalizedValue: normalizedEmail,
+          label: "Alumni registration email",
+          isPrimary: true,
+          isActive: true,
+          isVerified: true,
+          verifiedAt: new Date(),
+          verificationDeliveryStatus: "VERIFIED",
+        },
+        update: {
+          value: normalizedEmail,
+          label: "Alumni registration email",
+          isPrimary: true,
+          isActive: true,
+          isVerified: true,
+          verifiedAt: new Date(),
+          verificationDeliveryStatus: "VERIFIED",
+          verificationDeliveryError: null,
+        },
+      });
+
       await tx.alumniRegistrationSession.update({
         where: {
           id: session.id,
@@ -343,6 +403,325 @@ export class AlumniService {
     };
   }
 
+  // ============================================================
+  // DIRECTOR ALUMNI MANAGEMENT
+  // ============================================================
+
+  /**
+   * Returns all Alumni records for the Director workspace.
+   *
+   * We intentionally include inactive records here so the Director
+   * can distinguish Active, Locked, and Archived Alumni.
+   */
+  async findAll() {
+    const alumni = await this.prisma.alumni.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (alumni.length === 0) {
+      return [];
+    }
+
+    const alumniIds = alumni.map((record) => record.id);
+
+    const contacts = await this.prisma.communicationContact.findMany({
+      where: {
+        ownerType: "ALUMNI",
+        ownerId: {
+          in: alumniIds,
+        },
+        kind: "EMAIL",
+      },
+      select: {
+        id: true,
+        ownerId: true,
+        value: true,
+        normalizedValue: true,
+        isPrimary: true,
+        isActive: true,
+        isVerified: true,
+        verifiedAt: true,
+      },
+      orderBy: [
+        {
+          isPrimary: "desc",
+        },
+        {
+          createdAt: "asc",
+        },
+      ],
+    });
+
+    const contactsByAlumniId = new Map<string, typeof contacts>();
+
+    for (const contact of contacts) {
+      const existing = contactsByAlumniId.get(contact.ownerId) ?? [];
+      existing.push(contact);
+      contactsByAlumniId.set(contact.ownerId, existing);
+    }
+
+    return alumni.map((record) => ({
+      ...record,
+      contacts: contactsByAlumniId.get(record.id) ?? [],
+      primaryEmailVerified:
+        contactsByAlumniId
+          .get(record.id)
+          ?.some(
+            (contact) =>
+              contact.isPrimary && contact.isActive && contact.isVerified,
+          ) ?? false,
+    }));
+  }
+
+  /**
+   * Returns one complete Alumni profile for the Director.
+   */
+  async findOne(id: string) {
+    const alumni = await this.prisma.alumni.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!alumni) {
+      throw new NotFoundException("Alumni record not found.");
+    }
+
+    const contacts = await this.prisma.communicationContact.findMany({
+      where: {
+        ownerType: "ALUMNI",
+        ownerId: alumni.id,
+        kind: "EMAIL",
+      },
+      select: {
+        id: true,
+        ownerType: true,
+        ownerId: true,
+        kind: true,
+        value: true,
+        normalizedValue: true,
+        label: true,
+        isPrimary: true,
+        isActive: true,
+        isVerified: true,
+        verifiedAt: true,
+        verificationDeliveryStatus: true,
+        verificationDeliveryError: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: [
+        {
+          isPrimary: "desc",
+        },
+        {
+          createdAt: "asc",
+        },
+      ],
+    });
+
+    return {
+      ...alumni,
+      contacts,
+      primaryEmailVerified: contacts.some(
+        (contact) =>
+          contact.isPrimary && contact.isActive && contact.isVerified,
+      ),
+    };
+  }
+
+  /**
+   * Updates editable Alumni profile information.
+   *
+   * Email is intentionally excluded. An email change must go through
+   * the communication verification process rather than silently
+   * becoming a verified address.
+   */
+  async update(id: string, data: UpdateAlumniData) {
+    const existing = await this.prisma.alumni.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!existing) {
+      throw new NotFoundException("Alumni record not found.");
+    }
+
+    const updateData: {
+      fullName?: string;
+      graduationYear?: number | null;
+      studentPeriod?: string | null;
+      whatsappNumber?: string | null;
+      rememberedPerson?: string | null;
+    } = {};
+
+    if (data.fullName !== undefined) {
+      const fullName = data.fullName.trim();
+
+      if (!fullName) {
+        throw new BadRequestException("Full name is required.");
+      }
+
+      updateData.fullName = fullName;
+    }
+
+    if (data.graduationYear !== undefined) {
+      updateData.graduationYear = data.graduationYear;
+    }
+
+    if (data.studentPeriod !== undefined) {
+      updateData.studentPeriod = data.studentPeriod?.trim() || null;
+    }
+
+    if (data.whatsappNumber !== undefined) {
+      updateData.whatsappNumber = data.whatsappNumber?.trim() || null;
+    }
+
+    if (data.rememberedPerson !== undefined) {
+      updateData.rememberedPerson = data.rememberedPerson?.trim() || null;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return this.findOne(id);
+    }
+
+    await this.prisma.alumni.update({
+      where: {
+        id,
+      },
+      data: updateData,
+    });
+
+    return this.findOne(id);
+  }
+
+  /**
+   * Locks or unlocks an Alumni record.
+   *
+   * Locking does NOT archive the record.
+   * isActive and lockedAt represent separate lifecycle states.
+   */
+  async updateStatus(id: string, data: UpdateAlumniStatusData) {
+    const alumni = await this.prisma.alumni.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        isActive: true,
+        lockedAt: true,
+        lockedReason: true,
+      },
+    });
+
+    if (!alumni) {
+      throw new NotFoundException("Alumni record not found.");
+    }
+
+    if (!alumni.isActive) {
+      throw new BadRequestException(
+        "Archived Alumni records cannot be locked or unlocked.",
+      );
+    }
+
+    if (data.locked) {
+      const reason = data.reason?.trim();
+
+      if (!reason) {
+        throw new BadRequestException(
+          "A reason is required when locking an Alumni record.",
+        );
+      }
+
+      await this.prisma.alumni.update({
+        where: {
+          id,
+        },
+        data: {
+          lockedAt: new Date(),
+          lockedReason: reason,
+        },
+      });
+    } else {
+      await this.prisma.alumni.update({
+        where: {
+          id,
+        },
+        data: {
+          lockedAt: null,
+          lockedReason: null,
+        },
+      });
+    }
+
+    return this.findOne(id);
+  }
+
+  /**
+   * Archives an Alumni record.
+   *
+   * This does NOT hard-delete the Alumni record. Historical information
+   * remains available to the school.
+   *
+   * Communication contacts are deactivated so an archived Alumni cannot
+   * receive school-wide communications.
+   */
+  async remove(id: string) {
+    const alumni = await this.prisma.alumni.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        isActive: true,
+      },
+    });
+
+    if (!alumni) {
+      throw new NotFoundException("Alumni record not found.");
+    }
+
+    if (!alumni.isActive) {
+      throw new BadRequestException("This Alumni record is already archived.");
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.alumni.update({
+        where: {
+          id,
+        },
+        data: {
+          isActive: false,
+        },
+      });
+
+      await tx.communicationContact.updateMany({
+        where: {
+          ownerType: "ALUMNI",
+          ownerId: id,
+        },
+        data: {
+          isActive: false,
+        },
+      });
+    });
+
+    return {
+      success: true,
+      message: "Alumni record archived successfully.",
+    };
+  }
+
+  // ============================================================
+  // STUDENT MATCHING
+  // ============================================================
+
   private async findPossibleStudentMatch(fullName: string) {
     const normalizedName = this.normalizeName(fullName);
 
@@ -393,6 +772,10 @@ export class AlumniService {
     };
   }
 
+  // ============================================================
+  // PROFILE IMAGE
+  // ============================================================
+
   private validateProfileImage(file: Express.Multer.File) {
     const allowedMimeTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
@@ -406,6 +789,10 @@ export class AlumniService {
       throw new BadRequestException("Profile image must not exceed 5 MB.");
     }
   }
+
+  // ============================================================
+  // HELPERS
+  // ============================================================
 
   private normalizeEmail(email: string) {
     return email.trim().toLowerCase();
