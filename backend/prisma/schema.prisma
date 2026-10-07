@@ -1257,6 +1257,32 @@ model CommunicationContact {
   @@index([kind, normalizedValue, isVerified])
 }
 
+// A short-lived proof that an email was controlled before its Parent or
+// Teacher profile exists. It is deliberately separate from User login email.
+model RegistrationEmailVerification {
+  id String @id @default(cuid())
+
+  ownerType String
+  email String
+  normalizedEmail String
+
+  verificationCodeHash String?
+  verificationExpiresAt DateTime?
+  verificationAttempts Int @default(0)
+  verificationRequestedAt DateTime @default(now())
+  verificationDeliveryStatus String?
+  verificationDeliveryError String?
+
+  verifiedAt DateTime?
+  usedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerType, normalizedEmail, verifiedAt])
+  @@index([verificationExpiresAt])
+}
+
 // School-authored communications are separate from automatic notifications.
 // Notification is one delivery channel; this domain preserves the authored
 // message, target logic and per-recipient delivery history for audit.

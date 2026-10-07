@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import type { Guardian } from '../../../services/parentService';
 import PhotoCapture from '../../../components/forms/PhotoCapture';
+import VerifiedCommunicationEmailField from '../../../components/forms/VerifiedCommunicationEmailField';
 
 export type GuardianFormValues = {
   firstName: string;
@@ -11,6 +12,7 @@ export type GuardianFormValues = {
   occupation: string;
   address: string;
   profilePhoto: string;
+  communicationEmailVerificationId?: string;
 };
 
 const OCCUPATIONS = ['Self-employed', 'Teacher', 'Civil servant', 'Business owner', 'Farmer', 'Healthcare worker', 'Driver', 'Engineer', 'Lawyer', 'Accountant', 'Security personnel', 'Unemployed'];
@@ -23,16 +25,17 @@ export function guardianToForm(guardian: Guardian): GuardianFormValues {
   return {
     firstName: guardian.firstName ?? '', lastName: guardian.lastName ?? '', gender: guardian.gender ?? '',
     phone: guardian.phone ?? '', email: guardian.email ?? '', occupation: guardian.occupation ?? '',
-    address: guardian.address ?? '', profilePhoto: guardian.profilePhoto ?? '',
+  address: guardian.address ?? '', profilePhoto: guardian.profilePhoto ?? '', communicationEmailVerificationId: undefined,
   };
 }
 
-export default function GuardianProfileForm({ initial = emptyGuardian, submitLabel, busy, onSubmit, children }: {
+export default function GuardianProfileForm({ initial = emptyGuardian, submitLabel, busy, onSubmit, children, existingOwnerId }: {
   initial?: GuardianFormValues;
   submitLabel: string;
   busy?: boolean;
   onSubmit: (values: GuardianFormValues) => Promise<void>;
   children?: ReactNode;
+  existingOwnerId?: string;
 }) {
   const [values, setValues] = useState(initial);
   const update = (field: keyof GuardianFormValues, value: string) => setValues((current) => ({ ...current, [field]: value }));
@@ -46,7 +49,7 @@ export default function GuardianProfileForm({ initial = emptyGuardian, submitLab
         <Field label="Last name" required value={values.lastName} onChange={(value) => update('lastName', value)} />
         <Select label="Gender" value={values.gender} onChange={(value) => update('gender', value)} options={['Male', 'Female', 'Other']} />
         <Field label="Phone" required value={values.phone} onChange={(value) => update('phone', value)} />
-        <Field label="Communication email" type="email" value={values.email} onChange={(value) => update('email', value)} />
+        <VerifiedCommunicationEmailField ownerType="PARENT" existingOwnerId={existingOwnerId} email={values.email} onEmailChange={(email) => setValues((current) => ({ ...current, email, communicationEmailVerificationId: undefined }))} verificationId={values.communicationEmailVerificationId} onVerificationChange={(communicationEmailVerificationId) => setValues((current) => ({ ...current, communicationEmailVerificationId }))} />
         <OccupationField value={values.occupation} onChange={(value) => update('occupation', value)} />
         <div className="md:col-span-2"><Field label="Address" value={values.address} onChange={(value) => update('address', value)} /></div>
       </div>

@@ -2,8 +2,8 @@ import { IsBoolean, IsIn, IsOptional, IsString, MaxLength } from 'class-validato
 
 export class CreateCommunicationContactDto {
   @IsString()
-  @IsIn(['PARENT', 'TEACHER', 'STUDENT'])
-  ownerType!: 'PARENT' | 'TEACHER' | 'STUDENT';
+  @IsIn(['PARENT', 'TEACHER', 'STUDENT', 'ALUMNI'])
+  ownerType!: 'PARENT' | 'TEACHER' | 'STUDENT' | 'ALUMNI';
 
   @IsString()
   ownerId!: string;

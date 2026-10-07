@@ -67,6 +67,173 @@ export class CommunicationsService {
     );
   }
 
+  /**
+   * Starts the proof-of-email step used before a new guardian or teacher
+   * profile exists. The resulting verification id is supplied with the final
+   * registration payload; it is never a portal-login credential.
+   */
+  async requestRegistrationEmailVerification(
+    ownerType: Extract<ContactOwnerType, "PARENT" | "TEACHER">,
+    email: string,
+  ) {
+    const value = email.trim();
+    const normalizedEmail = value.toLowerCase();
+    if (!this.isEmail(normalizedEmail)) {
+      throw new BadRequestException("Provide a valid communication email address.");
+    }
+
+    const code = String(randomInt(100000, 1_000_000));
+    const verification = await this.prisma.registrationEmailVerification.create({
+      data: {
+        ownerType,
+        email: value,
+        normalizedEmail,
+        verificationCodeHash: await bcrypt.hash(code, 12),
+        verificationExpiresAt: new Date(Date.now() + this.verificationLifetimeMs),
+        verificationDeliveryStatus: "PENDING",
+      },
+    });
+
+    const delivery = await this.email.sendTextEmail({
+      to: value,
+      subject: "Verify your Mpumudde High School communication email",
+      text: `Your Mpumudde High School verification code is ${code}. It expires in 15 minutes. This email will be used for official school communication, not for portal login.`,
+    });
+
+    const updated = await this.prisma.registrationEmailVerification.update({
+      where: { id: verification.id },
+      data: {
+        verificationDeliveryStatus: delivery.status,
+        verificationDeliveryError: delivery.error ?? null,
+      },
+    });
+
+    return {
+      id: updated.id,
+      ownerType: updated.ownerType,
+      email: updated.email,
+      isVerified: false,
+      deliveryStatus: updated.verificationDeliveryStatus,
+    };
+  }
+
+  async confirmRegistrationEmailVerification(id: string, code: string) {
+    const verification = await this.prisma.registrationEmailVerification.findUnique({
+      where: { id },
+    });
+    if (!verification || verification.usedAt) {
+      throw new NotFoundException("Registration email verification was not found.");
+    }
+    if (
+      !verification.verificationCodeHash ||
+      !verification.verificationExpiresAt ||
+      verification.verificationExpiresAt <= new Date()
+    ) {
+      throw new BadRequestException("This verification code has expired. Send another code.");
+    }
+    if (verification.verificationAttempts >= this.maximumVerificationAttempts) {
+      throw new HttpException(
+        "Too many incorrect codes. Send another verification code.",
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+    if (!(await bcrypt.compare(code.trim(), verification.verificationCodeHash))) {
+      await this.prisma.registrationEmailVerification.update({
+        where: { id },
+        data: { verificationAttempts: { increment: 1 } },
+      });
+      throw new BadRequestException("The verification code is incorrect.");
+    }
+
+    const verified = await this.prisma.registrationEmailVerification.update({
+      where: { id },
+      data: {
+        verifiedAt: new Date(),
+        verificationCodeHash: null,
+        verificationExpiresAt: null,
+        verificationAttempts: 0,
+        verificationDeliveryStatus: "VERIFIED",
+        verificationDeliveryError: null,
+      },
+    });
+
+    return {
+      id: verified.id,
+      ownerType: verified.ownerType,
+      email: verified.email,
+      isVerified: true,
+      verifiedAt: verified.verifiedAt,
+    };
+  }
+
+  async assertVerifiedRegistrationEmail(
+    verificationId: string | undefined,
+    ownerType: Extract<ContactOwnerType, "PARENT" | "TEACHER">,
+    email: string | null | undefined,
+  ) {
+    const normalizedEmail = email?.trim().toLowerCase();
+    if (!normalizedEmail || !this.isEmail(normalizedEmail)) {
+      throw new BadRequestException("A verified communication email is required.");
+    }
+    if (!verificationId) {
+      throw new BadRequestException("Verify the communication email before continuing.");
+    }
+    const verification = await this.prisma.registrationEmailVerification.findFirst({
+      where: {
+        id: verificationId,
+        ownerType,
+        normalizedEmail,
+        verifiedAt: { not: null },
+        usedAt: null,
+      },
+    });
+    if (!verification) {
+      throw new BadRequestException(
+        "This communication email has not been verified for this registration. Verify it again before continuing.",
+      );
+    }
+    return verification;
+  }
+
+  async finalizeVerifiedRegistrationEmail(
+    verificationId: string,
+    ownerType: Extract<ContactOwnerType, "PARENT" | "TEACHER">,
+    ownerId: string,
+    email: string,
+    createdByUserId?: string,
+  ) {
+    const normalizedEmail = email.trim().toLowerCase();
+    return this.prisma.$transaction(async (tx) => {
+      const claimed = await tx.registrationEmailVerification.updateMany({
+        where: {
+          id: verificationId,
+          ownerType,
+          normalizedEmail,
+          verifiedAt: { not: null },
+          usedAt: null,
+        },
+        data: { usedAt: new Date() },
+      });
+      if (claimed.count !== 1) {
+        throw new BadRequestException(
+          "The communication email verification is no longer available. Verify the email again.",
+        );
+      }
+
+      return this.upsertEmailContactWithClient(
+        tx,
+        {
+          ownerType,
+          ownerId,
+          value: email,
+          isPrimary: true,
+          isVerified: true,
+        },
+        createdByUserId,
+      );
+    });
+  }
+
   async createContact(dto: CreateCommunicationContactDto, actor: Actor) {
     this.assertDirector(actor);
 
@@ -428,6 +595,22 @@ export class CommunicationsService {
 
   async previewSchoolCommunication(dto: SendSchoolCommunicationDto) {
     const candidates = await this.resolveRecipients(dto);
+    const deliveryByRecipientType = (["PARENT", "STUDENT", "TEACHER", "ALUMNI"] as const)
+      .map((recipientType) => {
+        const group = candidates.filter((candidate) => candidate.recipientType === recipientType);
+        const portalRecipients = group.filter((candidate) => Boolean(candidate.portalUserId)).length;
+        const verifiedEmailRecipients = group.filter((candidate) => Boolean(candidate.emailAddress)).length;
+        return {
+          recipientType,
+          totalRecipients: group.length,
+          portalRecipients,
+          verifiedEmailRecipients,
+          withoutAnyDelivery: group.filter(
+            (candidate) => !candidate.portalUserId && !candidate.emailAddress,
+          ).length,
+        };
+      })
+      .filter((group) => group.totalRecipients > 0);
 
     return {
       totalRecipients: candidates.length,
@@ -442,6 +625,10 @@ export class CommunicationsService {
       withoutVerifiedEmail: candidates.filter(
         (candidate) => !candidate.emailAddress,
       ).length,
+      withoutAnyDelivery: candidates.filter(
+        (candidate) => !candidate.portalUserId && !candidate.emailAddress,
+      ).length,
+      deliveryByRecipientType,
     };
   }
 
@@ -464,8 +651,33 @@ export class CommunicationsService {
       );
     }
 
-    return this.prisma.$transaction(async (tx) => {
-      if (input.isPrimary) {
+    return this.prisma.$transaction((tx) =>
+      this.upsertEmailContactWithClient(tx, input, createdByUserId),
+    );
+  }
+
+  private async upsertEmailContactWithClient(
+    tx: any,
+    input: {
+      ownerType: ContactOwnerType;
+      ownerId: string;
+      value: string;
+      label?: string;
+      isPrimary?: boolean;
+      isVerified?: boolean;
+    },
+    createdByUserId?: string,
+  ) {
+    const value = input.value.trim();
+    const normalizedValue = value.toLowerCase();
+
+    if (!this.isEmail(normalizedValue)) {
+      throw new BadRequestException(
+        "Provide a valid communication email address.",
+      );
+    }
+
+    if (input.isPrimary) {
         await tx.communicationContact.updateMany({
           where: {
             ownerType: input.ownerType,
@@ -479,7 +691,7 @@ export class CommunicationsService {
         });
       }
 
-      return tx.communicationContact.upsert({
+    return tx.communicationContact.upsert({
         where: {
           ownerType_ownerId_kind_normalizedValue: {
             ownerType: input.ownerType,
@@ -497,14 +709,31 @@ export class CommunicationsService {
           label: input.label,
           isPrimary: input.isPrimary ?? true,
           createdByUserId,
+          ...(input.isVerified
+            ? {
+                isVerified: true,
+                verifiedAt: new Date(),
+                verificationDeliveryStatus: "VERIFIED",
+              }
+            : {}),
         },
         update: {
           value,
           label: input.label,
           isPrimary: input.isPrimary ?? true,
           isActive: true,
+          ...(input.isVerified
+            ? {
+                isVerified: true,
+                verifiedAt: new Date(),
+                verificationCodeHash: null,
+                verificationExpiresAt: null,
+                verificationAttempts: 0,
+                verificationDeliveryStatus: "VERIFIED",
+                verificationDeliveryError: null,
+              }
+            : {}),
         },
-      });
     });
   }
 

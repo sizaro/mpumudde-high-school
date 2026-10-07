@@ -21,6 +21,14 @@ export type CommunicationPreview = {
   portalRecipients: number;
   verifiedEmailRecipients: number;
   withoutVerifiedEmail: number;
+  withoutAnyDelivery: number;
+  deliveryByRecipientType: Array<{
+    recipientType: "PARENT" | "STUDENT" | "TEACHER" | "ALUMNI";
+    totalRecipients: number;
+    portalRecipients: number;
+    verifiedEmailRecipients: number;
+    withoutAnyDelivery: number;
+  }>;
 };
 
 export type SchoolCommunication = {
@@ -48,6 +56,15 @@ export type CommunicationContact = {
   isVerified: boolean;
   verifiedAt?: string | null;
   verificationDeliveryStatus?: string | null;
+};
+
+export type RegistrationEmailVerification = {
+  id: string;
+  ownerType: "PARENT" | "TEACHER";
+  email: string;
+  isVerified: boolean;
+  verifiedAt?: string | null;
+  deliveryStatus?: string | null;
 };
 
 class CommunicationService {
@@ -85,6 +102,17 @@ class CommunicationService {
     return data;
   }
 
+  async listOwnerContacts(
+    ownerType: CommunicationContact["ownerType"],
+    ownerId: string,
+  ): Promise<CommunicationContact[]> {
+    const { data } = await api.get<CommunicationContact[]>(
+      "/communications/contacts",
+      { params: { ownerType, ownerId } },
+    );
+    return data;
+  }
+
   async requestContactVerification(id: string): Promise<{
     contact: CommunicationContact;
     deliveryStatus: string;
@@ -106,6 +134,28 @@ class CommunicationService {
       { code },
     );
 
+    return data;
+  }
+
+  async requestRegistrationEmailVerification(
+    ownerType: "PARENT" | "TEACHER",
+    email: string,
+  ): Promise<RegistrationEmailVerification> {
+    const { data } = await api.post<RegistrationEmailVerification>(
+      "/communications/contacts/registration-email-verifications/request",
+      { ownerType, email },
+    );
+    return data;
+  }
+
+  async confirmRegistrationEmailVerification(
+    id: string,
+    code: string,
+  ): Promise<RegistrationEmailVerification> {
+    const { data } = await api.post<RegistrationEmailVerification>(
+      `/communications/contacts/registration-email-verifications/${id}/confirm`,
+      { code },
+    );
     return data;
   }
 }

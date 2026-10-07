@@ -7,6 +7,7 @@ import { UpdateStudentDto } from "./dto/update-student.dto.js";
 import { CompleteStudentRegistrationDto } from "./dto/complete-student-registration.dto.js";
 import * as bcrypt from "bcrypt";
 import crypto from "node:crypto";
+import { CommunicationsService } from "../communications/communications.service.js";
 
 function generateGuardianTempPassword(length = 12) {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#";
@@ -28,7 +29,10 @@ function guardianLoginEmailBase(firstName: string, lastName: string): string {
 
 @Injectable()
 export class StudentsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly communications: CommunicationsService,
+  ) {}
 
   private async ensurePlacementIsAvailable(
     tx: any,
@@ -161,6 +165,11 @@ export class StudentsService {
     if (!primaryGuardian.identityDocumentType || !primaryGuardian.identityDocumentUrl) {
       throw new BadRequestException("The primary guardian's supporting identity document is required.");
     }
+    await this.communications.assertVerifiedRegistrationEmail(
+      primaryGuardian.communicationEmailVerificationId,
+      "PARENT",
+      primaryGuardian.email,
+    );
     const parentRole = primaryGuardian?.fullName
       ? await this.prisma.role.findUnique({ where: { name: "PARENT" } })
       : null;
@@ -200,7 +209,7 @@ export class StudentsService {
       throw new BadRequestException(
         "Select Registration, enter its payment amount, and attach receipt evidence before continuing.",
       );
-    return this.prisma.$transaction(
+    const result = await this.prisma.$transaction(
       async (tx) => {
         const classOffering = await this.ensurePlacementIsAvailable(tx, student.academicYearId!, student.termId!, student.classId!);
         const admissionNumber = await this.generateStudentNumber(tx);
@@ -283,6 +292,7 @@ export class StudentsService {
         ];
         let guardianCredentials:
           { email: string; temporaryPassword: string } | undefined;
+        let primaryGuardianId: string | undefined;
         for (const guardian of guardians) {
           const names = guardian.fullName.trim().split(/\s+/);
           const communicationEmail =
@@ -443,6 +453,10 @@ export class StudentsService {
             };
           }
 
+          if (guardian.primary) {
+            primaryGuardianId = parent.id;
+          }
+
           await tx.studentParent.upsert({
             where: {
               studentId_parentId: {
@@ -540,10 +554,25 @@ export class StudentsService {
             studentCategory: true,
           },
         });
-        return { student: registeredStudent, guardianCredentials };
+        return { student: registeredStudent, guardianCredentials, primaryGuardianId };
       },
       { maxWait: 10_000, timeout: 20_000 },
     );
+
+    if (!result.primaryGuardianId) {
+      throw new BadRequestException("The primary guardian could not be finalized.");
+    }
+    await this.communications.finalizeVerifiedRegistrationEmail(
+      primaryGuardian.communicationEmailVerificationId!,
+      "PARENT",
+      result.primaryGuardianId,
+      primaryGuardian.email!,
+      user?.id,
+    );
+    return {
+      student: result.student,
+      guardianCredentials: result.guardianCredentials,
+    };
   }
 
   async findAll(includeInactive = false) {

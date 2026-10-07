@@ -6,6 +6,8 @@ import { Roles } from '../common/decorators/roles.decorator.js';
 import { CommunicationsService } from './communications.service.js';
 import { CreateCommunicationContactDto } from './dto/create-communication-contact.dto.js';
 import { VerifyCommunicationContactDto } from './dto/verify-communication-contact.dto.js';
+import { RequestRegistrationEmailVerificationDto } from './dto/request-registration-email-verification.dto.js';
+import { ConfirmRegistrationEmailVerificationDto } from './dto/confirm-registration-email-verification.dto.js';
 
 type RequestUser = { id: string; roles?: string[] };
 
@@ -23,7 +25,7 @@ export class CommunicationsController {
   @UseGuards(RolesGuard)
   @Roles('SUPER_ADMIN')
   listForOwner(
-    @Query('ownerType') ownerType: 'PARENT' | 'TEACHER' | 'STUDENT',
+    @Query('ownerType') ownerType: 'PARENT' | 'TEACHER' | 'STUDENT' | 'ALUMNI',
     @Query('ownerId') ownerId: string,
     @CurrentUser() user: RequestUser,
   ) {
@@ -35,6 +37,28 @@ export class CommunicationsController {
   @Roles('SUPER_ADMIN')
   create(@Body() dto: CreateCommunicationContactDto, @CurrentUser() user: RequestUser) {
     return this.communications.createContact(dto, user);
+  }
+
+  @Post('registration-email-verifications/request')
+  @UseGuards(RolesGuard)
+  @Roles('SUPER_ADMIN')
+  requestRegistrationEmailVerification(
+    @Body() dto: RequestRegistrationEmailVerificationDto,
+  ) {
+    return this.communications.requestRegistrationEmailVerification(
+      dto.ownerType,
+      dto.email,
+    );
+  }
+
+  @Post('registration-email-verifications/:id/confirm')
+  @UseGuards(RolesGuard)
+  @Roles('SUPER_ADMIN')
+  confirmRegistrationEmailVerification(
+    @Param('id') id: string,
+    @Body() dto: ConfirmRegistrationEmailVerificationDto,
+  ) {
+    return this.communications.confirmRegistrationEmailVerification(id, dto.code);
   }
 
   @Post(':id/request-verification')

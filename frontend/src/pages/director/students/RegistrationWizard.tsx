@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Plus, X } from "lucide-react";
 import SetupService from "../../../services/setupService";
 import StudentService from "../../../services/studentService";
+import VerifiedCommunicationEmailField from "../../../components/forms/VerifiedCommunicationEmailField";
 
 const steps = ["Student Information", "Medical Information", "Parent Information", "Academic Placement", "Fees & Receipt", "Review"];
 const DRAFT_KEY = "mhs.student-registration-draft.v1";
@@ -56,6 +57,7 @@ export default function RegistrationWizard() {
     parentRelationship: "",
     parentPhone: "",
     parentEmail: "",
+    parentCommunicationEmailVerificationId: "",
     parentOccupation: "",
     parentAddress: "",
     parentIdInfo: "",
@@ -162,6 +164,7 @@ export default function RegistrationWizard() {
     if (index === 2) {
       if (!form.parentPhoto) return "Add and review the primary guardian's photo.";
       if (!form.parentName.trim() || !form.parentRelationship || !form.parentPhone.trim()) return "Complete the primary guardian's name, relationship, and phone number.";
+      if (!form.parentEmail.trim() || !form.parentCommunicationEmailVerificationId) return "Verify the primary guardian's communication email before continuing.";
       if (!form.parentDocumentType || !form.parentDocumentDataUrl) return "Select and attach the primary guardian's supporting identity document.";
       const incompleteAdditionalGuardian = form.guardians.some(
         (guardian) => Boolean(guardian.name.trim() || guardian.phone.trim()) &&
@@ -260,7 +263,7 @@ export default function RegistrationWizard() {
         bloodGroup: form.bloodGroup || undefined, allergies: form.allergies || undefined, medicalConditions: form.medicalConditions || undefined, specialNeeds: form.specialNeeds || undefined, medicalNotes: form.medicalNotes || undefined,
       };
       setSubmissionStage("Creating the student account, guardian account, enrollment, charges, and payments…");
-      const result = await StudentService.createCompleteRegistration({ student, primaryGuardian: form.parentName ? { fullName: form.parentName, relationship: form.parentRelationship, phone: form.parentPhone, email: form.parentEmail, occupation: form.parentOccupation, address: form.parentAddress, profilePhoto: parentPhoto, identityDocumentType: form.parentDocumentType || undefined, identityDocumentUrl: parentDocumentUrl } : undefined, additionalGuardians: form.guardians.filter((guardian) => guardian.name.trim() && guardian.phone.trim()), payments: paymentPayload });
+      const result = await StudentService.createCompleteRegistration({ student, primaryGuardian: form.parentName ? { fullName: form.parentName, relationship: form.parentRelationship, phone: form.parentPhone, email: form.parentEmail, communicationEmailVerificationId: form.parentCommunicationEmailVerificationId, occupation: form.parentOccupation, address: form.parentAddress, profilePhoto: parentPhoto, identityDocumentType: form.parentDocumentType || undefined, identityDocumentUrl: parentDocumentUrl } : undefined, additionalGuardians: form.guardians.filter((guardian) => guardian.name.trim() && guardian.phone.trim()), payments: paymentPayload });
       localStorage.removeItem(DRAFT_KEY);
       setCompleted({ studentId: result.student.id, studentName: `${result.student.firstName} ${result.student.lastName}`, guardianCredentials: result.guardianCredentials });
     } catch (error) {
@@ -399,7 +402,7 @@ export default function RegistrationWizard() {
               <label className="text-sm font-medium text-slate-700">Parent Name<input value={form.parentName} onChange={(event) => updateField("parentName", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
               <label className="text-sm font-medium text-slate-700">Relationship<select value={form.parentRelationship} onChange={(event) => updateField("parentRelationship", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select relationship</option><option value="Father">Father</option><option value="Mother">Mother</option><option value="Guardian">Guardian</option><option value="Uncle">Uncle</option><option value="Aunt">Aunt</option><option value="Grandfather">Grandfather</option><option value="Grandmother">Grandmother</option><option value="Other">Other</option></select></label>
               <label className="text-sm font-medium text-slate-700">Phone<input value={form.parentPhone} onChange={(event) => updateField("parentPhone", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
-              <label className="text-sm font-medium text-slate-700">Email<input value={form.parentEmail} onChange={(event) => updateField("parentEmail", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
+              <VerifiedCommunicationEmailField ownerType="PARENT" email={form.parentEmail} onEmailChange={(parentEmail) => setForm((current) => ({ ...current, parentEmail, parentCommunicationEmailVerificationId: "" }))} verificationId={form.parentCommunicationEmailVerificationId || undefined} onVerificationChange={(parentCommunicationEmailVerificationId) => setForm((current) => ({ ...current, parentCommunicationEmailVerificationId: parentCommunicationEmailVerificationId ?? "" }))} />
               <label className="text-sm font-medium text-slate-700">Occupation<select value={STANDARD_OCCUPATIONS.includes(form.parentOccupation) ? form.parentOccupation : form.parentOccupation ? "Other" : ""} onChange={(event) => updateField("parentOccupation", event.target.value === "Other" ? "Other" : event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"><option value="">Select occupation</option>{OCCUPATIONS.map((item) => <option key={item}>{item}</option>)}</select>{form.parentOccupation && !STANDARD_OCCUPATIONS.includes(form.parentOccupation) && <input value={form.parentOccupation === "Other" ? "" : form.parentOccupation} onChange={(event) => updateField("parentOccupation", event.target.value || "Other")} placeholder="Type occupation" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />}</label>
               <label className="text-sm font-medium text-slate-700">Address<input value={form.parentAddress} onChange={(event) => updateField("parentAddress", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>
               <label className="text-sm font-medium text-slate-700 md:col-span-2">Identification Information<textarea value={form.parentIdInfo} onChange={(event) => updateField("parentIdInfo", event.target.value)} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" /></label>

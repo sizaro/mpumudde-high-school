@@ -37,6 +37,10 @@ export class CreateTeacherDto {
 
   @IsOptional()
   @IsString()
+  communicationEmailVerificationId?: string;
+
+  @IsOptional()
+  @IsString()
   nationality?: string;
 
   @IsOptional()

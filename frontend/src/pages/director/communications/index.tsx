@@ -24,9 +24,16 @@ const audienceLabels: Record<CommunicationAudience, string> = {
 const audienceDescriptions: Record<CommunicationAudience, string> = {
   EVERYONE: "Parents, students, teachers, and alumni",
   PARENTS: "Parents and guardians of active students",
-  STUDENTS: "Active students with verified communication emails",
+  STUDENTS: "Reserved for future student communication contacts; students do not receive portal or email copies yet",
   TEACHERS: "Active teachers with portal accounts",
   ALUMNI: "Active alumni with verified communication emails",
+};
+
+const recipientTypeLabels: Record<"PARENT" | "STUDENT" | "TEACHER" | "ALUMNI", string> = {
+  PARENT: "Parents and guardians",
+  STUDENT: "Students",
+  TEACHER: "Teachers",
+  ALUMNI: "Alumni",
 };
 
 function messageFor(error: unknown) {
@@ -323,11 +330,11 @@ export default function DirectorCommunicationsPage() {
                 value={preview.verifiedEmailRecipients}
               />
 
-              <p className="rounded-2xl bg-amber-50 p-3 text-xs leading-5 text-amber-800">
-                {preview.withoutVerifiedEmail} recipients do not yet have a
-                verified primary email. They can still receive a portal copy
-                when they have a portal account.
-              </p>
+              <div className="space-y-2 rounded-2xl bg-slate-50 p-3 text-xs leading-5 text-slate-700">
+                {preview.deliveryByRecipientType.map((group) => <p key={group.recipientType}><strong>{recipientTypeLabels[group.recipientType]}</strong>: {group.totalRecipients} matching · {group.portalRecipients} portal · {group.verifiedEmailRecipients} verified email{group.withoutAnyDelivery ? ` · ${group.withoutAnyDelivery} with no available delivery method` : ""}.</p>)}
+              </div>
+
+              {preview.withoutAnyDelivery > 0 ? <p className="rounded-2xl bg-rose-50 p-3 text-xs leading-5 text-rose-800">{preview.withoutAnyDelivery} matching recipient{preview.withoutAnyDelivery === 1 ? " has" : "s have"} neither a portal copy nor a verified communication email and will not receive this message.</p> : <p className="rounded-2xl bg-emerald-50 p-3 text-xs leading-5 text-emerald-800">Every matching recipient has at least one available delivery method.</p>}
 
               <button
                 type="button"

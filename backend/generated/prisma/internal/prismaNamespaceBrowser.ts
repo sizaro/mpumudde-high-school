@@ -87,6 +87,7 @@ export const ModelName = {
   StudentCharge: 'StudentCharge',
   Notification: 'Notification',
   CommunicationContact: 'CommunicationContact',
+  RegistrationEmailVerification: 'RegistrationEmailVerification',
   SchoolCommunication: 'SchoolCommunication',
   CommunicationRecipient: 'CommunicationRecipient',
   Payment: 'Payment',
@@ -682,6 +683,26 @@ export const CommunicationContactScalarFieldEnum = {
 } as const
 
 export type CommunicationContactScalarFieldEnum = (typeof CommunicationContactScalarFieldEnum)[keyof typeof CommunicationContactScalarFieldEnum]
+
+
+export const RegistrationEmailVerificationScalarFieldEnum = {
+  id: 'id',
+  ownerType: 'ownerType',
+  email: 'email',
+  normalizedEmail: 'normalizedEmail',
+  verificationCodeHash: 'verificationCodeHash',
+  verificationExpiresAt: 'verificationExpiresAt',
+  verificationAttempts: 'verificationAttempts',
+  verificationRequestedAt: 'verificationRequestedAt',
+  verificationDeliveryStatus: 'verificationDeliveryStatus',
+  verificationDeliveryError: 'verificationDeliveryError',
+  verifiedAt: 'verifiedAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationEmailVerificationScalarFieldEnum = (typeof RegistrationEmailVerificationScalarFieldEnum)[keyof typeof RegistrationEmailVerificationScalarFieldEnum]
 
 
 export const SchoolCommunicationScalarFieldEnum = {

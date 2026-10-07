@@ -17,6 +17,10 @@ function generateTempPassword(length = 12): string {
   ).join("");
 }
 
+function sameEmail(left?: string | null, right?: string | null) {
+  return (left ?? "").trim().toLowerCase() === (right ?? "").trim().toLowerCase();
+}
+
 @Injectable()
 export class ParentsService {
   constructor(
@@ -49,6 +53,12 @@ export class ParentsService {
         "The same student cannot be linked more than once.",
       );
     }
+
+    await this.communications.assertVerifiedRegistrationEmail(
+      createParentDto.communicationEmailVerificationId,
+      "PARENT",
+      createParentDto.email,
+    );
 
     const shouldCreateLogin = createParentDto.createLoginAccount ?? false;
     const loginEmail = shouldCreateLogin
@@ -189,13 +199,11 @@ export class ParentsService {
     });
 
     const registeredParent = await this.findOne(createdId.id);
-    // Contact capture is intentionally best-effort. A guardian registration is
-    // never blocked because the supplied communication email is unavailable or
-    // needs verification later.
-    await this.communications.syncProfileEmail(
+    await this.communications.finalizeVerifiedRegistrationEmail(
+      createParentDto.communicationEmailVerificationId!,
       "PARENT",
       createdId.id,
-      registeredParent.email,
+      registeredParent.email!,
       uploadedByUserId,
     );
 
@@ -797,11 +805,21 @@ export class ParentsService {
     }
     const parent = await this.prisma.parent.findUnique({
       where: { id },
-      select: { id: true, isActive: true },
+      select: { id: true, isActive: true, email: true },
     });
     if (!parent) throw new NotFoundException("Parent profile not found.");
     if (!parent.isActive)
       throw new BadRequestException("Archived guardians cannot be edited.");
+
+    const communicationEmailChanged =
+      dto.email !== undefined && !sameEmail(parent.email, dto.email);
+    if (communicationEmailChanged) {
+      await this.communications.assertVerifiedRegistrationEmail(
+        dto.communicationEmailVerificationId,
+        "PARENT",
+        dto.email,
+      );
+    }
 
     await this.prisma.$transaction(async (tx) => {
       const students = await tx.student.findMany({
@@ -872,7 +890,17 @@ export class ParentsService {
       });
     });
     const updated = await this.findOne(id);
-    await this.communications.syncProfileEmail("PARENT", id, updated.email, changedByUserId);
+    if (communicationEmailChanged) {
+      await this.communications.finalizeVerifiedRegistrationEmail(
+        dto.communicationEmailVerificationId!,
+        "PARENT",
+        id,
+        updated.email!,
+        changedByUserId,
+      );
+    } else {
+      await this.communications.syncProfileEmail("PARENT", id, updated.email, changedByUserId);
+    }
     return updated;
   }
 
@@ -908,6 +936,17 @@ export class ParentsService {
       data.email = updateParentDto.email;
     }
 
+    const communicationEmailChanged =
+      updateParentDto.email !== undefined &&
+      !sameEmail(parent.email, updateParentDto.email);
+    if (communicationEmailChanged) {
+      await this.communications.assertVerifiedRegistrationEmail(
+        updateParentDto.communicationEmailVerificationId,
+        "PARENT",
+        updateParentDto.email,
+      );
+    }
+
     const updated = await this.prisma.parent.update({
       where: { id: parent.id },
       data,
@@ -917,7 +956,16 @@ export class ParentsService {
         },
       },
     });
-    await this.communications.syncProfileEmail("PARENT", updated.id, updated.email);
+    if (communicationEmailChanged) {
+      await this.communications.finalizeVerifiedRegistrationEmail(
+        updateParentDto.communicationEmailVerificationId!,
+        "PARENT",
+        updated.id,
+        updated.email!,
+      );
+    } else {
+      await this.communications.syncProfileEmail("PARENT", updated.id, updated.email);
+    }
     return updated;
   }
 

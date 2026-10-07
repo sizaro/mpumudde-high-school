@@ -198,6 +198,11 @@ export type Notification = Prisma.NotificationModel
  */
 export type CommunicationContact = Prisma.CommunicationContactModel
 /**
+ * Model RegistrationEmailVerification
+ * 
+ */
+export type RegistrationEmailVerification = Prisma.RegistrationEmailVerificationModel
+/**
  * Model SchoolCommunication
  * 
  */

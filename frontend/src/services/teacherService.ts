@@ -11,6 +11,7 @@ export interface TeacherPersonal {
   nationality?: string;
   address?: string;
   profilePhoto?: string;
+  communicationEmailVerificationId?: string;
 }
 
 export interface EmploymentInfo {

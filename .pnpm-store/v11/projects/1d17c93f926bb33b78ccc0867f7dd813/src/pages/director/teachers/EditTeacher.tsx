@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TeacherService from "../../../services/teacherService";
+import VerifiedCommunicationEmailField from "../../../components/forms/VerifiedCommunicationEmailField";
 
 export default function EditTeacher() {
   const { id } = useParams<{ id: string }>();
@@ -11,6 +12,7 @@ export default function EditTeacher() {
   const [tab, setTab] = useState<"personal" | "employment">("personal");
 
   const [personal, setPersonal] = useState({ firstName: "", middleName: "", lastName: "", gender: "", dateOfBirth: "", phone: "", email: "", nationality: "", address: "" });
+  const [communicationEmailVerificationId, setCommunicationEmailVerificationId] = useState<string | undefined>();
   const [employment, setEmployment] = useState({ employeeNumber: "", position: "", department: "", employmentType: "", employmentDate: "", salary: "", status: "active" });
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export default function EditTeacher() {
   async function savePersonal() {
     if (!id) return;
     setSaving(true); setError("");
-    try { await TeacherService.updatePersonal(id, personal); navigate(`/director/teachers/${id}`); }
+    try { await TeacherService.updatePersonal(id, { ...personal, communicationEmailVerificationId }); navigate(`/director/teachers/${id}`); }
     catch (e: any) { setError(e?.response?.data?.message ?? "Save failed"); }
     finally { setSaving(false); }
   }
@@ -56,7 +58,7 @@ export default function EditTeacher() {
       {tab === "personal" && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            {(["firstName", "middleName", "lastName", "gender", "dateOfBirth", "phone", "email", "nationality"] as const).map((f) => (
+            {(["firstName", "middleName", "lastName", "gender", "dateOfBirth", "phone", "nationality"] as const).map((f) => (
               <div key={f}>
                 <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">{f.replace(/([A-Z])/g, " $1")}</label>
                 {f === "gender" ? (
@@ -68,6 +70,7 @@ export default function EditTeacher() {
                 )}
               </div>
             ))}
+            <VerifiedCommunicationEmailField ownerType="TEACHER" existingOwnerId={id} email={personal.email} onEmailChange={(email) => { setPersonal((current) => ({ ...current, email })); setCommunicationEmailVerificationId(undefined); }} verificationId={communicationEmailVerificationId} onVerificationChange={(next) => setCommunicationEmailVerificationId(next)} />
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
               <input value={personal.address} onChange={(e) => setPersonal((p) => ({ ...p, address: e.target.value }))} className="w-full border border-gray-300 rounded px-3 py-2" />

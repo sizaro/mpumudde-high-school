@@ -28,6 +28,10 @@ export class CreateParentDto {
 
   @IsOptional()
   @IsString()
+  communicationEmailVerificationId?: string;
+
+  @IsOptional()
+  @IsString()
   address?: string;
 
   @IsOptional()

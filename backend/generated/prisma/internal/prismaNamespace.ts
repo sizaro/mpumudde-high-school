@@ -420,6 +420,7 @@ export const ModelName = {
   StudentCharge: 'StudentCharge',
   Notification: 'Notification',
   CommunicationContact: 'CommunicationContact',
+  RegistrationEmailVerification: 'RegistrationEmailVerification',
   SchoolCommunication: 'SchoolCommunication',
   CommunicationRecipient: 'CommunicationRecipient',
   Payment: 'Payment',
@@ -441,7 +442,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "teacherEmployment" | "subject" | "teacherAssignment" | "medicalInformation" | "emergencyContact" | "document" | "documentCategory" | "qualification" | "attendanceSession" | "attendanceRecord" | "parent" | "student" | "studentNumberSequence" | "studentParent" | "alumni" | "alumniRegistrationSession" | "academicYear" | "term" | "schoolClass" | "academicYearClass" | "classSubject" | "studentEnrollment" | "studentCategory" | "feeType" | "financeStructure" | "studentTermFee" | "studentCharge" | "notification" | "communicationContact" | "schoolCommunication" | "communicationRecipient" | "payment" | "paymentAudit" | "expense" | "otherIncome"
+    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "teacherEmployment" | "subject" | "teacherAssignment" | "medicalInformation" | "emergencyContact" | "document" | "documentCategory" | "qualification" | "attendanceSession" | "attendanceRecord" | "parent" | "student" | "studentNumberSequence" | "studentParent" | "alumni" | "alumniRegistrationSession" | "academicYear" | "term" | "schoolClass" | "academicYearClass" | "classSubject" | "studentEnrollment" | "studentCategory" | "feeType" | "financeStructure" | "studentTermFee" | "studentCharge" | "notification" | "communicationContact" | "registrationEmailVerification" | "schoolCommunication" | "communicationRecipient" | "payment" | "paymentAudit" | "expense" | "otherIncome"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3109,6 +3110,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RegistrationEmailVerification: {
+      payload: Prisma.$RegistrationEmailVerificationPayload<ExtArgs>
+      fields: Prisma.RegistrationEmailVerificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RegistrationEmailVerificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RegistrationEmailVerificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload>
+        }
+        findFirst: {
+          args: Prisma.RegistrationEmailVerificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RegistrationEmailVerificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload>
+        }
+        findMany: {
+          args: Prisma.RegistrationEmailVerificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload>[]
+        }
+        create: {
+          args: Prisma.RegistrationEmailVerificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload>
+        }
+        createMany: {
+          args: Prisma.RegistrationEmailVerificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RegistrationEmailVerificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload>[]
+        }
+        delete: {
+          args: Prisma.RegistrationEmailVerificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload>
+        }
+        update: {
+          args: Prisma.RegistrationEmailVerificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.RegistrationEmailVerificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RegistrationEmailVerificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RegistrationEmailVerificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.RegistrationEmailVerificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationEmailVerificationPayload>
+        }
+        aggregate: {
+          args: Prisma.RegistrationEmailVerificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRegistrationEmailVerification>
+        }
+        groupBy: {
+          args: Prisma.RegistrationEmailVerificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistrationEmailVerificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RegistrationEmailVerificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistrationEmailVerificationCountAggregateOutputType> | number
+        }
+      }
+    }
     SchoolCommunication: {
       payload: Prisma.$SchoolCommunicationPayload<ExtArgs>
       fields: Prisma.SchoolCommunicationFieldRefs
@@ -4165,6 +4240,26 @@ export const CommunicationContactScalarFieldEnum = {
 export type CommunicationContactScalarFieldEnum = (typeof CommunicationContactScalarFieldEnum)[keyof typeof CommunicationContactScalarFieldEnum]
 
 
+export const RegistrationEmailVerificationScalarFieldEnum = {
+  id: 'id',
+  ownerType: 'ownerType',
+  email: 'email',
+  normalizedEmail: 'normalizedEmail',
+  verificationCodeHash: 'verificationCodeHash',
+  verificationExpiresAt: 'verificationExpiresAt',
+  verificationAttempts: 'verificationAttempts',
+  verificationRequestedAt: 'verificationRequestedAt',
+  verificationDeliveryStatus: 'verificationDeliveryStatus',
+  verificationDeliveryError: 'verificationDeliveryError',
+  verifiedAt: 'verifiedAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationEmailVerificationScalarFieldEnum = (typeof RegistrationEmailVerificationScalarFieldEnum)[keyof typeof RegistrationEmailVerificationScalarFieldEnum]
+
+
 export const SchoolCommunicationScalarFieldEnum = {
   id: 'id',
   senderUserId: 'senderUserId',
@@ -4563,6 +4658,7 @@ export type GlobalOmitConfig = {
   studentCharge?: Prisma.StudentChargeOmit
   notification?: Prisma.NotificationOmit
   communicationContact?: Prisma.CommunicationContactOmit
+  registrationEmailVerification?: Prisma.RegistrationEmailVerificationOmit
   schoolCommunication?: Prisma.SchoolCommunicationOmit
   communicationRecipient?: Prisma.CommunicationRecipientOmit
   payment?: Prisma.PaymentOmit

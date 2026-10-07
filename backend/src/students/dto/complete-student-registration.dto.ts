@@ -20,6 +20,7 @@ export class CompleteStudentRegistrationDto {
     relationship?: string;
     phone?: string;
     email?: string;
+    communicationEmailVerificationId?: string;
     occupation?: string;
     address?: string;
     profilePhoto?: string;

@@ -44,6 +44,10 @@ function loginEmailBase(firstName: string, lastName: string): string {
   return `${normalize(firstName)}.${normalize(lastName)}`;
 }
 
+function sameEmail(left?: string | null, right?: string | null) {
+  return (left ?? "").trim().toLowerCase() === (right ?? "").trim().toLowerCase();
+}
+
 const TEACHER_INCLUDE = {
   user: { select: { id: true, email: true, isActive: true } },
   employment: true,
@@ -102,6 +106,11 @@ export class TeachersService {
   }
 
   async createWithAccount(personalDto: CreateTeacherDto) {
+    await this.communications.assertVerifiedRegistrationEmail(
+      personalDto.communicationEmailVerificationId,
+      "TEACHER",
+      personalDto.email,
+    );
     const loginEmail = await this.generateLoginEmail(
       personalDto.firstName,
       personalDto.lastName,
@@ -144,7 +153,12 @@ export class TeachersService {
       include: TEACHER_INCLUDE,
     });
 
-    await this.communications.syncProfileEmail("TEACHER", teacher.id, teacher.email);
+    await this.communications.finalizeVerifiedRegistrationEmail(
+      personalDto.communicationEmailVerificationId!,
+      "TEACHER",
+      teacher.id,
+      teacher.email!,
+    );
     return { teacher, temporaryPassword: tempPassword };
   }
 
@@ -160,9 +174,15 @@ export class TeachersService {
       medical,
       documents = [],
     } = registration;
+    const { communicationEmailVerificationId, ...teacherPersonal } = personal;
+    await this.communications.assertVerifiedRegistrationEmail(
+      communicationEmailVerificationId,
+      "TEACHER",
+      teacherPersonal.email,
+    );
     const loginEmail = await this.generateLoginEmail(
-      personal.firstName,
-      personal.lastName,
+      teacherPersonal.firstName,
+      teacherPersonal.lastName,
     );
     const role = await this.prisma.role.findFirst({
       where: { name: "TEACHER" },
@@ -182,9 +202,9 @@ export class TeachersService {
       async (tx) => {
         const created = await tx.teacher.create({
           data: {
-            ...personal,
-            dateOfBirth: personal.dateOfBirth
-              ? new Date(personal.dateOfBirth)
+            ...teacherPersonal,
+            dateOfBirth: teacherPersonal.dateOfBirth
+              ? new Date(teacherPersonal.dateOfBirth)
               : undefined,
             user: {
               create: {
@@ -247,7 +267,13 @@ export class TeachersService {
       { maxWait: 10_000, timeout: 20_000 },
     );
 
-    await this.communications.syncProfileEmail("TEACHER", teacher.id, teacher.email, uploadedByUserId);
+    await this.communications.finalizeVerifiedRegistrationEmail(
+      communicationEmailVerificationId!,
+      "TEACHER",
+      teacher.id,
+      teacher.email!,
+      uploadedByUserId,
+    );
     return { teacher, temporaryPassword: tempPassword };
   }
 
@@ -407,7 +433,20 @@ export class TeachersService {
   }
 
   async updatePersonal(id: string, dto: UpdateTeacherDto) {
-    await this.assertExists(id);
+    const current = await this.prisma.teacher.findUnique({
+      where: { id },
+      select: { id: true, email: true },
+    });
+    if (!current) throw new NotFoundException("Teacher not found");
+    const communicationEmailChanged =
+      dto.email !== undefined && !sameEmail(current.email, dto.email);
+    if (communicationEmailChanged) {
+      await this.communications.assertVerifiedRegistrationEmail(
+        dto.communicationEmailVerificationId,
+        "TEACHER",
+        dto.email,
+      );
+    }
     const data: Record<string, unknown> = {};
     if (dto.firstName !== undefined) data.firstName = dto.firstName;
     if (dto.middleName !== undefined) data.middleName = dto.middleName;
@@ -425,7 +464,16 @@ export class TeachersService {
       data,
       include: TEACHER_INCLUDE,
     });
-    await this.communications.syncProfileEmail("TEACHER", updated.id, updated.email);
+    if (communicationEmailChanged) {
+      await this.communications.finalizeVerifiedRegistrationEmail(
+        dto.communicationEmailVerificationId!,
+        "TEACHER",
+        updated.id,
+        updated.email!,
+      );
+    } else {
+      await this.communications.syncProfileEmail("TEACHER", updated.id, updated.email);
+    }
     return updated;
   }
 
