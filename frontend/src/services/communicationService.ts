@@ -47,6 +47,27 @@ export type SchoolCommunication = {
   };
 };
 
+export type CommunicationRecipient = {
+  id: string;
+  recipientType: "PARENT" | "STUDENT" | "TEACHER" | "ALUMNI";
+  recipientId: string;
+  portalUserId?: string | null;
+  emailAddress?: string | null;
+  portalStatus: string;
+  emailStatus: string;
+  emailError?: string | null;
+  deliveredAt?: string | null;
+  portalNotification?: {
+    id: string;
+    isRead: boolean;
+    readAt?: string | null;
+  } | null;
+};
+
+export type SchoolCommunicationDetail = SchoolCommunication & {
+  recipients: CommunicationRecipient[];
+};
+
 export type CommunicationContact = {
   id: string;
   ownerType: "PARENT" | "TEACHER" | "STUDENT" | "ALUMNI";
@@ -90,6 +111,14 @@ class CommunicationService {
 
   async list(): Promise<SchoolCommunication[]> {
     const { data } = await api.get<SchoolCommunication[]>("/communications");
+
+    return data;
+  }
+
+  async get(id: string): Promise<SchoolCommunicationDetail> {
+    const { data } = await api.get<SchoolCommunicationDetail>(
+      `/communications/${id}`,
+    );
 
     return data;
   }

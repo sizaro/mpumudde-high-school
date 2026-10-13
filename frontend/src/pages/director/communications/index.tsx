@@ -9,6 +9,7 @@ import { CheckCircle2, MailCheck, Send, UsersRound } from "lucide-react";
 import SetupService, { type SchoolClass } from "../../../services/setupService";
 import CommunicationService, {
   type CommunicationAudience,
+  type SchoolCommunicationDetail,
   type CommunicationPreview,
   type SchoolCommunication,
 } from "../../../services/communicationService";
@@ -62,10 +63,13 @@ export default function DirectorCommunicationsPage() {
   const [classes, setClasses] = useState<SchoolClass[]>([]);
   const [preview, setPreview] = useState<CommunicationPreview | null>(null);
   const [history, setHistory] = useState<SchoolCommunication[]>([]);
+  const [selectedCommunication, setSelectedCommunication] =
+    useState<SchoolCommunicationDetail | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [reviewing, setReviewing] = useState(false);
   const [sending, setSending] = useState(false);
+  const [loadingDeliveryId, setLoadingDeliveryId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState("");
 
   const classFilterApplies =
@@ -160,6 +164,19 @@ export default function DirectorCommunicationsPage() {
       setFeedback(messageFor(error));
     } finally {
       setSending(false);
+    }
+  };
+
+  const viewDelivery = async (id: string) => {
+    setLoadingDeliveryId(id);
+    setFeedback("");
+
+    try {
+      setSelectedCommunication(await CommunicationService.get(id));
+    } catch (error) {
+      setFeedback(messageFor(error));
+    } finally {
+      setLoadingDeliveryId(null);
     }
   };
 
@@ -379,15 +396,17 @@ export default function DirectorCommunicationsPage() {
 
                 <th className="px-6 py-3">Recipients</th>
 
-                <th className="px-6 py-3">Sent</th>
+                    <th className="px-6 py-3">Sent</th>
+
+                    <th className="px-6 py-3">Delivery</th>
               </tr>
             </thead>
 
             <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td
-                    colSpan={4}
+                    <td
+                      colSpan={5}
                     className="px-6 py-8 text-center text-slate-500"
                   >
                     Loading school communication history...
@@ -395,37 +414,19 @@ export default function DirectorCommunicationsPage() {
                 </tr>
               ) : history.length ? (
                 history.map((item) => (
-                  <tr key={item.id}>
-                    <td className="max-w-md px-6 py-4">
-                      <p className="font-semibold text-slate-800">
-                        {item.subject}
-                      </p>
-
-                      <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
-                        {item.message}
-                      </p>
-                    </td>
-
-                    <td className="px-6 py-4 text-slate-600">
-                      {audienceLabels[item.audience as CommunicationAudience] ??
-                        item.audience}
-                    </td>
-
-                    <td className="px-6 py-4 font-semibold text-slate-800">
-                      {item._count?.recipients ?? 0}
-                    </td>
-
-                    <td className="whitespace-nowrap px-6 py-4 text-slate-500">
-                      {item.sentAt
-                        ? new Date(item.sentAt).toLocaleString()
-                        : "—"}
-                    </td>
-                  </tr>
+                  <HistoryRow
+                    key={item.id}
+                    item={item}
+                    selected={selectedCommunication?.id === item.id}
+                    detail={selectedCommunication?.id === item.id ? selectedCommunication : null}
+                    loading={loadingDeliveryId === item.id}
+                    onView={() => void viewDelivery(item.id)}
+                  />
                 ))
               ) : (
                 <tr>
                   <td
-                    colSpan={4}
+                    colSpan={5}
                     className="px-6 py-10 text-center text-slate-500"
                   >
                     No official communications have been sent yet.
@@ -438,6 +439,50 @@ export default function DirectorCommunicationsPage() {
       </section>
     </div>
   );
+}
+
+function HistoryRow({
+  item,
+  selected,
+  detail,
+  loading,
+  onView,
+}: {
+  item: SchoolCommunication;
+  selected: boolean;
+  detail: SchoolCommunicationDetail | null;
+  loading: boolean;
+  onView: () => void;
+}) {
+  return <>
+    <tr>
+      <td className="max-w-md px-6 py-4">
+        <p className="font-semibold text-slate-800">{item.subject}</p>
+        <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">{item.message}</p>
+      </td>
+      <td className="px-6 py-4 text-slate-600">{audienceLabels[item.audience as CommunicationAudience] ?? item.audience}</td>
+      <td className="px-6 py-4 font-semibold text-slate-800">{item._count?.recipients ?? 0}</td>
+      <td className="whitespace-nowrap px-6 py-4 text-slate-500">{item.sentAt ? new Date(item.sentAt).toLocaleString() : "—"}</td>
+      <td className="px-6 py-4"><button type="button" onClick={onView} disabled={loading} className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50">{loading ? "Loading…" : selected ? "Refresh" : "View delivery"}</button></td>
+    </tr>
+    {selected && detail && <tr>
+      <td colSpan={5} className="bg-slate-50 px-6 py-5">
+        <DeliveryDetails recipients={detail.recipients} />
+      </td>
+    </tr>}
+  </>;
+}
+
+function DeliveryDetails({ recipients }: { recipients: SchoolCommunicationDetail["recipients"] }) {
+  const counts = recipients.reduce<Record<string, number>>((current, recipient) => {
+    current[recipient.emailStatus] = (current[recipient.emailStatus] ?? 0) + 1;
+    return current;
+  }, {});
+
+  return <div>
+    <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-semibold text-slate-900">Delivery status</h3><p className="mt-1 text-xs text-slate-500">One row represents one person, even where that person received both portal and email delivery.</p></div><div className="flex flex-wrap gap-2 text-xs font-semibold">{Object.entries(counts).map(([status, count]) => <span key={status} className="rounded-full bg-white px-3 py-1 text-slate-700 shadow-sm">Email {status.toLowerCase()}: {count}</span>)}</div></div>
+    <div className="mt-4 overflow-x-auto"><table className="min-w-full text-left text-xs"><thead className="text-slate-500"><tr><th className="pb-2 pr-4">Recipient</th><th className="pb-2 pr-4">Email</th><th className="pb-2 pr-4">Portal</th><th className="pb-2 pr-4">Email status</th><th className="pb-2">Details</th></tr></thead><tbody className="divide-y divide-slate-200">{recipients.map((recipient) => <tr key={recipient.id}><td className="py-3 pr-4 font-semibold text-slate-700">{recipientTypeLabels[recipient.recipientType]}</td><td className="py-3 pr-4 text-slate-600">{recipient.emailAddress ?? "No verified email"}</td><td className="py-3 pr-4 text-slate-600">{recipient.portalStatus}{recipient.portalNotification?.isRead ? " · Read" : ""}</td><td className="py-3 pr-4 text-slate-600">{recipient.emailStatus}</td><td className="py-3 text-slate-600">{recipient.emailError ?? (recipient.deliveredAt ? `Delivered ${new Date(recipient.deliveredAt).toLocaleString()}` : "—")}</td></tr>)}</tbody></table></div>
+  </div>;
 }
 
 function Metric({

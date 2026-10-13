@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 
@@ -32,6 +33,7 @@ type RecipientCandidate = {
 
 @Injectable()
 export class CommunicationsService {
+  private readonly logger = new Logger(CommunicationsService.name);
   private readonly verificationLifetimeMs = 15 * 60 * 1000;
   private readonly verificationResendCooldownMs = 60 * 1000;
   private readonly maximumVerificationAttempts = 5;
@@ -498,6 +500,11 @@ export class CommunicationsService {
             },
           },
         },
+        _count: {
+          select: {
+            recipients: true,
+          },
+        },
       },
     });
 
@@ -580,17 +587,26 @@ export class CommunicationsService {
       return created;
     });
 
-    // Network delivery happens only after the official record and portal copies
-    // are safely committed. A provider failure is visible on each recipient and
-    // never erases the school's communication history.
-    await this.deliverCommunicationEmails(
+    // The official record and portal copies are committed before external email
+    // delivery begins. Return that record immediately so the Director sees it in
+    // history without waiting for one slow recipient mailbox. Each recipient
+    // starts as PENDING and is updated to SENT, FAILED, or NOT_CONFIGURED by the
+    // delivery task below.
+    const savedCommunication = await this.getSchoolCommunication(communication.id);
+
+    void this.deliverCommunicationEmails(
       communication.id,
       subject,
       message,
       candidates,
-    );
+    ).catch((error: unknown) => {
+      const detail = error instanceof Error ? error.message : "Unknown email delivery error.";
+      this.logger.error(
+        `Email delivery follow-up failed for communication ${communication.id}: ${detail}`,
+      );
+    });
 
-    return this.getSchoolCommunication(communication.id);
+    return savedCommunication;
   }
 
   async previewSchoolCommunication(dto: SendSchoolCommunicationDto) {
