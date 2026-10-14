@@ -422,6 +422,7 @@ export const ModelName = {
   CommunicationContact: 'CommunicationContact',
   RegistrationEmailVerification: 'RegistrationEmailVerification',
   SchoolCommunication: 'SchoolCommunication',
+  CommunicationTestEmail: 'CommunicationTestEmail',
   CommunicationRecipient: 'CommunicationRecipient',
   Payment: 'Payment',
   PaymentAudit: 'PaymentAudit',
@@ -442,7 +443,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "teacherEmployment" | "subject" | "teacherAssignment" | "medicalInformation" | "emergencyContact" | "document" | "documentCategory" | "qualification" | "attendanceSession" | "attendanceRecord" | "parent" | "student" | "studentNumberSequence" | "studentParent" | "alumni" | "alumniRegistrationSession" | "academicYear" | "term" | "schoolClass" | "academicYearClass" | "classSubject" | "studentEnrollment" | "studentCategory" | "feeType" | "financeStructure" | "studentTermFee" | "studentCharge" | "notification" | "communicationContact" | "registrationEmailVerification" | "schoolCommunication" | "communicationRecipient" | "payment" | "paymentAudit" | "expense" | "otherIncome"
+    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "teacherEmployment" | "subject" | "teacherAssignment" | "medicalInformation" | "emergencyContact" | "document" | "documentCategory" | "qualification" | "attendanceSession" | "attendanceRecord" | "parent" | "student" | "studentNumberSequence" | "studentParent" | "alumni" | "alumniRegistrationSession" | "academicYear" | "term" | "schoolClass" | "academicYearClass" | "classSubject" | "studentEnrollment" | "studentCategory" | "feeType" | "financeStructure" | "studentTermFee" | "studentCharge" | "notification" | "communicationContact" | "registrationEmailVerification" | "schoolCommunication" | "communicationTestEmail" | "communicationRecipient" | "payment" | "paymentAudit" | "expense" | "otherIncome"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3258,6 +3259,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CommunicationTestEmail: {
+      payload: Prisma.$CommunicationTestEmailPayload<ExtArgs>
+      fields: Prisma.CommunicationTestEmailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CommunicationTestEmailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CommunicationTestEmailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload>
+        }
+        findFirst: {
+          args: Prisma.CommunicationTestEmailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CommunicationTestEmailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload>
+        }
+        findMany: {
+          args: Prisma.CommunicationTestEmailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload>[]
+        }
+        create: {
+          args: Prisma.CommunicationTestEmailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload>
+        }
+        createMany: {
+          args: Prisma.CommunicationTestEmailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CommunicationTestEmailCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload>[]
+        }
+        delete: {
+          args: Prisma.CommunicationTestEmailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload>
+        }
+        update: {
+          args: Prisma.CommunicationTestEmailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload>
+        }
+        deleteMany: {
+          args: Prisma.CommunicationTestEmailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CommunicationTestEmailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CommunicationTestEmailUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload>[]
+        }
+        upsert: {
+          args: Prisma.CommunicationTestEmailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunicationTestEmailPayload>
+        }
+        aggregate: {
+          args: Prisma.CommunicationTestEmailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCommunicationTestEmail>
+        }
+        groupBy: {
+          args: Prisma.CommunicationTestEmailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommunicationTestEmailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CommunicationTestEmailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommunicationTestEmailCountAggregateOutputType> | number
+        }
+      }
+    }
     CommunicationRecipient: {
       payload: Prisma.$CommunicationRecipientPayload<ExtArgs>
       fields: Prisma.CommunicationRecipientFieldRefs
@@ -4267,6 +4342,9 @@ export const SchoolCommunicationScalarFieldEnum = {
   message: 'message',
   audience: 'audience',
   targeting: 'targeting',
+  format: 'format',
+  contentDocument: 'contentDocument',
+  templateVersion: 'templateVersion',
   status: 'status',
   sentAt: 'sentAt',
   createdAt: 'createdAt',
@@ -4274,6 +4352,18 @@ export const SchoolCommunicationScalarFieldEnum = {
 } as const
 
 export type SchoolCommunicationScalarFieldEnum = (typeof SchoolCommunicationScalarFieldEnum)[keyof typeof SchoolCommunicationScalarFieldEnum]
+
+
+export const CommunicationTestEmailScalarFieldEnum = {
+  id: 'id',
+  senderUserId: 'senderUserId',
+  recipientEmail: 'recipientEmail',
+  status: 'status',
+  error: 'error',
+  createdAt: 'createdAt'
+} as const
+
+export type CommunicationTestEmailScalarFieldEnum = (typeof CommunicationTestEmailScalarFieldEnum)[keyof typeof CommunicationTestEmailScalarFieldEnum]
 
 
 export const CommunicationRecipientScalarFieldEnum = {
@@ -4660,6 +4750,7 @@ export type GlobalOmitConfig = {
   communicationContact?: Prisma.CommunicationContactOmit
   registrationEmailVerification?: Prisma.RegistrationEmailVerificationOmit
   schoolCommunication?: Prisma.SchoolCommunicationOmit
+  communicationTestEmail?: Prisma.CommunicationTestEmailOmit
   communicationRecipient?: Prisma.CommunicationRecipientOmit
   payment?: Prisma.PaymentOmit
   paymentAudit?: Prisma.PaymentAuditOmit

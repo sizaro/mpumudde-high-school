@@ -1,506 +1,145 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-  type FormEvent,
-  type ReactNode,
-} from "react";
-import { CheckCircle2, MailCheck, Send, UsersRound } from "lucide-react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { CheckCircle2, ChevronDown, Eye, FileText, ImagePlus, Link2, List, MailPlus, Plus, Save, Send, Trash2, UsersRound, Video } from "lucide-react";
 import SetupService, { type SchoolClass } from "../../../services/setupService";
-import CommunicationService, {
-  type CommunicationAudience,
-  type SchoolCommunicationDetail,
-  type CommunicationPreview,
-  type SchoolCommunication,
-} from "../../../services/communicationService";
+import CommunicationService, { type CommunicationAudience, type CommunicationBlock, type CommunicationContentDocument, type CommunicationFormat, type CommunicationPreview, type SchoolCommunication, type SchoolCommunicationDetail } from "../../../services/communicationService";
 
-const audienceLabels: Record<CommunicationAudience, string> = {
-  EVERYONE: "Everyone",
-  PARENTS: "Parents and guardians",
-  STUDENTS: "Students",
-  TEACHERS: "Teachers",
-  ALUMNI: "Alumni",
+const audienceLabels: Record<CommunicationAudience, string> = { EVERYONE: "Everyone", PARENTS: "Parents and guardians", STUDENTS: "Students", TEACHERS: "Teachers", ALUMNI: "Alumni" };
+const formats: Array<{ value: CommunicationFormat; label: string; hint: string }> = [
+  { value: "ANNOUNCEMENT", label: "Announcement", hint: "Short official notice or update." },
+  { value: "NEWSLETTER", label: "Newsletter", hint: "Multiple stories, sections, pictures and links." },
+  { value: "INVITATION", label: "Invitation", hint: "Meeting, event or reunion with RSVP details." },
+  { value: "REMINDER", label: "Reminder", hint: "Clear, time-sensitive deadline or activity." },
+];
+const emptyDocument = (): CommunicationContentDocument => ({ version: 1, blocks: [] });
+const meaningfulBlock = (block: CommunicationBlock) => {
+  switch (block.type) {
+    case "heading": case "paragraph": return Boolean(block.text.trim());
+    case "list": return block.items.some((item) => item.trim());
+    case "image": return Boolean(block.url.trim() && block.alt.trim());
+    case "button": return Boolean(block.label.trim() && block.url.trim());
+    case "section": return Boolean(block.heading.trim());
+    case "event": return Boolean(block.title.trim() && block.date.trim());
+    case "video": return Boolean(block.url.trim() && block.title.trim());
+    case "divider": return true;
+  }
 };
-
-const audienceDescriptions: Record<CommunicationAudience, string> = {
-  EVERYONE: "Parents, students, teachers, and alumni",
-  PARENTS: "Parents and guardians of active students",
-  STUDENTS: "Reserved for future student communication contacts; students do not receive portal or email copies yet",
-  TEACHERS: "Active teachers with portal accounts",
-  ALUMNI: "Active alumni with verified communication emails",
+const incompleteBlockMessage = (block: CommunicationBlock): string | null => {
+  const hasValue = (value?: string) => Boolean(value?.trim());
+  switch (block.type) {
+    case "image": return (hasValue(block.url) || hasValue(block.alt) || hasValue(block.caption)) && !meaningfulBlock(block) ? "Upload an image or add its HTTPS link, then provide alternative text." : null;
+    case "button": return (hasValue(block.label) || hasValue(block.url)) && !meaningfulBlock(block) ? "Complete both the button label and its HTTPS link." : null;
+    case "event": return (hasValue(block.title) || hasValue(block.date) || hasValue(block.time) || hasValue(block.location) || hasValue(block.description) || hasValue(block.rsvpUrl)) && !meaningfulBlock(block) ? "Complete the event title and date." : null;
+    case "video": return (hasValue(block.title) || hasValue(block.url) || hasValue(block.thumbnailUrl)) && !meaningfulBlock(block) ? "Complete the video title and a YouTube, Vimeo, or uploaded school-video URL." : null;
+    case "section": return hasValue(block.body) && !meaningfulBlock(block) ? "Give the newsletter section a heading." : null;
+    default: return null;
+  }
 };
+const cleanedDocument = (document: CommunicationContentDocument): CommunicationContentDocument => ({
+  version: 1,
+  blocks: document.blocks.map((block) => block.type === "list" ? { ...block, items: block.items.filter((item) => item.trim()) } : block).filter(meaningfulBlock),
+});const recipientLabels: Record<string, string> = { PARENT: "Parents", STUDENT: "Students", TEACHER: "Teachers", ALUMNI: "Alumni" };
 
-const recipientTypeLabels: Record<"PARENT" | "STUDENT" | "TEACHER" | "ALUMNI", string> = {
-  PARENT: "Parents and guardians",
-  STUDENT: "Students",
-  TEACHER: "Teachers",
-  ALUMNI: "Alumni",
-};
-
-function messageFor(error: unknown) {
-  const response = error as {
-    response?: {
-      data?: {
-        message?: string | string[];
-      };
-    };
-  };
-
-  const message = response.response?.data?.message;
-
-  return Array.isArray(message)
-    ? message.join(" ")
-    : message || "Unable to complete this communication action.";
+function errorText(error: unknown) {
+  const data = (error as { response?: { data?: { message?: string | string[] } } }).response?.data;
+  return Array.isArray(data?.message) ? data.message.join(" ") : data?.message || "Unable to complete this communication action.";
 }
 
 export default function DirectorCommunicationsPage() {
   const [audience, setAudience] = useState<CommunicationAudience>("PARENTS");
-
-  const [classId, setClassId] = useState("");
+  const [format, setFormat] = useState<CommunicationFormat>("ANNOUNCEMENT");
   const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-
+  const [classId, setClassId] = useState("");
+  const [document, setDocument] = useState<CommunicationContentDocument>(emptyDocument);
   const [classes, setClasses] = useState<SchoolClass[]>([]);
   const [preview, setPreview] = useState<CommunicationPreview | null>(null);
+  const [renderedHtml, setRenderedHtml] = useState("");
   const [history, setHistory] = useState<SchoolCommunication[]>([]);
-  const [selectedCommunication, setSelectedCommunication] =
-    useState<SchoolCommunicationDetail | null>(null);
-
+  const [drafts, setDrafts] = useState<SchoolCommunication[]>([]);
+  const [activeDraftId, setActiveDraftId] = useState<string | null>(null);
+  const [detail, setDetail] = useState<SchoolCommunicationDetail | null>(null);
+  const [testAddress, setTestAddress] = useState("");
+  const [busy, setBusy] = useState<"review" | "preview" | "save" | "send" | "test" | null>(null);
   const [loading, setLoading] = useState(true);
-  const [reviewing, setReviewing] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [loadingDeliveryId, setLoadingDeliveryId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState("");
 
-  const classFilterApplies =
-    audience === "EVERYONE" ||
-    audience === "PARENTS" ||
-    audience === "STUDENTS";
+  const classFilterApplies = audience === "EVERYONE" || audience === "PARENTS" || audience === "STUDENTS";
+  const payload = useMemo(() => ({ audience, subject: subject.trim(), format, contentDocument: cleanedDocument(document), ...(classFilterApplies && classId ? { classId } : {}) }), [audience, classFilterApplies, classId, document.blocks, format, subject]);
 
-  const payload = useMemo(
-    () => ({
-      audience,
-      subject: subject.trim(),
-      message: message.trim(),
-      ...(classFilterApplies && classId ? { classId } : {}),
-    }),
-    [audience, classFilterApplies, classId, message, subject],
-  );
-
-  const load = async () => {
+  async function load() {
     setLoading(true);
-
     try {
-      const [schoolClasses, records] = await Promise.all([
-        SetupService.getClasses(),
-        CommunicationService.list(),
-      ]);
+      const [schoolClasses, sent, savedDrafts] = await Promise.all([SetupService.getClasses(), CommunicationService.list(), CommunicationService.listDrafts()]);
+      setClasses(schoolClasses); setHistory(sent); setDrafts(savedDrafts);
+    } catch (error) { setFeedback(errorText(error)); } finally { setLoading(false); }
+  }
+  useEffect(() => { void load(); }, []);
 
-      setClasses(schoolClasses.filter((item) => item.isActive));
-
-      setHistory(records);
-    } catch (error) {
-      setFeedback(messageFor(error));
-    } finally {
-      setLoading(false);
-    }
+  const resetComposer = () => {
+    setAudience("PARENTS"); setFormat("ANNOUNCEMENT"); setSubject(""); setClassId("");
+    setDocument(emptyDocument()); setActiveDraftId(null); setPreview(null); setRenderedHtml("");
+  };  const updateBlock = (index: number, patch: Partial<CommunicationBlock>) => { setFeedback(""); setDocument((current) => ({ ...current, blocks: current.blocks.map((block, blockIndex) => blockIndex === index ? ({ ...block, ...patch } as CommunicationBlock) : block) })); };
+  const removeBlock = (index: number) => setDocument((current) => ({ ...current, blocks: current.blocks.length === 1 ? current.blocks : current.blocks.filter((_, blockIndex) => blockIndex !== index) }));
+  const addBlock = (block: CommunicationBlock) => setDocument((current) => ({ ...current, blocks: [...current.blocks, block] }));
+  const uploadInto = async (index: number, file: File) => {
+    try { setFeedback("Uploading media securely…"); const uploaded = await CommunicationService.uploadMedia(file); if (uploaded.resourceType === "VIDEO") updateBlock(index, { type: "video", url: uploaded.url, title: file.name } as CommunicationBlock); else updateBlock(index, { type: "image", url: uploaded.url, alt: file.name } as CommunicationBlock); setFeedback("Media uploaded. Add meaningful alternative text before sending."); } catch (error) { setFeedback(errorText(error)); }
   };
-
-  useEffect(() => {
-    void load();
-  }, []);
-
-  const changeAudience = (nextAudience: CommunicationAudience) => {
-    setAudience(nextAudience);
-    setPreview(null);
-
-    if (nextAudience === "TEACHERS" || nextAudience === "ALUMNI") {
-      setClassId("");
-    }
+  const hasContent = () => {
+    if (!subject.trim()) { setFeedback("Add a subject before continuing."); return false; }
+    const incomplete = document.blocks.map(incompleteBlockMessage).find(Boolean);
+    if (incomplete) { setFeedback(incomplete); return false; }
+    if (!payload.contentDocument.blocks.length) { setFeedback("Choose a content block and complete it before continuing."); return false; }
+    return true;
   };
+  const review = async (event: FormEvent) => { event.preventDefault(); if (!hasContent()) return; setBusy("review"); setFeedback(""); try { setPreview(await CommunicationService.preview(payload)); } catch (error) { setFeedback(errorText(error)); } finally { setBusy(null); } };
+  const renderPreview = async () => { if (!hasContent()) return; setBusy("preview"); setFeedback(""); try { const result = await CommunicationService.renderPreview(payload); setRenderedHtml(result.html); } catch (error) { setFeedback(errorText(error)); } finally { setBusy(null); } };
+  const saveDraft = async () => { if (!hasContent()) return; setBusy("save"); setFeedback(""); try { const saved = activeDraftId ? await CommunicationService.updateDraft(activeDraftId, payload) : await CommunicationService.createDraft(payload); setActiveDraftId(saved.id); setDrafts((current) => [saved, ...current.filter((item) => item.id !== saved.id)]); setFeedback("Draft saved. It has not been sent to anyone."); } catch (error) { setFeedback(errorText(error)); } finally { setBusy(null); } };
+  const send = async () => { if (!preview?.totalRecipients) return; setBusy("send"); setFeedback(""); try { const sent = activeDraftId ? await CommunicationService.sendDraft(activeDraftId) : await CommunicationService.send(payload); setHistory((current) => [sent, ...current.filter((item) => item.id !== sent.id)]); setDrafts((current) => current.filter((item) => item.id !== sent.id)); resetComposer(); setFeedback("Official communication saved. The composer is ready for a new message; portal copies are available now and verified email delivery is updating in the background."); } catch (error) { setFeedback(errorText(error)); } finally { setBusy(null); } };
+  const sendTest = async () => { if (!hasContent()) return; setBusy("test"); setFeedback(""); try { const result = await CommunicationService.sendTest({ to: testAddress, subject: subject.trim(), format, contentDocument: document }); setFeedback(result.status === "SENT" ? "Test email accepted by the provider. It was not sent to the selected audience." : result.error || result.message); } catch (error) { setFeedback(errorText(error)); } finally { setBusy(null); } };
+  const openDraft = (draft: SchoolCommunication) => { setAudience(draft.audience); setSubject(draft.subject); setFormat(draft.format || "ANNOUNCEMENT"); setDocument(draft.contentDocument || { version: 1, blocks: [{ type: "paragraph", text: draft.message }] }); const targeting = draft.targeting as { classId?: string } | null; setClassId(targeting?.classId || ""); setActiveDraftId(draft.id); setPreview(null); setRenderedHtml(""); setFeedback(`Editing draft “${draft.subject}”.`); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const newCommunication = () => { resetComposer(); setFeedback("New communication ready."); };
+  const showDetail = async (id: string) => { try { setDetail(await CommunicationService.get(id)); } catch (error) { setFeedback(errorText(error)); } };
 
-  const review = async (event: FormEvent) => {
-    event.preventDefault();
+  return <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6">
+    <header className="flex flex-col justify-between gap-4 rounded-3xl bg-[#081a2b] p-6 text-white shadow-sm lg:flex-row lg:items-end">
+      <div><p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d9a21b]">Director workspace</p><h1 className="mt-2 text-3xl font-bold">Official communications</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-200">Create branded announcements, newsletters, invitations and reminders for verified school contacts.</p></div>
+      <button type="button" onClick={newCommunication} className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#081a2b]"><Plus size={17}/>New communication</button>
+    </header>
+    {feedback && <div role="status" className="rounded-2xl border border-[#d9a21b]/40 bg-amber-50 px-4 py-3 text-sm text-amber-950">{feedback}</div>}
 
-    setFeedback("");
-    setPreview(null);
-
-    if (!payload.subject || !payload.message) {
-      setFeedback("Enter both a subject and message before reviewing.");
-      return;
-    }
-
-    setReviewing(true);
-
-    try {
-      setPreview(await CommunicationService.preview(payload));
-    } catch (error) {
-      setFeedback(messageFor(error));
-    } finally {
-      setReviewing(false);
-    }
-  };
-
-  const send = async () => {
-    setSending(true);
-    setFeedback("");
-
-    try {
-      const created = await CommunicationService.send(payload);
-
-      setHistory((current) => [created, ...current]);
-
-      setSubject("");
-      setMessage("");
-      setClassId("");
-      setPreview(null);
-
-      setFeedback(
-        `Communication sent. ${
-          created._count?.recipients ?? 0
-        } recipient records were created.`,
-      );
-    } catch (error) {
-      setFeedback(messageFor(error));
-    } finally {
-      setSending(false);
-    }
-  };
-
-  const viewDelivery = async (id: string) => {
-    setLoadingDeliveryId(id);
-    setFeedback("");
-
-    try {
-      setSelectedCommunication(await CommunicationService.get(id));
-    } catch (error) {
-      setFeedback(messageFor(error));
-    } finally {
-      setLoadingDeliveryId(null);
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-700 to-indigo-800 p-6 text-white shadow-xl sm:p-8">
-        <p className="text-sm font-semibold text-blue-100">
-          School communication centre
-        </p>
-
-        <h1 className="mt-2 text-3xl font-bold tracking-tight">
-          Send a clear, official school message.
-        </h1>
-
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-blue-100">
-          Messages are saved in school history, delivered read-only through
-          eligible portals, and emailed only to verified communication contacts.
-        </p>
-      </div>
-
-      {feedback && (
-        <p
-          className={`rounded-2xl p-4 text-sm ${
-            feedback.startsWith("Communication sent")
-              ? "bg-emerald-50 text-emerald-800"
-              : "bg-rose-50 text-rose-800"
-          }`}
-        >
-          {feedback}
-        </p>
-      )}
-
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
-        <form
-          onSubmit={review}
-          className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7"
-        >
-          <div>
-            <h2 className="text-xl font-bold text-slate-900">
-              New communication
-            </h2>
-
-            <p className="mt-1 text-sm text-slate-500">
-              Choose the audience, write the message, then review the delivery
-              coverage before sending.
-            </p>
-          </div>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <label className="text-sm font-semibold text-slate-700">
-              Audience
-              <select
-                value={audience}
-                onChange={(event) =>
-                  changeAudience(event.target.value as CommunicationAudience)
-                }
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 font-normal"
-              >
-                <option value="PARENTS">Parents and guardians</option>
-
-                <option value="STUDENTS">Students</option>
-
-                <option value="TEACHERS">Teachers</option>
-
-                <option value="ALUMNI">Alumni</option>
-
-                <option value="EVERYONE">Everyone</option>
-              </select>
-              <span className="mt-2 block text-xs font-normal leading-5 text-slate-400">
-                {audienceDescriptions[audience]}
-              </span>
-            </label>
-
-            {classFilterApplies && (
-              <label className="text-sm font-semibold text-slate-700">
-                Class filter{" "}
-                <span className="font-normal text-slate-400">(optional)</span>
-                <select
-                  value={classId}
-                  onChange={(event) => {
-                    setClassId(event.target.value);
-                    setPreview(null);
-                  }}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 font-normal"
-                >
-                  <option value="">All active classes</option>
-
-                  {classes.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-                <span className="mt-2 block text-xs font-normal leading-5 text-slate-400">
-                  Applies to parent and student recipients. Alumni and teachers
-                  are not class-filtered.
-                </span>
-              </label>
-            )}
-          </div>
-
-          <label className="mt-4 block text-sm font-semibold text-slate-700">
-            Subject
-            <input
-              required
-              maxLength={180}
-              value={subject}
-              onChange={(event) => {
-                setSubject(event.target.value);
-                setPreview(null);
-              }}
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal"
-              placeholder="For example: Parent meeting this Friday"
-            />
-          </label>
-
-          <label className="mt-4 block text-sm font-semibold text-slate-700">
-            Message
-            <textarea
-              required
-              maxLength={10000}
-              value={message}
-              onChange={(event) => {
-                setMessage(event.target.value);
-                setPreview(null);
-              }}
-              rows={8}
-              className="mt-2 w-full resize-y rounded-xl border border-slate-200 px-4 py-3 font-normal"
-              placeholder="Write the official school message here..."
-            />
-          </label>
-
-          <button
-            type="submit"
-            disabled={reviewing}
-            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:opacity-60"
-          >
-            <CheckCircle2 size={17} />
-
-            {reviewing ? "Checking recipients..." : "Review delivery"}
-          </button>
-        </form>
-
-        <aside className="self-start rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900">Review</h2>
-
-          <p className="mt-1 text-sm text-slate-500">
-            {audienceLabels[audience]}
-          </p>
-
-          {preview ? (
-            <div className="mt-5 space-y-3">
-              <Metric
-                icon={<UsersRound size={18} />}
-                label="Matching recipients"
-                value={preview.totalRecipients}
-              />
-
-              <Metric
-                icon={<CheckCircle2 size={18} />}
-                label="Portal copies"
-                value={preview.portalRecipients}
-              />
-
-              <Metric
-                icon={<MailCheck size={18} />}
-                label="Verified email addresses"
-                value={preview.verifiedEmailRecipients}
-              />
-
-              <div className="space-y-2 rounded-2xl bg-slate-50 p-3 text-xs leading-5 text-slate-700">
-                {preview.deliveryByRecipientType.map((group) => <p key={group.recipientType}><strong>{recipientTypeLabels[group.recipientType]}</strong>: {group.totalRecipients} matching · {group.portalRecipients} portal · {group.verifiedEmailRecipients} verified email{group.withoutAnyDelivery ? ` · ${group.withoutAnyDelivery} with no available delivery method` : ""}.</p>)}
-              </div>
-
-              {preview.withoutAnyDelivery > 0 ? <p className="rounded-2xl bg-rose-50 p-3 text-xs leading-5 text-rose-800">{preview.withoutAnyDelivery} matching recipient{preview.withoutAnyDelivery === 1 ? " has" : "s have"} neither a portal copy nor a verified communication email and will not receive this message.</p> : <p className="rounded-2xl bg-emerald-50 p-3 text-xs leading-5 text-emerald-800">Every matching recipient has at least one available delivery method.</p>}
-
-              <button
-                type="button"
-                disabled={sending || preview.totalRecipients === 0}
-                onClick={() => void send()}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
-              >
-                <Send size={17} />
-
-                {sending ? "Sending..." : "Send official communication"}
-              </button>
-            </div>
-          ) : (
-            <p className="mt-4 text-sm leading-6 text-slate-500">
-              A recipient coverage summary will appear here after you review the
-              message.
-            </p>
-          )}
-        </aside>
-      </div>
-
-      <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between p-5 sm:p-6">
-          <div>
-            <h2 className="text-xl font-bold text-slate-900">
-              Communication history
-            </h2>
-
-            <p className="mt-1 text-sm text-slate-500">
-              The most recent official messages and their recipient records.
-            </p>
-          </div>
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+      <form onSubmit={review} className="relative z-30 space-y-5 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+        <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-xl font-bold text-[#081a2b]">{activeDraftId ? "Edit draft" : "Compose"}</h2><p className="mt-1 text-sm text-slate-500">Use approved blocks only. <strong>**bold**</strong> and <em>_italic_</em> text are supported in headings, paragraphs and lists.</p></div>{activeDraftId && <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-900">Draft</span>}</div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <label className="text-sm font-semibold text-slate-700">Format<select value={format} onChange={(event) => { setFormat(event.target.value as CommunicationFormat); setPreview(null); }} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 font-normal">{formats.map((item) => <option value={item.value} key={item.value}>{item.label}</option>)}</select><span className="mt-1 block text-xs font-normal text-slate-500">{formats.find((item) => item.value === format)?.hint}</span></label>
+          <label className="text-sm font-semibold text-slate-700">Audience<select value={audience} onChange={(event) => { setAudience(event.target.value as CommunicationAudience); setPreview(null); }} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 font-normal">{Object.entries(audienceLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select><span className="mt-1 block text-xs font-normal text-slate-500">Students are currently shown accurately but require approved verified contacts before email delivery.</span></label>
         </div>
+        {classFilterApplies && <label className="block text-sm font-semibold text-slate-700">Class filter <span className="font-normal text-slate-400">(optional)</span><select value={classId} onChange={(event) => { setClassId(event.target.value); setPreview(null); }} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 font-normal"><option value="">All active classes</option>{classes.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>}
+        <label className="block text-sm font-semibold text-slate-700">Subject<input required maxLength={180} value={subject} onChange={(event) => { setSubject(event.target.value); setPreview(null); }} className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal" placeholder="For example: Parent meeting this Friday"/></label>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-              <tr>
-                <th className="px-6 py-3">Subject</th>
+        <section className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-bold text-[#081a2b]">Content</h3><p className="text-xs text-slate-500">Arrange sections and use secure school images or video cards.</p></div><BlockMenu add={addBlock}/></div><div className="mt-4 space-y-3">{document.blocks.map((block, index) => <BlockEditor key={`${block.type}-${index}`} block={block} onChange={(patch) => updateBlock(index, patch)} onRemove={() => removeBlock(index)} onUpload={(file) => void uploadInto(index, file)}/>)}</div></section>
+        <div className="flex flex-wrap gap-3"><button type="submit" disabled={busy !== null} className="inline-flex items-center gap-2 rounded-xl bg-[#081a2b] px-4 py-3 text-sm font-bold text-white disabled:opacity-60"><UsersRound size={17}/>{busy === "review" ? "Reviewing…" : "Review recipient coverage"}</button><button type="button" onClick={() => void renderPreview()} disabled={busy !== null} className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-700 disabled:opacity-60"><Eye size={17}/>Preview email</button><button type="button" onClick={() => void saveDraft()} disabled={busy !== null} className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-700 disabled:opacity-60"><Save size={17}/>{busy === "save" ? "Saving…" : "Save draft"}</button></div>
+      </form>
 
-                <th className="px-6 py-3">Audience</th>
-
-                <th className="px-6 py-3">Recipients</th>
-
-                    <th className="px-6 py-3">Sent</th>
-
-                    <th className="px-6 py-3">Delivery</th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-slate-100">
-              {loading ? (
-                <tr>
-                    <td
-                      colSpan={5}
-                    className="px-6 py-8 text-center text-slate-500"
-                  >
-                    Loading school communication history...
-                  </td>
-                </tr>
-              ) : history.length ? (
-                history.map((item) => (
-                  <HistoryRow
-                    key={item.id}
-                    item={item}
-                    selected={selectedCommunication?.id === item.id}
-                    detail={selectedCommunication?.id === item.id ? selectedCommunication : null}
-                    loading={loadingDeliveryId === item.id}
-                    onView={() => void viewDelivery(item.id)}
-                  />
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={5}
-                    className="px-6 py-10 text-center text-slate-500"
-                  >
-                    No official communications have been sent yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <aside className="space-y-5"><section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><h2 className="text-lg font-bold text-[#081a2b]">Delivery review</h2><p className="mt-1 text-sm text-slate-500">{audienceLabels[audience]}</p>{preview ? <div className="mt-5 space-y-3"><Metric label="Matching people" value={preview.totalRecipients}/><Metric label="Portal copies" value={preview.portalRecipients}/><Metric label="Verified email addresses" value={preview.verifiedEmailRecipients}/>{preview.deliveryByRecipientType.map((group) => <p key={group.recipientType} className="rounded-xl bg-slate-50 p-3 text-xs leading-5 text-slate-700"><strong>{recipientLabels[group.recipientType]}</strong>: {group.totalRecipients} matching · {group.portalRecipients} portal · {group.verifiedEmailRecipients} email{group.withoutAnyDelivery ? ` · ${group.withoutAnyDelivery} unavailable` : ""}</p>)}{preview.withoutAnyDelivery > 0 && <p className="rounded-xl bg-rose-50 p-3 text-xs text-rose-800">{preview.withoutAnyDelivery} matching people currently have no delivery method and will be excluded.</p>}<button type="button" onClick={() => void send()} disabled={busy !== null || preview.totalRecipients === 0} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0f8a5f] px-4 py-3 text-sm font-bold text-white disabled:opacity-60"><Send size={17}/>{busy === "send" ? "Sending…" : activeDraftId ? "Send draft officially" : "Send official communication"}</button></div> : <p className="mt-4 text-sm leading-6 text-slate-500">Review matching, portal, verified-email and unavailable recipients before official delivery.</p>}</section>
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><h2 className="text-lg font-bold text-[#081a2b]">Send a test</h2><p className="mt-1 text-xs leading-5 text-slate-500">Tests are marked clearly, never use the selected audience, and do not enter official recipient history.</p><input type="email" value={testAddress} onChange={(event) => setTestAddress(event.target.value)} className="mt-3 w-full rounded-xl border border-slate-200 px-3 py-3 text-sm" placeholder="your.email@example.com"/><button type="button" onClick={() => void sendTest()} disabled={busy !== null || !testAddress} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#0f8a5f] px-4 py-3 text-sm font-bold text-[#0f8a5f] disabled:opacity-60"><MailPlus size={17}/>{busy === "test" ? "Sending…" : "Send test email"}</button></section></aside>
     </div>
-  );
-}
 
-function HistoryRow({
-  item,
-  selected,
-  detail,
-  loading,
-  onView,
-}: {
-  item: SchoolCommunication;
-  selected: boolean;
-  detail: SchoolCommunicationDetail | null;
-  loading: boolean;
-  onView: () => void;
-}) {
-  return <>
-    <tr>
-      <td className="max-w-md px-6 py-4">
-        <p className="font-semibold text-slate-800">{item.subject}</p>
-        <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">{item.message}</p>
-      </td>
-      <td className="px-6 py-4 text-slate-600">{audienceLabels[item.audience as CommunicationAudience] ?? item.audience}</td>
-      <td className="px-6 py-4 font-semibold text-slate-800">{item._count?.recipients ?? 0}</td>
-      <td className="whitespace-nowrap px-6 py-4 text-slate-500">{item.sentAt ? new Date(item.sentAt).toLocaleString() : "—"}</td>
-      <td className="px-6 py-4"><button type="button" onClick={onView} disabled={loading} className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50">{loading ? "Loading…" : selected ? "Refresh" : "View delivery"}</button></td>
-    </tr>
-    {selected && detail && <tr>
-      <td colSpan={5} className="bg-slate-50 px-6 py-5">
-        <DeliveryDetails recipients={detail.recipients} />
-      </td>
-    </tr>}
-  </>;
-}
+    {renderedHtml && <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center justify-between gap-3"><div><h2 className="text-xl font-bold text-[#081a2b]">Email preview</h2><p className="mt-1 text-sm text-slate-500">This is the same server-rendered layout sent to verified email contacts.</p></div><button type="button" onClick={() => setRenderedHtml("")} className="text-sm font-bold text-slate-500">Close</button></div><iframe title="Official email preview" sandbox="" srcDoc={renderedHtml} className="mt-5 h-[680px] w-full rounded-2xl border border-slate-200 bg-slate-100"/></section>}
 
-function DeliveryDetails({ recipients }: { recipients: SchoolCommunicationDetail["recipients"] }) {
-  const counts = recipients.reduce<Record<string, number>>((current, recipient) => {
-    current[recipient.emailStatus] = (current[recipient.emailStatus] ?? 0) + 1;
-    return current;
-  }, {});
+    <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center justify-between gap-3"><div><h2 className="text-xl font-bold text-[#081a2b]">Saved drafts</h2><p className="mt-1 text-sm text-slate-500">Drafts remain private until sent officially.</p></div><FileText className="text-[#0f8a5f]"/></div>{loading ? <p className="mt-4 text-sm text-slate-500">Loading drafts…</p> : drafts.length ? <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">{drafts.map((draft) => <button type="button" key={draft.id} onClick={() => openDraft(draft)} className="rounded-2xl border border-slate-200 p-4 text-left transition hover:border-[#0f8a5f]"><p className="font-bold text-[#081a2b]">{draft.subject}</p><p className="mt-1 text-xs text-slate-500">{draft.format || "ANNOUNCEMENT"} · Updated {draft.updatedAt ? new Date(draft.updatedAt).toLocaleString() : "recently"}</p></button>)}</div> : <p className="mt-4 text-sm text-slate-500">No saved drafts.</p>}</section>
 
-  return <div>
-    <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-semibold text-slate-900">Delivery status</h3><p className="mt-1 text-xs text-slate-500">One row represents one person, even where that person received both portal and email delivery.</p></div><div className="flex flex-wrap gap-2 text-xs font-semibold">{Object.entries(counts).map(([status, count]) => <span key={status} className="rounded-full bg-white px-3 py-1 text-slate-700 shadow-sm">Email {status.toLowerCase()}: {count}</span>)}</div></div>
-    <div className="mt-4 overflow-x-auto"><table className="min-w-full text-left text-xs"><thead className="text-slate-500"><tr><th className="pb-2 pr-4">Recipient</th><th className="pb-2 pr-4">Email</th><th className="pb-2 pr-4">Portal</th><th className="pb-2 pr-4">Email status</th><th className="pb-2">Details</th></tr></thead><tbody className="divide-y divide-slate-200">{recipients.map((recipient) => <tr key={recipient.id}><td className="py-3 pr-4 font-semibold text-slate-700">{recipientTypeLabels[recipient.recipientType]}</td><td className="py-3 pr-4 text-slate-600">{recipient.emailAddress ?? "No verified email"}</td><td className="py-3 pr-4 text-slate-600">{recipient.portalStatus}{recipient.portalNotification?.isRead ? " · Read" : ""}</td><td className="py-3 pr-4 text-slate-600">{recipient.emailStatus}</td><td className="py-3 text-slate-600">{recipient.emailError ?? (recipient.deliveredAt ? `Delivered ${new Date(recipient.deliveredAt).toLocaleString()}` : "—")}</td></tr>)}</tbody></table></div>
+    <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"><div className="flex items-center justify-between p-5 sm:p-6"><div><h2 className="text-xl font-bold text-[#081a2b]">Official communication history</h2><p className="mt-1 text-sm text-slate-500">Official sends only. Provider acceptance updates after each email attempt.</p></div></div><div className="overflow-x-auto"><table className="min-w-full text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-6 py-3">Subject</th><th className="px-6 py-3">Format</th><th className="px-6 py-3">Audience</th><th className="px-6 py-3">People</th><th className="px-6 py-3">Sent</th><th className="px-6 py-3"></th></tr></thead><tbody className="divide-y divide-slate-100">{loading ? <tr><td colSpan={6} className="px-6 py-8 text-center text-slate-500">Loading history…</td></tr> : history.length ? history.map((item) => <><tr key={item.id}><td className="max-w-md px-6 py-4"><p className="font-semibold text-slate-800">{item.subject}</p><p className="mt-1 line-clamp-1 text-xs text-slate-500">{item.message}</p></td><td className="px-6 py-4 text-slate-600">{item.format || "ANNOUNCEMENT"}</td><td className="px-6 py-4 text-slate-600">{audienceLabels[item.audience]}</td><td className="px-6 py-4 font-semibold text-slate-800">{item._count?.recipients ?? 0}</td><td className="whitespace-nowrap px-6 py-4 text-slate-500">{item.sentAt ? new Date(item.sentAt).toLocaleString() : "—"}</td><td className="px-6 py-4"><button type="button" onClick={() => void showDetail(item.id)} className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700">{detail?.id === item.id ? "Refresh" : "View delivery"}</button></td></tr>{detail?.id === item.id && <tr key={`${item.id}-detail`}><td colSpan={6} className="bg-slate-50 px-6 py-4"><div className="flex flex-wrap gap-2 text-xs">{detail.recipients.reduce<Record<string, number>>((all, recipient) => ({ ...all, [recipient.emailStatus]: (all[recipient.emailStatus] || 0) + 1 }), {}) && Object.entries(detail.recipients.reduce<Record<string, number>>((all, recipient) => ({ ...all, [recipient.emailStatus]: (all[recipient.emailStatus] || 0) + 1 }), {})).map(([status, count]) => <span key={status} className="rounded-full bg-white px-3 py-1 font-semibold text-slate-700">Email {status.toLowerCase()}: {count}</span>)}</div><p className="mt-3 text-xs text-slate-600">One record represents one person, even if they received portal and email delivery. Detailed email addresses remain restricted to the Director.</p></td></tr>}</>) : <tr><td colSpan={6} className="px-6 py-10 text-center text-slate-500">No official communications have been sent yet.</td></tr>}</tbody></table></div></section>
   </div>;
 }
 
-function Metric({
-  icon,
-  label,
-  value,
-}: {
-  icon: ReactNode;
-  label: string;
-  value: number;
-}) {
-  return (
-    <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3">
-      <span className="text-blue-700">{icon}</span>
+function Metric({ label, value }: { label: string; value: number }) { return <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3"><CheckCircle2 size={17} className="text-[#0f8a5f]"/><span className="flex-1 text-sm text-slate-600">{label}</span><b className="text-lg text-[#081a2b]">{value}</b></div>; }
 
-      <span className="min-w-0 flex-1 text-sm text-slate-600">{label}</span>
+function BlockMenu({ add }: { add: (block: CommunicationBlock) => void }) { const [open, setOpen] = useState(false); const options: Array<[string, CommunicationBlock, React.ReactNode]> = [["Heading", { type: "heading", text: "" }, <FileText size={15}/>], ["Paragraph", { type: "paragraph", text: "" }, <FileText size={15}/>], ["List", { type: "list", items: [""] }, <List size={15}/>], ["Image", { type: "image", url: "", alt: "" }, <ImagePlus size={15}/>], ["Button", { type: "button", label: "Open link", url: "" }, <Link2 size={15}/>], ["Newsletter section", { type: "section", heading: "", body: "" }, <FileText size={15}/>], ["Event", { type: "event", title: "", date: "" }, <FileText size={15}/>], ["Video", { type: "video", url: "", title: "" }, <Video size={15}/>], ["Divider", { type: "divider" }, <ChevronDown size={15}/>]]; return <div className="relative z-50"><button type="button" onClick={() => setOpen((value) => !value)} className="inline-flex items-center gap-2 rounded-xl bg-[#081a2b] px-3 py-2 text-xs font-bold text-white"><Plus size={15}/>Add block<ChevronDown size={15}/></button>{open && <div className="absolute right-0 z-[60] mt-2 grid max-h-64 w-56 gap-1 overflow-y-auto rounded-xl border border-slate-200 bg-white p-2 shadow-xl">{options.map(([label, block, icon]) => <button type="button" key={label} onClick={() => { add(block); setOpen(false); }} className="flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">{icon}{label}</button>)}</div>}</div>; }
 
-      <b className="text-lg text-slate-900">{value}</b>
-    </div>
-  );
-}
+function BlockEditor({ block, onChange, onRemove, onUpload }: { block: CommunicationBlock; onChange: (patch: Partial<CommunicationBlock>) => void; onRemove: () => void; onUpload: (file: File) => void }) { const input = "mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"; const area = "mt-2 w-full resize-y rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"; const [useImageLink, setUseImageLink] = useState(false); const inputValue = (key: string) => (block as Record<string, unknown>)[key] as string || ""; return <div className="rounded-2xl border border-slate-200 bg-white p-4"><div className="mb-3 flex items-center justify-between"><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">{block.type}</span><button type="button" onClick={onRemove} className="rounded-lg p-2 text-rose-600 hover:bg-rose-50" aria-label="Remove content block"><Trash2 size={16}/></button></div>{block.type === "divider" ? <p className="text-sm text-slate-500">A visual divider separates content in the email.</p> : block.type === "list" ? <label className="block text-sm font-semibold text-slate-700">Items <span className="font-normal text-slate-400">(one per line)</span><textarea value={block.items.join("\n")} onChange={(event) => onChange({ items: event.target.value.split("\n") } as Partial<CommunicationBlock>)} className={area} rows={4}/><label className="mt-2 flex items-center gap-2 text-xs font-normal"><input type="checkbox" checked={Boolean(block.ordered)} onChange={(event) => onChange({ ordered: event.target.checked } as Partial<CommunicationBlock>)}/>Numbered list</label></label> : block.type === "image" ? <div className="grid gap-3 md:grid-cols-2"><label className="text-sm font-semibold text-slate-700">Upload image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => event.target.files?.[0] && onUpload(event.target.files[0])} className="mt-2 block w-full text-xs"/></label><label className="text-sm font-semibold text-slate-700">Alternative text<input value={block.alt} onChange={(event) => onChange({ alt: event.target.value })} className={input} placeholder="Describe the image"/></label>{block.url && <div className="md:col-span-2 rounded-xl bg-emerald-50 p-3 text-xs text-emerald-800">Image attached. Upload another file to replace it.</div>}<div className="md:col-span-2"><button type="button" onClick={() => setUseImageLink((current) => !current)} className="text-xs font-bold text-[#0f8a5f]">{useImageLink ? "Use an uploaded image instead" : "Use an existing HTTPS image link instead"}</button>{useImageLink && <label className="mt-2 block text-sm font-semibold text-slate-700">Existing image URL<input value={block.url} onChange={(event) => onChange({ url: event.target.value })} className={input} placeholder="https://…"/></label>}</div><label className="text-sm font-semibold text-slate-700 md:col-span-2">Caption <span className="font-normal text-slate-400">(optional)</span><input value={block.caption || ""} onChange={(event) => onChange({ caption: event.target.value })} className={input}/></label></div> : block.type === "button" ? <div className="grid gap-3 md:grid-cols-2"><label className="text-sm font-semibold text-slate-700">Button label<input value={block.label} onChange={(event) => onChange({ label: event.target.value })} className={input}/></label><label className="text-sm font-semibold text-slate-700">HTTPS URL<input value={block.url} onChange={(event) => onChange({ url: event.target.value })} className={input} placeholder="https://…"/></label></div> : block.type === "section" ? <><label className="block text-sm font-semibold text-slate-700">Section heading<input value={block.heading} onChange={(event) => onChange({ heading: event.target.value })} className={input}/></label><label className="mt-3 block text-sm font-semibold text-slate-700">Section story<textarea value={block.body || ""} onChange={(event) => onChange({ body: event.target.value })} className={area} rows={4}/></label></> : block.type === "event" ? <div className="grid gap-3 md:grid-cols-2"><label className="text-sm font-semibold text-slate-700">Event title<input value={block.title} onChange={(event) => onChange({ title: event.target.value })} className={input}/></label><label className="text-sm font-semibold text-slate-700">Date<input value={block.date} onChange={(event) => onChange({ date: event.target.value })} className={input} placeholder="Friday, 12 June 2026"/></label><label className="text-sm font-semibold text-slate-700">Time<input value={block.time || ""} onChange={(event) => onChange({ time: event.target.value })} className={input}/></label><label className="text-sm font-semibold text-slate-700">Location<input value={block.location || ""} onChange={(event) => onChange({ location: event.target.value })} className={input}/></label><label className="text-sm font-semibold text-slate-700 md:col-span-2">Description<textarea value={block.description || ""} onChange={(event) => onChange({ description: event.target.value })} className={area} rows={3}/></label><label className="text-sm font-semibold text-slate-700 md:col-span-2">RSVP HTTPS URL<input value={block.rsvpUrl || ""} onChange={(event) => onChange({ rsvpUrl: event.target.value })} className={input}/></label></div> : block.type === "video" ? <div className="grid gap-3 md:grid-cols-2"><label className="text-sm font-semibold text-slate-700">Video title<input value={block.title} onChange={(event) => onChange({ title: event.target.value })} className={input}/></label><label className="text-sm font-semibold text-slate-700">YouTube, Vimeo or school video URL<input value={block.url} onChange={(event) => onChange({ url: event.target.value })} className={input} placeholder="https://…"/></label><label className="text-sm font-semibold text-slate-700">Thumbnail URL <span className="font-normal text-slate-400">(optional)</span><input value={block.thumbnailUrl || ""} onChange={(event) => onChange({ thumbnailUrl: event.target.value })} className={input}/></label><label className="text-sm font-semibold text-slate-700">Upload MP4, WEBM or MOV<input type="file" accept="video/mp4,video/webm,video/quicktime" onChange={(event) => event.target.files?.[0] && onUpload(event.target.files[0])} className="mt-2 block w-full text-xs"/></label></div> : <label className="block text-sm font-semibold text-slate-700">{block.type === "heading" ? "Heading" : "Text"}<textarea value={inputValue("text")} onChange={(event) => onChange({ text: event.target.value })} className={area} rows={block.type === "heading" ? 2 : 4}/>{block.type === "heading" && <select value={block.level || 2} onChange={(event) => onChange({ level: Number(event.target.value) as 1 | 2 | 3 })} className={input}><option value={1}>Large heading</option><option value={2}>Section heading</option><option value={3}>Small heading</option></select>}</label>}</div>; }
+
+
+
+
+
+

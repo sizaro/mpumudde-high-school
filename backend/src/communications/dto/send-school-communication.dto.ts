@@ -1,11 +1,4 @@
-import {
-  ArrayMaxSize,
-  IsArray,
-  IsIn,
-  IsOptional,
-  IsString,
-  MaxLength,
-} from "class-validator";
+import { ArrayMaxSize, IsArray, IsIn, IsObject, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class SendSchoolCommunicationDto {
   @IsString()
@@ -16,9 +9,19 @@ export class SendSchoolCommunicationDto {
   @MaxLength(180)
   subject!: string;
 
+  /** Legacy plain-text content remains accepted for existing clients. */
+  @IsOptional()
   @IsString()
-  @MaxLength(10_000)
-  message!: string;
+  @MaxLength(12_000)
+  message?: string;
+
+  @IsOptional()
+  @IsIn(["ANNOUNCEMENT", "NEWSLETTER", "INVITATION", "REMINDER"])
+  format?: "ANNOUNCEMENT" | "NEWSLETTER" | "INVITATION" | "REMINDER";
+
+  @IsOptional()
+  @IsObject()
+  contentDocument?: Record<string, unknown>;
 
   @IsOptional()
   @IsString()

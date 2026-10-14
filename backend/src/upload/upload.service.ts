@@ -1,4 +1,4 @@
-﻿import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 
@@ -30,7 +30,25 @@ export class UploadService {
     });
   }
 
+  async uploadCommunicationAsset(
+    fileBuffer: Buffer,
+    originalName: string,
+    mimeType: string,
+  ): Promise<UploadApiResponse> {
+    const resourceType = mimeType.startsWith("video/") ? "video" : "image";
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "school-communications", resource_type: resourceType, use_filename: true, unique_filename: true },
+        (error, result) => {
+          if (error || !result) return reject(error ?? new BadRequestException("Upload failed"));
+          resolve(result);
+        },
+      );
+      uploadStream.end(fileBuffer);
+    });
+  }
   async deleteFile(publicId: string): Promise<void> {
     await cloudinary.uploader.destroy(publicId);
   }
 }
+

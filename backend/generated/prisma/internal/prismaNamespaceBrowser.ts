@@ -89,6 +89,7 @@ export const ModelName = {
   CommunicationContact: 'CommunicationContact',
   RegistrationEmailVerification: 'RegistrationEmailVerification',
   SchoolCommunication: 'SchoolCommunication',
+  CommunicationTestEmail: 'CommunicationTestEmail',
   CommunicationRecipient: 'CommunicationRecipient',
   Payment: 'Payment',
   PaymentAudit: 'PaymentAudit',
@@ -712,6 +713,9 @@ export const SchoolCommunicationScalarFieldEnum = {
   message: 'message',
   audience: 'audience',
   targeting: 'targeting',
+  format: 'format',
+  contentDocument: 'contentDocument',
+  templateVersion: 'templateVersion',
   status: 'status',
   sentAt: 'sentAt',
   createdAt: 'createdAt',
@@ -719,6 +723,18 @@ export const SchoolCommunicationScalarFieldEnum = {
 } as const
 
 export type SchoolCommunicationScalarFieldEnum = (typeof SchoolCommunicationScalarFieldEnum)[keyof typeof SchoolCommunicationScalarFieldEnum]
+
+
+export const CommunicationTestEmailScalarFieldEnum = {
+  id: 'id',
+  senderUserId: 'senderUserId',
+  recipientEmail: 'recipientEmail',
+  status: 'status',
+  error: 'error',
+  createdAt: 'createdAt'
+} as const
+
+export type CommunicationTestEmailScalarFieldEnum = (typeof CommunicationTestEmailScalarFieldEnum)[keyof typeof CommunicationTestEmailScalarFieldEnum]
 
 
 export const CommunicationRecipientScalarFieldEnum = {

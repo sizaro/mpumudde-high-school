@@ -1289,13 +1289,17 @@ model RegistrationEmailVerification {
 model SchoolCommunication {
   id String @id @default(cuid())
 
-  senderUserId String
-  subject      String
-  message      String
-  audience     String
-  targeting    Json?
-  status       String    @default("SENT")
-  sentAt       DateTime?
+  senderUserId     String
+  subject          String
+  message          String
+  audience         String
+  targeting        Json?
+  // New rich content is deliberately stored as validated JSON, never arbitrary browser HTML.
+  format           String    @default("ANNOUNCEMENT")
+  contentDocument  Json?
+  templateVersion  String?   @default("mhs-email-v1")
+  status           String    @default("SENT")
+  sentAt           DateTime?
 
   sender     User                     @relation("SchoolCommunicationSender", fields: [senderUserId], references: [id])
   recipients CommunicationRecipient[]
@@ -1304,6 +1308,20 @@ model SchoolCommunication {
   updatedAt DateTime @updatedAt
 
   @@index([audience, sentAt])
+  @@index([senderUserId, createdAt])
+  @@index([status, updatedAt])
+}
+
+// Test deliveries are kept outside official communication history, while making
+// the Director-only test-email rate limit reliable across application instances.
+model CommunicationTestEmail {
+  id             String   @id @default(cuid())
+  senderUserId   String
+  recipientEmail String
+  status         String
+  error          String?
+  createdAt      DateTime @default(now())
+
   @@index([senderUserId, createdAt])
 }
 
@@ -1480,3 +1498,4 @@ model OtherIncome {
   @@index([incomeDate, status])
   @@index([recordedByUserId])
 }
+

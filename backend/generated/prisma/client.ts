@@ -232,6 +232,11 @@ export type RegistrationEmailVerification = Prisma.RegistrationEmailVerification
  */
 export type SchoolCommunication = Prisma.SchoolCommunicationModel
 /**
+ * Model CommunicationTestEmail
+ * 
+ */
+export type CommunicationTestEmail = Prisma.CommunicationTestEmailModel
+/**
  * Model CommunicationRecipient
  * 
  */

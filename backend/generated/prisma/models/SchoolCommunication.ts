@@ -30,6 +30,8 @@ export type SchoolCommunicationMinAggregateOutputType = {
   subject: string | null
   message: string | null
   audience: string | null
+  format: string | null
+  templateVersion: string | null
   status: string | null
   sentAt: Date | null
   createdAt: Date | null
@@ -42,6 +44,8 @@ export type SchoolCommunicationMaxAggregateOutputType = {
   subject: string | null
   message: string | null
   audience: string | null
+  format: string | null
+  templateVersion: string | null
   status: string | null
   sentAt: Date | null
   createdAt: Date | null
@@ -55,6 +59,9 @@ export type SchoolCommunicationCountAggregateOutputType = {
   message: number
   audience: number
   targeting: number
+  format: number
+  contentDocument: number
+  templateVersion: number
   status: number
   sentAt: number
   createdAt: number
@@ -69,6 +76,8 @@ export type SchoolCommunicationMinAggregateInputType = {
   subject?: true
   message?: true
   audience?: true
+  format?: true
+  templateVersion?: true
   status?: true
   sentAt?: true
   createdAt?: true
@@ -81,6 +90,8 @@ export type SchoolCommunicationMaxAggregateInputType = {
   subject?: true
   message?: true
   audience?: true
+  format?: true
+  templateVersion?: true
   status?: true
   sentAt?: true
   createdAt?: true
@@ -94,6 +105,9 @@ export type SchoolCommunicationCountAggregateInputType = {
   message?: true
   audience?: true
   targeting?: true
+  format?: true
+  contentDocument?: true
+  templateVersion?: true
   status?: true
   sentAt?: true
   createdAt?: true
@@ -180,6 +194,9 @@ export type SchoolCommunicationGroupByOutputType = {
   message: string
   audience: string
   targeting: runtime.JsonValue | null
+  format: string
+  contentDocument: runtime.JsonValue | null
+  templateVersion: string | null
   status: string
   sentAt: Date | null
   createdAt: Date
@@ -214,6 +231,9 @@ export type SchoolCommunicationWhereInput = {
   message?: Prisma.StringFilter<"SchoolCommunication"> | string
   audience?: Prisma.StringFilter<"SchoolCommunication"> | string
   targeting?: Prisma.JsonNullableFilter<"SchoolCommunication">
+  format?: Prisma.StringFilter<"SchoolCommunication"> | string
+  contentDocument?: Prisma.JsonNullableFilter<"SchoolCommunication">
+  templateVersion?: Prisma.StringNullableFilter<"SchoolCommunication"> | string | null
   status?: Prisma.StringFilter<"SchoolCommunication"> | string
   sentAt?: Prisma.DateTimeNullableFilter<"SchoolCommunication"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SchoolCommunication"> | Date | string
@@ -229,6 +249,9 @@ export type SchoolCommunicationOrderByWithRelationInput = {
   message?: Prisma.SortOrder
   audience?: Prisma.SortOrder
   targeting?: Prisma.SortOrderInput | Prisma.SortOrder
+  format?: Prisma.SortOrder
+  contentDocument?: Prisma.SortOrderInput | Prisma.SortOrder
+  templateVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -247,6 +270,9 @@ export type SchoolCommunicationWhereUniqueInput = Prisma.AtLeast<{
   message?: Prisma.StringFilter<"SchoolCommunication"> | string
   audience?: Prisma.StringFilter<"SchoolCommunication"> | string
   targeting?: Prisma.JsonNullableFilter<"SchoolCommunication">
+  format?: Prisma.StringFilter<"SchoolCommunication"> | string
+  contentDocument?: Prisma.JsonNullableFilter<"SchoolCommunication">
+  templateVersion?: Prisma.StringNullableFilter<"SchoolCommunication"> | string | null
   status?: Prisma.StringFilter<"SchoolCommunication"> | string
   sentAt?: Prisma.DateTimeNullableFilter<"SchoolCommunication"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SchoolCommunication"> | Date | string
@@ -262,6 +288,9 @@ export type SchoolCommunicationOrderByWithAggregationInput = {
   message?: Prisma.SortOrder
   audience?: Prisma.SortOrder
   targeting?: Prisma.SortOrderInput | Prisma.SortOrder
+  format?: Prisma.SortOrder
+  contentDocument?: Prisma.SortOrderInput | Prisma.SortOrder
+  templateVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -281,6 +310,9 @@ export type SchoolCommunicationScalarWhereWithAggregatesInput = {
   message?: Prisma.StringWithAggregatesFilter<"SchoolCommunication"> | string
   audience?: Prisma.StringWithAggregatesFilter<"SchoolCommunication"> | string
   targeting?: Prisma.JsonNullableWithAggregatesFilter<"SchoolCommunication">
+  format?: Prisma.StringWithAggregatesFilter<"SchoolCommunication"> | string
+  contentDocument?: Prisma.JsonNullableWithAggregatesFilter<"SchoolCommunication">
+  templateVersion?: Prisma.StringNullableWithAggregatesFilter<"SchoolCommunication"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"SchoolCommunication"> | string
   sentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SchoolCommunication"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SchoolCommunication"> | Date | string
@@ -293,6 +325,9 @@ export type SchoolCommunicationCreateInput = {
   message: string
   audience: string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
   status?: string
   sentAt?: Date | string | null
   createdAt?: Date | string
@@ -308,6 +343,9 @@ export type SchoolCommunicationUncheckedCreateInput = {
   message: string
   audience: string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
   status?: string
   sentAt?: Date | string | null
   createdAt?: Date | string
@@ -321,6 +359,9 @@ export type SchoolCommunicationUpdateInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   audience?: Prisma.StringFieldUpdateOperationsInput | string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -336,6 +377,9 @@ export type SchoolCommunicationUncheckedUpdateInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   audience?: Prisma.StringFieldUpdateOperationsInput | string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -350,6 +394,9 @@ export type SchoolCommunicationCreateManyInput = {
   message: string
   audience: string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
   status?: string
   sentAt?: Date | string | null
   createdAt?: Date | string
@@ -362,6 +409,9 @@ export type SchoolCommunicationUpdateManyMutationInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   audience?: Prisma.StringFieldUpdateOperationsInput | string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -375,6 +425,9 @@ export type SchoolCommunicationUncheckedUpdateManyInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   audience?: Prisma.StringFieldUpdateOperationsInput | string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -398,6 +451,9 @@ export type SchoolCommunicationCountOrderByAggregateInput = {
   message?: Prisma.SortOrder
   audience?: Prisma.SortOrder
   targeting?: Prisma.SortOrder
+  format?: Prisma.SortOrder
+  contentDocument?: Prisma.SortOrder
+  templateVersion?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -410,6 +466,8 @@ export type SchoolCommunicationMaxOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   message?: Prisma.SortOrder
   audience?: Prisma.SortOrder
+  format?: Prisma.SortOrder
+  templateVersion?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -422,6 +480,8 @@ export type SchoolCommunicationMinOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   message?: Prisma.SortOrder
   audience?: Prisma.SortOrder
+  format?: Prisma.SortOrder
+  templateVersion?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -495,6 +555,9 @@ export type SchoolCommunicationCreateWithoutSenderInput = {
   message: string
   audience: string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
   status?: string
   sentAt?: Date | string | null
   createdAt?: Date | string
@@ -508,6 +571,9 @@ export type SchoolCommunicationUncheckedCreateWithoutSenderInput = {
   message: string
   audience: string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
   status?: string
   sentAt?: Date | string | null
   createdAt?: Date | string
@@ -551,6 +617,9 @@ export type SchoolCommunicationScalarWhereInput = {
   message?: Prisma.StringFilter<"SchoolCommunication"> | string
   audience?: Prisma.StringFilter<"SchoolCommunication"> | string
   targeting?: Prisma.JsonNullableFilter<"SchoolCommunication">
+  format?: Prisma.StringFilter<"SchoolCommunication"> | string
+  contentDocument?: Prisma.JsonNullableFilter<"SchoolCommunication">
+  templateVersion?: Prisma.StringNullableFilter<"SchoolCommunication"> | string | null
   status?: Prisma.StringFilter<"SchoolCommunication"> | string
   sentAt?: Prisma.DateTimeNullableFilter<"SchoolCommunication"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SchoolCommunication"> | Date | string
@@ -563,6 +632,9 @@ export type SchoolCommunicationCreateWithoutRecipientsInput = {
   message: string
   audience: string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
   status?: string
   sentAt?: Date | string | null
   createdAt?: Date | string
@@ -577,6 +649,9 @@ export type SchoolCommunicationUncheckedCreateWithoutRecipientsInput = {
   message: string
   audience: string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
   status?: string
   sentAt?: Date | string | null
   createdAt?: Date | string
@@ -605,6 +680,9 @@ export type SchoolCommunicationUpdateWithoutRecipientsInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   audience?: Prisma.StringFieldUpdateOperationsInput | string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -619,6 +697,9 @@ export type SchoolCommunicationUncheckedUpdateWithoutRecipientsInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   audience?: Prisma.StringFieldUpdateOperationsInput | string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -631,6 +712,9 @@ export type SchoolCommunicationCreateManySenderInput = {
   message: string
   audience: string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
   status?: string
   sentAt?: Date | string | null
   createdAt?: Date | string
@@ -643,6 +727,9 @@ export type SchoolCommunicationUpdateWithoutSenderInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   audience?: Prisma.StringFieldUpdateOperationsInput | string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -656,6 +743,9 @@ export type SchoolCommunicationUncheckedUpdateWithoutSenderInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   audience?: Prisma.StringFieldUpdateOperationsInput | string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -669,6 +759,9 @@ export type SchoolCommunicationUncheckedUpdateManyWithoutSenderInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   audience?: Prisma.StringFieldUpdateOperationsInput | string
   targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -713,6 +806,9 @@ export type SchoolCommunicationSelect<ExtArgs extends runtime.Types.Extensions.I
   message?: boolean
   audience?: boolean
   targeting?: boolean
+  format?: boolean
+  contentDocument?: boolean
+  templateVersion?: boolean
   status?: boolean
   sentAt?: boolean
   createdAt?: boolean
@@ -729,6 +825,9 @@ export type SchoolCommunicationSelectCreateManyAndReturn<ExtArgs extends runtime
   message?: boolean
   audience?: boolean
   targeting?: boolean
+  format?: boolean
+  contentDocument?: boolean
+  templateVersion?: boolean
   status?: boolean
   sentAt?: boolean
   createdAt?: boolean
@@ -743,6 +842,9 @@ export type SchoolCommunicationSelectUpdateManyAndReturn<ExtArgs extends runtime
   message?: boolean
   audience?: boolean
   targeting?: boolean
+  format?: boolean
+  contentDocument?: boolean
+  templateVersion?: boolean
   status?: boolean
   sentAt?: boolean
   createdAt?: boolean
@@ -757,13 +859,16 @@ export type SchoolCommunicationSelectScalar = {
   message?: boolean
   audience?: boolean
   targeting?: boolean
+  format?: boolean
+  contentDocument?: boolean
+  templateVersion?: boolean
   status?: boolean
   sentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SchoolCommunicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "senderUserId" | "subject" | "message" | "audience" | "targeting" | "status" | "sentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["schoolCommunication"]>
+export type SchoolCommunicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "senderUserId" | "subject" | "message" | "audience" | "targeting" | "format" | "contentDocument" | "templateVersion" | "status" | "sentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["schoolCommunication"]>
 export type SchoolCommunicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recipients?: boolean | Prisma.SchoolCommunication$recipientsArgs<ExtArgs>
@@ -789,6 +894,9 @@ export type $SchoolCommunicationPayload<ExtArgs extends runtime.Types.Extensions
     message: string
     audience: string
     targeting: runtime.JsonValue | null
+    format: string
+    contentDocument: runtime.JsonValue | null
+    templateVersion: string | null
     status: string
     sentAt: Date | null
     createdAt: Date
@@ -1224,6 +1332,9 @@ export interface SchoolCommunicationFieldRefs {
   readonly message: Prisma.FieldRef<"SchoolCommunication", 'String'>
   readonly audience: Prisma.FieldRef<"SchoolCommunication", 'String'>
   readonly targeting: Prisma.FieldRef<"SchoolCommunication", 'Json'>
+  readonly format: Prisma.FieldRef<"SchoolCommunication", 'String'>
+  readonly contentDocument: Prisma.FieldRef<"SchoolCommunication", 'Json'>
+  readonly templateVersion: Prisma.FieldRef<"SchoolCommunication", 'String'>
   readonly status: Prisma.FieldRef<"SchoolCommunication", 'String'>
   readonly sentAt: Prisma.FieldRef<"SchoolCommunication", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"SchoolCommunication", 'DateTime'>

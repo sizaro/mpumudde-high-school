@@ -12,9 +12,12 @@ import * as bcrypt from "bcrypt";
 import { randomInt } from "node:crypto";
 
 import { PrismaService } from "../prisma/prisma.service.js";
+import { ConfigService } from "@nestjs/config";
 import { CreateCommunicationContactDto } from "./dto/create-communication-contact.dto.js";
 import { SchoolEmailService } from "./school-email.service.js";
 import { SendSchoolCommunicationDto } from "./dto/send-school-communication.dto.js";
+import { SaveSchoolCommunicationDraftDto, SendSchoolCommunicationTestDto } from "./dto/save-school-communication-draft.dto.js";
+import { CommunicationContentDocument, CommunicationFormat, plainTextFromDocument, renderSchoolCommunication, normalizeCommunicationFormat, validateCommunicationDocument } from "./email-templates/communication-content.js";
 
 type ContactOwnerType = "PARENT" | "TEACHER" | "STUDENT" | "ALUMNI";
 
@@ -41,6 +44,7 @@ export class CommunicationsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly email: SchoolEmailService,
+    private readonly config: ConfigService,
   ) {}
 
   async syncProfileEmail(
@@ -451,21 +455,20 @@ export class CommunicationsService {
 
   async listSchoolCommunications() {
     return this.prisma.schoolCommunication.findMany({
+      where: { status: { not: "DRAFT" } },
       orderBy: { sentAt: "desc" },
       take: 100,
-      include: {
-        sender: {
-          select: {
-            id: true,
-            email: true,
-          },
-        },
-        _count: {
-          select: {
-            recipients: true,
-          },
-        },
-      },
+      include: { sender: { select: { id: true, email: true } }, _count: { select: { recipients: true } } },
+    });
+  }
+
+  async listSchoolCommunicationDrafts(actor: Actor) {
+    this.assertDirector(actor);
+    return this.prisma.schoolCommunication.findMany({
+      where: { senderUserId: actor.id, status: "DRAFT" },
+      orderBy: { updatedAt: "desc" },
+      take: 100,
+      include: { _count: { select: { recipients: true } } },
     });
   }
 
@@ -473,181 +476,181 @@ export class CommunicationsService {
     const communication = await this.prisma.schoolCommunication.findUnique({
       where: { id },
       include: {
-        sender: {
-          select: {
-            id: true,
-            email: true,
-          },
-        },
+        sender: { select: { id: true, email: true } },
         recipients: {
-          orderBy: {
-            createdAt: "asc",
-          },
+          orderBy: { createdAt: "asc" },
           include: {
-            communicationContact: {
-              select: {
-                id: true,
-                value: true,
-                isVerified: true,
-              },
-            },
-            portalNotification: {
-              select: {
-                id: true,
-                isRead: true,
-                readAt: true,
-              },
-            },
+            communicationContact: { select: { id: true, value: true, isVerified: true } },
+            portalNotification: { select: { id: true, isRead: true, readAt: true } },
           },
         },
-        _count: {
-          select: {
-            recipients: true,
-          },
-        },
+        _count: { select: { recipients: true } },
       },
     });
-
-    if (!communication) {
-      throw new NotFoundException("School communication not found.");
-    }
-
+    if (!communication) throw new NotFoundException("School communication not found.");
     return communication;
   }
 
-  async sendSchoolCommunication(dto: SendSchoolCommunicationDto, actor: Actor) {
+  async saveSchoolCommunicationDraft(dto: SaveSchoolCommunicationDraftDto, actor: Actor, id?: string) {
     this.assertDirector(actor);
-
-    const subject = dto.subject.trim();
-    const message = dto.message.trim();
-
-    if (!subject || !message) {
-      throw new BadRequestException("A subject and message are required.");
+    const prepared = this.prepareCommunication(dto);
+    const data = {
+      subject: prepared.subject,
+      message: prepared.message,
+      format: prepared.format,
+      contentDocument: prepared.document as any,
+      templateVersion: "mhs-email-v1",
+      audience: dto.audience,
+      targeting: { classId: dto.classId ?? null, studentIds: dto.studentIds ?? [], teacherIds: dto.teacherIds ?? [] },
+      status: "DRAFT",
+      sentAt: null,
+    };
+    if (!id) {
+      return this.prisma.schoolCommunication.create({ data: { senderUserId: actor.id, ...data } });
     }
+    const changed = await this.prisma.schoolCommunication.updateMany({
+      where: { id, senderUserId: actor.id, status: "DRAFT" }, data,
+    });
+    if (changed.count !== 1) throw new BadRequestException("Only your unsent drafts can be edited.");
+    return this.getSchoolCommunication(id);
+  }
 
+  async sendDraftSchoolCommunication(id: string, actor: Actor) {
+    this.assertDirector(actor);
+    const draft = await this.prisma.schoolCommunication.findFirst({ where: { id, senderUserId: actor.id, status: "DRAFT" } });
+    if (!draft) throw new NotFoundException("An unsent communication draft was not found.");
+    const claimed = await this.prisma.schoolCommunication.updateMany({
+      where: { id, senderUserId: actor.id, status: "DRAFT" }, data: { status: "SENDING" },
+    });
+    if (claimed.count !== 1) throw new BadRequestException("This draft is already being sent or was changed.");
+    try {
+      return await this.sendSchoolCommunication({
+        audience: draft.audience as SendSchoolCommunicationDto["audience"],
+        subject: draft.subject,
+        message: draft.message,
+        format: draft.format as CommunicationFormat,
+        contentDocument: (draft.contentDocument as Record<string, unknown> | null) ?? undefined,
+        ...(this.targetingToDto(draft.targeting) ?? {}),
+      }, actor, id);
+    } catch (error) {
+      await this.prisma.schoolCommunication.updateMany({ where: { id, status: "SENDING" }, data: { status: "DRAFT" } });
+      throw error;
+    }
+  }
+
+  async sendSchoolCommunication(dto: SendSchoolCommunicationDto, actor: Actor, existingDraftId?: string) {
+    this.assertDirector(actor);
+    const prepared = this.prepareCommunication(dto);
     const candidates = await this.resolveRecipients(dto);
-
-    if (!candidates.length) {
-      throw new BadRequestException(
-        "No active recipients match the selected audience and filters.",
-      );
-    }
-
+    if (!candidates.length) throw new BadRequestException("No active recipients match the selected audience and filters.");
     const now = new Date();
+    const rendered = renderSchoolCommunication({ subject: prepared.subject, format: prepared.format, document: prepared.document, fallbackMessage: prepared.message, ...this.emailBrandOptions() });
 
     const communication = await this.prisma.$transaction(async (tx) => {
-      const created = await tx.schoolCommunication.create({
-        data: {
-          senderUserId: actor.id,
-          subject,
-          message,
-          audience: dto.audience,
-          targeting: {
-            classId: dto.classId ?? null,
-            studentIds: dto.studentIds ?? [],
-            teacherIds: dto.teacherIds ?? [],
-          },
-          status: "SENT",
-          sentAt: now,
-        },
-      });
-
+      const data = {
+        subject: prepared.subject,
+        message: prepared.message,
+        format: prepared.format,
+        contentDocument: prepared.document as any,
+        templateVersion: "mhs-email-v1",
+        audience: dto.audience,
+        targeting: { classId: dto.classId ?? null, studentIds: dto.studentIds ?? [], teacherIds: dto.teacherIds ?? [] },
+        status: "SENT",
+        sentAt: now,
+      };
+      const created = existingDraftId
+        ? await tx.schoolCommunication.update({ where: { id: existingDraftId }, data })
+        : await tx.schoolCommunication.create({ data: { senderUserId: actor.id, ...data } });
       for (const candidate of candidates) {
-        const notification = candidate.portalUserId
-          ? await tx.notification.create({
-              data: {
-                userId: candidate.portalUserId,
-                type: "SCHOOL_COMMUNICATION",
-                title: subject,
-                message,
-                entityType: "SchoolCommunication",
-                entityId: created.id,
-              },
-            })
-          : null;
-
+        const notification = candidate.portalUserId ? await tx.notification.create({
+          data: { userId: candidate.portalUserId, type: "SCHOOL_COMMUNICATION", title: prepared.subject, message: prepared.message, entityType: "SchoolCommunication", entityId: created.id },
+        }) : null;
         await tx.communicationRecipient.create({
           data: {
-            communicationId: created.id,
-            recipientType: candidate.recipientType,
-            recipientId: candidate.recipientId,
-            portalUserId: candidate.portalUserId,
-            communicationContactId: candidate.contactId,
-            emailAddress: candidate.emailAddress,
-            portalNotificationId: notification?.id,
-            portalStatus: notification ? "DELIVERED" : "NOT_APPLICABLE",
-            emailStatus: candidate.emailAddress
-              ? "PENDING"
-              : "NO_VERIFIED_CONTACT",
-            deliveredAt: notification ? now : null,
+            communicationId: created.id, recipientType: candidate.recipientType, recipientId: candidate.recipientId,
+            portalUserId: candidate.portalUserId, communicationContactId: candidate.contactId, emailAddress: candidate.emailAddress,
+            portalNotificationId: notification?.id, portalStatus: notification ? "DELIVERED" : "NOT_APPLICABLE",
+            emailStatus: candidate.emailAddress ? "PENDING" : "NO_VERIFIED_CONTACT", deliveredAt: notification ? now : null,
           },
         });
       }
-
       return created;
     });
 
-    // The official record and portal copies are committed before external email
-    // delivery begins. Return that record immediately so the Director sees it in
-    // history without waiting for one slow recipient mailbox. Each recipient
-    // starts as PENDING and is updated to SENT, FAILED, or NOT_CONFIGURED by the
-    // delivery task below.
-    const savedCommunication = await this.getSchoolCommunication(communication.id);
-
-    void this.deliverCommunicationEmails(
-      communication.id,
-      subject,
-      message,
-      candidates,
-    ).catch((error: unknown) => {
+    const saved = await this.getSchoolCommunication(communication.id);
+    void this.deliverCommunicationEmails(communication.id, prepared.subject, rendered, candidates).catch((error: unknown) => {
       const detail = error instanceof Error ? error.message : "Unknown email delivery error.";
-      this.logger.error(
-        `Email delivery follow-up failed for communication ${communication.id}: ${detail}`,
-      );
+      this.logger.error(`Email delivery follow-up failed for communication ${communication.id}: ${detail}`);
     });
-
-    return savedCommunication;
+    return saved;
   }
 
   async previewSchoolCommunication(dto: SendSchoolCommunicationDto) {
     const candidates = await this.resolveRecipients(dto);
-    const deliveryByRecipientType = (["PARENT", "STUDENT", "TEACHER", "ALUMNI"] as const)
-      .map((recipientType) => {
-        const group = candidates.filter((candidate) => candidate.recipientType === recipientType);
-        const portalRecipients = group.filter((candidate) => Boolean(candidate.portalUserId)).length;
-        const verifiedEmailRecipients = group.filter((candidate) => Boolean(candidate.emailAddress)).length;
-        return {
-          recipientType,
-          totalRecipients: group.length,
-          portalRecipients,
-          verifiedEmailRecipients,
-          withoutAnyDelivery: group.filter(
-            (candidate) => !candidate.portalUserId && !candidate.emailAddress,
-          ).length,
-        };
-      })
-      .filter((group) => group.totalRecipients > 0);
-
+    const deliveryByRecipientType = (["PARENT", "STUDENT", "TEACHER", "ALUMNI"] as const).map((recipientType) => {
+      const group = candidates.filter((candidate) => candidate.recipientType === recipientType);
+      return { recipientType, totalRecipients: group.length, portalRecipients: group.filter((candidate) => Boolean(candidate.portalUserId)).length, verifiedEmailRecipients: group.filter((candidate) => Boolean(candidate.emailAddress)).length, withoutAnyDelivery: group.filter((candidate) => !candidate.portalUserId && !candidate.emailAddress).length };
+    }).filter((group) => group.totalRecipients > 0);
     return {
       totalRecipients: candidates.length,
-      portalRecipients: candidates.filter((candidate) =>
-        Boolean(candidate.portalUserId),
-      ).length,
-      verifiedEmailRecipients: new Set(
-        candidates
-          .map((candidate) => candidate.emailAddress?.trim().toLowerCase())
-          .filter(Boolean),
-      ).size,
-      withoutVerifiedEmail: candidates.filter(
-        (candidate) => !candidate.emailAddress,
-      ).length,
-      withoutAnyDelivery: candidates.filter(
-        (candidate) => !candidate.portalUserId && !candidate.emailAddress,
-      ).length,
+      portalRecipients: candidates.filter((candidate) => Boolean(candidate.portalUserId)).length,
+      verifiedEmailRecipients: new Set(candidates.map((candidate) => candidate.emailAddress?.trim().toLowerCase()).filter(Boolean)).size,
+      withoutVerifiedEmail: candidates.filter((candidate) => !candidate.emailAddress).length,
+      withoutAnyDelivery: candidates.filter((candidate) => !candidate.portalUserId && !candidate.emailAddress).length,
       deliveryByRecipientType,
     };
   }
 
+  async renderSchoolCommunicationPreview(dto: SendSchoolCommunicationDto, actor: Actor) {
+    this.assertDirector(actor);
+    const prepared = this.prepareCommunication(dto);
+    return renderSchoolCommunication({ subject: prepared.subject, format: prepared.format, document: prepared.document, fallbackMessage: prepared.message, ...this.emailBrandOptions() });
+  }
+
+  async sendSchoolCommunicationTest(dto: SendSchoolCommunicationTestDto, actor: Actor) {
+    this.assertDirector(actor);
+    const recipient = dto.to.trim().toLowerCase();
+    if (!this.isEmail(recipient)) throw new BadRequestException("Provide a valid test email address.");
+    const since = new Date(Date.now() - 60 * 60 * 1000);
+    const count = await this.prisma.communicationTestEmail.count({ where: { senderUserId: actor.id, createdAt: { gte: since } } });
+    if (count >= 5) throw new HttpException("You can send up to five test emails per hour.", HttpStatus.TOO_MANY_REQUESTS);
+    const prepared = this.prepareCommunication(dto);
+    const rendered = renderSchoolCommunication({ subject: prepared.subject, format: prepared.format, document: prepared.document, fallbackMessage: prepared.message, isTest: true, ...this.emailBrandOptions() });
+    const delivery = await this.email.sendEmail({ to: recipient, subject: `[TEST] ${prepared.subject}`, text: `TEST EMAIL — not sent to the selected audience.\n\n${rendered.text}`, html: rendered.html });
+    await this.prisma.communicationTestEmail.create({ data: { senderUserId: actor.id, recipientEmail: recipient, status: delivery.status, error: delivery.error ?? null } });
+    return { status: delivery.status, error: delivery.error, message: "The test email was not sent to the selected audience and is not included in official delivery history." };
+  }
+
+  private emailBrandOptions() {
+    const logoUrl = this.config.get<string>("SCHOOL_EMAIL_LOGO_URL")?.trim();
+    if (!logoUrl || !logoUrl.startsWith("https://")) return {};
+    return { logoUrl };
+  }
+  private prepareCommunication(dto: { subject: string; message?: string; format?: string; contentDocument?: unknown }) {
+    const subject = dto.subject?.trim();
+    if (!subject) throw new BadRequestException("A subject is required.");
+    let format: CommunicationFormat;
+    let document: CommunicationContentDocument | undefined;
+    try {
+      format = normalizeCommunicationFormat(dto.format);
+      document = dto.contentDocument ? validateCommunicationDocument(dto.contentDocument) : undefined;
+    } catch (error) {
+      throw new BadRequestException(error instanceof Error ? error.message : "The communication content is invalid.");
+    }
+    const message = document ? plainTextFromDocument(document) : dto.message?.trim();
+    if (!message) throw new BadRequestException("Write a message or add structured communication content.");
+    return { subject, format, document, message };
+  }
+
+  private targetingToDto(targeting: unknown) {
+    if (!targeting || typeof targeting !== "object" || Array.isArray(targeting)) return undefined;
+    const value = targeting as { classId?: unknown; studentIds?: unknown; teacherIds?: unknown };
+    return {
+      ...(typeof value.classId === "string" ? { classId: value.classId } : {}),
+      ...(Array.isArray(value.studentIds) ? { studentIds: value.studentIds.filter((id): id is string => typeof id === "string") } : {}),
+      ...(Array.isArray(value.teacherIds) ? { teacherIds: value.teacherIds.filter((id): id is string => typeof id === "string") } : {}),
+    };
+  }
   private async upsertEmailContact(
     input: {
       ownerType: ContactOwnerType;
@@ -1114,49 +1117,24 @@ export class CommunicationsService {
   private async deliverCommunicationEmails(
     communicationId: string,
     subject: string,
-    message: string,
+    rendered: { html: string; text: string },
     candidates: RecipientCandidate[],
   ) {
     const byEmail = new Map<string, RecipientCandidate[]>();
-
     for (const candidate of candidates) {
-      if (!candidate.emailAddress) {
-        continue;
-      }
-
+      if (!candidate.emailAddress) continue;
       const key = candidate.emailAddress.trim().toLowerCase();
-
       byEmail.set(key, [...(byEmail.get(key) ?? []), candidate]);
     }
-
-    await Promise.all(
-      [...byEmail.entries()].map(async ([email, grouped]) => {
-        const delivery = await this.email.sendTextEmail({
-          to: email,
-          subject,
-          text: message,
-        });
-
-        const recipientIds = grouped.map((candidate) => candidate.recipientId);
-
-        await this.prisma.communicationRecipient.updateMany({
-          where: {
-            communicationId,
-            recipientType: {
-              in: grouped.map((candidate) => candidate.recipientType),
-            },
-            recipientId: {
-              in: recipientIds,
-            },
-            emailAddress: email,
-          },
-          data: {
-            emailStatus: delivery.status,
-            emailError: delivery.error ?? null,
-            deliveredAt: delivery.status === "SENT" ? new Date() : undefined,
-          },
-        });
-      }),
-    );
+    await Promise.all([...byEmail.entries()].map(async ([email, grouped]) => {
+      const delivery = await this.email.sendEmail({ to: email, subject, text: rendered.text, html: rendered.html });
+      await this.prisma.communicationRecipient.updateMany({
+        where: { communicationId, recipientType: { in: grouped.map((candidate) => candidate.recipientType) }, recipientId: { in: grouped.map((candidate) => candidate.recipientId) }, emailAddress: email },
+        data: { emailStatus: delivery.status, emailError: delivery.error ?? null, deliveredAt: delivery.status === "SENT" ? new Date() : undefined },
+      });
+    }));
   }
 }
+
+
+
