@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service.js";
 import * as bcrypt from "bcrypt";
+import { randomInt } from "node:crypto";
 import { CreateTeacherDto } from "./dto/create-teacher.dto.js";
 import { UpdateTeacherDto } from "./dto/update-teacher.dto.js";
 import { CreateEmploymentDto } from "./dto/create-employment.dto.js";
@@ -29,7 +30,7 @@ function generateTempPassword(length = 10): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#";
   let result = "";
   for (let i = 0; i < length; i++) {
-    result += chars[Math.floor(Math.random() * chars.length)];
+    result += chars[randomInt(chars.length)];
   }
   return result;
 }
@@ -45,7 +46,9 @@ function loginEmailBase(firstName: string, lastName: string): string {
 }
 
 function sameEmail(left?: string | null, right?: string | null) {
-  return (left ?? "").trim().toLowerCase() === (right ?? "").trim().toLowerCase();
+  return (
+    (left ?? "").trim().toLowerCase() === (right ?? "").trim().toLowerCase()
+  );
 }
 
 const TEACHER_INCLUDE = {
@@ -472,7 +475,11 @@ export class TeachersService {
         updated.email!,
       );
     } else {
-      await this.communications.syncProfileEmail("TEACHER", updated.id, updated.email);
+      await this.communications.syncProfileEmail(
+        "TEACHER",
+        updated.id,
+        updated.email,
+      );
     }
     return updated;
   }
@@ -675,7 +682,9 @@ export class TeachersService {
   async getMyClasses(userId: string) {
     const teacher = await this.prisma.teacher.findUnique({ where: { userId } });
     if (!teacher) throw new NotFoundException("Teacher profile not found");
-    const activeYear = await this.prisma.academicYear.findFirst({ where: { status: "ACTIVE" } });
+    const activeYear = await this.prisma.academicYear.findFirst({
+      where: { status: "ACTIVE" },
+    });
     if (!activeYear) return [];
     const offerings = await this.prisma.academicYearClass.findMany({
       where: { academicYearId: activeYear.id, isActive: true },
@@ -705,7 +714,9 @@ export class TeachersService {
   async getMySubjects(userId: string) {
     const teacher = await this.prisma.teacher.findUnique({ where: { userId } });
     if (!teacher) throw new NotFoundException("Teacher profile not found");
-    const activeYear = await this.prisma.academicYear.findFirst({ where: { status: "ACTIVE" } });
+    const activeYear = await this.prisma.academicYear.findFirst({
+      where: { status: "ACTIVE" },
+    });
     if (!activeYear) return [];
     const assignments = await this.prisma.teacherAssignment.findMany({
       where: {
@@ -727,8 +738,17 @@ export class TeachersService {
         appliesToAllClasses: false,
       };
       if (!assignment.academicYearClassId) current.appliesToAllClasses = true;
-      if (assignment.academicYearClass?.schoolClass && !current.classes.some((item: { id: string }) => item.id === assignment.academicYearClass!.schoolClass.id)) {
-        current.classes.push({ id: assignment.academicYearClass.schoolClass.id, name: assignment.academicYearClass.schoolClass.name });
+      if (
+        assignment.academicYearClass?.schoolClass &&
+        !current.classes.some(
+          (item: { id: string }) =>
+            item.id === assignment.academicYearClass!.schoolClass.id,
+        )
+      ) {
+        current.classes.push({
+          id: assignment.academicYearClass.schoolClass.id,
+          name: assignment.academicYearClass.schoolClass.name,
+        });
       }
       subjects.set(assignment.subjectId, current);
     }

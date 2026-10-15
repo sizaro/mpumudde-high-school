@@ -70,6 +70,7 @@ import ParentAttendance from "../pages/parent/Attendance";
 import ParentFinance from "../pages/parent/Finance";
 import ParentSettings from "../pages/parent/Settings";
 import StudentDashboard from "../pages/student/Dashboard";
+import PortalMessages from "../pages/portal/PortalMessages";
 
 export default function AppRoutes() {
   return (
@@ -162,6 +163,8 @@ export default function AppRoutes() {
       >
         <Route index element={<TeacherOverview />} />
         <Route path="overview" element={<TeacherOverview />} />
+        <Route path="messages" element={<PortalMessages />} />
+        <Route path="messages/:id" element={<PortalMessages />} />
         <Route path="classes" element={<MyClasses />} />
         <Route path="subjects" element={<MySubjects />} />
         <Route path="attendance/take" element={<TakeAttendance />} />
@@ -191,6 +194,8 @@ export default function AppRoutes() {
         }
       >
         <Route index element={<ParentDashboard />} />
+        <Route path="messages" element={<PortalMessages />} />
+        <Route path="messages/:id" element={<PortalMessages />} />
         <Route path="children" element={<ParentChildren />} />
         <Route path="attendance" element={<ParentAttendance />} />
         <Route path="finance" element={<ParentFinance />} />

@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
+import { randomInt } from "node:crypto";
 import { CreateParentDto } from "./dto/create-parent.dto.js";
 import { UpdateParentDto } from "./dto/update-parent.dto.js";
 import { PrismaService } from "../prisma/prisma.service.js";
@@ -11,14 +12,13 @@ import { CommunicationsService } from "../communications/communications.service.
 
 function generateTempPassword(length = 12): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#";
-  return Array.from(
-    { length },
-    () => chars[Math.floor(Math.random() * chars.length)],
-  ).join("");
+  return Array.from({ length }, () => chars[randomInt(chars.length)]).join("");
 }
 
 function sameEmail(left?: string | null, right?: string | null) {
-  return (left ?? "").trim().toLowerCase() === (right ?? "").trim().toLowerCase();
+  return (
+    (left ?? "").trim().toLowerCase() === (right ?? "").trim().toLowerCase()
+  );
 }
 
 @Injectable()
@@ -899,7 +899,12 @@ export class ParentsService {
         changedByUserId,
       );
     } else {
-      await this.communications.syncProfileEmail("PARENT", id, updated.email, changedByUserId);
+      await this.communications.syncProfileEmail(
+        "PARENT",
+        id,
+        updated.email,
+        changedByUserId,
+      );
     }
     return updated;
   }
@@ -964,7 +969,11 @@ export class ParentsService {
         updated.email!,
       );
     } else {
-      await this.communications.syncProfileEmail("PARENT", updated.id, updated.email);
+      await this.communications.syncProfileEmail(
+        "PARENT",
+        updated.id,
+        updated.email,
+      );
     }
     return updated;
   }

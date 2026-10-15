@@ -5,6 +5,8 @@ export type PortalNotification = {
   type: string;
   title: string;
   message: string;
+  entityType?: string | null;
+  entityId?: string | null;
   link?: string | null;
   isRead: boolean;
   createdAt: string;
@@ -21,7 +23,9 @@ class NotificationService {
   }
 
   async markRead(id: string): Promise<PortalNotification[]> {
-    const { data } = await api.patch<PortalNotification[]>(`/notifications/${id}/read`);
+    const { data } = await api.patch<PortalNotification[]>(
+      `/notifications/${id}/read`,
+    );
     return data;
   }
 }

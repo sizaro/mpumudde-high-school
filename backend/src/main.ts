@@ -1,8 +1,8 @@
-import { NestFactory } from '@nestjs/core';
-import express from 'express';
-import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module.js';
-import cookieParser from 'cookie-parser';
+import { NestFactory } from "@nestjs/core";
+import express from "express";
+import { ValidationPipe } from "@nestjs/common";
+import { AppModule } from "./app.module.js";
+import cookieParser from "cookie-parser";
 
 async function bootstrap() {
   /*
@@ -12,12 +12,16 @@ async function bootstrap() {
    * dependency can then fail before CORS has a chance to add its headers.
    */
   const app = await NestFactory.create(AppModule, { bodyParser: false });
-  const configuredOrigins = (process.env.FRONTEND_URLS ?? process.env.FRONTEND_URL ?? '')
-    .split(',')
-    .map((origin) => origin.trim().replace(/\/$/, ''))
+  const configuredOrigins = (
+    process.env.FRONTEND_URLS ??
+    process.env.FRONTEND_URL ??
+    ""
+  )
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/$/, ""))
     .filter(Boolean);
   const allowedOrigins = new Set([
-    'https://mpumudde-high-school.vercel.app',
+    "https://mpumudde-high-school.vercel.app",
     ...configuredOrigins,
   ]);
 
@@ -26,38 +30,43 @@ async function bootstrap() {
       if (!origin) {
         return callback(null, true);
       }
-      if (allowedOrigins.has(origin.replace(/\/$/, '')) || /^http:\/\/localhost:\d+$/.test(origin)) {
+      if (
+        allowedOrigins.has(origin.replace(/\/$/, "")) ||
+        /^http:\/\/localhost:\d+$/.test(origin)
+      ) {
         return callback(null, true);
       }
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
   });
 
   const hasContentType = (request: unknown, value: string) => {
-    const headers = (request as {
-      headers?: Record<string, string | string[] | undefined>;
-    }).headers;
-    const contentType = headers?.['content-type'];
+    const headers = (
+      request as {
+        headers?: Record<string, string | string[] | undefined>;
+      }
+    ).headers;
+    const contentType = headers?.["content-type"];
 
     return (
-      typeof contentType === 'string' &&
+      typeof contentType === "string" &&
       contentType.toLowerCase().includes(value)
     );
   };
 
   app.use(
     express.json({
-      limit: '10mb',
-      type: (request) => hasContentType(request, 'application/json'),
+      limit: "10mb",
+      type: (request) => hasContentType(request, "application/json"),
     }),
   );
   app.use(
     express.urlencoded({
-      limit: '10mb',
+      limit: "10mb",
       extended: true,
       type: (request) =>
-        hasContentType(request, 'application/x-www-form-urlencoded'),
+        hasContentType(request, "application/x-www-form-urlencoded"),
     }),
   );
   app.use(cookieParser());

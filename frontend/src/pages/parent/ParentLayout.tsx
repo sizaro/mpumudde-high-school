@@ -3,6 +3,7 @@ import {
   CalendarCheck,
   Home,
   LogOut,
+  Mail,
   Settings as SettingsIcon,
   Users,
   Wallet,
@@ -12,10 +13,11 @@ import {
   ParentDashboardProvider,
   useParentDashboard,
 } from "./ParentDashboardContext";
-import PortalNotifications from '../../components/portal/PortalNotifications';
+import PortalNotifications from "../../components/portal/PortalNotifications";
 
 const links = [
   { to: ".", label: "Overview", icon: Home, end: true },
+  { to: "messages", label: "School Messages", icon: Mail },
   { to: "children", label: "Children", icon: Users },
   { to: "attendance", label: "Attendance", icon: CalendarCheck },
   { to: "finance", label: "Finance", icon: Wallet },
@@ -32,9 +34,7 @@ function ParentPortalShell() {
         <aside className="portal-sidebar w-full p-5 text-white lg:w-72 lg:shrink-0 lg:p-6">
           <div className="lg:sticky lg:top-6">
             <div className="flex items-center gap-3 px-2">
-              <div className="portal-brand-mark text-lg font-bold">
-                M
-              </div>
+              <div className="portal-brand-mark text-lg font-bold">M</div>
               <div>
                 <p className="text-sm font-semibold">Mpumudde High</p>
                 <p className="text-xs text-slate-400">Parent Portal</p>
@@ -82,16 +82,24 @@ function ParentPortalShell() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2"><PortalNotifications label="School messages" /><button
+            <div className="flex items-center gap-2">
+              <PortalNotifications
+                label="School messages"
+                messagesPath="/parent/messages"
+              />
+              <button
                 type="button"
                 onClick={logout}
                 className="portal-action-button"
               >
                 <LogOut size={16} />
                 <span className="hidden sm:inline">Log out</span>
-              </button></div>
+              </button>
+            </div>
           </header>
-          <div className="portal-content"><Outlet /></div>
+          <div className="portal-content">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

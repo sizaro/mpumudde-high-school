@@ -13,7 +13,7 @@ function generateGuardianTempPassword(length = 12) {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#";
   return Array.from(
     { length },
-    () => chars[Math.floor(Math.random() * chars.length)],
+    () => chars[crypto.randomInt(chars.length)],
   ).join("");
 }
 
@@ -41,22 +41,49 @@ export class StudentsService {
     classId: string,
   ) {
     const [term, classOffering] = await Promise.all([
-      tx.term.findFirst({ where: { id: termId, academicYearId, isActive: true }, select: { id: true } }),
-      tx.academicYearClass.findFirst({ where: { academicYearId, classId, isActive: true }, select: { id: true } }),
+      tx.term.findFirst({
+        where: { id: termId, academicYearId, isActive: true },
+        select: { id: true },
+      }),
+      tx.academicYearClass.findFirst({
+        where: { academicYearId, classId, isActive: true },
+        select: { id: true },
+      }),
     ]);
-    if (!term) throw new BadRequestException("The selected term does not belong to the selected academic year.");
-    if (!classOffering) throw new BadRequestException("The selected class is not offered in this academic year.");
+    if (!term)
+      throw new BadRequestException(
+        "The selected term does not belong to the selected academic year.",
+      );
+    if (!classOffering)
+      throw new BadRequestException(
+        "The selected class is not offered in this academic year.",
+      );
     return classOffering;
   }
 
   async create(createStudentDto: CreateStudentDto) {
     return this.prisma.$transaction(async (tx) => {
-      const placement = [createStudentDto.academicYearId, createStudentDto.termId, createStudentDto.classId];
+      const placement = [
+        createStudentDto.academicYearId,
+        createStudentDto.termId,
+        createStudentDto.classId,
+      ];
       if (placement.some(Boolean) && !placement.every(Boolean)) {
-        throw new BadRequestException("Academic year, term, and class must be selected together.");
+        throw new BadRequestException(
+          "Academic year, term, and class must be selected together.",
+        );
       }
-      if (createStudentDto.academicYearId && createStudentDto.termId && createStudentDto.classId) {
-        await this.ensurePlacementIsAvailable(tx, createStudentDto.academicYearId, createStudentDto.termId, createStudentDto.classId);
+      if (
+        createStudentDto.academicYearId &&
+        createStudentDto.termId &&
+        createStudentDto.classId
+      ) {
+        await this.ensurePlacementIsAvailable(
+          tx,
+          createStudentDto.academicYearId,
+          createStudentDto.termId,
+          createStudentDto.classId,
+        );
       }
       const created = await tx.student.create({
         data: {
@@ -78,7 +105,12 @@ export class StudentsService {
 
       if (created.academicYearId && created.termId && created.classId) {
         const classOffering = await tx.academicYearClass.findUnique({
-          where: { academicYearId_classId: { academicYearId: created.academicYearId, classId: created.classId } },
+          where: {
+            academicYearId_classId: {
+              academicYearId: created.academicYearId,
+              classId: created.classId,
+            },
+          },
         });
         await tx.studentEnrollment.create({
           data: {
@@ -143,7 +175,10 @@ export class StudentsService {
     });
   }
 
-  async createCompleteRegistration(dto: CompleteStudentRegistrationDto, user?: { id?: string }) {
+  async createCompleteRegistration(
+    dto: CompleteStudentRegistrationDto,
+    user?: { id?: string },
+  ) {
     const {
       student,
       primaryGuardian,
@@ -151,19 +186,48 @@ export class StudentsService {
       payments = [],
     } = dto;
     if (!student?.firstName?.trim() || !student?.lastName?.trim()) {
-      throw new BadRequestException("Student first name and last name are required.");
+      throw new BadRequestException(
+        "Student first name and last name are required.",
+      );
     }
-    if (!student.dateOfBirth || !student.gender || !student.passportPhoto || !student.nationality || !student.address) {
-      throw new BadRequestException("Complete the student's personal information and photo.");
+    if (
+      !student.dateOfBirth ||
+      !student.gender ||
+      !student.passportPhoto ||
+      !student.nationality ||
+      !student.address
+    ) {
+      throw new BadRequestException(
+        "Complete the student's personal information and photo.",
+      );
     }
-    if (!student.academicYearId || !student.termId || !student.classId || !student.studentCategoryId) {
-      throw new BadRequestException("Academic year, term, class, and student category are required.");
+    if (
+      !student.academicYearId ||
+      !student.termId ||
+      !student.classId ||
+      !student.studentCategoryId
+    ) {
+      throw new BadRequestException(
+        "Academic year, term, class, and student category are required.",
+      );
     }
-    if (!primaryGuardian?.fullName?.trim() || !primaryGuardian.relationship || !primaryGuardian.phone || !primaryGuardian.profilePhoto) {
-      throw new BadRequestException("Complete the primary guardian's name, relationship, phone number, and photo.");
+    if (
+      !primaryGuardian?.fullName?.trim() ||
+      !primaryGuardian.relationship ||
+      !primaryGuardian.phone ||
+      !primaryGuardian.profilePhoto
+    ) {
+      throw new BadRequestException(
+        "Complete the primary guardian's name, relationship, phone number, and photo.",
+      );
     }
-    if (!primaryGuardian.identityDocumentType || !primaryGuardian.identityDocumentUrl) {
-      throw new BadRequestException("The primary guardian's supporting identity document is required.");
+    if (
+      !primaryGuardian.identityDocumentType ||
+      !primaryGuardian.identityDocumentUrl
+    ) {
+      throw new BadRequestException(
+        "The primary guardian's supporting identity document is required.",
+      );
     }
     await this.communications.assertVerifiedRegistrationEmail(
       primaryGuardian.communicationEmailVerificationId,
@@ -203,7 +267,9 @@ export class StudentsService {
     if (
       !normalizedPayments.some(
         (payment) =>
-          payment.feeTypeId === registrationFee.id && payment.amount > 0 && Boolean(payment.receiptUrl),
+          payment.feeTypeId === registrationFee.id &&
+          payment.amount > 0 &&
+          Boolean(payment.receiptUrl),
       )
     )
       throw new BadRequestException(
@@ -211,7 +277,12 @@ export class StudentsService {
       );
     const result = await this.prisma.$transaction(
       async (tx) => {
-        const classOffering = await this.ensurePlacementIsAvailable(tx, student.academicYearId!, student.termId!, student.classId!);
+        const classOffering = await this.ensurePlacementIsAvailable(
+          tx,
+          student.academicYearId!,
+          student.termId!,
+          student.classId!,
+        );
         const admissionNumber = await this.generateStudentNumber(tx);
         const created = await tx.student.create({
           data: {
@@ -494,12 +565,19 @@ export class StudentsService {
               })
             : null;
           if (!structure || !charge) {
-            const feeName = feeTypes.find((item) => item.id === payment.feeTypeId)?.name ?? "selected fee";
-            throw new BadRequestException(`Create and apply a ${feeName} finance structure for this year, term, class, and student category before receiving its registration payment.`);
+            const feeName =
+              feeTypes.find((item) => item.id === payment.feeTypeId)?.name ??
+              "selected fee";
+            throw new BadRequestException(
+              `Create and apply a ${feeName} finance structure for this year, term, class, and student category before receiving its registration payment.`,
+            );
           }
-          const remainingBalance = charge.expectedAmount - charge.paidAmount - charge.waivedAmount;
+          const remainingBalance =
+            charge.expectedAmount - charge.paidAmount - charge.waivedAmount;
           if (payment.amount > remainingBalance) {
-            throw new BadRequestException(`The ${feeTypes.find((item) => item.id === payment.feeTypeId)?.name ?? "fee"} payment exceeds its remaining balance of UGX ${remainingBalance.toLocaleString()}.`);
+            throw new BadRequestException(
+              `The ${feeTypes.find((item) => item.id === payment.feeTypeId)?.name ?? "fee"} payment exceeds its remaining balance of UGX ${remainingBalance.toLocaleString()}.`,
+            );
           }
           const paymentDate = toKampalaLocalDateTime();
           const createdPayment = await tx.payment.create({
@@ -519,7 +597,14 @@ export class StudentsService {
               recordedByUserId: user?.id,
             },
           });
-          await tx.paymentAudit.create({ data: { paymentId: createdPayment.id, action: "CREATED_DURING_REGISTRATION", actorUserId: user?.id, changes: { amount: payment.amount, studentChargeId: charge.id } } });
+          await tx.paymentAudit.create({
+            data: {
+              paymentId: createdPayment.id,
+              action: "CREATED_DURING_REGISTRATION",
+              actorUserId: user?.id,
+              changes: { amount: payment.amount, studentChargeId: charge.id },
+            },
+          });
           if (charge) {
             const paidAmount = charge.paidAmount + payment.amount;
             const balance =
@@ -554,13 +639,19 @@ export class StudentsService {
             studentCategory: true,
           },
         });
-        return { student: registeredStudent, guardianCredentials, primaryGuardianId };
+        return {
+          student: registeredStudent,
+          guardianCredentials,
+          primaryGuardianId,
+        };
       },
       { maxWait: 10_000, timeout: 20_000 },
     );
 
     if (!result.primaryGuardianId) {
-      throw new BadRequestException("The primary guardian could not be finalized.");
+      throw new BadRequestException(
+        "The primary guardian could not be finalized.",
+      );
     }
     await this.communications.finalizeVerifiedRegistrationEmail(
       primaryGuardian.communicationEmailVerificationId!,
@@ -607,7 +698,12 @@ export class StudentsService {
         schoolClass: true,
         studentCategory: true,
         enrollments: {
-          include: { academicYear: true, term: true, schoolClass: true, studentCategory: true },
+          include: {
+            academicYear: true,
+            term: true,
+            schoolClass: true,
+            studentCategory: true,
+          },
           orderBy: { startedAt: "desc" },
         },
       },
@@ -669,10 +765,12 @@ export class StudentsService {
     const existing = await this.prisma.student.findUnique({ where: { id } });
     if (!existing) throw new BadRequestException("Student not found.");
 
-    const nextAcademicYearId = updateStudentDto.academicYearId ?? existing.academicYearId;
+    const nextAcademicYearId =
+      updateStudentDto.academicYearId ?? existing.academicYearId;
     const nextTermId = updateStudentDto.termId ?? existing.termId;
     const nextClassId = updateStudentDto.classId ?? existing.classId;
-    const nextCategoryId = updateStudentDto.studentCategoryId ?? existing.studentCategoryId;
+    const nextCategoryId =
+      updateStudentDto.studentCategoryId ?? existing.studentCategoryId;
     const nextIsActive = updateStudentDto.isActive ?? existing.isActive;
     const placementChanged =
       nextAcademicYearId !== existing.academicYearId ||
@@ -683,9 +781,16 @@ export class StudentsService {
     return this.prisma.$transaction(async (tx) => {
       if (nextIsActive && (placementChanged || !existing.isActive)) {
         if (!nextAcademicYearId || !nextTermId || !nextClassId) {
-          throw new BadRequestException("Academic year, term, and class are required for an active placement.");
+          throw new BadRequestException(
+            "Academic year, term, and class are required for an active placement.",
+          );
         }
-        const classOffering = await this.ensurePlacementIsAvailable(tx, nextAcademicYearId, nextTermId, nextClassId);
+        const classOffering = await this.ensurePlacementIsAvailable(
+          tx,
+          nextAcademicYearId,
+          nextTermId,
+          nextClassId,
+        );
         await tx.studentEnrollment.updateMany({
           where: { studentId: id, isCurrent: true },
           data: { isCurrent: false, status: "COMPLETED", endedAt: new Date() },
@@ -720,7 +825,12 @@ export class StudentsService {
           schoolClass: true,
           studentCategory: true,
           enrollments: {
-            include: { academicYear: true, term: true, schoolClass: true, studentCategory: true },
+            include: {
+              academicYear: true,
+              term: true,
+              schoolClass: true,
+              studentCategory: true,
+            },
             orderBy: { startedAt: "desc" },
           },
         },
@@ -759,8 +869,15 @@ export class StudentsService {
       notes?: string;
     }>;
   }) {
-    if (!data.decisions?.length) throw new BadRequestException("Select at least one student.");
-    const allowedStatuses = new Set(["PROMOTED", "REPEATED", "TRANSFERRED", "WITHDRAWN", "COMPLETED"]);
+    if (!data.decisions?.length)
+      throw new BadRequestException("Select at least one student.");
+    const allowedStatuses = new Set([
+      "PROMOTED",
+      "REPEATED",
+      "TRANSFERRED",
+      "WITHDRAWN",
+      "COMPLETED",
+    ]);
     return this.prisma.$transaction(async (tx) => {
       let targetOffering: { id: string } | null = null;
       if (data.targetAcademicYearId && data.targetClassId) {
@@ -772,12 +889,16 @@ export class StudentsService {
           },
           select: { id: true },
         });
-        if (!targetOffering) throw new BadRequestException("The destination class is not offered in the destination academic year.");
+        if (!targetOffering)
+          throw new BadRequestException(
+            "The destination class is not offered in the destination academic year.",
+          );
       }
       const results: object[] = [];
       for (const decision of data.decisions) {
         const status = String(decision.status).toUpperCase();
-        if (!allowedStatuses.has(status)) throw new BadRequestException("Invalid student movement status.");
+        if (!allowedStatuses.has(status))
+          throw new BadRequestException("Invalid student movement status.");
         const current = await tx.studentEnrollment.findFirst({
           where: {
             studentId: decision.studentId,
@@ -786,17 +907,32 @@ export class StudentsService {
             status: "ACTIVE",
           },
         });
-        if (!current) throw new BadRequestException("A selected student is not actively enrolled in the source class.");
+        if (!current)
+          throw new BadRequestException(
+            "A selected student is not actively enrolled in the source class.",
+          );
         await tx.studentEnrollment.update({
           where: { id: current.id },
-          data: { status, isCurrent: false, endedAt: new Date(), notes: decision.notes },
+          data: {
+            status,
+            isCurrent: false,
+            endedAt: new Date(),
+            notes: decision.notes,
+          },
         });
 
         if (status === "PROMOTED" || status === "REPEATED") {
-          if (!data.targetAcademicYearId || !data.targetClassId || !targetOffering) {
-            throw new BadRequestException("A destination academic year and class are required for promoted or repeated students.");
+          if (
+            !data.targetAcademicYearId ||
+            !data.targetClassId ||
+            !targetOffering
+          ) {
+            throw new BadRequestException(
+              "A destination academic year and class are required for promoted or repeated students.",
+            );
           }
-          const categoryId = decision.studentCategoryId ?? current.studentCategoryId;
+          const categoryId =
+            decision.studentCategoryId ?? current.studentCategoryId;
           const enrollment = await tx.studentEnrollment.create({
             data: {
               studentId: decision.studentId,
