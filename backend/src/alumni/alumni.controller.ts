@@ -61,6 +61,11 @@ export class AlumniController {
     return this.alumniService.completeRegistration(dto, profileImage);
   }
 
+  @Get("community-summary")
+  communitySummary() {
+    return this.alumniService.getPublicCommunitySummary();
+  }
+
   // ============================================================
   // DIRECTOR ALUMNI MANAGEMENT
   // ============================================================

@@ -3,13 +3,9 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useSearchParams } from "react-router-dom";
 import {
-  AlumniCommunity,
-  AlumniConnection,
-  AlumniHero,
-  AlumniJoin,
   AlumniRegistrationForm,
-  AlumniStories,
 } from "../../components/alumni";
+import AlumniLanding from "./alumni/AlumniLanding";
 
 export default function Alumni() {
   const [searchParams] = useSearchParams();
@@ -32,13 +28,5 @@ export default function Alumni() {
     return <AlumniRegistrationForm token={token} />;
   }
 
-  return (
-    <>
-      <AlumniHero />
-      <AlumniCommunity />
-      <AlumniStories />
-      <AlumniConnection />
-      <AlumniJoin />
-    </>
-  );
+  return <AlumniLanding />;
 }

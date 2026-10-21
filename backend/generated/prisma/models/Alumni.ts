@@ -304,6 +304,7 @@ export type AlumniWhereInput = {
   possibleStudentMatchDetails?: Prisma.StringNullableFilter<"Alumni"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Alumni"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Alumni"> | Date | string
+  publications?: Prisma.SchoolPublicationListRelationFilter
 }
 
 export type AlumniOrderByWithRelationInput = {
@@ -323,6 +324,7 @@ export type AlumniOrderByWithRelationInput = {
   possibleStudentMatchDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  publications?: Prisma.SchoolPublicationOrderByRelationAggregateInput
 }
 
 export type AlumniWhereUniqueInput = Prisma.AtLeast<{
@@ -345,6 +347,7 @@ export type AlumniWhereUniqueInput = Prisma.AtLeast<{
   possibleStudentMatchDetails?: Prisma.StringNullableFilter<"Alumni"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Alumni"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Alumni"> | Date | string
+  publications?: Prisma.SchoolPublicationListRelationFilter
 }, "id" | "email">
 
 export type AlumniOrderByWithAggregationInput = {
@@ -410,6 +413,7 @@ export type AlumniCreateInput = {
   possibleStudentMatchDetails?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publications?: Prisma.SchoolPublicationCreateNestedManyWithoutAlumniInput
 }
 
 export type AlumniUncheckedCreateInput = {
@@ -429,6 +433,7 @@ export type AlumniUncheckedCreateInput = {
   possibleStudentMatchDetails?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publications?: Prisma.SchoolPublicationUncheckedCreateNestedManyWithoutAlumniInput
 }
 
 export type AlumniUpdateInput = {
@@ -448,6 +453,7 @@ export type AlumniUpdateInput = {
   possibleStudentMatchDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publications?: Prisma.SchoolPublicationUpdateManyWithoutAlumniNestedInput
 }
 
 export type AlumniUncheckedUpdateInput = {
@@ -467,6 +473,7 @@ export type AlumniUncheckedUpdateInput = {
   possibleStudentMatchDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publications?: Prisma.SchoolPublicationUncheckedUpdateManyWithoutAlumniNestedInput
 }
 
 export type AlumniCreateManyInput = {
@@ -591,6 +598,148 @@ export type AlumniSumOrderByAggregateInput = {
   graduationYear?: Prisma.SortOrder
 }
 
+export type AlumniNullableScalarRelationFilter = {
+  is?: Prisma.AlumniWhereInput | null
+  isNot?: Prisma.AlumniWhereInput | null
+}
+
+export type AlumniCreateNestedOneWithoutPublicationsInput = {
+  create?: Prisma.XOR<Prisma.AlumniCreateWithoutPublicationsInput, Prisma.AlumniUncheckedCreateWithoutPublicationsInput>
+  connectOrCreate?: Prisma.AlumniCreateOrConnectWithoutPublicationsInput
+  connect?: Prisma.AlumniWhereUniqueInput
+}
+
+export type AlumniUpdateOneWithoutPublicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AlumniCreateWithoutPublicationsInput, Prisma.AlumniUncheckedCreateWithoutPublicationsInput>
+  connectOrCreate?: Prisma.AlumniCreateOrConnectWithoutPublicationsInput
+  upsert?: Prisma.AlumniUpsertWithoutPublicationsInput
+  disconnect?: Prisma.AlumniWhereInput | boolean
+  delete?: Prisma.AlumniWhereInput | boolean
+  connect?: Prisma.AlumniWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AlumniUpdateToOneWithWhereWithoutPublicationsInput, Prisma.AlumniUpdateWithoutPublicationsInput>, Prisma.AlumniUncheckedUpdateWithoutPublicationsInput>
+}
+
+export type AlumniCreateWithoutPublicationsInput = {
+  id?: string
+  email: string
+  fullName: string
+  graduationYear?: number | null
+  studentPeriod?: string | null
+  whatsappNumber?: string | null
+  profileImageUrl?: string | null
+  profileImagePublicId?: string | null
+  rememberedPerson?: string | null
+  isActive?: boolean
+  lockedAt?: Date | string | null
+  lockedReason?: string | null
+  possibleStudentMatch?: boolean
+  possibleStudentMatchDetails?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AlumniUncheckedCreateWithoutPublicationsInput = {
+  id?: string
+  email: string
+  fullName: string
+  graduationYear?: number | null
+  studentPeriod?: string | null
+  whatsappNumber?: string | null
+  profileImageUrl?: string | null
+  profileImagePublicId?: string | null
+  rememberedPerson?: string | null
+  isActive?: boolean
+  lockedAt?: Date | string | null
+  lockedReason?: string | null
+  possibleStudentMatch?: boolean
+  possibleStudentMatchDetails?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AlumniCreateOrConnectWithoutPublicationsInput = {
+  where: Prisma.AlumniWhereUniqueInput
+  create: Prisma.XOR<Prisma.AlumniCreateWithoutPublicationsInput, Prisma.AlumniUncheckedCreateWithoutPublicationsInput>
+}
+
+export type AlumniUpsertWithoutPublicationsInput = {
+  update: Prisma.XOR<Prisma.AlumniUpdateWithoutPublicationsInput, Prisma.AlumniUncheckedUpdateWithoutPublicationsInput>
+  create: Prisma.XOR<Prisma.AlumniCreateWithoutPublicationsInput, Prisma.AlumniUncheckedCreateWithoutPublicationsInput>
+  where?: Prisma.AlumniWhereInput
+}
+
+export type AlumniUpdateToOneWithWhereWithoutPublicationsInput = {
+  where?: Prisma.AlumniWhereInput
+  data: Prisma.XOR<Prisma.AlumniUpdateWithoutPublicationsInput, Prisma.AlumniUncheckedUpdateWithoutPublicationsInput>
+}
+
+export type AlumniUpdateWithoutPublicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  studentPeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rememberedPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  possibleStudentMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  possibleStudentMatchDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AlumniUncheckedUpdateWithoutPublicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  studentPeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rememberedPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  possibleStudentMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  possibleStudentMatchDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type AlumniCountOutputType
+ */
+
+export type AlumniCountOutputType = {
+  publications: number
+}
+
+export type AlumniCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  publications?: boolean | AlumniCountOutputTypeCountPublicationsArgs
+}
+
+/**
+ * AlumniCountOutputType without action
+ */
+export type AlumniCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AlumniCountOutputType
+   */
+  select?: Prisma.AlumniCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AlumniCountOutputType without action
+ */
+export type AlumniCountOutputTypeCountPublicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SchoolPublicationWhereInput
+}
 
 
 export type AlumniSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -610,6 +759,8 @@ export type AlumniSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   possibleStudentMatchDetails?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  publications?: boolean | Prisma.Alumni$publicationsArgs<ExtArgs>
+  _count?: boolean | Prisma.AlumniCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["alumni"]>
 
 export type AlumniSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -670,10 +821,18 @@ export type AlumniSelectScalar = {
 }
 
 export type AlumniOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "fullName" | "graduationYear" | "studentPeriod" | "whatsappNumber" | "profileImageUrl" | "profileImagePublicId" | "rememberedPerson" | "isActive" | "lockedAt" | "lockedReason" | "possibleStudentMatch" | "possibleStudentMatchDetails" | "createdAt" | "updatedAt", ExtArgs["result"]["alumni"]>
+export type AlumniInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  publications?: boolean | Prisma.Alumni$publicationsArgs<ExtArgs>
+  _count?: boolean | Prisma.AlumniCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type AlumniIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type AlumniIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $AlumniPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Alumni"
-  objects: {}
+  objects: {
+    publications: Prisma.$SchoolPublicationPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
@@ -1085,6 +1244,7 @@ readonly fields: AlumniFieldRefs;
  */
 export interface Prisma__AlumniClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  publications<T extends Prisma.Alumni$publicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Alumni$publicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolPublicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1147,6 +1307,10 @@ export type AlumniFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
+  /**
    * Filter, which Alumni to fetch.
    */
   where: Prisma.AlumniWhereUniqueInput
@@ -1165,6 +1329,10 @@ export type AlumniFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
+  /**
    * Filter, which Alumni to fetch.
    */
   where: Prisma.AlumniWhereUniqueInput
@@ -1182,6 +1350,10 @@ export type AlumniFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Alumni
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
   /**
    * Filter, which Alumni to fetch.
    */
@@ -1231,6 +1403,10 @@ export type AlumniFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
+  /**
    * Filter, which Alumni to fetch.
    */
   where?: Prisma.AlumniWhereInput
@@ -1278,6 +1454,10 @@ export type AlumniFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Alumni
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
   /**
    * Filter, which Alumni to fetch.
    */
@@ -1327,6 +1507,10 @@ export type AlumniCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
+  /**
    * The data needed to create a Alumni.
    */
   data: Prisma.XOR<Prisma.AlumniCreateInput, Prisma.AlumniUncheckedCreateInput>
@@ -1374,6 +1558,10 @@ export type AlumniUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Alumni
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
   /**
    * The data needed to update a Alumni.
    */
@@ -1441,6 +1629,10 @@ export type AlumniUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
+  /**
    * The filter to search for the Alumni to update in case it exists.
    */
   where: Prisma.AlumniWhereUniqueInput
@@ -1467,6 +1659,10 @@ export type AlumniDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
+  /**
    * Filter which Alumni to delete.
    */
   where: Prisma.AlumniWhereUniqueInput
@@ -1487,6 +1683,30 @@ export type AlumniDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * Alumni.publications
+ */
+export type Alumni$publicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SchoolPublication
+   */
+  select?: Prisma.SchoolPublicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SchoolPublication
+   */
+  omit?: Prisma.SchoolPublicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SchoolPublicationInclude<ExtArgs> | null
+  where?: Prisma.SchoolPublicationWhereInput
+  orderBy?: Prisma.SchoolPublicationOrderByWithRelationInput | Prisma.SchoolPublicationOrderByWithRelationInput[]
+  cursor?: Prisma.SchoolPublicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SchoolPublicationScalarFieldEnum | Prisma.SchoolPublicationScalarFieldEnum[]
+}
+
+/**
  * Alumni without action
  */
 export type AlumniDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1498,4 +1718,8 @@ export type AlumniDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Alumni
    */
   omit?: Prisma.AlumniOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
 }

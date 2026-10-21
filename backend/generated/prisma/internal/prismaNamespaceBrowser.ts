@@ -89,6 +89,13 @@ export const ModelName = {
   CommunicationContact: 'CommunicationContact',
   RegistrationEmailVerification: 'RegistrationEmailVerification',
   SchoolCommunication: 'SchoolCommunication',
+  SchoolPublication: 'SchoolPublication',
+  SchoolPublicationImage: 'SchoolPublicationImage',
+  SchoolEventSeries: 'SchoolEventSeries',
+  SchoolEvent: 'SchoolEvent',
+  SchoolEventAudience: 'SchoolEventAudience',
+  SchoolEventChange: 'SchoolEventChange',
+  SchoolEventImage: 'SchoolEventImage',
   CommunicationTestEmail: 'CommunicationTestEmail',
   CommunicationRecipient: 'CommunicationRecipient',
   Payment: 'Payment',
@@ -723,6 +730,139 @@ export const SchoolCommunicationScalarFieldEnum = {
 } as const
 
 export type SchoolCommunicationScalarFieldEnum = (typeof SchoolCommunicationScalarFieldEnum)[keyof typeof SchoolCommunicationScalarFieldEnum]
+
+
+export const SchoolPublicationScalarFieldEnum = {
+  id: 'id',
+  kind: 'kind',
+  status: 'status',
+  title: 'title',
+  slug: 'slug',
+  summary: 'summary',
+  category: 'category',
+  contentDocument: 'contentDocument',
+  alumniId: 'alumniId',
+  authorUserId: 'authorUserId',
+  isFeatured: 'isFeatured',
+  featuredImageUrl: 'featuredImageUrl',
+  featuredImagePublicId: 'featuredImagePublicId',
+  featuredImageAlt: 'featuredImageAlt',
+  consentConfirmedAt: 'consentConfirmedAt',
+  consentConfirmedByUserId: 'consentConfirmedByUserId',
+  consentNote: 'consentNote',
+  publishedAt: 'publishedAt',
+  archivedAt: 'archivedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolPublicationScalarFieldEnum = (typeof SchoolPublicationScalarFieldEnum)[keyof typeof SchoolPublicationScalarFieldEnum]
+
+
+export const SchoolPublicationImageScalarFieldEnum = {
+  id: 'id',
+  publicationId: 'publicationId',
+  secureUrl: 'secureUrl',
+  cloudinaryPublicId: 'cloudinaryPublicId',
+  altText: 'altText',
+  caption: 'caption',
+  mimeType: 'mimeType',
+  width: 'width',
+  height: 'height',
+  bytes: 'bytes',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolPublicationImageScalarFieldEnum = (typeof SchoolPublicationImageScalarFieldEnum)[keyof typeof SchoolPublicationImageScalarFieldEnum]
+
+
+export const SchoolEventSeriesScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  recurrenceRule: 'recurrenceRule',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolEventSeriesScalarFieldEnum = (typeof SchoolEventSeriesScalarFieldEnum)[keyof typeof SchoolEventSeriesScalarFieldEnum]
+
+
+export const SchoolEventScalarFieldEnum = {
+  id: 'id',
+  seriesId: 'seriesId',
+  title: 'title',
+  slug: 'slug',
+  descriptionDocument: 'descriptionDocument',
+  type: 'type',
+  venue: 'venue',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  recurrenceRule: 'recurrenceRule',
+  visibility: 'visibility',
+  publicationStatus: 'publicationStatus',
+  operationalStatus: 'operationalStatus',
+  featuredImageUrl: 'featuredImageUrl',
+  featuredImagePublicId: 'featuredImagePublicId',
+  featuredImageAlt: 'featuredImageAlt',
+  announcementCommunicationId: 'announcementCommunicationId',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  publishedAt: 'publishedAt',
+  archivedAt: 'archivedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolEventScalarFieldEnum = (typeof SchoolEventScalarFieldEnum)[keyof typeof SchoolEventScalarFieldEnum]
+
+
+export const SchoolEventAudienceScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  audience: 'audience',
+  schoolClassId: 'schoolClassId',
+  academicYearId: 'academicYearId',
+  stream: 'stream',
+  createdAt: 'createdAt'
+} as const
+
+export type SchoolEventAudienceScalarFieldEnum = (typeof SchoolEventAudienceScalarFieldEnum)[keyof typeof SchoolEventAudienceScalarFieldEnum]
+
+
+export const SchoolEventChangeScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  actorUserId: 'actorUserId',
+  action: 'action',
+  reason: 'reason',
+  previousValues: 'previousValues',
+  nextValues: 'nextValues',
+  createdAt: 'createdAt'
+} as const
+
+export type SchoolEventChangeScalarFieldEnum = (typeof SchoolEventChangeScalarFieldEnum)[keyof typeof SchoolEventChangeScalarFieldEnum]
+
+
+export const SchoolEventImageScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  secureUrl: 'secureUrl',
+  cloudinaryPublicId: 'cloudinaryPublicId',
+  altText: 'altText',
+  caption: 'caption',
+  mimeType: 'mimeType',
+  width: 'width',
+  height: 'height',
+  bytes: 'bytes',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolEventImageScalarFieldEnum = (typeof SchoolEventImageScalarFieldEnum)[keyof typeof SchoolEventImageScalarFieldEnum]
 
 
 export const CommunicationTestEmailScalarFieldEnum = {

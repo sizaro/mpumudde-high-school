@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { ArrowRight, CheckCircle2, Mail, ShieldCheck } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import alumniService from "../../services/alumniService";
 
 type AlumniJoinState = {
@@ -13,6 +13,8 @@ const initialState: AlumniJoinState = {
   message: "",
   error: "",
 };
+
+const illustrativeAlumniImage = "/images/alumni/alumni-join-illustrative.png";
 
 async function submitAlumniRegistration(
   _previousState: AlumniJoinState,
@@ -73,97 +75,62 @@ export default function AlumniJoin() {
 
   return (
     <section id="join-alumni" className="section-shell scroll-mt-24">
-      <div data-aos="fade-up" className="glass-card-solid overflow-hidden">
-        <div className="grid gap-10 p-8 md:p-12 lg:grid-cols-[1fr_0.85fr] lg:items-center lg:p-14">
-          <div>
-            <span className="section-badge">Join the community</span>
-
-            <h2 className="section-title mt-5">
-              Your Mpumudde journey still has a place here.
-            </h2>
-
-            <p className="section-lead mt-5 max-w-2xl">
-              Register your email to join the Mpumudde Alumni Community. We will
-              send you a verification link before you complete your alumni
-              profile.
-            </p>
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-3xl bg-white/5 p-5">
-                <div className="inline-flex rounded-2xl bg-emerald-400/15 p-3">
-                  <Mail size={21} className="text-emerald-400" />
-                </div>
-
-                <h3 className="mt-4 font-semibold text-slate-900 dark:text-white">
-                  Verify your email
-                </h3>
-
-                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-white/65">
-                  A secure verification link will be sent to the email address
-                  you provide.
-                </p>
-              </div>
-
-              <div className="rounded-3xl bg-white/5 p-5">
-                <div className="inline-flex rounded-2xl bg-emerald-400/15 p-3">
-                  <ShieldCheck size={21} className="text-emerald-400" />
-                </div>
-
-                <h3 className="mt-4 font-semibold text-slate-900 dark:text-white">
-                  Complete your profile
-                </h3>
-
-                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-white/65">
-                  After verification, provide the details you want the school to
-                  keep in your alumni record.
-                </p>
-              </div>
-            </div>
+      <div data-aos="fade-up" className="overflow-hidden rounded-2xl bg-[#071d3a] shadow-xl">
+        <div className="grid lg:grid-cols-[.82fr_1.18fr]">
+          <div className="relative hidden min-h-[29rem] lg:block">
+            <img
+              src={illustrativeAlumniImage}
+              alt="Illustrative alumni community placeholder"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#071d3a]/10 via-[#071d3a]/20 to-[#071d3a]/70" />
+            <span className="absolute bottom-5 left-5 rounded bg-[#071d3a]/75 px-3 py-2 text-xs font-semibold text-white/90">
+              Illustrative image
+            </span>
           </div>
 
-          <div
-            data-aos="fade-left"
-            data-aos-delay={120}
-            className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm md:p-8"
-          >
+          <div className="relative overflow-hidden px-7 py-12 text-white md:px-12 lg:py-16">
+            <div className="absolute -right-28 -top-28 h-72 w-72 rounded-full bg-[#1261d0]/30 blur-3xl" />
+            <div className="relative">
+              <p className="text-xs font-bold uppercase tracking-[.24em] text-[#f2c64c]">
+                Join the community
+              </p>
+              <h2 className="mt-4 max-w-2xl text-3xl font-extrabold leading-tight md:text-4xl">
+                Your Mpumudde journey still has a place here.
+              </h2>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-white/85">
+                Register your email to join the Mpumudde Alumni Community. We will
+                send you a verification link before you complete your alumni profile.
+              </p>
+
+              <p className="mt-6 text-sm font-semibold text-white">
+                Start your registration
+              </p>
+
+              <p className="mt-1 text-sm leading-6 text-white/70">
+                Enter the email address the school should use for official alumni communication.
+              </p>
+
+              <div
+                data-aos="fade-left"
+                data-aos-delay={120}
+                className="mt-6"
+              >
             {state.success ? (
-              <div className="py-6 text-center">
-                <div className="mx-auto inline-flex rounded-full bg-emerald-400/15 p-4">
-                  <CheckCircle2 size={32} className="text-emerald-400" />
+              <div className="rounded-xl border border-emerald-300/25 bg-white/10 p-6 text-center backdrop-blur-sm">
+                <div className="mx-auto inline-flex rounded-full bg-emerald-400/15 p-3">
+                  <CheckCircle2 size={28} className="text-emerald-300" />
                 </div>
-
-                <h3 className="mt-5 text-xl font-bold text-slate-900 dark:text-white">
-                  Check your email
-                </h3>
-
-                <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-white/70">
-                  {state.message}
-                </p>
-
-                <p className="mt-4 text-xs leading-6 text-slate-500 dark:text-white/50">
+                <h3 className="mt-4 text-xl font-bold">Check your email</h3>
+                <p className="mt-3 text-sm leading-7 text-white/80">{state.message}</p>
+                <p className="mt-4 text-xs leading-6 text-white/65">
                   If you do not see the message, check your spam or junk folder.
                 </p>
               </div>
             ) : (
-              <>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                  Start your registration
-                </h3>
-
-                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-white/65">
-                  Enter the email address you want the school to use for
-                  official alumni communication.
-                </p>
-
-                <form action={formAction} className="mt-7 space-y-5">
-                  <div>
-                    <label
-                      htmlFor="alumni-email"
-                      className="mb-2 block text-sm font-semibold text-slate-900 dark:text-white"
-                    >
-                      Email address
-                    </label>
-
+              <form action={formAction} className="space-y-4">
+                  <label htmlFor="alumni-email" className="sr-only">Email address</label>
+                  <div className="flex flex-col gap-3 sm:flex-row">
                     <input
                       id="alumni-email"
                       name="email"
@@ -172,41 +139,34 @@ export default function AlumniJoin() {
                       autoComplete="email"
                       required
                       disabled={isPending}
-                      className="w-full rounded-2xl border border-slate-300 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                      className="min-w-0 flex-1 rounded-lg border border-white/40 bg-white px-4 py-3 text-sm text-[#081a2b] outline-none transition placeholder:text-slate-500 focus:border-[#f2c64c] focus:ring-2 focus:ring-[#f2c64c]/45 disabled:cursor-not-allowed disabled:opacity-60"
                     />
+                    <button
+                      type="submit"
+                      disabled={isPending}
+                      className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#1261d0] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#0e52b2] focus:outline-none focus:ring-2 focus:ring-[#f2c64c] focus:ring-offset-2 focus:ring-offset-[#071d3a] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {isPending ? "Sending…" : "Continue with Email"}
+                      {!isPending && <ArrowRight size={17} />}
+                    </button>
                   </div>
-
                   {state.error && (
                     <div
                       role="alert"
-                      className="rounded-2xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm leading-6 text-red-700 dark:text-red-300"
+                      className="rounded-lg border border-red-300/35 bg-red-500/15 px-4 py-3 text-sm leading-6 text-red-100"
                     >
                       {state.error}
                     </div>
                   )}
-
-                  <button
-                    type="submit"
-                    disabled={isPending}
-                    className="glass-button w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {isPending
-                      ? "Sending verification link..."
-                      : "Continue with Email"}
-
-                    {!isPending && <ArrowRight size={18} />}
-                  </button>
-                </form>
-
-                <p className="mt-5 text-center text-xs leading-5 text-slate-500 dark:text-white/45">
-                  Your email must be verified before you can complete your
-                  alumni registration.
-                </p>
-              </>
+              </form>
             )}
+              </div>
+              {!state.success && <p className="mt-4 text-xs leading-5 text-white/65">Your email must be verified before you can complete your alumni registration.</p>}
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 }
+

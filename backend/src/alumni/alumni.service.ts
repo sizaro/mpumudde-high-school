@@ -42,6 +42,21 @@ export class AlumniService {
   // PUBLIC ALUMNI REGISTRATION
   // ============================================================
 
+  async getPublicCommunitySummary() {
+    const now = new Date();
+    const verifiedContacts = await this.prisma.communicationContact.findMany({
+      where: { ownerType: "ALUMNI", kind: "EMAIL", isActive: true, isVerified: true },
+      select: { ownerId: true },
+    });
+    const verifiedAlumniIds = [...new Set(verifiedContacts.map((contact) => contact.ownerId))];
+    const [registeredAlumni, publishedStories, upcomingEvents] = await this.prisma.$transaction([
+      this.prisma.alumni.count({ where: { isActive: true, id: { in: verifiedAlumniIds } } }),
+      this.prisma.schoolPublication.count({ where: { kind: "ALUMNI_STORY", status: "PUBLISHED", publishedAt: { lte: now } } }),
+      this.prisma.schoolEvent.count({ where: { publicationStatus: "PUBLISHED", visibility: "PUBLIC", operationalStatus: { in: ["SCHEDULED", "POSTPONED"] }, startsAt: { gte: now }, audiences: { some: { audience: { in: ["ALUMNI", "WHOLE_SCHOOL"] } } } } }),
+    ]);
+    return { registeredAlumni, publishedStories, upcomingEvents };
+  }
+
   async startRegistration(email: string) {
     const normalizedEmail = this.normalizeEmail(email);
 

@@ -59,6 +59,18 @@ model User {
 
   communicationsSent SchoolCommunication[] @relation("SchoolCommunicationSender")
 
+  publicationsAuthored SchoolPublication[] @relation("SchoolPublicationAuthor")
+
+  publicationConsents SchoolPublication[] @relation("SchoolPublicationConsentActor")
+
+  eventSeriesCreated SchoolEventSeries[] @relation("SchoolEventSeriesCreator")
+
+  eventsCreated SchoolEvent[] @relation("SchoolEventCreator")
+
+  eventsUpdated SchoolEvent[] @relation("SchoolEventUpdater")
+
+  eventChanges SchoolEventChange[] @relation("SchoolEventChangeActor")
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -819,6 +831,8 @@ model Alumni {
   @@index([fullName])
   @@index([isActive])
   @@index([graduationYear])
+
+  publications SchoolPublication[]
 }
 
 model AlumniRegistrationSession {
@@ -870,6 +884,8 @@ model AcademicYear {
   teacherAssignments TeacherAssignment[]
 
   attendanceSessions AttendanceSession[]
+
+  eventAudienceTargets SchoolEventAudience[]
 
   createdAt DateTime @default(now())
 
@@ -930,6 +946,8 @@ model SchoolClass {
   academicYears AcademicYearClass[]
 
   studentEnrollments StudentEnrollment[]
+
+  eventAudienceTargets SchoolEventAudience[]
 
   createdAt DateTime @default(now())
 
@@ -1304,12 +1322,198 @@ model SchoolCommunication {
   sender     User                     @relation("SchoolCommunicationSender", fields: [senderUserId], references: [id])
   recipients CommunicationRecipient[]
 
+  announcedEvent SchoolEvent? @relation("SchoolEventAnnouncement")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([audience, sentAt])
   @@index([senderUserId, createdAt])
   @@index([status, updatedAt])
+}
+
+// School-authored public content. The first supported kind is ALUMNI_STORY;
+// the model is deliberately reusable when the manual Newsroom is migrated.
+model SchoolPublication {
+  id String @id @default(cuid())
+
+  kind String @default("ALUMNI_STORY")
+  status String @default("DRAFT")
+
+  title String
+  slug String @unique
+  summary String
+  category String?
+  contentDocument Json?
+
+  alumniId String?
+  authorUserId String
+
+  isFeatured Boolean @default(false)
+  featuredImageUrl String?
+  featuredImagePublicId String?
+  featuredImageAlt String?
+
+  consentConfirmedAt DateTime?
+  consentConfirmedByUserId String?
+  consentNote String?
+
+  publishedAt DateTime?
+  archivedAt DateTime?
+
+  author User @relation("SchoolPublicationAuthor", fields: [authorUserId], references: [id])
+  alumni Alumni? @relation(fields: [alumniId], references: [id], onDelete: SetNull)
+  consentConfirmedBy User? @relation("SchoolPublicationConsentActor", fields: [consentConfirmedByUserId], references: [id], onDelete: SetNull)
+  images SchoolPublicationImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kind, status, publishedAt])
+  @@index([alumniId])
+  @@index([isFeatured, publishedAt])
+}
+
+model SchoolPublicationImage {
+  id String @id @default(cuid())
+  publicationId String
+  secureUrl String
+  cloudinaryPublicId String?
+  altText String
+  caption String?
+  mimeType String?
+  width Int?
+  height Int?
+  bytes Int?
+  sortOrder Int @default(0)
+
+  publication SchoolPublication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([publicationId, sortOrder])
+  @@index([cloudinaryPublicId])
+}
+
+// Recurrence is represented by a series plus independently editable event
+// occurrences. A future reunion never overwrites an earlier one.
+model SchoolEventSeries {
+  id String @id @default(cuid())
+  title String
+  recurrenceRule String
+  createdByUserId String
+
+  createdBy User @relation("SchoolEventSeriesCreator", fields: [createdByUserId], references: [id])
+  events SchoolEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([recurrenceRule])
+}
+
+model SchoolEvent {
+  id String @id @default(cuid())
+  seriesId String?
+
+  title String
+  slug String @unique
+  descriptionDocument Json?
+  type String
+  venue String?
+
+  startsAt DateTime
+  endsAt DateTime?
+  recurrenceRule String @default("ONE_TIME")
+  visibility String @default("PUBLIC")
+
+  publicationStatus String @default("DRAFT")
+  operationalStatus String @default("SCHEDULED")
+
+  featuredImageUrl String?
+  featuredImagePublicId String?
+  featuredImageAlt String?
+
+  announcementCommunicationId String? @unique
+  createdByUserId String
+  updatedByUserId String?
+  publishedAt DateTime?
+  archivedAt DateTime?
+
+  series SchoolEventSeries? @relation(fields: [seriesId], references: [id], onDelete: SetNull)
+  announcementCommunication SchoolCommunication? @relation("SchoolEventAnnouncement", fields: [announcementCommunicationId], references: [id], onDelete: SetNull)
+  createdBy User @relation("SchoolEventCreator", fields: [createdByUserId], references: [id])
+  updatedBy User? @relation("SchoolEventUpdater", fields: [updatedByUserId], references: [id])
+  audiences SchoolEventAudience[]
+  changes SchoolEventChange[]
+  images SchoolEventImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([publicationStatus, visibility, startsAt])
+  @@index([operationalStatus, startsAt])
+  @@index([seriesId, startsAt])
+}
+
+model SchoolEventAudience {
+  id String @id @default(cuid())
+  eventId String
+  audience String
+  schoolClassId String?
+  academicYearId String?
+  stream String?
+
+  event SchoolEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  schoolClass SchoolClass? @relation(fields: [schoolClassId], references: [id], onDelete: SetNull)
+  academicYear AcademicYear? @relation(fields: [academicYearId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([audience, eventId])
+  @@index([schoolClassId])
+  @@index([academicYearId])
+}
+
+model SchoolEventChange {
+  id String @id @default(cuid())
+  eventId String
+  actorUserId String
+  action String
+  reason String?
+  previousValues Json?
+  nextValues Json?
+
+  event SchoolEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  actor User @relation("SchoolEventChangeActor", fields: [actorUserId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([eventId, createdAt])
+  @@index([actorUserId, createdAt])
+}
+
+model SchoolEventImage {
+  id String @id @default(cuid())
+  eventId String
+  secureUrl String
+  cloudinaryPublicId String?
+  altText String
+  caption String?
+  mimeType String?
+  width Int?
+  height Int?
+  bytes Int?
+  sortOrder Int @default(0)
+
+  event SchoolEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([eventId, sortOrder])
+  @@index([cloudinaryPublicId])
 }
 
 // Test deliveries are kept outside official communication history, while making

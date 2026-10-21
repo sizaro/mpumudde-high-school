@@ -5,6 +5,7 @@ import {
   BookOpenCheck,
   ChevronDown,
   ClipboardCheck,
+  FileText,
   GraduationCap,
   LayoutDashboard,
   LogOut,
@@ -245,6 +246,11 @@ export default function DirectorLayout() {
               <NavLink to="communications" className={navButton} end>
                 <MessageSquareText size={18} />
                 Communication
+              </NavLink>
+
+              <NavLink to="content" className={navButton} end>
+                <FileText size={18} />
+                Stories & events
               </NavLink>
 
               <NavLink to="reports" className={navButton} end>

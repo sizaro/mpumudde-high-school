@@ -208,6 +208,41 @@ export type RegistrationEmailVerification = Prisma.RegistrationEmailVerification
  */
 export type SchoolCommunication = Prisma.SchoolCommunicationModel
 /**
+ * Model SchoolPublication
+ * 
+ */
+export type SchoolPublication = Prisma.SchoolPublicationModel
+/**
+ * Model SchoolPublicationImage
+ * 
+ */
+export type SchoolPublicationImage = Prisma.SchoolPublicationImageModel
+/**
+ * Model SchoolEventSeries
+ * 
+ */
+export type SchoolEventSeries = Prisma.SchoolEventSeriesModel
+/**
+ * Model SchoolEvent
+ * 
+ */
+export type SchoolEvent = Prisma.SchoolEventModel
+/**
+ * Model SchoolEventAudience
+ * 
+ */
+export type SchoolEventAudience = Prisma.SchoolEventAudienceModel
+/**
+ * Model SchoolEventChange
+ * 
+ */
+export type SchoolEventChange = Prisma.SchoolEventChangeModel
+/**
+ * Model SchoolEventImage
+ * 
+ */
+export type SchoolEventImage = Prisma.SchoolEventImageModel
+/**
  * Model CommunicationTestEmail
  * 
  */

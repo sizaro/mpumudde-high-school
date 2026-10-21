@@ -8,6 +8,7 @@ import About from "../pages/public/About";
 import Academics from "../pages/public/Academics";
 import Admissions from "../pages/public/Admissions";
 import Alumni from "../pages/public/Alumni";
+import { AlumniEventDetailPage, AlumniEventsPage, AlumniStoriesPage, AlumniStoryDetailPage } from "../pages/public/alumni/AlumniContentPages";
 import Gallery from "../pages/public/Gallery";
 import Contact from "../pages/public/Contact";
 import Calendar from "../pages/public/Calendar";
@@ -38,6 +39,7 @@ import AlumniPage from "../pages/director/alumni";
 import AlumniDetailsPage from "../pages/director/alumni/Details";
 import AlumniEditPage from "../pages/director/alumni/Edit";
 import DirectorCommunicationsPage from "../pages/director/communications";
+import DirectorContentPage from "../pages/director/content";
 
 // Director — Teacher management
 import TeacherListPage from "../pages/director/teachers/List";
@@ -83,6 +85,10 @@ export default function AppRoutes() {
         <Route path="/admissions" element={<Admissions />} />
         <Route path="/alumni" element={<Alumni />} />
         <Route path="/alumni/register" element={<Alumni />} />
+        <Route path="/alumni/stories" element={<AlumniStoriesPage />} />
+        <Route path="/alumni/stories/:slug" element={<AlumniStoryDetailPage />} />
+        <Route path="/alumni/events" element={<AlumniEventsPage />} />
+        <Route path="/alumni/events/:slug" element={<AlumniEventDetailPage />} />
         <Route
           path="/news"
           element={<Navigate to="/newsroom/news" replace />}
@@ -134,6 +140,7 @@ export default function AppRoutes() {
         <Route path="account-management" element={<AccountManagement />} />
         <Route path="reports" element={<DirectorReports />} />
         <Route path="communications" element={<DirectorCommunicationsPage />} />
+        <Route path="content" element={<DirectorContentPage />} />
 
         {/* Teacher management */}
         <Route path="teachers" element={<TeacherListPage />} />

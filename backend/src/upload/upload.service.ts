@@ -47,6 +47,32 @@ export class UploadService {
       uploadStream.end(fileBuffer);
     });
   }
+
+  async uploadContentImage(
+    fileBuffer: Buffer,
+    originalName: string,
+  ): Promise<UploadApiResponse> {
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "school-content",
+          resource_type: "image",
+          use_filename: true,
+          unique_filename: true,
+          overwrite: false,
+          transformation: [
+            { width: 2400, height: 2400, crop: "limit" },
+            { quality: "auto", fetch_format: "auto" },
+          ],
+        },
+        (error, result) => {
+          if (error || !result) return reject(error ?? new BadRequestException("Image upload failed"));
+          resolve(result);
+        },
+      );
+      uploadStream.end(fileBuffer);
+    });
+  }
   async deleteFile(publicId: string): Promise<void> {
     await cloudinary.uploader.destroy(publicId);
   }

@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useSearchParams } from "react-router-dom";
 import { CheckCircle2, ChevronDown, Eye, FileText, ImagePlus, Link2, List, MailPlus, Plus, Save, Send, Trash2, UsersRound, Video } from "lucide-react";
 import SetupService, { type SchoolClass } from "../../../services/setupService";
 import CommunicationService, { type CommunicationAudience, type CommunicationBlock, type CommunicationContentDocument, type CommunicationFormat, type CommunicationPreview, type SchoolCommunication, type SchoolCommunicationDetail } from "../../../services/communicationService";
+import contentManagementService from "../../../services/contentManagementService";
 
 const audienceLabels: Record<CommunicationAudience, string> = { EVERYONE: "Everyone", PARENTS: "Parents and guardians", STUDENTS: "Students", TEACHERS: "Teachers", ALUMNI: "Alumni" };
 const formats: Array<{ value: CommunicationFormat; label: string; hint: string }> = [
@@ -45,6 +47,7 @@ function errorText(error: unknown) {
 }
 
 export default function DirectorCommunicationsPage() {
+  const [searchParams] = useSearchParams();
   const [audience, setAudience] = useState<CommunicationAudience>("PARENTS");
   const [format, setFormat] = useState<CommunicationFormat>("ANNOUNCEMENT");
   const [subject, setSubject] = useState("");
@@ -73,6 +76,16 @@ export default function DirectorCommunicationsPage() {
     } catch (error) { setFeedback(errorText(error)); } finally { setLoading(false); }
   }
   useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    const eventId = searchParams.get("eventId");
+    if (!eventId) return;
+    void contentManagementService.getEvent(eventId).then((event) => {
+      const target = event.audiences.some((item) => item.audience === "ALUMNI") ? "ALUMNI" : event.audiences.some((item) => item.audience === "PARENTS") ? "PARENTS" : event.audiences.some((item) => item.audience === "STUDENTS") ? "STUDENTS" : event.audiences.some((item) => item.audience === "TEACHERS") ? "TEACHERS" : "EVERYONE";
+      setAudience(target); setFormat("INVITATION"); setSubject(`Invitation: ${event.title}`); setClassId(""); setActiveDraftId(null); setPreview(null); setRenderedHtml("");
+      setDocument({ version: 1, blocks: [{ type: "event", title: event.title, date: new Intl.DateTimeFormat("en-UG", { dateStyle: "full" }).format(new Date(event.startsAt)), time: new Intl.DateTimeFormat("en-UG", { timeStyle: "short" }).format(new Date(event.startsAt)), location: event.venue || undefined, description: event.descriptionDocument?.blocks.map((block) => block.type === "paragraph" || block.type === "heading" ? block.text : "").filter(Boolean).join(" ") || undefined }] });
+      setFeedback(`Invitation prepared from “${event.title}”. Review recipients before sending.`);
+    }).catch((error) => setFeedback(errorText(error)));
+  }, [searchParams]);
 
   const resetComposer = () => {
     setAudience("PARENTS"); setFormat("ANNOUNCEMENT"); setSubject(""); setClassId("");

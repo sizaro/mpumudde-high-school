@@ -240,6 +240,7 @@ export type SchoolCommunicationWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"SchoolCommunication"> | Date | string
   sender?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   recipients?: Prisma.CommunicationRecipientListRelationFilter
+  announcedEvent?: Prisma.XOR<Prisma.SchoolEventNullableScalarRelationFilter, Prisma.SchoolEventWhereInput> | null
 }
 
 export type SchoolCommunicationOrderByWithRelationInput = {
@@ -258,6 +259,7 @@ export type SchoolCommunicationOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   sender?: Prisma.UserOrderByWithRelationInput
   recipients?: Prisma.CommunicationRecipientOrderByRelationAggregateInput
+  announcedEvent?: Prisma.SchoolEventOrderByWithRelationInput
 }
 
 export type SchoolCommunicationWhereUniqueInput = Prisma.AtLeast<{
@@ -279,6 +281,7 @@ export type SchoolCommunicationWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"SchoolCommunication"> | Date | string
   sender?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   recipients?: Prisma.CommunicationRecipientListRelationFilter
+  announcedEvent?: Prisma.XOR<Prisma.SchoolEventNullableScalarRelationFilter, Prisma.SchoolEventWhereInput> | null
 }, "id">
 
 export type SchoolCommunicationOrderByWithAggregationInput = {
@@ -334,6 +337,7 @@ export type SchoolCommunicationCreateInput = {
   updatedAt?: Date | string
   sender: Prisma.UserCreateNestedOneWithoutCommunicationsSentInput
   recipients?: Prisma.CommunicationRecipientCreateNestedManyWithoutCommunicationInput
+  announcedEvent?: Prisma.SchoolEventCreateNestedOneWithoutAnnouncementCommunicationInput
 }
 
 export type SchoolCommunicationUncheckedCreateInput = {
@@ -351,6 +355,7 @@ export type SchoolCommunicationUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   recipients?: Prisma.CommunicationRecipientUncheckedCreateNestedManyWithoutCommunicationInput
+  announcedEvent?: Prisma.SchoolEventUncheckedCreateNestedOneWithoutAnnouncementCommunicationInput
 }
 
 export type SchoolCommunicationUpdateInput = {
@@ -368,6 +373,7 @@ export type SchoolCommunicationUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sender?: Prisma.UserUpdateOneRequiredWithoutCommunicationsSentNestedInput
   recipients?: Prisma.CommunicationRecipientUpdateManyWithoutCommunicationNestedInput
+  announcedEvent?: Prisma.SchoolEventUpdateOneWithoutAnnouncementCommunicationNestedInput
 }
 
 export type SchoolCommunicationUncheckedUpdateInput = {
@@ -385,6 +391,7 @@ export type SchoolCommunicationUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recipients?: Prisma.CommunicationRecipientUncheckedUpdateManyWithoutCommunicationNestedInput
+  announcedEvent?: Prisma.SchoolEventUncheckedUpdateOneWithoutAnnouncementCommunicationNestedInput
 }
 
 export type SchoolCommunicationCreateManyInput = {
@@ -488,6 +495,11 @@ export type SchoolCommunicationMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type SchoolCommunicationNullableScalarRelationFilter = {
+  is?: Prisma.SchoolCommunicationWhereInput | null
+  isNot?: Prisma.SchoolCommunicationWhereInput | null
+}
+
 export type SchoolCommunicationScalarRelationFilter = {
   is?: Prisma.SchoolCommunicationWhereInput
   isNot?: Prisma.SchoolCommunicationWhereInput
@@ -535,6 +547,22 @@ export type SchoolCommunicationUncheckedUpdateManyWithoutSenderNestedInput = {
   deleteMany?: Prisma.SchoolCommunicationScalarWhereInput | Prisma.SchoolCommunicationScalarWhereInput[]
 }
 
+export type SchoolCommunicationCreateNestedOneWithoutAnnouncedEventInput = {
+  create?: Prisma.XOR<Prisma.SchoolCommunicationCreateWithoutAnnouncedEventInput, Prisma.SchoolCommunicationUncheckedCreateWithoutAnnouncedEventInput>
+  connectOrCreate?: Prisma.SchoolCommunicationCreateOrConnectWithoutAnnouncedEventInput
+  connect?: Prisma.SchoolCommunicationWhereUniqueInput
+}
+
+export type SchoolCommunicationUpdateOneWithoutAnnouncedEventNestedInput = {
+  create?: Prisma.XOR<Prisma.SchoolCommunicationCreateWithoutAnnouncedEventInput, Prisma.SchoolCommunicationUncheckedCreateWithoutAnnouncedEventInput>
+  connectOrCreate?: Prisma.SchoolCommunicationCreateOrConnectWithoutAnnouncedEventInput
+  upsert?: Prisma.SchoolCommunicationUpsertWithoutAnnouncedEventInput
+  disconnect?: Prisma.SchoolCommunicationWhereInput | boolean
+  delete?: Prisma.SchoolCommunicationWhereInput | boolean
+  connect?: Prisma.SchoolCommunicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SchoolCommunicationUpdateToOneWithWhereWithoutAnnouncedEventInput, Prisma.SchoolCommunicationUpdateWithoutAnnouncedEventInput>, Prisma.SchoolCommunicationUncheckedUpdateWithoutAnnouncedEventInput>
+}
+
 export type SchoolCommunicationCreateNestedOneWithoutRecipientsInput = {
   create?: Prisma.XOR<Prisma.SchoolCommunicationCreateWithoutRecipientsInput, Prisma.SchoolCommunicationUncheckedCreateWithoutRecipientsInput>
   connectOrCreate?: Prisma.SchoolCommunicationCreateOrConnectWithoutRecipientsInput
@@ -563,6 +591,7 @@ export type SchoolCommunicationCreateWithoutSenderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   recipients?: Prisma.CommunicationRecipientCreateNestedManyWithoutCommunicationInput
+  announcedEvent?: Prisma.SchoolEventCreateNestedOneWithoutAnnouncementCommunicationInput
 }
 
 export type SchoolCommunicationUncheckedCreateWithoutSenderInput = {
@@ -579,6 +608,7 @@ export type SchoolCommunicationUncheckedCreateWithoutSenderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   recipients?: Prisma.CommunicationRecipientUncheckedCreateNestedManyWithoutCommunicationInput
+  announcedEvent?: Prisma.SchoolEventUncheckedCreateNestedOneWithoutAnnouncementCommunicationInput
 }
 
 export type SchoolCommunicationCreateOrConnectWithoutSenderInput = {
@@ -626,6 +656,90 @@ export type SchoolCommunicationScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"SchoolCommunication"> | Date | string
 }
 
+export type SchoolCommunicationCreateWithoutAnnouncedEventInput = {
+  id?: string
+  subject: string
+  message: string
+  audience: string
+  targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
+  status?: string
+  sentAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sender: Prisma.UserCreateNestedOneWithoutCommunicationsSentInput
+  recipients?: Prisma.CommunicationRecipientCreateNestedManyWithoutCommunicationInput
+}
+
+export type SchoolCommunicationUncheckedCreateWithoutAnnouncedEventInput = {
+  id?: string
+  senderUserId: string
+  subject: string
+  message: string
+  audience: string
+  targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: string | null
+  status?: string
+  sentAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  recipients?: Prisma.CommunicationRecipientUncheckedCreateNestedManyWithoutCommunicationInput
+}
+
+export type SchoolCommunicationCreateOrConnectWithoutAnnouncedEventInput = {
+  where: Prisma.SchoolCommunicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.SchoolCommunicationCreateWithoutAnnouncedEventInput, Prisma.SchoolCommunicationUncheckedCreateWithoutAnnouncedEventInput>
+}
+
+export type SchoolCommunicationUpsertWithoutAnnouncedEventInput = {
+  update: Prisma.XOR<Prisma.SchoolCommunicationUpdateWithoutAnnouncedEventInput, Prisma.SchoolCommunicationUncheckedUpdateWithoutAnnouncedEventInput>
+  create: Prisma.XOR<Prisma.SchoolCommunicationCreateWithoutAnnouncedEventInput, Prisma.SchoolCommunicationUncheckedCreateWithoutAnnouncedEventInput>
+  where?: Prisma.SchoolCommunicationWhereInput
+}
+
+export type SchoolCommunicationUpdateToOneWithWhereWithoutAnnouncedEventInput = {
+  where?: Prisma.SchoolCommunicationWhereInput
+  data: Prisma.XOR<Prisma.SchoolCommunicationUpdateWithoutAnnouncedEventInput, Prisma.SchoolCommunicationUncheckedUpdateWithoutAnnouncedEventInput>
+}
+
+export type SchoolCommunicationUpdateWithoutAnnouncedEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  audience?: Prisma.StringFieldUpdateOperationsInput | string
+  targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sender?: Prisma.UserUpdateOneRequiredWithoutCommunicationsSentNestedInput
+  recipients?: Prisma.CommunicationRecipientUpdateManyWithoutCommunicationNestedInput
+}
+
+export type SchoolCommunicationUncheckedUpdateWithoutAnnouncedEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  senderUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  audience?: Prisma.StringFieldUpdateOperationsInput | string
+  targeting?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  contentDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recipients?: Prisma.CommunicationRecipientUncheckedUpdateManyWithoutCommunicationNestedInput
+}
+
 export type SchoolCommunicationCreateWithoutRecipientsInput = {
   id?: string
   subject: string
@@ -640,6 +754,7 @@ export type SchoolCommunicationCreateWithoutRecipientsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sender: Prisma.UserCreateNestedOneWithoutCommunicationsSentInput
+  announcedEvent?: Prisma.SchoolEventCreateNestedOneWithoutAnnouncementCommunicationInput
 }
 
 export type SchoolCommunicationUncheckedCreateWithoutRecipientsInput = {
@@ -656,6 +771,7 @@ export type SchoolCommunicationUncheckedCreateWithoutRecipientsInput = {
   sentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  announcedEvent?: Prisma.SchoolEventUncheckedCreateNestedOneWithoutAnnouncementCommunicationInput
 }
 
 export type SchoolCommunicationCreateOrConnectWithoutRecipientsInput = {
@@ -688,6 +804,7 @@ export type SchoolCommunicationUpdateWithoutRecipientsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sender?: Prisma.UserUpdateOneRequiredWithoutCommunicationsSentNestedInput
+  announcedEvent?: Prisma.SchoolEventUpdateOneWithoutAnnouncementCommunicationNestedInput
 }
 
 export type SchoolCommunicationUncheckedUpdateWithoutRecipientsInput = {
@@ -704,6 +821,7 @@ export type SchoolCommunicationUncheckedUpdateWithoutRecipientsInput = {
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  announcedEvent?: Prisma.SchoolEventUncheckedUpdateOneWithoutAnnouncementCommunicationNestedInput
 }
 
 export type SchoolCommunicationCreateManySenderInput = {
@@ -735,6 +853,7 @@ export type SchoolCommunicationUpdateWithoutSenderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recipients?: Prisma.CommunicationRecipientUpdateManyWithoutCommunicationNestedInput
+  announcedEvent?: Prisma.SchoolEventUpdateOneWithoutAnnouncementCommunicationNestedInput
 }
 
 export type SchoolCommunicationUncheckedUpdateWithoutSenderInput = {
@@ -751,6 +870,7 @@ export type SchoolCommunicationUncheckedUpdateWithoutSenderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recipients?: Prisma.CommunicationRecipientUncheckedUpdateManyWithoutCommunicationNestedInput
+  announcedEvent?: Prisma.SchoolEventUncheckedUpdateOneWithoutAnnouncementCommunicationNestedInput
 }
 
 export type SchoolCommunicationUncheckedUpdateManyWithoutSenderInput = {
@@ -815,6 +935,7 @@ export type SchoolCommunicationSelect<ExtArgs extends runtime.Types.Extensions.I
   updatedAt?: boolean
   sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recipients?: boolean | Prisma.SchoolCommunication$recipientsArgs<ExtArgs>
+  announcedEvent?: boolean | Prisma.SchoolCommunication$announcedEventArgs<ExtArgs>
   _count?: boolean | Prisma.SchoolCommunicationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["schoolCommunication"]>
 
@@ -872,6 +993,7 @@ export type SchoolCommunicationOmit<ExtArgs extends runtime.Types.Extensions.Int
 export type SchoolCommunicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recipients?: boolean | Prisma.SchoolCommunication$recipientsArgs<ExtArgs>
+  announcedEvent?: boolean | Prisma.SchoolCommunication$announcedEventArgs<ExtArgs>
   _count?: boolean | Prisma.SchoolCommunicationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SchoolCommunicationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -886,6 +1008,7 @@ export type $SchoolCommunicationPayload<ExtArgs extends runtime.Types.Extensions
   objects: {
     sender: Prisma.$UserPayload<ExtArgs>
     recipients: Prisma.$CommunicationRecipientPayload<ExtArgs>[]
+    announcedEvent: Prisma.$SchoolEventPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1297,6 +1420,7 @@ export interface Prisma__SchoolCommunicationClient<T, Null = never, ExtArgs exte
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sender<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   recipients<T extends Prisma.SchoolCommunication$recipientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SchoolCommunication$recipientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommunicationRecipientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  announcedEvent<T extends Prisma.SchoolCommunication$announcedEventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SchoolCommunication$announcedEventArgs<ExtArgs>>): Prisma.Prisma__SchoolEventClient<runtime.Types.Result.GetResult<Prisma.$SchoolEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1761,6 +1885,25 @@ export type SchoolCommunication$recipientsArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.CommunicationRecipientScalarFieldEnum | Prisma.CommunicationRecipientScalarFieldEnum[]
+}
+
+/**
+ * SchoolCommunication.announcedEvent
+ */
+export type SchoolCommunication$announcedEventArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SchoolEvent
+   */
+  select?: Prisma.SchoolEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SchoolEvent
+   */
+  omit?: Prisma.SchoolEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SchoolEventInclude<ExtArgs> | null
+  where?: Prisma.SchoolEventWhereInput
 }
 
 /**

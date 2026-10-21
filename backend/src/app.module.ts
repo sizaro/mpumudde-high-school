@@ -21,6 +21,9 @@ import { NotificationsModule } from "./notifications/notifications.module.js";
 import { CommunicationsModule } from "./communications/communications.module.js";
 import { PrismaModule } from "./prisma/prisma.module.js";
 import { AlumniModule } from "./alumni/alumni.module.js";
+import { PublicationsModule } from "./publications/publications.module.js";
+import { EventsModule } from "./events/events.module.js";
+import { ContentModule } from "./content/content.module.js";
 
 @Module({
   imports: [
@@ -44,6 +47,9 @@ import { AlumniModule } from "./alumni/alumni.module.js";
     NotificationsModule,
     CommunicationsModule,
     AlumniModule,
+    PublicationsModule,
+    EventsModule,
+    ContentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

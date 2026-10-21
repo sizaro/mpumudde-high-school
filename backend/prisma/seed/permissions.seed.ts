@@ -111,6 +111,33 @@ export async function seedPermissions() {
       name: 'reports.view',
       description: 'View system reports',
     },
+
+    // School content. These are intentionally separate from roles so the
+    // Director can later delegate only the required actions.
+    {
+      name: 'content.publications.view',
+      description: 'View school publication drafts and history',
+    },
+    {
+      name: 'content.publications.manage',
+      description: 'Create and edit school publication drafts',
+    },
+    {
+      name: 'content.publications.publish',
+      description: 'Publish, unpublish, and archive school publications',
+    },
+    {
+      name: 'content.events.view',
+      description: 'View school event drafts and change history',
+    },
+    {
+      name: 'content.events.manage',
+      description: 'Create, edit, and update school event operations',
+    },
+    {
+      name: 'content.events.publish',
+      description: 'Publish, unpublish, and archive school events',
+    },
   ];
 
   for (const permission of permissions) {
