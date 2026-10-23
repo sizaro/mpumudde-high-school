@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TeacherService from "../../../services/teacherService";
 import VerifiedCommunicationEmailField from "../../../components/forms/VerifiedCommunicationEmailField";
@@ -66,7 +66,7 @@ export default function EditTeacher() {
                     <option value="">—</option><option value="Male">Male</option><option value="Female">Female</option>
                   </select>
                 ) : (
-                  <input type={f === "dateOfBirth" ? "date" : f === "email" ? "email" : "text"} value={personal[f]} onChange={(e) => setPersonal((p) => ({ ...p, [f]: e.target.value }))} className="w-full border border-gray-300 rounded px-3 py-2" />
+                  <input type={f === "dateOfBirth" ? "date" : "text"} value={personal[f]} onChange={(e) => setPersonal((p) => ({ ...p, [f]: e.target.value }))} className="w-full border border-gray-300 rounded px-3 py-2" />
                 )}
               </div>
             ))}
