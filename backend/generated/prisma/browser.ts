@@ -228,6 +228,11 @@ export type SchoolEventSeries = Prisma.SchoolEventSeriesModel
  */
 export type SchoolEvent = Prisma.SchoolEventModel
 /**
+ * Model SchoolEventRsvp
+ * 
+ */
+export type SchoolEventRsvp = Prisma.SchoolEventRsvpModel
+/**
  * Model SchoolEventAudience
  * 
  */

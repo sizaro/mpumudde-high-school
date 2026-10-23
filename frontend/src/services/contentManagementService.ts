@@ -6,6 +6,7 @@ export type EventAudience = "ALUMNI" | "PARENTS" | "STUDENTS" | "TEACHERS" | "WH
 export type EventPublicationStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 export type EventOperationalStatus = "SCHEDULED" | "POSTPONED" | "CANCELLED" | "COMPLETED";
 export type EventRecurrenceRule = "ONE_TIME" | "ANNUAL" | "BIENNIAL" | "IRREGULAR";
+export type EventRsvpMode = "ALUMNI_ONLY" | "PUBLIC_EMAIL";
 
 export type ManagedImage = {
   id?: string;
@@ -54,6 +55,13 @@ export type SchoolEvent = {
   visibility: "PUBLIC" | "RESTRICTED";
   publicationStatus: EventPublicationStatus;
   operationalStatus: EventOperationalStatus;
+  rsvpEnabled: boolean;
+  rsvpMode: EventRsvpMode;
+  rsvpDeadline?: string | null;
+  rsvpCapacity?: number | null;
+  waitlistEnabled: boolean;
+  whatsappGroupUrl?: string | null;
+  organiserEmail?: string | null;
   featuredImageUrl?: string | null;
   featuredImagePublicId?: string | null;
   featuredImageAlt?: string | null;
@@ -62,6 +70,8 @@ export type SchoolEvent = {
   changes?: EventChange[];
   updatedAt: string;
 };
+
+export type EventRsvp = { id: string; fullName: string; email: string; status: string; requestedAttendance: string; guestCount: number; note?: string | null; confirmedAt?: string | null; updatedAt: string; alumni?: { id: string; fullName: string; profileImageUrl?: string | null; graduationYear?: number | null; isActive: boolean } | null; };
 
 export type EventChange = {
   id: string;
@@ -95,6 +105,13 @@ export type EventInput = {
   recurrenceRule?: EventRecurrenceRule;
   seriesTitle?: string;
   visibility?: "PUBLIC" | "RESTRICTED";
+  rsvpEnabled?: boolean;
+  rsvpMode?: EventRsvpMode;
+  rsvpDeadline?: string;
+  rsvpCapacity?: number;
+  waitlistEnabled?: boolean;
+  whatsappGroupUrl?: string;
+  organiserEmail?: string;
   featuredImageUrl?: string;
   featuredImagePublicId?: string;
   featuredImageAlt?: string;
@@ -114,12 +131,16 @@ const contentManagementService = {
   async publishStory(id: string) { return (await api.post<SchoolPublication>(`/director/publications/${id}/publish`)).data; },
   async unpublishStory(id: string) { return (await api.post<SchoolPublication>(`/director/publications/${id}/unpublish`)).data; },
   async archiveStory(id: string) { return (await api.post<SchoolPublication>(`/director/publications/${id}/archive`)).data; },
+  async deleteStoryDraft(id: string) { return (await api.delete<{ id: string; deleted: boolean }>(`/director/publications/${id}`)).data; },
 
   async listEvents() { return (await api.get<SchoolEvent[]>("/director/events")).data; },
   async getEvent(id: string) { return (await api.get<SchoolEvent>(`/director/events/${id}`)).data; },
   async getEventHistory(id: string) { return (await api.get<EventChange[]>(`/director/events/${id}/history`)).data; },
   async createEvent(input: EventInput) { return (await api.post<SchoolEvent>("/director/events", input)).data; },
   async updateEvent(id: string, input: Partial<EventInput>) { return (await api.patch<SchoolEvent>(`/director/events/${id}`, input)).data; },
+  async deleteEventDraft(id: string) { return (await api.delete<{ id: string; deleted: boolean }>(`/director/events/${id}`)).data; },
+  async eventRsvps(id: string) { return (await api.get<{ event: { id: string; title: string }; counts: Record<string, number>; peopleAttending: number; items: EventRsvp[] }>(`/director/events/${id}/rsvps`)).data; },
+
   async eventAction(id: string, action: "publish" | "unpublish" | "archive" | "postpone" | "reschedule" | "cancel" | "complete", input: { reason?: string; startsAt?: string; endsAt?: string } = {}) { return (await api.post<SchoolEvent>(`/director/events/${id}/${action}`, input)).data; },
 };
 

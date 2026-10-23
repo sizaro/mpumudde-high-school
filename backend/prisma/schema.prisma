@@ -833,6 +833,7 @@ model Alumni {
   @@index([graduationYear])
 
   publications SchoolPublication[]
+  eventRsvps SchoolEventRsvp[]
 }
 
 model AlumniRegistrationSession {
@@ -1431,6 +1432,14 @@ model SchoolEvent {
   publicationStatus String @default("DRAFT")
   operationalStatus String @default("SCHEDULED")
 
+  rsvpEnabled Boolean @default(false)
+  rsvpMode String @default("ALUMNI_ONLY")
+  rsvpDeadline DateTime?
+  rsvpCapacity Int?
+  waitlistEnabled Boolean @default(false)
+  whatsappGroupUrl String?
+  organiserEmail String?
+
   featuredImageUrl String?
   featuredImagePublicId String?
   featuredImageAlt String?
@@ -1448,6 +1457,7 @@ model SchoolEvent {
   audiences SchoolEventAudience[]
   changes SchoolEventChange[]
   images SchoolEventImage[]
+  rsvps SchoolEventRsvp[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1457,6 +1467,34 @@ model SchoolEvent {
   @@index([seriesId, startsAt])
 }
 
+model SchoolEventRsvp {
+  id String @id @default(cuid())
+  eventId String
+  alumniId String?
+  fullName String
+  email String
+  normalizedEmail String
+  status String @default("PENDING_CONFIRMATION")
+  guestCount Int @default(0)
+  note String?
+  requestedAttendance String @default("GOING")
+  confirmationTokenHash String?
+  confirmationExpiresAt DateTime?
+  confirmationSentAt DateTime?
+  confirmedAt DateTime?
+  manageTokenHash String?
+  manageTokenExpiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event SchoolEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  alumni Alumni? @relation(fields: [alumniId], references: [id], onDelete: SetNull)
+
+  @@unique([eventId, normalizedEmail])
+  @@index([eventId, status])
+  @@index([alumniId])
+  @@index([confirmationExpiresAt])
+}
 model SchoolEventAudience {
   id String @id @default(cuid())
   eventId String

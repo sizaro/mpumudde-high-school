@@ -65,6 +65,7 @@ export class SchoolEventsService {
         title: dto.title.trim(), slug: await this.availableSlug(dto.slug || dto.title), type: dto.type.trim(), venue: dto.venue?.trim() || null,
         descriptionDocument: dto.descriptionDocument ? this.safeDocument(dto.descriptionDocument) : undefined,
         startsAt: new Date(dto.startsAt), endsAt: dto.endsAt ? new Date(dto.endsAt) : null, recurrenceRule, visibility: dto.visibility ?? "PUBLIC", publicationStatus,
+        rsvpEnabled: dto.rsvpEnabled ?? false, rsvpMode: dto.rsvpMode ?? "ALUMNI_ONLY", rsvpDeadline: dto.rsvpDeadline ? new Date(dto.rsvpDeadline) : null, rsvpCapacity: dto.rsvpCapacity ?? null, waitlistEnabled: dto.waitlistEnabled ?? false, whatsappGroupUrl: dto.whatsappGroupUrl?.trim() || null, organiserEmail: dto.organiserEmail?.trim().toLowerCase() || null,
         seriesId: series?.id, featuredImageUrl: dto.featuredImageUrl || null, featuredImagePublicId: dto.featuredImagePublicId || null, featuredImageAlt: dto.featuredImageAlt?.trim() || null,
         createdByUserId: actor.id, updatedByUserId: actor.id, publishedAt: publicationStatus === "PUBLISHED" ? new Date() : null,
         audiences: { create: dto.audiences.map((target) => ({ audience: target.audience, schoolClassId: target.schoolClassId || null, academicYearId: target.academicYearId || null, stream: target.stream?.trim() || null })) },
@@ -91,6 +92,13 @@ export class SchoolEventsService {
         ...(dto.endsAt !== undefined ? { endsAt: dto.endsAt ? new Date(dto.endsAt) : null } : {}),
         ...(dto.recurrenceRule !== undefined ? { recurrenceRule: dto.recurrenceRule } : {}),
         ...(dto.visibility !== undefined ? { visibility: dto.visibility } : {}),
+        ...(dto.rsvpEnabled !== undefined ? { rsvpEnabled: dto.rsvpEnabled } : {}),
+        ...(dto.rsvpMode !== undefined ? { rsvpMode: dto.rsvpMode } : {}),
+        ...(dto.rsvpDeadline !== undefined ? { rsvpDeadline: dto.rsvpDeadline ? new Date(dto.rsvpDeadline) : null } : {}),
+        ...(dto.rsvpCapacity !== undefined ? { rsvpCapacity: dto.rsvpCapacity } : {}),
+        ...(dto.waitlistEnabled !== undefined ? { waitlistEnabled: dto.waitlistEnabled } : {}),
+        ...(dto.whatsappGroupUrl !== undefined ? { whatsappGroupUrl: dto.whatsappGroupUrl?.trim() || null } : {}),
+        ...(dto.organiserEmail !== undefined ? { organiserEmail: dto.organiserEmail?.trim().toLowerCase() || null } : {}),
         ...(dto.featuredImageUrl !== undefined ? { featuredImageUrl: dto.featuredImageUrl || null } : {}),
         ...(dto.featuredImagePublicId !== undefined ? { featuredImagePublicId: dto.featuredImagePublicId || null } : {}),
         ...(dto.featuredImageAlt !== undefined ? { featuredImageAlt: dto.featuredImageAlt.trim() || null } : {}),
@@ -111,6 +119,7 @@ export class SchoolEventsService {
   }
   async unpublish(id: string, actor: Actor) { return this.transitionPublication(id, actor, "DRAFT", "UNPUBLISHED"); }
   async archive(id: string, actor: Actor) { return this.transitionPublication(id, actor, "ARCHIVED", "ARCHIVED", { archivedAt: new Date() }); }
+  async deleteDraft(id: string) { const event = await this.getForManagement(id); if (event.publicationStatus !== "DRAFT") throw new BadRequestException("Only an unpublished draft can be deleted. Archive other records to preserve event and attendance history."); const rsvpCount = await this.prisma.schoolEventRsvp.count({ where: { eventId: id } }); if (rsvpCount) throw new BadRequestException("An event with attendance responses cannot be deleted. Archive it instead."); await this.prisma.schoolEvent.delete({ where: { id } }); return { id, deleted: true }; }
 
   async postpone(id: string, dto: EventDecisionDto, actor: Actor) {
     const existing = await this.getForManagement(id);

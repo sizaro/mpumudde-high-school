@@ -93,6 +93,7 @@ export const ModelName = {
   SchoolPublicationImage: 'SchoolPublicationImage',
   SchoolEventSeries: 'SchoolEventSeries',
   SchoolEvent: 'SchoolEvent',
+  SchoolEventRsvp: 'SchoolEventRsvp',
   SchoolEventAudience: 'SchoolEventAudience',
   SchoolEventChange: 'SchoolEventChange',
   SchoolEventImage: 'SchoolEventImage',
@@ -804,6 +805,13 @@ export const SchoolEventScalarFieldEnum = {
   visibility: 'visibility',
   publicationStatus: 'publicationStatus',
   operationalStatus: 'operationalStatus',
+  rsvpEnabled: 'rsvpEnabled',
+  rsvpMode: 'rsvpMode',
+  rsvpDeadline: 'rsvpDeadline',
+  rsvpCapacity: 'rsvpCapacity',
+  waitlistEnabled: 'waitlistEnabled',
+  whatsappGroupUrl: 'whatsappGroupUrl',
+  organiserEmail: 'organiserEmail',
   featuredImageUrl: 'featuredImageUrl',
   featuredImagePublicId: 'featuredImagePublicId',
   featuredImageAlt: 'featuredImageAlt',
@@ -817,6 +825,30 @@ export const SchoolEventScalarFieldEnum = {
 } as const
 
 export type SchoolEventScalarFieldEnum = (typeof SchoolEventScalarFieldEnum)[keyof typeof SchoolEventScalarFieldEnum]
+
+
+export const SchoolEventRsvpScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  alumniId: 'alumniId',
+  fullName: 'fullName',
+  email: 'email',
+  normalizedEmail: 'normalizedEmail',
+  status: 'status',
+  guestCount: 'guestCount',
+  note: 'note',
+  requestedAttendance: 'requestedAttendance',
+  confirmationTokenHash: 'confirmationTokenHash',
+  confirmationExpiresAt: 'confirmationExpiresAt',
+  confirmationSentAt: 'confirmationSentAt',
+  confirmedAt: 'confirmedAt',
+  manageTokenHash: 'manageTokenHash',
+  manageTokenExpiresAt: 'manageTokenExpiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolEventRsvpScalarFieldEnum = (typeof SchoolEventRsvpScalarFieldEnum)[keyof typeof SchoolEventRsvpScalarFieldEnum]
 
 
 export const SchoolEventAudienceScalarFieldEnum = {

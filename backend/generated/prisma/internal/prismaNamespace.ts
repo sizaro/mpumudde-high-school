@@ -426,6 +426,7 @@ export const ModelName = {
   SchoolPublicationImage: 'SchoolPublicationImage',
   SchoolEventSeries: 'SchoolEventSeries',
   SchoolEvent: 'SchoolEvent',
+  SchoolEventRsvp: 'SchoolEventRsvp',
   SchoolEventAudience: 'SchoolEventAudience',
   SchoolEventChange: 'SchoolEventChange',
   SchoolEventImage: 'SchoolEventImage',
@@ -450,7 +451,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "teacherEmployment" | "subject" | "teacherAssignment" | "medicalInformation" | "emergencyContact" | "document" | "documentCategory" | "qualification" | "attendanceSession" | "attendanceRecord" | "parent" | "student" | "studentNumberSequence" | "studentParent" | "alumni" | "alumniRegistrationSession" | "academicYear" | "term" | "schoolClass" | "academicYearClass" | "classSubject" | "studentEnrollment" | "studentCategory" | "feeType" | "financeStructure" | "studentTermFee" | "studentCharge" | "notification" | "communicationContact" | "registrationEmailVerification" | "schoolCommunication" | "schoolPublication" | "schoolPublicationImage" | "schoolEventSeries" | "schoolEvent" | "schoolEventAudience" | "schoolEventChange" | "schoolEventImage" | "communicationTestEmail" | "communicationRecipient" | "payment" | "paymentAudit" | "expense" | "otherIncome"
+    modelProps: "user" | "role" | "permission" | "userRole" | "rolePermission" | "director" | "teacher" | "teacherEmployment" | "subject" | "teacherAssignment" | "medicalInformation" | "emergencyContact" | "document" | "documentCategory" | "qualification" | "attendanceSession" | "attendanceRecord" | "parent" | "student" | "studentNumberSequence" | "studentParent" | "alumni" | "alumniRegistrationSession" | "academicYear" | "term" | "schoolClass" | "academicYearClass" | "classSubject" | "studentEnrollment" | "studentCategory" | "feeType" | "financeStructure" | "studentTermFee" | "studentCharge" | "notification" | "communicationContact" | "registrationEmailVerification" | "schoolCommunication" | "schoolPublication" | "schoolPublicationImage" | "schoolEventSeries" | "schoolEvent" | "schoolEventRsvp" | "schoolEventAudience" | "schoolEventChange" | "schoolEventImage" | "communicationTestEmail" | "communicationRecipient" | "payment" | "paymentAudit" | "expense" | "otherIncome"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3562,6 +3563,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SchoolEventRsvp: {
+      payload: Prisma.$SchoolEventRsvpPayload<ExtArgs>
+      fields: Prisma.SchoolEventRsvpFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SchoolEventRsvpFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SchoolEventRsvpFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload>
+        }
+        findFirst: {
+          args: Prisma.SchoolEventRsvpFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SchoolEventRsvpFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload>
+        }
+        findMany: {
+          args: Prisma.SchoolEventRsvpFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload>[]
+        }
+        create: {
+          args: Prisma.SchoolEventRsvpCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload>
+        }
+        createMany: {
+          args: Prisma.SchoolEventRsvpCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SchoolEventRsvpCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload>[]
+        }
+        delete: {
+          args: Prisma.SchoolEventRsvpDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload>
+        }
+        update: {
+          args: Prisma.SchoolEventRsvpUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload>
+        }
+        deleteMany: {
+          args: Prisma.SchoolEventRsvpDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SchoolEventRsvpUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SchoolEventRsvpUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload>[]
+        }
+        upsert: {
+          args: Prisma.SchoolEventRsvpUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SchoolEventRsvpPayload>
+        }
+        aggregate: {
+          args: Prisma.SchoolEventRsvpAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSchoolEventRsvp>
+        }
+        groupBy: {
+          args: Prisma.SchoolEventRsvpGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolEventRsvpGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SchoolEventRsvpCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SchoolEventRsvpCountAggregateOutputType> | number
+        }
+      }
+    }
     SchoolEventAudience: {
       payload: Prisma.$SchoolEventAudiencePayload<ExtArgs>
       fields: Prisma.SchoolEventAudienceFieldRefs
@@ -4951,6 +5026,13 @@ export const SchoolEventScalarFieldEnum = {
   visibility: 'visibility',
   publicationStatus: 'publicationStatus',
   operationalStatus: 'operationalStatus',
+  rsvpEnabled: 'rsvpEnabled',
+  rsvpMode: 'rsvpMode',
+  rsvpDeadline: 'rsvpDeadline',
+  rsvpCapacity: 'rsvpCapacity',
+  waitlistEnabled: 'waitlistEnabled',
+  whatsappGroupUrl: 'whatsappGroupUrl',
+  organiserEmail: 'organiserEmail',
   featuredImageUrl: 'featuredImageUrl',
   featuredImagePublicId: 'featuredImagePublicId',
   featuredImageAlt: 'featuredImageAlt',
@@ -4964,6 +5046,30 @@ export const SchoolEventScalarFieldEnum = {
 } as const
 
 export type SchoolEventScalarFieldEnum = (typeof SchoolEventScalarFieldEnum)[keyof typeof SchoolEventScalarFieldEnum]
+
+
+export const SchoolEventRsvpScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  alumniId: 'alumniId',
+  fullName: 'fullName',
+  email: 'email',
+  normalizedEmail: 'normalizedEmail',
+  status: 'status',
+  guestCount: 'guestCount',
+  note: 'note',
+  requestedAttendance: 'requestedAttendance',
+  confirmationTokenHash: 'confirmationTokenHash',
+  confirmationExpiresAt: 'confirmationExpiresAt',
+  confirmationSentAt: 'confirmationSentAt',
+  confirmedAt: 'confirmedAt',
+  manageTokenHash: 'manageTokenHash',
+  manageTokenExpiresAt: 'manageTokenExpiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SchoolEventRsvpScalarFieldEnum = (typeof SchoolEventRsvpScalarFieldEnum)[keyof typeof SchoolEventRsvpScalarFieldEnum]
 
 
 export const SchoolEventAudienceScalarFieldEnum = {
@@ -5412,6 +5518,7 @@ export type GlobalOmitConfig = {
   schoolPublicationImage?: Prisma.SchoolPublicationImageOmit
   schoolEventSeries?: Prisma.SchoolEventSeriesOmit
   schoolEvent?: Prisma.SchoolEventOmit
+  schoolEventRsvp?: Prisma.SchoolEventRsvpOmit
   schoolEventAudience?: Prisma.SchoolEventAudienceOmit
   schoolEventChange?: Prisma.SchoolEventChangeOmit
   schoolEventImage?: Prisma.SchoolEventImageOmit

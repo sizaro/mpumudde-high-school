@@ -981,3 +981,7 @@
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.15);
   }
 }
+
+.rsvp-input { width: 100%; margin-top: 0.35rem; border: 1px solid rgb(203 213 225); border-radius: 0.65rem; background: white; padding: 0.7rem 0.8rem; color: rgb(15 23 42); }
+.rsvp-input:focus { outline: 2px solid #1261d0; outline-offset: 1px; border-color: #1261d0; }
+

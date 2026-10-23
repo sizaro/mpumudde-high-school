@@ -8,7 +8,7 @@ import About from "../pages/public/About";
 import Academics from "../pages/public/Academics";
 import Admissions from "../pages/public/Admissions";
 import Alumni from "../pages/public/Alumni";
-import { AlumniEventDetailPage, AlumniEventsPage, AlumniStoriesPage, AlumniStoryDetailPage } from "../pages/public/alumni/AlumniContentPages";
+import { AlumniEventDetailPage, AlumniEventRsvpConfirmationPage, AlumniEventRsvpManagePage, AlumniEventsPage, AlumniStoriesPage, AlumniStoryDetailPage } from "../pages/public/alumni/AlumniContentPages";
 import Gallery from "../pages/public/Gallery";
 import Contact from "../pages/public/Contact";
 import Calendar from "../pages/public/Calendar";
@@ -88,6 +88,8 @@ export default function AppRoutes() {
         <Route path="/alumni/stories" element={<AlumniStoriesPage />} />
         <Route path="/alumni/stories/:slug" element={<AlumniStoryDetailPage />} />
         <Route path="/alumni/events" element={<AlumniEventsPage />} />
+        <Route path="/alumni/events/rsvp/confirm" element={<AlumniEventRsvpConfirmationPage />} />
+        <Route path="/alumni/events/rsvp/manage" element={<AlumniEventRsvpManagePage />} />
         <Route path="/alumni/events/:slug" element={<AlumniEventDetailPage />} />
         <Route
           path="/news"

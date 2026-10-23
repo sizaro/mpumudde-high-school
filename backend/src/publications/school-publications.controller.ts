@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard.js";
 import { PermissionsGuard } from "../auth/guards/permissions.guard.js";
 import { CurrentUser } from "../common/decorators/current-user.decorator.js";
@@ -28,4 +28,5 @@ export class DirectorSchoolPublicationsController {
   @Post(":id/publish") @Permissions("content.publications.publish") publish(@Param("id") id: string) { return this.publications.publish(id); }
   @Post(":id/unpublish") @Permissions("content.publications.publish") unpublish(@Param("id") id: string) { return this.publications.unpublish(id); }
   @Post(":id/archive") @Permissions("content.publications.publish") archive(@Param("id") id: string) { return this.publications.archive(id); }
+  @Delete(":id") @Permissions("content.publications.manage") deleteDraft(@Param("id") id: string) { return this.publications.deleteDraft(id); }
 }

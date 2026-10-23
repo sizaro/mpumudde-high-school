@@ -88,6 +88,7 @@ export class SchoolPublicationsService {
 
   async unpublish(id: string) { return this.changeStatus(id, "DRAFT", { publishedAt: null }); }
   async archive(id: string) { return this.changeStatus(id, "ARCHIVED", { archivedAt: new Date() }); }
+  async deleteDraft(id: string) { const publication = await this.getForManagement(id); if (publication.status !== "DRAFT") throw new BadRequestException("Only an unpublished draft can be deleted. Archive other records to preserve the school history."); await this.prisma.schoolPublication.delete({ where: { id } }); return { id, deleted: true }; }
 
   private async changeStatus(id: string, status: string, extra: Record<string, unknown> = {}) {
     await this.getForManagement(id);

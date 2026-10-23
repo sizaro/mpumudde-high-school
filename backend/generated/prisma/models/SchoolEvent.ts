@@ -20,8 +20,18 @@ export type SchoolEventModel = runtime.Types.Result.DefaultSelection<Prisma.$Sch
 
 export type AggregateSchoolEvent = {
   _count: SchoolEventCountAggregateOutputType | null
+  _avg: SchoolEventAvgAggregateOutputType | null
+  _sum: SchoolEventSumAggregateOutputType | null
   _min: SchoolEventMinAggregateOutputType | null
   _max: SchoolEventMaxAggregateOutputType | null
+}
+
+export type SchoolEventAvgAggregateOutputType = {
+  rsvpCapacity: number | null
+}
+
+export type SchoolEventSumAggregateOutputType = {
+  rsvpCapacity: number | null
 }
 
 export type SchoolEventMinAggregateOutputType = {
@@ -37,6 +47,13 @@ export type SchoolEventMinAggregateOutputType = {
   visibility: string | null
   publicationStatus: string | null
   operationalStatus: string | null
+  rsvpEnabled: boolean | null
+  rsvpMode: string | null
+  rsvpDeadline: Date | null
+  rsvpCapacity: number | null
+  waitlistEnabled: boolean | null
+  whatsappGroupUrl: string | null
+  organiserEmail: string | null
   featuredImageUrl: string | null
   featuredImagePublicId: string | null
   featuredImageAlt: string | null
@@ -62,6 +79,13 @@ export type SchoolEventMaxAggregateOutputType = {
   visibility: string | null
   publicationStatus: string | null
   operationalStatus: string | null
+  rsvpEnabled: boolean | null
+  rsvpMode: string | null
+  rsvpDeadline: Date | null
+  rsvpCapacity: number | null
+  waitlistEnabled: boolean | null
+  whatsappGroupUrl: string | null
+  organiserEmail: string | null
   featuredImageUrl: string | null
   featuredImagePublicId: string | null
   featuredImageAlt: string | null
@@ -88,6 +112,13 @@ export type SchoolEventCountAggregateOutputType = {
   visibility: number
   publicationStatus: number
   operationalStatus: number
+  rsvpEnabled: number
+  rsvpMode: number
+  rsvpDeadline: number
+  rsvpCapacity: number
+  waitlistEnabled: number
+  whatsappGroupUrl: number
+  organiserEmail: number
   featuredImageUrl: number
   featuredImagePublicId: number
   featuredImageAlt: number
@@ -102,6 +133,14 @@ export type SchoolEventCountAggregateOutputType = {
 }
 
 
+export type SchoolEventAvgAggregateInputType = {
+  rsvpCapacity?: true
+}
+
+export type SchoolEventSumAggregateInputType = {
+  rsvpCapacity?: true
+}
+
 export type SchoolEventMinAggregateInputType = {
   id?: true
   seriesId?: true
@@ -115,6 +154,13 @@ export type SchoolEventMinAggregateInputType = {
   visibility?: true
   publicationStatus?: true
   operationalStatus?: true
+  rsvpEnabled?: true
+  rsvpMode?: true
+  rsvpDeadline?: true
+  rsvpCapacity?: true
+  waitlistEnabled?: true
+  whatsappGroupUrl?: true
+  organiserEmail?: true
   featuredImageUrl?: true
   featuredImagePublicId?: true
   featuredImageAlt?: true
@@ -140,6 +186,13 @@ export type SchoolEventMaxAggregateInputType = {
   visibility?: true
   publicationStatus?: true
   operationalStatus?: true
+  rsvpEnabled?: true
+  rsvpMode?: true
+  rsvpDeadline?: true
+  rsvpCapacity?: true
+  waitlistEnabled?: true
+  whatsappGroupUrl?: true
+  organiserEmail?: true
   featuredImageUrl?: true
   featuredImagePublicId?: true
   featuredImageAlt?: true
@@ -166,6 +219,13 @@ export type SchoolEventCountAggregateInputType = {
   visibility?: true
   publicationStatus?: true
   operationalStatus?: true
+  rsvpEnabled?: true
+  rsvpMode?: true
+  rsvpDeadline?: true
+  rsvpCapacity?: true
+  waitlistEnabled?: true
+  whatsappGroupUrl?: true
+  organiserEmail?: true
   featuredImageUrl?: true
   featuredImagePublicId?: true
   featuredImageAlt?: true
@@ -217,6 +277,18 @@ export type SchoolEventAggregateArgs<ExtArgs extends runtime.Types.Extensions.In
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SchoolEventAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SchoolEventSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SchoolEventMinAggregateInputType
@@ -247,6 +319,8 @@ export type SchoolEventGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   _count?: SchoolEventCountAggregateInputType | true
+  _avg?: SchoolEventAvgAggregateInputType
+  _sum?: SchoolEventSumAggregateInputType
   _min?: SchoolEventMinAggregateInputType
   _max?: SchoolEventMaxAggregateInputType
 }
@@ -265,6 +339,13 @@ export type SchoolEventGroupByOutputType = {
   visibility: string
   publicationStatus: string
   operationalStatus: string
+  rsvpEnabled: boolean
+  rsvpMode: string
+  rsvpDeadline: Date | null
+  rsvpCapacity: number | null
+  waitlistEnabled: boolean
+  whatsappGroupUrl: string | null
+  organiserEmail: string | null
   featuredImageUrl: string | null
   featuredImagePublicId: string | null
   featuredImageAlt: string | null
@@ -276,6 +357,8 @@ export type SchoolEventGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   _count: SchoolEventCountAggregateOutputType | null
+  _avg: SchoolEventAvgAggregateOutputType | null
+  _sum: SchoolEventSumAggregateOutputType | null
   _min: SchoolEventMinAggregateOutputType | null
   _max: SchoolEventMaxAggregateOutputType | null
 }
@@ -312,6 +395,13 @@ export type SchoolEventWhereInput = {
   visibility?: Prisma.StringFilter<"SchoolEvent"> | string
   publicationStatus?: Prisma.StringFilter<"SchoolEvent"> | string
   operationalStatus?: Prisma.StringFilter<"SchoolEvent"> | string
+  rsvpEnabled?: Prisma.BoolFilter<"SchoolEvent"> | boolean
+  rsvpMode?: Prisma.StringFilter<"SchoolEvent"> | string
+  rsvpDeadline?: Prisma.DateTimeNullableFilter<"SchoolEvent"> | Date | string | null
+  rsvpCapacity?: Prisma.IntNullableFilter<"SchoolEvent"> | number | null
+  waitlistEnabled?: Prisma.BoolFilter<"SchoolEvent"> | boolean
+  whatsappGroupUrl?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
+  organiserEmail?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
   featuredImageUrl?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
   featuredImagePublicId?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
   featuredImageAlt?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
@@ -329,6 +419,7 @@ export type SchoolEventWhereInput = {
   audiences?: Prisma.SchoolEventAudienceListRelationFilter
   changes?: Prisma.SchoolEventChangeListRelationFilter
   images?: Prisma.SchoolEventImageListRelationFilter
+  rsvps?: Prisma.SchoolEventRsvpListRelationFilter
 }
 
 export type SchoolEventOrderByWithRelationInput = {
@@ -345,6 +436,13 @@ export type SchoolEventOrderByWithRelationInput = {
   visibility?: Prisma.SortOrder
   publicationStatus?: Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
+  rsvpEnabled?: Prisma.SortOrder
+  rsvpMode?: Prisma.SortOrder
+  rsvpDeadline?: Prisma.SortOrderInput | Prisma.SortOrder
+  rsvpCapacity?: Prisma.SortOrderInput | Prisma.SortOrder
+  waitlistEnabled?: Prisma.SortOrder
+  whatsappGroupUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  organiserEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   featuredImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   featuredImagePublicId?: Prisma.SortOrderInput | Prisma.SortOrder
   featuredImageAlt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -362,6 +460,7 @@ export type SchoolEventOrderByWithRelationInput = {
   audiences?: Prisma.SchoolEventAudienceOrderByRelationAggregateInput
   changes?: Prisma.SchoolEventChangeOrderByRelationAggregateInput
   images?: Prisma.SchoolEventImageOrderByRelationAggregateInput
+  rsvps?: Prisma.SchoolEventRsvpOrderByRelationAggregateInput
 }
 
 export type SchoolEventWhereUniqueInput = Prisma.AtLeast<{
@@ -382,6 +481,13 @@ export type SchoolEventWhereUniqueInput = Prisma.AtLeast<{
   visibility?: Prisma.StringFilter<"SchoolEvent"> | string
   publicationStatus?: Prisma.StringFilter<"SchoolEvent"> | string
   operationalStatus?: Prisma.StringFilter<"SchoolEvent"> | string
+  rsvpEnabled?: Prisma.BoolFilter<"SchoolEvent"> | boolean
+  rsvpMode?: Prisma.StringFilter<"SchoolEvent"> | string
+  rsvpDeadline?: Prisma.DateTimeNullableFilter<"SchoolEvent"> | Date | string | null
+  rsvpCapacity?: Prisma.IntNullableFilter<"SchoolEvent"> | number | null
+  waitlistEnabled?: Prisma.BoolFilter<"SchoolEvent"> | boolean
+  whatsappGroupUrl?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
+  organiserEmail?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
   featuredImageUrl?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
   featuredImagePublicId?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
   featuredImageAlt?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
@@ -398,6 +504,7 @@ export type SchoolEventWhereUniqueInput = Prisma.AtLeast<{
   audiences?: Prisma.SchoolEventAudienceListRelationFilter
   changes?: Prisma.SchoolEventChangeListRelationFilter
   images?: Prisma.SchoolEventImageListRelationFilter
+  rsvps?: Prisma.SchoolEventRsvpListRelationFilter
 }, "id" | "slug" | "announcementCommunicationId">
 
 export type SchoolEventOrderByWithAggregationInput = {
@@ -414,6 +521,13 @@ export type SchoolEventOrderByWithAggregationInput = {
   visibility?: Prisma.SortOrder
   publicationStatus?: Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
+  rsvpEnabled?: Prisma.SortOrder
+  rsvpMode?: Prisma.SortOrder
+  rsvpDeadline?: Prisma.SortOrderInput | Prisma.SortOrder
+  rsvpCapacity?: Prisma.SortOrderInput | Prisma.SortOrder
+  waitlistEnabled?: Prisma.SortOrder
+  whatsappGroupUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  organiserEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   featuredImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   featuredImagePublicId?: Prisma.SortOrderInput | Prisma.SortOrder
   featuredImageAlt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -425,8 +539,10 @@ export type SchoolEventOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SchoolEventCountOrderByAggregateInput
+  _avg?: Prisma.SchoolEventAvgOrderByAggregateInput
   _max?: Prisma.SchoolEventMaxOrderByAggregateInput
   _min?: Prisma.SchoolEventMinOrderByAggregateInput
+  _sum?: Prisma.SchoolEventSumOrderByAggregateInput
 }
 
 export type SchoolEventScalarWhereWithAggregatesInput = {
@@ -446,6 +562,13 @@ export type SchoolEventScalarWhereWithAggregatesInput = {
   visibility?: Prisma.StringWithAggregatesFilter<"SchoolEvent"> | string
   publicationStatus?: Prisma.StringWithAggregatesFilter<"SchoolEvent"> | string
   operationalStatus?: Prisma.StringWithAggregatesFilter<"SchoolEvent"> | string
+  rsvpEnabled?: Prisma.BoolWithAggregatesFilter<"SchoolEvent"> | boolean
+  rsvpMode?: Prisma.StringWithAggregatesFilter<"SchoolEvent"> | string
+  rsvpDeadline?: Prisma.DateTimeNullableWithAggregatesFilter<"SchoolEvent"> | Date | string | null
+  rsvpCapacity?: Prisma.IntNullableWithAggregatesFilter<"SchoolEvent"> | number | null
+  waitlistEnabled?: Prisma.BoolWithAggregatesFilter<"SchoolEvent"> | boolean
+  whatsappGroupUrl?: Prisma.StringNullableWithAggregatesFilter<"SchoolEvent"> | string | null
+  organiserEmail?: Prisma.StringNullableWithAggregatesFilter<"SchoolEvent"> | string | null
   featuredImageUrl?: Prisma.StringNullableWithAggregatesFilter<"SchoolEvent"> | string | null
   featuredImagePublicId?: Prisma.StringNullableWithAggregatesFilter<"SchoolEvent"> | string | null
   featuredImageAlt?: Prisma.StringNullableWithAggregatesFilter<"SchoolEvent"> | string | null
@@ -471,6 +594,13 @@ export type SchoolEventCreateInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -485,6 +615,7 @@ export type SchoolEventCreateInput = {
   audiences?: Prisma.SchoolEventAudienceCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventUncheckedCreateInput = {
@@ -501,6 +632,13 @@ export type SchoolEventUncheckedCreateInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -514,6 +652,7 @@ export type SchoolEventUncheckedCreateInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeUncheckedCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageUncheckedCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventUpdateInput = {
@@ -529,6 +668,13 @@ export type SchoolEventUpdateInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -543,6 +689,7 @@ export type SchoolEventUpdateInput = {
   audiences?: Prisma.SchoolEventAudienceUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateInput = {
@@ -559,6 +706,13 @@ export type SchoolEventUncheckedUpdateInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -572,6 +726,7 @@ export type SchoolEventUncheckedUpdateInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUncheckedUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUncheckedUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventCreateManyInput = {
@@ -588,6 +743,13 @@ export type SchoolEventCreateManyInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -613,6 +775,13 @@ export type SchoolEventUpdateManyMutationInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -636,6 +805,13 @@ export type SchoolEventUncheckedUpdateManyInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -677,6 +853,13 @@ export type SchoolEventCountOrderByAggregateInput = {
   visibility?: Prisma.SortOrder
   publicationStatus?: Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
+  rsvpEnabled?: Prisma.SortOrder
+  rsvpMode?: Prisma.SortOrder
+  rsvpDeadline?: Prisma.SortOrder
+  rsvpCapacity?: Prisma.SortOrder
+  waitlistEnabled?: Prisma.SortOrder
+  whatsappGroupUrl?: Prisma.SortOrder
+  organiserEmail?: Prisma.SortOrder
   featuredImageUrl?: Prisma.SortOrder
   featuredImagePublicId?: Prisma.SortOrder
   featuredImageAlt?: Prisma.SortOrder
@@ -687,6 +870,10 @@ export type SchoolEventCountOrderByAggregateInput = {
   archivedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SchoolEventAvgOrderByAggregateInput = {
+  rsvpCapacity?: Prisma.SortOrder
 }
 
 export type SchoolEventMaxOrderByAggregateInput = {
@@ -702,6 +889,13 @@ export type SchoolEventMaxOrderByAggregateInput = {
   visibility?: Prisma.SortOrder
   publicationStatus?: Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
+  rsvpEnabled?: Prisma.SortOrder
+  rsvpMode?: Prisma.SortOrder
+  rsvpDeadline?: Prisma.SortOrder
+  rsvpCapacity?: Prisma.SortOrder
+  waitlistEnabled?: Prisma.SortOrder
+  whatsappGroupUrl?: Prisma.SortOrder
+  organiserEmail?: Prisma.SortOrder
   featuredImageUrl?: Prisma.SortOrder
   featuredImagePublicId?: Prisma.SortOrder
   featuredImageAlt?: Prisma.SortOrder
@@ -727,6 +921,13 @@ export type SchoolEventMinOrderByAggregateInput = {
   visibility?: Prisma.SortOrder
   publicationStatus?: Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
+  rsvpEnabled?: Prisma.SortOrder
+  rsvpMode?: Prisma.SortOrder
+  rsvpDeadline?: Prisma.SortOrder
+  rsvpCapacity?: Prisma.SortOrder
+  waitlistEnabled?: Prisma.SortOrder
+  whatsappGroupUrl?: Prisma.SortOrder
+  organiserEmail?: Prisma.SortOrder
   featuredImageUrl?: Prisma.SortOrder
   featuredImagePublicId?: Prisma.SortOrder
   featuredImageAlt?: Prisma.SortOrder
@@ -737,6 +938,10 @@ export type SchoolEventMinOrderByAggregateInput = {
   archivedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SchoolEventSumOrderByAggregateInput = {
+  rsvpCapacity?: Prisma.SortOrder
 }
 
 export type SchoolEventScalarRelationFilter = {
@@ -902,6 +1107,20 @@ export type SchoolEventUncheckedUpdateManyWithoutSeriesNestedInput = {
   deleteMany?: Prisma.SchoolEventScalarWhereInput | Prisma.SchoolEventScalarWhereInput[]
 }
 
+export type SchoolEventCreateNestedOneWithoutRsvpsInput = {
+  create?: Prisma.XOR<Prisma.SchoolEventCreateWithoutRsvpsInput, Prisma.SchoolEventUncheckedCreateWithoutRsvpsInput>
+  connectOrCreate?: Prisma.SchoolEventCreateOrConnectWithoutRsvpsInput
+  connect?: Prisma.SchoolEventWhereUniqueInput
+}
+
+export type SchoolEventUpdateOneRequiredWithoutRsvpsNestedInput = {
+  create?: Prisma.XOR<Prisma.SchoolEventCreateWithoutRsvpsInput, Prisma.SchoolEventUncheckedCreateWithoutRsvpsInput>
+  connectOrCreate?: Prisma.SchoolEventCreateOrConnectWithoutRsvpsInput
+  upsert?: Prisma.SchoolEventUpsertWithoutRsvpsInput
+  connect?: Prisma.SchoolEventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SchoolEventUpdateToOneWithWhereWithoutRsvpsInput, Prisma.SchoolEventUpdateWithoutRsvpsInput>, Prisma.SchoolEventUncheckedUpdateWithoutRsvpsInput>
+}
+
 export type SchoolEventCreateNestedOneWithoutAudiencesInput = {
   create?: Prisma.XOR<Prisma.SchoolEventCreateWithoutAudiencesInput, Prisma.SchoolEventUncheckedCreateWithoutAudiencesInput>
   connectOrCreate?: Prisma.SchoolEventCreateOrConnectWithoutAudiencesInput
@@ -957,6 +1176,13 @@ export type SchoolEventCreateWithoutCreatedByInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -970,6 +1196,7 @@ export type SchoolEventCreateWithoutCreatedByInput = {
   audiences?: Prisma.SchoolEventAudienceCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventUncheckedCreateWithoutCreatedByInput = {
@@ -986,6 +1213,13 @@ export type SchoolEventUncheckedCreateWithoutCreatedByInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -998,6 +1232,7 @@ export type SchoolEventUncheckedCreateWithoutCreatedByInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeUncheckedCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageUncheckedCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventCreateOrConnectWithoutCreatedByInput = {
@@ -1023,6 +1258,13 @@ export type SchoolEventCreateWithoutUpdatedByInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1036,6 +1278,7 @@ export type SchoolEventCreateWithoutUpdatedByInput = {
   audiences?: Prisma.SchoolEventAudienceCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventUncheckedCreateWithoutUpdatedByInput = {
@@ -1052,6 +1295,13 @@ export type SchoolEventUncheckedCreateWithoutUpdatedByInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1064,6 +1314,7 @@ export type SchoolEventUncheckedCreateWithoutUpdatedByInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeUncheckedCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageUncheckedCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventCreateOrConnectWithoutUpdatedByInput = {
@@ -1109,6 +1360,13 @@ export type SchoolEventScalarWhereInput = {
   visibility?: Prisma.StringFilter<"SchoolEvent"> | string
   publicationStatus?: Prisma.StringFilter<"SchoolEvent"> | string
   operationalStatus?: Prisma.StringFilter<"SchoolEvent"> | string
+  rsvpEnabled?: Prisma.BoolFilter<"SchoolEvent"> | boolean
+  rsvpMode?: Prisma.StringFilter<"SchoolEvent"> | string
+  rsvpDeadline?: Prisma.DateTimeNullableFilter<"SchoolEvent"> | Date | string | null
+  rsvpCapacity?: Prisma.IntNullableFilter<"SchoolEvent"> | number | null
+  waitlistEnabled?: Prisma.BoolFilter<"SchoolEvent"> | boolean
+  whatsappGroupUrl?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
+  organiserEmail?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
   featuredImageUrl?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
   featuredImagePublicId?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
   featuredImageAlt?: Prisma.StringNullableFilter<"SchoolEvent"> | string | null
@@ -1150,6 +1408,13 @@ export type SchoolEventCreateWithoutAnnouncementCommunicationInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1163,6 +1428,7 @@ export type SchoolEventCreateWithoutAnnouncementCommunicationInput = {
   audiences?: Prisma.SchoolEventAudienceCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventUncheckedCreateWithoutAnnouncementCommunicationInput = {
@@ -1179,6 +1445,13 @@ export type SchoolEventUncheckedCreateWithoutAnnouncementCommunicationInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1191,6 +1464,7 @@ export type SchoolEventUncheckedCreateWithoutAnnouncementCommunicationInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeUncheckedCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageUncheckedCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventCreateOrConnectWithoutAnnouncementCommunicationInput = {
@@ -1222,6 +1496,13 @@ export type SchoolEventUpdateWithoutAnnouncementCommunicationInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1235,6 +1516,7 @@ export type SchoolEventUpdateWithoutAnnouncementCommunicationInput = {
   audiences?: Prisma.SchoolEventAudienceUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateWithoutAnnouncementCommunicationInput = {
@@ -1251,6 +1533,13 @@ export type SchoolEventUncheckedUpdateWithoutAnnouncementCommunicationInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1263,6 +1552,7 @@ export type SchoolEventUncheckedUpdateWithoutAnnouncementCommunicationInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUncheckedUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUncheckedUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventCreateWithoutSeriesInput = {
@@ -1278,6 +1568,13 @@ export type SchoolEventCreateWithoutSeriesInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1291,6 +1588,7 @@ export type SchoolEventCreateWithoutSeriesInput = {
   audiences?: Prisma.SchoolEventAudienceCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventUncheckedCreateWithoutSeriesInput = {
@@ -1306,6 +1604,13 @@ export type SchoolEventUncheckedCreateWithoutSeriesInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1319,6 +1624,7 @@ export type SchoolEventUncheckedCreateWithoutSeriesInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeUncheckedCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageUncheckedCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventCreateOrConnectWithoutSeriesInput = {
@@ -1347,6 +1653,166 @@ export type SchoolEventUpdateManyWithWhereWithoutSeriesInput = {
   data: Prisma.XOR<Prisma.SchoolEventUpdateManyMutationInput, Prisma.SchoolEventUncheckedUpdateManyWithoutSeriesInput>
 }
 
+export type SchoolEventCreateWithoutRsvpsInput = {
+  id?: string
+  title: string
+  slug: string
+  descriptionDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type: string
+  venue?: string | null
+  startsAt: Date | string
+  endsAt?: Date | string | null
+  recurrenceRule?: string
+  visibility?: string
+  publicationStatus?: string
+  operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
+  featuredImageUrl?: string | null
+  featuredImagePublicId?: string | null
+  featuredImageAlt?: string | null
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  series?: Prisma.SchoolEventSeriesCreateNestedOneWithoutEventsInput
+  announcementCommunication?: Prisma.SchoolCommunicationCreateNestedOneWithoutAnnouncedEventInput
+  createdBy: Prisma.UserCreateNestedOneWithoutEventsCreatedInput
+  updatedBy?: Prisma.UserCreateNestedOneWithoutEventsUpdatedInput
+  audiences?: Prisma.SchoolEventAudienceCreateNestedManyWithoutEventInput
+  changes?: Prisma.SchoolEventChangeCreateNestedManyWithoutEventInput
+  images?: Prisma.SchoolEventImageCreateNestedManyWithoutEventInput
+}
+
+export type SchoolEventUncheckedCreateWithoutRsvpsInput = {
+  id?: string
+  seriesId?: string | null
+  title: string
+  slug: string
+  descriptionDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type: string
+  venue?: string | null
+  startsAt: Date | string
+  endsAt?: Date | string | null
+  recurrenceRule?: string
+  visibility?: string
+  publicationStatus?: string
+  operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
+  featuredImageUrl?: string | null
+  featuredImagePublicId?: string | null
+  featuredImageAlt?: string | null
+  announcementCommunicationId?: string | null
+  createdByUserId: string
+  updatedByUserId?: string | null
+  publishedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  audiences?: Prisma.SchoolEventAudienceUncheckedCreateNestedManyWithoutEventInput
+  changes?: Prisma.SchoolEventChangeUncheckedCreateNestedManyWithoutEventInput
+  images?: Prisma.SchoolEventImageUncheckedCreateNestedManyWithoutEventInput
+}
+
+export type SchoolEventCreateOrConnectWithoutRsvpsInput = {
+  where: Prisma.SchoolEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.SchoolEventCreateWithoutRsvpsInput, Prisma.SchoolEventUncheckedCreateWithoutRsvpsInput>
+}
+
+export type SchoolEventUpsertWithoutRsvpsInput = {
+  update: Prisma.XOR<Prisma.SchoolEventUpdateWithoutRsvpsInput, Prisma.SchoolEventUncheckedUpdateWithoutRsvpsInput>
+  create: Prisma.XOR<Prisma.SchoolEventCreateWithoutRsvpsInput, Prisma.SchoolEventUncheckedCreateWithoutRsvpsInput>
+  where?: Prisma.SchoolEventWhereInput
+}
+
+export type SchoolEventUpdateToOneWithWhereWithoutRsvpsInput = {
+  where?: Prisma.SchoolEventWhereInput
+  data: Prisma.XOR<Prisma.SchoolEventUpdateWithoutRsvpsInput, Prisma.SchoolEventUncheckedUpdateWithoutRsvpsInput>
+}
+
+export type SchoolEventUpdateWithoutRsvpsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrenceRule?: Prisma.StringFieldUpdateOperationsInput | string
+  visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  series?: Prisma.SchoolEventSeriesUpdateOneWithoutEventsNestedInput
+  announcementCommunication?: Prisma.SchoolCommunicationUpdateOneWithoutAnnouncedEventNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutEventsCreatedNestedInput
+  updatedBy?: Prisma.UserUpdateOneWithoutEventsUpdatedNestedInput
+  audiences?: Prisma.SchoolEventAudienceUpdateManyWithoutEventNestedInput
+  changes?: Prisma.SchoolEventChangeUpdateManyWithoutEventNestedInput
+  images?: Prisma.SchoolEventImageUpdateManyWithoutEventNestedInput
+}
+
+export type SchoolEventUncheckedUpdateWithoutRsvpsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  seriesId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionDocument?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrenceRule?: Prisma.StringFieldUpdateOperationsInput | string
+  visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  announcementCommunicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  audiences?: Prisma.SchoolEventAudienceUncheckedUpdateManyWithoutEventNestedInput
+  changes?: Prisma.SchoolEventChangeUncheckedUpdateManyWithoutEventNestedInput
+  images?: Prisma.SchoolEventImageUncheckedUpdateManyWithoutEventNestedInput
+}
+
 export type SchoolEventCreateWithoutAudiencesInput = {
   id?: string
   title: string
@@ -1360,6 +1826,13 @@ export type SchoolEventCreateWithoutAudiencesInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1373,6 +1846,7 @@ export type SchoolEventCreateWithoutAudiencesInput = {
   updatedBy?: Prisma.UserCreateNestedOneWithoutEventsUpdatedInput
   changes?: Prisma.SchoolEventChangeCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventUncheckedCreateWithoutAudiencesInput = {
@@ -1389,6 +1863,13 @@ export type SchoolEventUncheckedCreateWithoutAudiencesInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1401,6 +1882,7 @@ export type SchoolEventUncheckedCreateWithoutAudiencesInput = {
   updatedAt?: Date | string
   changes?: Prisma.SchoolEventChangeUncheckedCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageUncheckedCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventCreateOrConnectWithoutAudiencesInput = {
@@ -1432,6 +1914,13 @@ export type SchoolEventUpdateWithoutAudiencesInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1445,6 +1934,7 @@ export type SchoolEventUpdateWithoutAudiencesInput = {
   updatedBy?: Prisma.UserUpdateOneWithoutEventsUpdatedNestedInput
   changes?: Prisma.SchoolEventChangeUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateWithoutAudiencesInput = {
@@ -1461,6 +1951,13 @@ export type SchoolEventUncheckedUpdateWithoutAudiencesInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1473,6 +1970,7 @@ export type SchoolEventUncheckedUpdateWithoutAudiencesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   changes?: Prisma.SchoolEventChangeUncheckedUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUncheckedUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventCreateWithoutChangesInput = {
@@ -1488,6 +1986,13 @@ export type SchoolEventCreateWithoutChangesInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1501,6 +2006,7 @@ export type SchoolEventCreateWithoutChangesInput = {
   updatedBy?: Prisma.UserCreateNestedOneWithoutEventsUpdatedInput
   audiences?: Prisma.SchoolEventAudienceCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventUncheckedCreateWithoutChangesInput = {
@@ -1517,6 +2023,13 @@ export type SchoolEventUncheckedCreateWithoutChangesInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1529,6 +2042,7 @@ export type SchoolEventUncheckedCreateWithoutChangesInput = {
   updatedAt?: Date | string
   audiences?: Prisma.SchoolEventAudienceUncheckedCreateNestedManyWithoutEventInput
   images?: Prisma.SchoolEventImageUncheckedCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventCreateOrConnectWithoutChangesInput = {
@@ -1560,6 +2074,13 @@ export type SchoolEventUpdateWithoutChangesInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1573,6 +2094,7 @@ export type SchoolEventUpdateWithoutChangesInput = {
   updatedBy?: Prisma.UserUpdateOneWithoutEventsUpdatedNestedInput
   audiences?: Prisma.SchoolEventAudienceUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateWithoutChangesInput = {
@@ -1589,6 +2111,13 @@ export type SchoolEventUncheckedUpdateWithoutChangesInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1601,6 +2130,7 @@ export type SchoolEventUncheckedUpdateWithoutChangesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   audiences?: Prisma.SchoolEventAudienceUncheckedUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUncheckedUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventCreateWithoutImagesInput = {
@@ -1616,6 +2146,13 @@ export type SchoolEventCreateWithoutImagesInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1629,6 +2166,7 @@ export type SchoolEventCreateWithoutImagesInput = {
   updatedBy?: Prisma.UserCreateNestedOneWithoutEventsUpdatedInput
   audiences?: Prisma.SchoolEventAudienceCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventUncheckedCreateWithoutImagesInput = {
@@ -1645,6 +2183,13 @@ export type SchoolEventUncheckedCreateWithoutImagesInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1657,6 +2202,7 @@ export type SchoolEventUncheckedCreateWithoutImagesInput = {
   updatedAt?: Date | string
   audiences?: Prisma.SchoolEventAudienceUncheckedCreateNestedManyWithoutEventInput
   changes?: Prisma.SchoolEventChangeUncheckedCreateNestedManyWithoutEventInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type SchoolEventCreateOrConnectWithoutImagesInput = {
@@ -1688,6 +2234,13 @@ export type SchoolEventUpdateWithoutImagesInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1701,6 +2254,7 @@ export type SchoolEventUpdateWithoutImagesInput = {
   updatedBy?: Prisma.UserUpdateOneWithoutEventsUpdatedNestedInput
   audiences?: Prisma.SchoolEventAudienceUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateWithoutImagesInput = {
@@ -1717,6 +2271,13 @@ export type SchoolEventUncheckedUpdateWithoutImagesInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1729,6 +2290,7 @@ export type SchoolEventUncheckedUpdateWithoutImagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   audiences?: Prisma.SchoolEventAudienceUncheckedUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUncheckedUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventCreateManyCreatedByInput = {
@@ -1745,6 +2307,13 @@ export type SchoolEventCreateManyCreatedByInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1770,6 +2339,13 @@ export type SchoolEventCreateManyUpdatedByInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1794,6 +2370,13 @@ export type SchoolEventUpdateWithoutCreatedByInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1807,6 +2390,7 @@ export type SchoolEventUpdateWithoutCreatedByInput = {
   audiences?: Prisma.SchoolEventAudienceUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateWithoutCreatedByInput = {
@@ -1823,6 +2407,13 @@ export type SchoolEventUncheckedUpdateWithoutCreatedByInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1835,6 +2426,7 @@ export type SchoolEventUncheckedUpdateWithoutCreatedByInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUncheckedUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUncheckedUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateManyWithoutCreatedByInput = {
@@ -1851,6 +2443,13 @@ export type SchoolEventUncheckedUpdateManyWithoutCreatedByInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1875,6 +2474,13 @@ export type SchoolEventUpdateWithoutUpdatedByInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1888,6 +2494,7 @@ export type SchoolEventUpdateWithoutUpdatedByInput = {
   audiences?: Prisma.SchoolEventAudienceUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateWithoutUpdatedByInput = {
@@ -1904,6 +2511,13 @@ export type SchoolEventUncheckedUpdateWithoutUpdatedByInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1916,6 +2530,7 @@ export type SchoolEventUncheckedUpdateWithoutUpdatedByInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUncheckedUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUncheckedUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateManyWithoutUpdatedByInput = {
@@ -1932,6 +2547,13 @@ export type SchoolEventUncheckedUpdateManyWithoutUpdatedByInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1956,6 +2578,13 @@ export type SchoolEventCreateManySeriesInput = {
   visibility?: string
   publicationStatus?: string
   operationalStatus?: string
+  rsvpEnabled?: boolean
+  rsvpMode?: string
+  rsvpDeadline?: Date | string | null
+  rsvpCapacity?: number | null
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: string | null
+  organiserEmail?: string | null
   featuredImageUrl?: string | null
   featuredImagePublicId?: string | null
   featuredImageAlt?: string | null
@@ -1981,6 +2610,13 @@ export type SchoolEventUpdateWithoutSeriesInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1994,6 +2630,7 @@ export type SchoolEventUpdateWithoutSeriesInput = {
   audiences?: Prisma.SchoolEventAudienceUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateWithoutSeriesInput = {
@@ -2009,6 +2646,13 @@ export type SchoolEventUncheckedUpdateWithoutSeriesInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2022,6 +2666,7 @@ export type SchoolEventUncheckedUpdateWithoutSeriesInput = {
   audiences?: Prisma.SchoolEventAudienceUncheckedUpdateManyWithoutEventNestedInput
   changes?: Prisma.SchoolEventChangeUncheckedUpdateManyWithoutEventNestedInput
   images?: Prisma.SchoolEventImageUncheckedUpdateManyWithoutEventNestedInput
+  rsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type SchoolEventUncheckedUpdateManyWithoutSeriesInput = {
@@ -2037,6 +2682,13 @@ export type SchoolEventUncheckedUpdateManyWithoutSeriesInput = {
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
   publicationStatus?: Prisma.StringFieldUpdateOperationsInput | string
   operationalStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rsvpMode?: Prisma.StringFieldUpdateOperationsInput | string
+  rsvpDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rsvpCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  waitlistEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappGroupUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organiserEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featuredImageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2058,12 +2710,14 @@ export type SchoolEventCountOutputType = {
   audiences: number
   changes: number
   images: number
+  rsvps: number
 }
 
 export type SchoolEventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   audiences?: boolean | SchoolEventCountOutputTypeCountAudiencesArgs
   changes?: boolean | SchoolEventCountOutputTypeCountChangesArgs
   images?: boolean | SchoolEventCountOutputTypeCountImagesArgs
+  rsvps?: boolean | SchoolEventCountOutputTypeCountRsvpsArgs
 }
 
 /**
@@ -2097,6 +2751,13 @@ export type SchoolEventCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Ty
   where?: Prisma.SchoolEventImageWhereInput
 }
 
+/**
+ * SchoolEventCountOutputType without action
+ */
+export type SchoolEventCountOutputTypeCountRsvpsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SchoolEventRsvpWhereInput
+}
+
 
 export type SchoolEventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2112,6 +2773,13 @@ export type SchoolEventSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   visibility?: boolean
   publicationStatus?: boolean
   operationalStatus?: boolean
+  rsvpEnabled?: boolean
+  rsvpMode?: boolean
+  rsvpDeadline?: boolean
+  rsvpCapacity?: boolean
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: boolean
+  organiserEmail?: boolean
   featuredImageUrl?: boolean
   featuredImagePublicId?: boolean
   featuredImageAlt?: boolean
@@ -2129,6 +2797,7 @@ export type SchoolEventSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   audiences?: boolean | Prisma.SchoolEvent$audiencesArgs<ExtArgs>
   changes?: boolean | Prisma.SchoolEvent$changesArgs<ExtArgs>
   images?: boolean | Prisma.SchoolEvent$imagesArgs<ExtArgs>
+  rsvps?: boolean | Prisma.SchoolEvent$rsvpsArgs<ExtArgs>
   _count?: boolean | Prisma.SchoolEventCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["schoolEvent"]>
 
@@ -2146,6 +2815,13 @@ export type SchoolEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   visibility?: boolean
   publicationStatus?: boolean
   operationalStatus?: boolean
+  rsvpEnabled?: boolean
+  rsvpMode?: boolean
+  rsvpDeadline?: boolean
+  rsvpCapacity?: boolean
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: boolean
+  organiserEmail?: boolean
   featuredImageUrl?: boolean
   featuredImagePublicId?: boolean
   featuredImageAlt?: boolean
@@ -2176,6 +2852,13 @@ export type SchoolEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   visibility?: boolean
   publicationStatus?: boolean
   operationalStatus?: boolean
+  rsvpEnabled?: boolean
+  rsvpMode?: boolean
+  rsvpDeadline?: boolean
+  rsvpCapacity?: boolean
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: boolean
+  organiserEmail?: boolean
   featuredImageUrl?: boolean
   featuredImagePublicId?: boolean
   featuredImageAlt?: boolean
@@ -2206,6 +2889,13 @@ export type SchoolEventSelectScalar = {
   visibility?: boolean
   publicationStatus?: boolean
   operationalStatus?: boolean
+  rsvpEnabled?: boolean
+  rsvpMode?: boolean
+  rsvpDeadline?: boolean
+  rsvpCapacity?: boolean
+  waitlistEnabled?: boolean
+  whatsappGroupUrl?: boolean
+  organiserEmail?: boolean
   featuredImageUrl?: boolean
   featuredImagePublicId?: boolean
   featuredImageAlt?: boolean
@@ -2218,7 +2908,7 @@ export type SchoolEventSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SchoolEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "seriesId" | "title" | "slug" | "descriptionDocument" | "type" | "venue" | "startsAt" | "endsAt" | "recurrenceRule" | "visibility" | "publicationStatus" | "operationalStatus" | "featuredImageUrl" | "featuredImagePublicId" | "featuredImageAlt" | "announcementCommunicationId" | "createdByUserId" | "updatedByUserId" | "publishedAt" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["schoolEvent"]>
+export type SchoolEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "seriesId" | "title" | "slug" | "descriptionDocument" | "type" | "venue" | "startsAt" | "endsAt" | "recurrenceRule" | "visibility" | "publicationStatus" | "operationalStatus" | "rsvpEnabled" | "rsvpMode" | "rsvpDeadline" | "rsvpCapacity" | "waitlistEnabled" | "whatsappGroupUrl" | "organiserEmail" | "featuredImageUrl" | "featuredImagePublicId" | "featuredImageAlt" | "announcementCommunicationId" | "createdByUserId" | "updatedByUserId" | "publishedAt" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["schoolEvent"]>
 export type SchoolEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   series?: boolean | Prisma.SchoolEvent$seriesArgs<ExtArgs>
   announcementCommunication?: boolean | Prisma.SchoolEvent$announcementCommunicationArgs<ExtArgs>
@@ -2227,6 +2917,7 @@ export type SchoolEventInclude<ExtArgs extends runtime.Types.Extensions.Internal
   audiences?: boolean | Prisma.SchoolEvent$audiencesArgs<ExtArgs>
   changes?: boolean | Prisma.SchoolEvent$changesArgs<ExtArgs>
   images?: boolean | Prisma.SchoolEvent$imagesArgs<ExtArgs>
+  rsvps?: boolean | Prisma.SchoolEvent$rsvpsArgs<ExtArgs>
   _count?: boolean | Prisma.SchoolEventCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SchoolEventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2252,6 +2943,7 @@ export type $SchoolEventPayload<ExtArgs extends runtime.Types.Extensions.Interna
     audiences: Prisma.$SchoolEventAudiencePayload<ExtArgs>[]
     changes: Prisma.$SchoolEventChangePayload<ExtArgs>[]
     images: Prisma.$SchoolEventImagePayload<ExtArgs>[]
+    rsvps: Prisma.$SchoolEventRsvpPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2267,6 +2959,13 @@ export type $SchoolEventPayload<ExtArgs extends runtime.Types.Extensions.Interna
     visibility: string
     publicationStatus: string
     operationalStatus: string
+    rsvpEnabled: boolean
+    rsvpMode: string
+    rsvpDeadline: Date | null
+    rsvpCapacity: number | null
+    waitlistEnabled: boolean
+    whatsappGroupUrl: string | null
+    organiserEmail: string | null
     featuredImageUrl: string | null
     featuredImagePublicId: string | null
     featuredImageAlt: string | null
@@ -2678,6 +3377,7 @@ export interface Prisma__SchoolEventClient<T, Null = never, ExtArgs extends runt
   audiences<T extends Prisma.SchoolEvent$audiencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SchoolEvent$audiencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolEventAudiencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   changes<T extends Prisma.SchoolEvent$changesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SchoolEvent$changesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolEventChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   images<T extends Prisma.SchoolEvent$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SchoolEvent$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolEventImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rsvps<T extends Prisma.SchoolEvent$rsvpsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SchoolEvent$rsvpsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolEventRsvpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2720,6 +3420,13 @@ export interface SchoolEventFieldRefs {
   readonly visibility: Prisma.FieldRef<"SchoolEvent", 'String'>
   readonly publicationStatus: Prisma.FieldRef<"SchoolEvent", 'String'>
   readonly operationalStatus: Prisma.FieldRef<"SchoolEvent", 'String'>
+  readonly rsvpEnabled: Prisma.FieldRef<"SchoolEvent", 'Boolean'>
+  readonly rsvpMode: Prisma.FieldRef<"SchoolEvent", 'String'>
+  readonly rsvpDeadline: Prisma.FieldRef<"SchoolEvent", 'DateTime'>
+  readonly rsvpCapacity: Prisma.FieldRef<"SchoolEvent", 'Int'>
+  readonly waitlistEnabled: Prisma.FieldRef<"SchoolEvent", 'Boolean'>
+  readonly whatsappGroupUrl: Prisma.FieldRef<"SchoolEvent", 'String'>
+  readonly organiserEmail: Prisma.FieldRef<"SchoolEvent", 'String'>
   readonly featuredImageUrl: Prisma.FieldRef<"SchoolEvent", 'String'>
   readonly featuredImagePublicId: Prisma.FieldRef<"SchoolEvent", 'String'>
   readonly featuredImageAlt: Prisma.FieldRef<"SchoolEvent", 'String'>
@@ -3257,6 +3964,30 @@ export type SchoolEvent$imagesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.SchoolEventImageScalarFieldEnum | Prisma.SchoolEventImageScalarFieldEnum[]
+}
+
+/**
+ * SchoolEvent.rsvps
+ */
+export type SchoolEvent$rsvpsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SchoolEventRsvp
+   */
+  select?: Prisma.SchoolEventRsvpSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SchoolEventRsvp
+   */
+  omit?: Prisma.SchoolEventRsvpOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SchoolEventRsvpInclude<ExtArgs> | null
+  where?: Prisma.SchoolEventRsvpWhereInput
+  orderBy?: Prisma.SchoolEventRsvpOrderByWithRelationInput | Prisma.SchoolEventRsvpOrderByWithRelationInput[]
+  cursor?: Prisma.SchoolEventRsvpWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SchoolEventRsvpScalarFieldEnum | Prisma.SchoolEventRsvpScalarFieldEnum[]
 }
 
 /**

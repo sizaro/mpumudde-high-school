@@ -305,6 +305,7 @@ export type AlumniWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Alumni"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Alumni"> | Date | string
   publications?: Prisma.SchoolPublicationListRelationFilter
+  eventRsvps?: Prisma.SchoolEventRsvpListRelationFilter
 }
 
 export type AlumniOrderByWithRelationInput = {
@@ -325,6 +326,7 @@ export type AlumniOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   publications?: Prisma.SchoolPublicationOrderByRelationAggregateInput
+  eventRsvps?: Prisma.SchoolEventRsvpOrderByRelationAggregateInput
 }
 
 export type AlumniWhereUniqueInput = Prisma.AtLeast<{
@@ -348,6 +350,7 @@ export type AlumniWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Alumni"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Alumni"> | Date | string
   publications?: Prisma.SchoolPublicationListRelationFilter
+  eventRsvps?: Prisma.SchoolEventRsvpListRelationFilter
 }, "id" | "email">
 
 export type AlumniOrderByWithAggregationInput = {
@@ -414,6 +417,7 @@ export type AlumniCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   publications?: Prisma.SchoolPublicationCreateNestedManyWithoutAlumniInput
+  eventRsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutAlumniInput
 }
 
 export type AlumniUncheckedCreateInput = {
@@ -434,6 +438,7 @@ export type AlumniUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   publications?: Prisma.SchoolPublicationUncheckedCreateNestedManyWithoutAlumniInput
+  eventRsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutAlumniInput
 }
 
 export type AlumniUpdateInput = {
@@ -454,6 +459,7 @@ export type AlumniUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   publications?: Prisma.SchoolPublicationUpdateManyWithoutAlumniNestedInput
+  eventRsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutAlumniNestedInput
 }
 
 export type AlumniUncheckedUpdateInput = {
@@ -474,6 +480,7 @@ export type AlumniUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   publications?: Prisma.SchoolPublicationUncheckedUpdateManyWithoutAlumniNestedInput
+  eventRsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutAlumniNestedInput
 }
 
 export type AlumniCreateManyInput = {
@@ -619,6 +626,22 @@ export type AlumniUpdateOneWithoutPublicationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AlumniUpdateToOneWithWhereWithoutPublicationsInput, Prisma.AlumniUpdateWithoutPublicationsInput>, Prisma.AlumniUncheckedUpdateWithoutPublicationsInput>
 }
 
+export type AlumniCreateNestedOneWithoutEventRsvpsInput = {
+  create?: Prisma.XOR<Prisma.AlumniCreateWithoutEventRsvpsInput, Prisma.AlumniUncheckedCreateWithoutEventRsvpsInput>
+  connectOrCreate?: Prisma.AlumniCreateOrConnectWithoutEventRsvpsInput
+  connect?: Prisma.AlumniWhereUniqueInput
+}
+
+export type AlumniUpdateOneWithoutEventRsvpsNestedInput = {
+  create?: Prisma.XOR<Prisma.AlumniCreateWithoutEventRsvpsInput, Prisma.AlumniUncheckedCreateWithoutEventRsvpsInput>
+  connectOrCreate?: Prisma.AlumniCreateOrConnectWithoutEventRsvpsInput
+  upsert?: Prisma.AlumniUpsertWithoutEventRsvpsInput
+  disconnect?: Prisma.AlumniWhereInput | boolean
+  delete?: Prisma.AlumniWhereInput | boolean
+  connect?: Prisma.AlumniWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AlumniUpdateToOneWithWhereWithoutEventRsvpsInput, Prisma.AlumniUpdateWithoutEventRsvpsInput>, Prisma.AlumniUncheckedUpdateWithoutEventRsvpsInput>
+}
+
 export type AlumniCreateWithoutPublicationsInput = {
   id?: string
   email: string
@@ -636,6 +659,7 @@ export type AlumniCreateWithoutPublicationsInput = {
   possibleStudentMatchDetails?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  eventRsvps?: Prisma.SchoolEventRsvpCreateNestedManyWithoutAlumniInput
 }
 
 export type AlumniUncheckedCreateWithoutPublicationsInput = {
@@ -655,6 +679,7 @@ export type AlumniUncheckedCreateWithoutPublicationsInput = {
   possibleStudentMatchDetails?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  eventRsvps?: Prisma.SchoolEventRsvpUncheckedCreateNestedManyWithoutAlumniInput
 }
 
 export type AlumniCreateOrConnectWithoutPublicationsInput = {
@@ -690,6 +715,7 @@ export type AlumniUpdateWithoutPublicationsInput = {
   possibleStudentMatchDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventRsvps?: Prisma.SchoolEventRsvpUpdateManyWithoutAlumniNestedInput
 }
 
 export type AlumniUncheckedUpdateWithoutPublicationsInput = {
@@ -709,6 +735,103 @@ export type AlumniUncheckedUpdateWithoutPublicationsInput = {
   possibleStudentMatchDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventRsvps?: Prisma.SchoolEventRsvpUncheckedUpdateManyWithoutAlumniNestedInput
+}
+
+export type AlumniCreateWithoutEventRsvpsInput = {
+  id?: string
+  email: string
+  fullName: string
+  graduationYear?: number | null
+  studentPeriod?: string | null
+  whatsappNumber?: string | null
+  profileImageUrl?: string | null
+  profileImagePublicId?: string | null
+  rememberedPerson?: string | null
+  isActive?: boolean
+  lockedAt?: Date | string | null
+  lockedReason?: string | null
+  possibleStudentMatch?: boolean
+  possibleStudentMatchDetails?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  publications?: Prisma.SchoolPublicationCreateNestedManyWithoutAlumniInput
+}
+
+export type AlumniUncheckedCreateWithoutEventRsvpsInput = {
+  id?: string
+  email: string
+  fullName: string
+  graduationYear?: number | null
+  studentPeriod?: string | null
+  whatsappNumber?: string | null
+  profileImageUrl?: string | null
+  profileImagePublicId?: string | null
+  rememberedPerson?: string | null
+  isActive?: boolean
+  lockedAt?: Date | string | null
+  lockedReason?: string | null
+  possibleStudentMatch?: boolean
+  possibleStudentMatchDetails?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  publications?: Prisma.SchoolPublicationUncheckedCreateNestedManyWithoutAlumniInput
+}
+
+export type AlumniCreateOrConnectWithoutEventRsvpsInput = {
+  where: Prisma.AlumniWhereUniqueInput
+  create: Prisma.XOR<Prisma.AlumniCreateWithoutEventRsvpsInput, Prisma.AlumniUncheckedCreateWithoutEventRsvpsInput>
+}
+
+export type AlumniUpsertWithoutEventRsvpsInput = {
+  update: Prisma.XOR<Prisma.AlumniUpdateWithoutEventRsvpsInput, Prisma.AlumniUncheckedUpdateWithoutEventRsvpsInput>
+  create: Prisma.XOR<Prisma.AlumniCreateWithoutEventRsvpsInput, Prisma.AlumniUncheckedCreateWithoutEventRsvpsInput>
+  where?: Prisma.AlumniWhereInput
+}
+
+export type AlumniUpdateToOneWithWhereWithoutEventRsvpsInput = {
+  where?: Prisma.AlumniWhereInput
+  data: Prisma.XOR<Prisma.AlumniUpdateWithoutEventRsvpsInput, Prisma.AlumniUncheckedUpdateWithoutEventRsvpsInput>
+}
+
+export type AlumniUpdateWithoutEventRsvpsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  studentPeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rememberedPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  possibleStudentMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  possibleStudentMatchDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publications?: Prisma.SchoolPublicationUpdateManyWithoutAlumniNestedInput
+}
+
+export type AlumniUncheckedUpdateWithoutEventRsvpsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  studentPeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImagePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rememberedPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  possibleStudentMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  possibleStudentMatchDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publications?: Prisma.SchoolPublicationUncheckedUpdateManyWithoutAlumniNestedInput
 }
 
 
@@ -718,10 +841,12 @@ export type AlumniUncheckedUpdateWithoutPublicationsInput = {
 
 export type AlumniCountOutputType = {
   publications: number
+  eventRsvps: number
 }
 
 export type AlumniCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   publications?: boolean | AlumniCountOutputTypeCountPublicationsArgs
+  eventRsvps?: boolean | AlumniCountOutputTypeCountEventRsvpsArgs
 }
 
 /**
@@ -739,6 +864,13 @@ export type AlumniCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
  */
 export type AlumniCountOutputTypeCountPublicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SchoolPublicationWhereInput
+}
+
+/**
+ * AlumniCountOutputType without action
+ */
+export type AlumniCountOutputTypeCountEventRsvpsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SchoolEventRsvpWhereInput
 }
 
 
@@ -760,6 +892,7 @@ export type AlumniSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   updatedAt?: boolean
   publications?: boolean | Prisma.Alumni$publicationsArgs<ExtArgs>
+  eventRsvps?: boolean | Prisma.Alumni$eventRsvpsArgs<ExtArgs>
   _count?: boolean | Prisma.AlumniCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["alumni"]>
 
@@ -823,6 +956,7 @@ export type AlumniSelectScalar = {
 export type AlumniOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "fullName" | "graduationYear" | "studentPeriod" | "whatsappNumber" | "profileImageUrl" | "profileImagePublicId" | "rememberedPerson" | "isActive" | "lockedAt" | "lockedReason" | "possibleStudentMatch" | "possibleStudentMatchDetails" | "createdAt" | "updatedAt", ExtArgs["result"]["alumni"]>
 export type AlumniInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   publications?: boolean | Prisma.Alumni$publicationsArgs<ExtArgs>
+  eventRsvps?: boolean | Prisma.Alumni$eventRsvpsArgs<ExtArgs>
   _count?: boolean | Prisma.AlumniCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AlumniIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -832,6 +966,7 @@ export type $AlumniPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Alumni"
   objects: {
     publications: Prisma.$SchoolPublicationPayload<ExtArgs>[]
+    eventRsvps: Prisma.$SchoolEventRsvpPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1245,6 +1380,7 @@ readonly fields: AlumniFieldRefs;
 export interface Prisma__AlumniClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   publications<T extends Prisma.Alumni$publicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Alumni$publicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolPublicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  eventRsvps<T extends Prisma.Alumni$eventRsvpsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Alumni$eventRsvpsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchoolEventRsvpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1704,6 +1840,30 @@ export type Alumni$publicationsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.SchoolPublicationScalarFieldEnum | Prisma.SchoolPublicationScalarFieldEnum[]
+}
+
+/**
+ * Alumni.eventRsvps
+ */
+export type Alumni$eventRsvpsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SchoolEventRsvp
+   */
+  select?: Prisma.SchoolEventRsvpSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SchoolEventRsvp
+   */
+  omit?: Prisma.SchoolEventRsvpOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SchoolEventRsvpInclude<ExtArgs> | null
+  where?: Prisma.SchoolEventRsvpWhereInput
+  orderBy?: Prisma.SchoolEventRsvpOrderByWithRelationInput | Prisma.SchoolEventRsvpOrderByWithRelationInput[]
+  cursor?: Prisma.SchoolEventRsvpWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SchoolEventRsvpScalarFieldEnum | Prisma.SchoolEventRsvpScalarFieldEnum[]
 }
 
 /**
