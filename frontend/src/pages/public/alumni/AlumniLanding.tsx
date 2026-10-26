@@ -100,5 +100,4 @@ export function ContentImage({ src, alt, label, full = false }: { src?: string |
     <div className={fallbackClass}><span className="rounded bg-white/15 px-2 py-1 text-xs font-semibold text-white">{label}</span></div>
   );
 }
-function ContentUnavailable({ label }: { label: string }) { return <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">{label} are temporarily unavailable. Please refresh the page shortly.</p>; }
 function LoadingCards({ count }: { count: number }) { return <>{Array.from({ length: count }, (_, index) => <div className="h-72 animate-pulse rounded-md bg-slate-100" key={index}/>)}</>; }
